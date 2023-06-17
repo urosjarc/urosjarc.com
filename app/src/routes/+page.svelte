@@ -5,7 +5,7 @@
   import {hacker} from "../libs/hacker";
   import {onMount} from "svelte";
 
-  onMount(() => hacker(500));
+  onMount(() => hacker(750));
 </script>
 
 <div>
