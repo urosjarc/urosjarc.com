@@ -10,7 +10,7 @@ function scramble(ele, timeout, originalWord, charIter) {
     charIter = {};
     let i = 0;
     for (let char of originalWord) {
-      if (char !== " ") charIter[i] = Math.floor(Math.random() * 5)
+      if (char !== " ") charIter[i] = Math.floor(Math.random() * 3)
       i++;
     }
   }

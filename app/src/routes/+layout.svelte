@@ -10,14 +10,13 @@
   const delay = duration + 250;
   const transitionIn = {easing: cubicOut, duration, delay};
   const transitionOut = {easing: cubicIn, duration};
-  const transitionInStart = {easing: cubicIn, duration: duration};
 
 </script>
 
 <div id="app" class="container">
 
   <OnMount>
-    <div class="row justify-content-center" style="margin: 0"  in:fade={transitionInStart}>
+    <div class="row justify-content-center" style="margin: 0" in:fade={transitionIn} out:fade={transitionOut}>
       <div class="col-12 col-sm-11 col-lg-6" style="padding: 0">
 
         <div id="navigacija" class="row">
