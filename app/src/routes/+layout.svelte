@@ -3,12 +3,14 @@
   import {cubicIn, cubicOut} from 'svelte/easing'
   import Fab from '@smui/fab';
   import {Icon} from '@smui/common';
+  import OnMount from "../libs/OnMount.svelte";
 
-  export let data;
+  export let data = {url: null};
   const duration = 500;
   const delay = duration + 250;
   const transitionIn = {easing: cubicOut, duration, delay};
   const transitionOut = {easing: cubicIn, duration};
+
 </script>
 
 <div id="app" class="container">
@@ -48,9 +50,11 @@
       </div>
 
       {#key data.url}
-        <div id="vsebina" in:fade={transitionIn} out:fade={transitionOut}>
-          <slot/>
-        </div>
+        <OnMount>
+          <div id="vsebina" in:fade={transitionIn} out:fade={transitionOut}>
+            <slot/>
+          </div>
+        </OnMount>
       {/key}
 
     </div>

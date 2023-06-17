@@ -2,27 +2,30 @@
   import {Icon} from '@smui/common';
   import Button, {Group} from '@smui/button';
   import List, {Item, Separator} from '@smui/list';
+  import {hacker} from "../libs/hacker";
+  import {onMount} from "svelte";
 
+  onMount(() => hacker(750));
 </script>
 
 <div>
   <div id="glava">
 
-    <h1>Uroš Jarc</h1>
-    <h2>Inštruktor programiranja, fizike, matematike</h2>
+    <h1 class="hacker">Uroš Jarc</h1>
+    <h2 class="hacker">Inštruktor programiranja, fizike, matematike</h2>
 
     <Button href="/kontakt">
       <Icon class="material-icons">email</Icon>
-      <b>jar.fmf@gmail.com</b>
+      <b class="hacker">jar.fmf@gmail.com</b>
     </Button>
     <Button href="/kontakt">
       <Icon class="material-icons">phone</Icon>
-      <b>051-240-885</b>
+      <b class="hacker">051-240-885</b>
     </Button>
 
     <Group style="display: flex; justify-content: stretch;margin:20px 0;">
       <Button variant="raised" href="/koledar" color="primary" style="flex-grow: 1;">
-        <b>Naroči inštrukcije</b>
+        <b class="hacker">Naroči inštrukcije</b>
       </Button>
     </Group>
   </div>
@@ -30,19 +33,19 @@
   <List nonInteractive>
     <Separator/>
     <Item>
-      <p>Izvajam kvalitetne inštrukcije programiranja, fizike, matematike.</p>
+      <p class="hacker">Izvajam kvalitetne inštrukcije programiranja, fizike, matematike.</p>
     </Item>
     <Separator/>
     <Item>
-      <p>Pripravljam študente vseh fakultet na izpite iz programiranja.</p>
+      <p class="hacker">Pripravljam študente vseh fakultet na izpite iz programiranja.</p>
     </Item>
     <Separator/>
     <Item>
-      <p>Pomagam pri programiranju diplomskih in mag. nalog.</p>
+      <p class="hacker">Pomagam pri programiranju diplomskih in mag. nalog.</p>
     </Item>
     <Separator/>
     <Item>
-      <p>Pomagam pri prekvalifikaciji za programersko službo</p>
+      <p class="hacker">Pomagam pri prekvalifikaciji za programersko službo</p>
     </Item>
   </List>
 
