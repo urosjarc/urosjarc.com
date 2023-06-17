@@ -7,74 +7,66 @@
   export let data;
   const duration = 500;
   const delay = duration + 250;
-  const transitionIn = { easing: cubicOut, duration, delay};
-  const transitionOut = { easing: cubicIn, duration};
+  const transitionIn = {easing: cubicOut, duration, delay};
+  const transitionOut = {easing: cubicIn, duration};
 </script>
 
-<div id="app">
+<div id="app" class="container">
 
-  <table width="100%">
-    <tr>
-      <td width="25%"></td>
-      <td id="center">
+  <div class="row justify-content-center" style="margin: 0">
+    <div class="col-12 col-sm-11 col-lg-6" style="padding: 0">
 
-        <table width="100%">
-          <tr>
-            <td>
-              <Fab href="/">
-                <Icon class="material-icons">home</Icon>
-              </Fab>
-              <p><b>Domov</b></p>
-            </td>
-            <td>
-              <Fab href="/koledar">
-                <Icon class="material-icons">event</Icon>
-              </Fab>
-              <p><b>Koledar</b></p>
-            </td>
-            <td>
-              <Fab href="/kontakt">
-                <Icon class="material-icons">email</Icon>
-              </Fab>
-              <p><b>Kontakt</b></p>
-            </td>
-            <td>
-              <Fab href="/ucenci">
-                <Icon class="material-icons">person</Icon>
-              </Fab>
-              <p><b>Učenci</b></p>
-            </td>
-          </tr>
-        </table>
-        {#key data.url}
-          <div
-            in:fade={transitionIn}
-            out:fade={transitionOut}
-          >
-            <div id="vsebina">
-              <slot/>
-            </div>
-          </div>
-        {/key}
+      <div id="navigacija" class="row">
+        <div class="col-3">
+          <Fab href="/">
+            <Icon class="material-icons">home</Icon>
+          </Fab>
+          <p><b>Domov</b></p>
+        </div>
+        <div class="col-3">
+          <Fab href="/koledar">
+            <Icon class="material-icons">event</Icon>
+          </Fab>
+          <p><b>Koledar</b></p>
+        </div>
+        <div class="col-3">
+          <Fab href="/kontakt">
+            <Icon class="material-icons">email</Icon>
+          </Fab>
+          <p><b>Kontakt</b></p>
+        </div>
+        <div class="col-3">
+          <Fab href="/ucenci">
+            <Icon class="material-icons">person</Icon>
+          </Fab>
+          <p><b>Učenci</b></p>
+        </div>
+      </div>
 
-      </td>
-      <td width="25%"></td>
-    </tr>
-  </table>
+      {#key data.url}
+        <div id="vsebina" in:fade={transitionIn} out:fade={transitionOut}>
+          <slot/>
+        </div>
+      {/key}
+
+    </div>
+  </div>
 </div>
 
 
 <style>
-  #app {
-    width: 100%;
+  #app, #vsebina, #navigacija div {
+    padding: 0;
   }
 
-  #center {
+  #navigacija {
     text-align: center;
-    min-width: 330px;
+    margin: 0;
   }
+
 
   #vsebina {
+    opacity: 0.85;
     background-color: white;
     border-radius: 5px;
     -webkit-box-shadow: 0px 0px 10px -1px rgba(0, 0, 0, 0.75);

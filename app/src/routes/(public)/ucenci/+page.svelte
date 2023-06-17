@@ -27,8 +27,8 @@
   }
 </script>
 
-<div>
-  <form on:submit|preventDefault={poslji}>
+<form class="row" on:submit|preventDefault={poslji}>
+  <div class="col">
 
     <Textfield
       style="width: 100%;margin-bottom: 10px;"
@@ -36,17 +36,10 @@
       name="geslo" bind:value={email} label="Geslo">
       <Icon class="material-icons" slot="leadingIcon">lock</Icon>
     </Textfield>
-
     <Group style="display: flex; justify-content: stretch;">
       <Button variant="raised" color="primary" style="flex-grow: 1;">
         <b>Vstopi</b>
       </Button>
     </Group>
-  </form>
-</div>
-
-<style>
-  form {
-    padding: 10px;
-  }
-</style>
+  </div>
+</form>

@@ -1,5 +1,3 @@
-import {Vector3} from "three";
-
 export function formData(e: HTMLFormElement) {
   // @ts-ignore
   const formData = new FormData(e.target)
@@ -13,11 +11,3 @@ export function dateISO(leto: number, mesec: number, dan: number) {
     return null
   }
 }
-
-export const randomNumber = (min: number, max: number): number => Math.random() * (max - min) + min
-
-export const randomVector = (start: number, end: number): Parameters<Vector3['set']> => [
-  randomNumber(start, end),
-  randomNumber(start, end),
-  randomNumber(start, end),
-]
