@@ -16,7 +16,7 @@ def init():
 
         routes += f"""
         <url>
-            <loc>https://urosjarc.si/{route}</loc>
+            <loc>https://urosjarc.si{route}</loc>
         </url>
         """
 

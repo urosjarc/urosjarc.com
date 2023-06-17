@@ -5,8 +5,10 @@
   <title>Uroš Jarc | Inštruktor programiranja, fizike, matematike</title>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width"/>
-  <meta name="description" content="Uroš Jarc Inštruktor programiranja, fizike, matematike. Ponujam kvalitetne inštrukcije univerzitetnega nivoja za programiranje, fizike, matematike. Pripravljam študente na izspite iz programiranja, pomagam pri izvedbi in programiranju diplomske naloge. Pomagam pri postopku prekvalifikacije za IT industrijo.">
-  <meta name="keywords" content="inštrukcije programiranja, inštrukcije fizike, inštrukcije matematike, python, javascript, java, fakulteta za računalništvo, FRI, vegova, srednja računalniška šola, diplomska naloga">
+  <meta name="description"
+        content="Uroš Jarc Inštruktor programiranja, fizike, matematike. Ponujam kvalitetne inštrukcije univerzitetnega nivoja za programiranje, fizike, matematike. Pripravljam študente na izspite iz programiranja, pomagam pri izvedbi in programiranju diplomske naloge. Pomagam pri postopku prekvalifikacije za IT industrijo.">
+  <meta name="keywords"
+        content="inštrukcije programiranja, inštrukcije fizike, inštrukcije matematike, python, javascript, java, fakulteta za računalništvo, FRI, vegova, srednja računalniška šola, diplomska naloga">
   <meta name="author" content="Uroš Jarc">
 
   <link rel="icon" href="%sveltekit.assets%/favicon.ico"/>
@@ -17,9 +19,7 @@
   <link rel="stylesheet" href="%sveltekit.assets%/css/bootstrap-grid.min.css"/>
   <link rel="stylesheet" href="%sveltekit.assets%/css/main.css"/>
 
-  <script src="%sveltekit.assets%/js/acuityscheduling.embed.js" type="text/javascript"></script>
-  <script src="%sveltekit.assets%/js/three.min.js"></script>
-  <script src="%sveltekit.assets%/js/vanta.birds.min.js"></script>
+  <script src="%sveltekit.assets%/js/acuityscheduling.embed.js" type="text/javascript" async></script>
 
   %sveltekit.head%
 
@@ -32,6 +32,11 @@
 
 </html>
 
+<script>
+  if (screen && screen.width > 480) {
+    document.write(`
+<script src="%sveltekit.assets%/js/three.min.js"><\/script>
+<script src="%sveltekit.assets%/js/vanta.birds.min.js"><\/script>
 <script>
   VANTA.BIRDS({
     el: "#background",
@@ -47,4 +52,6 @@
     speedLimit: 4.00,
     color2: 0xff0000
   })
+<\/script>`);
+}
 </script>

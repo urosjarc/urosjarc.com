@@ -20,24 +20,28 @@
         <div class="col-3">
           <Fab href="/">
             <Icon class="material-icons">home</Icon>
+            <p class="link">Domov</p>
           </Fab>
           <p><b>Domov</b></p>
         </div>
         <div class="col-3">
           <Fab href="/koledar">
             <Icon class="material-icons">event</Icon>
+            <p class="link">Koledar</p>
           </Fab>
           <p><b>Koledar</b></p>
         </div>
         <div class="col-3">
           <Fab href="/kontakt">
             <Icon class="material-icons">email</Icon>
+            <p class="link">Kontakt</p>
           </Fab>
           <p><b>Kontakt</b></p>
         </div>
         <div class="col-3">
           <Fab href="/ucenci">
             <Icon class="material-icons">person</Icon>
+            <p class="link">Učenci</p>
           </Fab>
           <p><b>Učenci</b></p>
         </div>
@@ -62,6 +66,10 @@
   #navigacija {
     text-align: center;
     margin: 0;
+  }
+
+  .link {
+    font-size: 0 !important;
   }
 
 

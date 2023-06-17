@@ -9,7 +9,7 @@
   <div id="glava">
 
     <h1>Uroš Jarc</h1>
-    <h3>Inštruktor programiranja, fizike, matematike</h3>
+    <h2>Inštruktor programiranja, fizike, matematike</h2>
 
     <Button href="/kontakt">
       <Icon class="material-icons">email</Icon>
