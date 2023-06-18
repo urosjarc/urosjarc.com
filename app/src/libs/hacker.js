@@ -10,7 +10,7 @@ function scramble(ele, timeout, originalWord, charIter) {
     charIter = {};
     let i = 0;
     for (let char of originalWord) {
-      if (char !== " ") charIter[i] = Math.floor(Math.random() * 2)
+      if (char !== " ") charIter[i] = Math.ceil(70 / originalWord.length);
       i++;
     }
   }
@@ -40,7 +40,7 @@ export function hacker(delay) {
   let elements = document.getElementsByClassName("hacker");
   setTimeout(() => {
     for (let ele of elements) {
-      scramble(ele, 20);
+      scramble(ele, 5);
     }
   }, delay);
 }
