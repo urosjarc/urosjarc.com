@@ -4,15 +4,15 @@ function randChar() {
   return items.substring(index, index + 1);
 }
 
-function scramble(ele, timeout, originalWord, charIter) {
+function scramble(ele, timeout, maxWordSize, originalWord, charIter) {
   if (originalWord == null) originalWord = ele.textContent;
   if (charIter == null) {
     charIter = {};
     let i = 0;
     for (let char of originalWord) {
       if (char !== " ") {
-        if (i === 0) charIter[i] = Math.ceil(70);
-        else charIter[i] = Math.ceil(70 / originalWord.length);
+        if (i === 0) charIter[i] = Math.ceil(maxWordSize);
+        else charIter[i] = Math.ceil(maxWordSize / originalWord.length);
       }
       i++;
     }
@@ -35,15 +35,21 @@ function scramble(ele, timeout, originalWord, charIter) {
 
   setTimeout(() => {
     ele.textContent = newWord;
-    if (run) scramble(ele, timeout, originalWord, charIter);
+    if (run) scramble(ele, timeout, maxWordSize, originalWord, charIter);
   }, timeout);
 }
 
 export function hacker(delay) {
   let elements = document.getElementsByClassName("hacker");
+  let maxWordSize = 0;
+  for (let ele of elements) {
+    if(ele.textContent.length > maxWordSize){
+      maxWordSize = ele.textContent.length;
+    }
+  }
   setTimeout(() => {
     for (let ele of elements) {
-      scramble(ele, 5);
+      scramble(ele, 5, maxWordSize);
     }
   }, delay);
 }
