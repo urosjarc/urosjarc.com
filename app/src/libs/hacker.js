@@ -10,7 +10,10 @@ function scramble(ele, timeout, originalWord, charIter) {
     charIter = {};
     let i = 0;
     for (let char of originalWord) {
-      if (char !== " ") charIter[i] = Math.ceil(70 / originalWord.length);
+      if (char !== " ") {
+        if (i === 0) charIter[i] = Math.ceil(70);
+        else charIter[i] = Math.ceil(70 / originalWord.length);
+      }
       i++;
     }
   }
