@@ -1,20 +1,17 @@
 package si.urosjarc.server.app.services
 
-import com.google.i18n.phonenumbers.PhoneNumberUtil
-import com.twilio.http.TwilioRestClient
 import org.apache.logging.log4j.kotlin.logger
-import org.simplejavamail.api.email.Email
-import org.simplejavamail.api.mailer.Mailer
-import org.simplejavamail.api.mailer.config.TransportStrategy
-import org.simplejavamail.email.EmailBuilder
-import org.simplejavamail.mailer.MailerBuilder
 import si.urosjarc.server.core.services.EmailService
-import java.lang.RuntimeException
 import java.net.InetAddress
 import java.net.UnknownHostException
-import java.util.concurrent.TimeUnit
+import java.util.*
+import javax.mail.Message
+import javax.mail.MessagingException
+import javax.mail.PasswordAuthentication
+import javax.mail.Session
 import javax.mail.internet.AddressException
 import javax.mail.internet.InternetAddress
+import javax.mail.internet.MimeMessage
 
 
 class EmailSmtp(
@@ -25,20 +22,22 @@ class EmailSmtp(
 ) : EmailService {
 
     val log = this.logger()
-    val mailer: Mailer
+    val properties = Properties()
+    val session: Session
 
     init {
-        log.error("$host $port $username $password")
-        this.mailer = MailerBuilder.withSMTPServer(this.host, this.port, this.username, this.password)
-            .withDebugLogging(true)
-            .withTransportStrategy(TransportStrategy.SMTP)
-            .buildMailer()
-        try {
-            this.mailer.testConnection()
-        } catch (err: RuntimeException){
-            log.error("ERROR" + err.toString())
-
-        }
+        this.properties.put("mail.smtp.host", host)
+        this.properties.put("mail.smtp.port", port)
+        this.properties.put("mail.smtp.auth", true)
+        this.properties.put("mail.smtp.starttls.enable", true)
+        this.properties.put("mail.smtp.ssl.protocols", "TLSv1.2")
+        this.properties.put("mail.smtp.ssl.trust", host);
+        this.session = Session.getDefaultInstance(this.properties, object : javax.mail.Authenticator() {
+            override fun getPasswordAuthentication(): PasswordAuthentication {
+                return PasswordAuthentication(username, password)
+            }
+        })
+        this.session.debug = true
     }
 
     override fun obstaja(email: EmailService.FormatiranEmail): Boolean {
@@ -65,17 +64,23 @@ class EmailSmtp(
     }
 
     override fun poslji_email(from: String, to: String, subject: String, html: String): Boolean {
-        val test = this.mailer.sendMail(
-            EmailBuilder.startingBlank()
-                .from(from)
-                .to(to)
-                .withSubject(subject)
-                .withPlainText(html)
-                .withHTMLText(html)
-                .buildEmail()
-        ).get(10, TimeUnit.SECONDS).toString()
-        println(test)
-        return true
+        return try {
+            val mimeMessage = MimeMessage(session)
+            mimeMessage.setFrom(InternetAddress(from))
+            mimeMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, true))
+            mimeMessage.setText(html)
+            mimeMessage.subject = subject
+            mimeMessage.sentDate = Date()
+
+            val smtpTransport = session.getTransport("smtp")
+            smtpTransport.connect()
+            smtpTransport.sendMessage(mimeMessage, mimeMessage.allRecipients)
+            smtpTransport.close()
+            true
+        } catch (messagingException: MessagingException) {
+            messagingException.printStackTrace()
+            false
+        }
     }
 
 
