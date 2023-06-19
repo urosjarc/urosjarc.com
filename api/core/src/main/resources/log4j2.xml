@@ -21,6 +21,7 @@
 
         <SMTP name="Email"
               smtpProtocol="smtp"
+              smtpPort="${env:SMTP_PORT}"
               smtpHost="${env:SMTP_HOST}"
               smtpUsername="${env:SMTP_USERNAME}"
               smtpPassword="${env:SMTP_PASSWORD}"
@@ -55,6 +56,7 @@
 
     <Loggers>
         <Root includeLocation="true" level="TRACE">
+            <AppenderRef ref="Email"/>
             <AppenderRef ref="Async-Console"/>
             <AppenderRef ref="Async-File"/>
             <AppenderRef ref="Async-Email"/>
