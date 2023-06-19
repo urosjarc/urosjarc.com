@@ -1,7 +1,6 @@
 plugins {
     this.id("buildSrc.common")
     this.id("buildSrc.logging")
-    this.id("buildSrc.serialization")
     this.id("buildSrc.datetime")
     this.id("buildSrc.injections")
 }

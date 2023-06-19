@@ -6,6 +6,5 @@ plugins {
 }
 
 dependencies {
-    implementation("org.litote.kmongo:kmongo-id-serialization:4.8.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 }

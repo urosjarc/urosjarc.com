@@ -21,9 +21,9 @@
 
         <SMTP name="Email"
               smtpProtocol="smtp"
-              smtpHost="${env:LOG_SMTP_HOST}"
-              smtpUsername="${env:LOG_SMTP_USERNAME}"
-              smtpPassword="${env:LOG_SMTP_PASSWORD}"
+              smtpHost="${env:SMTP_HOST}"
+              smtpUsername="${env:SMTP_USERNAME}"
+              smtpPassword="${env:SMTP_PASSWORD}"
               subject="${env:LOG_SMTP_SUBJECT}"
               to="${env:LOG_SMTP_TO}"
               from="${env:LOG_SMTP_FROM}">

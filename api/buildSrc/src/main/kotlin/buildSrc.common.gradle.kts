@@ -15,7 +15,7 @@ dependencies {
     testImplementation(kotlin("test-junit"))
 }
 
-group = "si.programerski_klub"
+group = "si.urosjarc"
 version = "1.0-SNAPSHOT"
 
 tasks.test {

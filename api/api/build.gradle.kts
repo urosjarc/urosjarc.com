@@ -38,7 +38,7 @@ application {
         "-Dio.netty.tryReflectionSetAccessible=true",
         "-Dio.ktor.development=true"
     )
-    this.mainClass.set("si.programerski_klub.server.api.MainKt")
+    this.mainClass.set("si.urosjarc.server.api.MainKt")
 }
 
 tasks {
