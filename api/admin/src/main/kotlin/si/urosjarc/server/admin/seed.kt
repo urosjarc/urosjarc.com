@@ -211,7 +211,7 @@ fun main() {
     App.pripravi_DI(tip = App.Tip.TEST)
     val seeder = Seeder()
 
-    seeder.db.izbrisi_vse()
+    seeder.db.drop()
     seeder.ponudbe(n = 10)
     seeder.osebe(n = 10)
 }

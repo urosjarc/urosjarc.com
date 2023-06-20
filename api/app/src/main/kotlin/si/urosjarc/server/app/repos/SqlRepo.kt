@@ -8,9 +8,8 @@ import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.repos.DbGetRezultat
 import si.urosjarc.server.core.repos.DbPostRezultat
 import si.urosjarc.server.core.repos.DbRepo
-import kotlin.reflect.KClass
 
-abstract class SqlRepo<T : Entiteta<T>>(cls: KClass<T>) : Table(name = cls::class.java.simpleName.toString()), DbRepo<T> {
+abstract class SqlRepo<T : Entiteta<T>>(table: String) : Table(name = table), DbRepo<T> {
 
     val id: Column<Int> = integer("id").autoIncrement()
     override val primaryKey = PrimaryKey(id)
@@ -18,6 +17,8 @@ abstract class SqlRepo<T : Entiteta<T>>(cls: KClass<T>) : Table(name = cls::clas
     abstract fun resultRow(R: ResultRow): T;
     private fun query(query: Query): List<T> = query.map { this.resultRow(it) }
 
+    override fun drop() = SchemaUtils.drop(this)
+    override fun seed() = SchemaUtils.create(this)
     override fun post(entity: T): DbPostRezultat<T> {
         val result: ResultRow? = insert(body = { this.map(entity, it) }).resultedValues?.get(0)
 
@@ -26,7 +27,6 @@ abstract class SqlRepo<T : Entiteta<T>>(cls: KClass<T>) : Table(name = cls::clas
             true -> DbPostRezultat.FATAL_DB_NAPAKA()
         }
     }
-
 
     override fun get(page: Int): List<T> = query(selectAll().limit(n = 100, offset = 100L * page))
 
@@ -54,6 +54,4 @@ abstract class SqlRepo<T : Entiteta<T>>(cls: KClass<T>) : Table(name = cls::clas
         )
         return result == 1;
     }
-
-
 }

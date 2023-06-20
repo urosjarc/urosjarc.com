@@ -4,7 +4,7 @@ object Env {
     val PORT: Int = System.getenv("PORT").toInt()
 
     val DB_URL: String = System.getenv("DB_URL")
-    val DB_DRIVE: String = System.getenv("DB_DRIVE")
+    val DB_DRIVER: String = System.getenv("DB_DRIVER")
     val DB_USER: String = System.getenv("DB_USER")
     val DB_PASSWORD: String = System.getenv("DB_PASSWORD")
 

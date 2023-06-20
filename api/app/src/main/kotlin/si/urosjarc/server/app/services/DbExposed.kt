@@ -2,9 +2,8 @@ package si.urosjarc.server.app.services
 
 import org.apache.logging.log4j.kotlin.logger
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
 import si.urosjarc.server.app.repos.NalogeSqlRepo
-import si.urosjarc.server.core.repos.DbDeleteRezultat
 import si.urosjarc.server.core.repos.NalogeRepo
 import si.urosjarc.server.core.services.DbService
 
@@ -16,18 +15,22 @@ class DbExposed(
     val password: String
 ) : DbService {
 
-    override val naloge: NalogeRepo = NalogeSqlRepo()
-
     val log = this.logger()
+    val db = Database.connect(
+        url = this.url,
+        driver = this.driver,
+        user = this.user,
+        password = this.password
+    )
 
-    init {
-        Database.connect(url = this.url, driver = this.driver, user = this.user, password = this.password)
+    override val naloge: NalogeRepo = NalogeSqlRepo()
+    override fun drop() = transaction {
+        naloge.drop()
     }
 
-
-    override fun izbrisi_vse(): DbDeleteRezultat {
-        SchemaUtils.drop()
+    override fun seed() = transaction {
+        naloge.seed()
     }
 
-
+    override fun commit(code: () -> Unit) = transaction(statement = { code() })
 }
