@@ -3,6 +3,7 @@ plugins {
     this.id("buildSrc.logging")
     this.id("buildSrc.datetime")
     this.id("buildSrc.injections")
+    this.id("buildSrc.db")
 }
 
 dependencies() {

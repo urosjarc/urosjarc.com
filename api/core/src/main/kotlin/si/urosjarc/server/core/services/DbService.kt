@@ -7,7 +7,7 @@ interface DbService {
     fun izbrisi_vse(): DbRezultatIzbrisa
 
 //    val kontaktni_obrazec: KontaktniObrazecRepo
-//    val naloge: NalogeRepo
+    val naloge: NalogeRepo
 //    val narocila: NarocilaRepo
 //    val narocnine: NarocnineRepo
 //    val osebe: OsebeRepo
