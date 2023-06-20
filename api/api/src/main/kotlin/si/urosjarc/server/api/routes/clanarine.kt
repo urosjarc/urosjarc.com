@@ -15,7 +15,7 @@ import si.urosjarc.server.api.request.VclanitevReq
 import si.urosjarc.server.core.domain.placevanje.Izbira
 import si.urosjarc.server.core.domain.placevanje.Narocilo
 import si.urosjarc.server.core.domain.placevanje.Produkt
-import si.urosjarc.server.core.repos.DbRezultatId
+import si.urosjarc.server.core.repos.DbGetRezultat
 import si.urosjarc.server.core.services.DbService
 
 
@@ -36,8 +36,8 @@ fun Route.clanarine() {
         //PREPARING REQ TO BE PROCESSED
         val req = this.call.receive<VclanitevReq>()
         val produkt = when (val r = db.produkti.en(id = req.clanarina.toId())) {
-            is DbRezultatId.DATA -> r.data
-            is DbRezultatId.ERROR -> return@post this.call.system_error(r)
+            is DbGetRezultat.DATA -> r.data
+            is DbGetRezultat.ERROR -> return@post this.call.system_error(r)
         }
         val narocilo = Narocilo(
             kosarica = setOf(Izbira(produkt, kolicina = 1)),

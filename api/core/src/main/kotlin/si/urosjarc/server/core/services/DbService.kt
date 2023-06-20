@@ -4,9 +4,9 @@ import si.urosjarc.server.core.repos.*
 
 interface DbService {
     //ADMIN
-    fun izbrisi_vse(): DbRezultatIzbrisa
+    fun izbrisi_vse()
 
-//    val kontaktni_obrazec: KontaktniObrazecRepo
+    //    val kontaktni_obrazec: KontaktniObrazecRepo
     val naloge: NalogeRepo
 //    val narocila: NarocilaRepo
 //    val narocnine: NarocnineRepo

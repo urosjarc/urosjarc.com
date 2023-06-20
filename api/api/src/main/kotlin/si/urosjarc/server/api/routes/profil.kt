@@ -10,7 +10,7 @@ import org.litote.kmongo.toId
 import si.urosjarc.server.api.extend.client_error
 import si.urosjarc.server.api.extend.profil
 import si.urosjarc.server.api.extend.system_error
-import si.urosjarc.server.core.repos.DbRezultatId
+import si.urosjarc.server.core.repos.DbGetRezultat
 import si.urosjarc.server.core.services.DbService
 
 @Resource("profil")
@@ -74,15 +74,15 @@ fun Route.profil() {
 
     this.get<profil.ponudbe.id> {
         when (val r = db.produkti.vsi(id = it.id.toId())) {
-            is DbRezultatId.DATA -> this.call.respond(r.data)
-            is DbRezultatId.ERROR -> this.call.client_error(r)
+            is DbGetRezultat.DATA -> this.call.respond(r.data)
+            is DbGetRezultat.ERROR -> this.call.client_error(r)
         }
     }
 
     this.get<profil.produkti.id> {
         when (val r = db.produkti.en(id = it.id.toId())) {
-            is DbRezultatId.ERROR -> this.call.system_error(r)
-            is DbRezultatId.DATA -> this.call.respond(r.data)
+            is DbGetRezultat.ERROR -> this.call.system_error(r)
+            is DbGetRezultat.DATA -> this.call.respond(r.data)
         }
     }
 
@@ -101,22 +101,22 @@ fun Route.profil() {
     this.get<profil.programi.id> {
         val profil = this.call.profil()
         when (val r = db.programi.en(id = it.id.toId(), oseba = profil.id)) {
-            is DbRezultatId.DATA -> this.call.respond(r.data)
-            is DbRezultatId.ERROR -> this.call.system_error(r)
+            is DbGetRezultat.DATA -> this.call.respond(r.data)
+            is DbGetRezultat.ERROR -> this.call.system_error(r)
         }
     }
 
     this.get<profil.postaje.id> {
         when (val r = db.postaje.ena(id = it.id.toId())) {
-            is DbRezultatId.DATA -> this.call.respond(r.data)
-            is DbRezultatId.ERROR -> this.call.system_error(r)
+            is DbGetRezultat.DATA -> this.call.respond(r.data)
+            is DbGetRezultat.ERROR -> this.call.system_error(r)
         }
     }
 
     this.get<profil.postaje.id.narprej> {
         when (val r = db.postaje.naslednje(id = it.parent.id.toId())) {
-            is DbRezultatId.DATA -> this.call.respond(r.data)
-            is DbRezultatId.ERROR -> this.call.system_error(r)
+            is DbGetRezultat.DATA -> this.call.respond(r.data)
+            is DbGetRezultat.ERROR -> this.call.system_error(r)
         }
     }
 }

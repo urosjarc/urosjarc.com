@@ -16,7 +16,7 @@ import si.urosjarc.server.core.domain.placevanje.Ponudba
 import si.urosjarc.server.core.domain.placevanje.Produkt
 import si.urosjarc.server.core.domain.uprava.Oseba
 import si.urosjarc.server.core.extends.now
-import si.urosjarc.server.core.repos.DbRezultatShranitve
+import si.urosjarc.server.core.repos.DbPostRezultat
 import si.urosjarc.server.core.services.DbService
 import kotlin.random.Random
 
@@ -30,8 +30,8 @@ class Seeder : KoinComponent {
             val produkt = Entiteta.random<Produkt>()
             ids.add(produkt)
             when (val r = this.db.produkti.shrani(produkt)) {
-                is DbRezultatShranitve.DATA -> r.data
-                is DbRezultatShranitve.FATAL_DB_NAPAKA -> {}
+                is DbPostRezultat.DATA -> r.data
+                is DbPostRezultat.FATAL_DB_NAPAKA -> {}
             }
         }
         return ids
@@ -43,8 +43,8 @@ class Seeder : KoinComponent {
             val ponudba = Entiteta.random<Ponudba>()
             ponudba.produkti = this.produkti(n = 1).map { produkt -> produkt.id }.toMutableSet()
             when (val r = this.db.ponudbe.shrani(ponudba)) {
-                is DbRezultatShranitve.FATAL_DB_NAPAKA -> {}
-                is DbRezultatShranitve.DATA -> objs.add(r.data)
+                is DbPostRezultat.FATAL_DB_NAPAKA -> {}
+                is DbPostRezultat.DATA -> objs.add(r.data)
             }
         }
 
@@ -56,8 +56,8 @@ class Seeder : KoinComponent {
         for (i in 0..n) {
             val naloga = Entiteta.random<Naloga>()
             when (val r = this.db.naloge.shrani(naloga)) {
-                is DbRezultatShranitve.FATAL_DB_NAPAKA -> {}
-                is DbRezultatShranitve.DATA -> objs.add(r.data)
+                is DbPostRezultat.FATAL_DB_NAPAKA -> {}
+                is DbPostRezultat.DATA -> objs.add(r.data)
             }
         }
 
@@ -70,8 +70,8 @@ class Seeder : KoinComponent {
             val test = Entiteta.random<Test>()
             test.naloge = this.naloge(2).toMutableSet()
             when (val r = this.db.testi.shrani(test)) {
-                is DbRezultatShranitve.FATAL_DB_NAPAKA -> {}
-                is DbRezultatShranitve.DATA -> objs.add(r.data)
+                is DbPostRezultat.FATAL_DB_NAPAKA -> {}
+                is DbPostRezultat.DATA -> objs.add(r.data)
             }
         }
 
@@ -85,8 +85,8 @@ class Seeder : KoinComponent {
             val oseba = Entiteta.random<Oseba>()
             oseba.tip.addAll(Oseba.Tip.values())
             when (val r = this.db.osebe.shrani_ali_posodobi(oseba)) {
-                is DbRezultatShranitve.FATAL_DB_NAPAKA -> {}
-                is DbRezultatShranitve.DATA -> objs.add(r.data)
+                is DbPostRezultat.FATAL_DB_NAPAKA -> {}
+                is DbPostRezultat.DATA -> objs.add(r.data)
             }
 
             for (j in 0..3) {
@@ -107,8 +107,8 @@ class Seeder : KoinComponent {
         val zacetek = Entiteta.random<Postaja>()
         zacetek.stars = null
         when (val r = this.db.postaje.shrani(zacetek)) {
-            is DbRezultatShranitve.DATA -> cakalnica.add(r.data)
-            is DbRezultatShranitve.FATAL_DB_NAPAKA -> throw Exception()
+            is DbPostRezultat.DATA -> cakalnica.add(r.data)
+            is DbPostRezultat.FATAL_DB_NAPAKA -> throw Exception()
         }
 
         // Povezi v strukturo
@@ -123,12 +123,12 @@ class Seeder : KoinComponent {
                 }
 
                 when (val r = this.db.postaje.shrani(novi)) {
-                    is DbRezultatShranitve.DATA -> {
+                    is DbPostRezultat.DATA -> {
                         trenutni.povezi(r.data)
                         cakalnica.add(r.data)
                     }
 
-                    is DbRezultatShranitve.FATAL_DB_NAPAKA -> throw Exception()
+                    is DbPostRezultat.FATAL_DB_NAPAKA -> throw Exception()
                 }
             }
         }
@@ -136,8 +136,8 @@ class Seeder : KoinComponent {
         // Posodobi strukturo
         for (postaja in cakalnica) {
             when (this.db.postaje.shrani(postaja)) {
-                is DbRezultatShranitve.DATA -> {}
-                is DbRezultatShranitve.FATAL_DB_NAPAKA -> throw Exception()
+                is DbPostRezultat.DATA -> {}
+                is DbPostRezultat.FATAL_DB_NAPAKA -> throw Exception()
             }
         }
 
@@ -155,8 +155,8 @@ class Seeder : KoinComponent {
                 uporabnik = uporabnik.id
             )
             when (val r = this.db.programi.shrani(program)) {
-                is DbRezultatShranitve.FATAL_DB_NAPAKA -> {}
-                is DbRezultatShranitve.DATA -> objs.add(r.data)
+                is DbPostRezultat.FATAL_DB_NAPAKA -> {}
+                is DbPostRezultat.DATA -> objs.add(r.data)
             }
         }
 
@@ -172,8 +172,8 @@ class Seeder : KoinComponent {
                 kosarica = setOf(Entiteta.random())
             )
             when (val r = this.db.narocila.shrani(narocilo)) {
-                is DbRezultatShranitve.FATAL_DB_NAPAKA -> {}
-                is DbRezultatShranitve.DATA -> objs.add(r.data)
+                is DbPostRezultat.FATAL_DB_NAPAKA -> {}
+                is DbPostRezultat.DATA -> objs.add(r.data)
             }
         }
 
@@ -198,8 +198,8 @@ class Seeder : KoinComponent {
             )
 
             when (val r = this.db.narocnine.shrani(narocnina)) {
-                is DbRezultatShranitve.FATAL_DB_NAPAKA -> {}
-                is DbRezultatShranitve.DATA -> objs.add(r.data)
+                is DbPostRezultat.FATAL_DB_NAPAKA -> {}
+                is DbPostRezultat.DATA -> objs.add(r.data)
             }
         }
 

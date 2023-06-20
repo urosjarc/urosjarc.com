@@ -12,8 +12,8 @@ import si.urosjarc.server.api.extend.system_error
 import si.urosjarc.server.app.extend.toID
 import si.urosjarc.server.core.domain.napredovanje.Postaja
 import si.urosjarc.server.core.repos.DbRezultatIskanja
-import si.urosjarc.server.core.repos.DbRezultatIzbrisa
-import si.urosjarc.server.core.repos.DbRezultatShranitve
+import si.urosjarc.server.core.repos.DbDeleteRezultat
+import si.urosjarc.server.core.repos.DbPostRezultat
 import si.urosjarc.server.core.services.DbService
 
 
@@ -63,17 +63,17 @@ fun Route.admin() {
     this.post<admin.postaje> {
         val postaje: List<Postaja> = this.call.receive()
         when (val r = db.postaje.shrani(postaje = postaje)) {
-            is DbRezultatShranitve.DATA -> this.call.respond(r.data)
-            is DbRezultatShranitve.FATAL_DB_NAPAKA -> this.call.system_error(r)
+            is DbPostRezultat.DATA -> this.call.respond(r.data)
+            is DbPostRezultat.FATAL_DB_NAPAKA -> this.call.system_error(r)
         }
     }
 
     this.delete<admin.postaje> {
         val postaje: List<String> = this.call.receive()
         when (val r = db.postaje.izbrisi(ids = postaje.map { it.toID() })) {
-            DbRezultatIzbrisa.ERROR_DB_IZBRIS_NI_DOVOLJEN -> this.call.system_error(r)
-            DbRezultatIzbrisa.PASS -> this.call.respond(postaje)
-            DbRezultatIzbrisa.WARN_DELNI_IZBRIS -> this.call.system_error(r)
+            DbDeleteRezultat.ERROR_DB_IZBRIS_NI_DOVOLJEN -> this.call.system_error(r)
+            DbDeleteRezultat.PASS -> this.call.respond(postaje)
+            DbDeleteRezultat.WARN_DELNI_IZBRIS -> this.call.system_error(r)
         }
     }
 

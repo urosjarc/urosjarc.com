@@ -1,22 +1,17 @@
 package si.urosjarc.server.core.repos
 
-sealed interface DbRezultatShranitve<T> {
-    class FATAL_DB_NAPAKA<T> : DbRezultatShranitve<T>
-    data class DATA<T>(val data: T) : DbRezultatShranitve<T>
+sealed interface DbPostRezultat<T> {
+    class FATAL_DB_NAPAKA<T> : DbPostRezultat<T>
+    data class DATA<T>(val data: T) : DbPostRezultat<T>
 }
 
-sealed interface DbRezultatId<T> {
-    class ERROR<T> : DbRezultatId<T>
-    data class DATA<T>(val data: T) : DbRezultatId<T>
+sealed interface DbGetRezultat<T> {
+    class ERROR<T> : DbGetRezultat<T>
+    data class DATA<T>(val data: T) : DbGetRezultat<T>
 }
 
-sealed interface DbRezultatIskanja<T> {
-    class PASS<T> : DbRezultatIskanja<T>
-    data class DATA<T>(val data: T) : DbRezultatIskanja<T>
-}
-
-sealed interface DbRezultatIzbrisa {
-    object ERROR_DB_IZBRIS_NI_DOVOLJEN : DbRezultatIzbrisa
-    object WARN_DELNI_IZBRIS : DbRezultatIzbrisa
-    object PASS : DbRezultatIzbrisa
+sealed interface DbDeleteRezultat {
+    object ERROR_DB_IZBRIS_NI_DOVOLJEN : DbDeleteRezultat
+    object WARN_DELNI_IZBRIS : DbDeleteRezultat
+    object PASS : DbDeleteRezultat
 }

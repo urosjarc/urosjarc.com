@@ -13,7 +13,7 @@ import si.urosjarc.server.api.extend.system_error
 import si.urosjarc.server.api.request.NarociloReq
 import si.urosjarc.server.core.domain.placevanje.Izbira
 import si.urosjarc.server.core.domain.placevanje.Narocilo
-import si.urosjarc.server.core.repos.DbRezultatId
+import si.urosjarc.server.core.repos.DbGetRezultat
 import si.urosjarc.server.core.services.DbService
 
 @Resource("narocila")
@@ -30,11 +30,11 @@ fun Route.narocila() {
         val izbire = mutableSetOf<Izbira>()
         for (izbira in body.izbire) {
             when (val r = db.produkti.en(id = izbira.produkt.toId())) {
-                is DbRezultatId.DATA -> izbire.add(
+                is DbGetRezultat.DATA -> izbire.add(
                     Izbira(produkt = r.data, kolicina = izbira.kolicina)
                 )
 
-                is DbRezultatId.ERROR -> return@post this.call.system_error(r)
+                is DbGetRezultat.ERROR -> return@post this.call.system_error(r)
             }
         }
 

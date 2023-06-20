@@ -3,6 +3,11 @@ package si.urosjarc.server.app.base
 object Env {
     val PORT: Int = System.getenv("PORT").toInt()
 
+    val DB_URL: String = System.getenv("DB_URL")
+    val DB_DRIVE: String = System.getenv("DB_DRIVE")
+    val DB_USER: String = System.getenv("DB_USER")
+    val DB_PASSWORD: String = System.getenv("DB_PASSWORD")
+
     val TWILIO_ACCOUNT_SID: String = System.getenv("TWILIO_ACCOUNT_SID")
     val TWILIO_AUTH_TOKEN: String = System.getenv("TWILIO_AUTH_TOKEN")
     val TWILIO_DEFAULT_REGION: String = System.getenv("TWILIO_DEFAULT_REGION")

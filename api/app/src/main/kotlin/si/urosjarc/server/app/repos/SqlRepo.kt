@@ -5,37 +5,54 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.core.base.Entiteta
 import si.urosjarc.server.core.base.Id
-import si.urosjarc.server.core.repos.DbRezultatShranitve
+import si.urosjarc.server.core.repos.DbGetRezultat
+import si.urosjarc.server.core.repos.DbPostRezultat
+import si.urosjarc.server.core.repos.DbRepo
 import kotlin.reflect.KClass
 
-abstract class SqlRepo<T : Entiteta<T>>(cls: KClass<T>) : Table(name = cls::class.java.simpleName.toString()) {
+abstract class SqlRepo<T : Entiteta<T>>(cls: KClass<T>) : Table(name = cls::class.java.simpleName.toString()), DbRepo<T> {
+
     val id: Column<Int> = integer("id").autoIncrement()
     override val primaryKey = PrimaryKey(id)
     abstract fun map(obj: T, any: UpdateBuilder<Number>)
     abstract fun resultRow(R: ResultRow): T;
-    fun query(query: Query): List<T> = query.map { this.resultRow(it) }
+    private fun query(query: Query): List<T> = query.map { this.resultRow(it) }
 
-    fun post(entity: T): DbRezultatShranitve<T> {
-        val result: ResultRow? = insert({ this.map(entity, it) }).resultedValues?.get(0)
+    override fun post(entity: T): DbPostRezultat<T> {
+        val result: ResultRow? = insert(body = { this.map(entity, it) }).resultedValues?.get(0)
 
         return when (result == null) {
-            false -> DbRezultatShranitve.DATA(data = resultRow(result))
-            true -> DbRezultatShranitve.FATAL_DB_NAPAKA()
+            false -> DbPostRezultat.DATA(data = resultRow(result))
+            true -> DbPostRezultat.FATAL_DB_NAPAKA()
         }
     }
 
-    fun get(): List<T> = query(selectAll())
 
-    fun get(uid: Id<T>): T = resultRow(select { id eq uid.value }.first())
+    override fun get(page: Int): List<T> = query(selectAll().limit(n = 100, offset = 100L * page))
 
-    fun put(n: T, body: Table.(UpdateBuilder<Number>) -> Unit): Boolean {
-        update({ NalogeSqlRepo.id eq n.id.value }, 1, body)
-
-        return true
+    override fun get(key: Id<T>): DbGetRezultat<T> {
+        val result = select(where = { id eq key.value }).limit(n = 1).singleOrNull()
+        return when (result == null) {
+            true -> DbGetRezultat.ERROR()
+            false -> DbGetRezultat.DATA(data = resultRow(result))
+        }
     }
 
-    fun delete(uid: Id<T>) {
-        this.deleteWhere { id eq uid.value }
+    override fun put(entity: T): Boolean {
+        val result: Int = update(
+            where = { id eq entity.id.value },
+            body = { this.map(entity, it) },
+            limit = 1
+        )
+        return result == 1;
+    }
+
+    override fun delete(key: Id<T>): Boolean {
+        val result: Int = this.deleteWhere(
+            op = { id eq key.value },
+            limit = 1
+        )
+        return result == 1;
     }
 
 
