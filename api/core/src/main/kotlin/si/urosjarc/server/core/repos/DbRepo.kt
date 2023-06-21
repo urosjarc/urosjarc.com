@@ -9,4 +9,5 @@ interface DbRepo<T> {
     fun put(entity: T): Boolean
     fun delete(key: Id<T>): Boolean
     fun drop()
+    fun seed()
 }

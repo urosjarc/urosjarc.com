@@ -14,6 +14,7 @@ object OsebaSqlRepo : OsebaRepo, SqlRepo<Oseba>(name<Oseba>()) {
     val tip = varchar(Oseba::tip.name, STR_SHORT)
 
     override fun map(obj: Oseba, any: UpdateBuilder<Number>) {
+        any[id] = obj.id.value
         any[ime] = obj.ime
         any[priimek] = obj.priimek
         any[username] = obj.username
@@ -37,6 +38,7 @@ object NaslovSqlRepo : NaslovRepo, SqlRepo<Naslov>(name<Naslov>()) {
     val dodatno = varchar(Naslov::dodatno.name, STR_SHORT)
 
     override fun map(obj: Naslov, any: UpdateBuilder<Number>) {
+        any[id] = obj.id.value
         any[id_oseba] = obj.id_oseba.value
         any[drzava] = obj.drzava
         any[mesto] = obj.mesto
@@ -60,11 +62,13 @@ object ZaznamekSqlRepo : ZaznamekRepo, SqlRepo<Zaznamek>(name<Zaznamek>()) {
     val vsebina = varchar(Zaznamek::vsebina.name, STR_LONG)
 
     override fun map(obj: Zaznamek, any: UpdateBuilder<Number>) {
+        any[id] = obj.id.value
         any[id_oseba] = obj.id_oseba.value
         any[vsebina] = obj.vsebina
     }
 
     override fun resultRow(R: ResultRow): Zaznamek = Zaznamek(
+        id=Id(R[id]),
         id_oseba = Id(R[id_oseba]),
         vsebina = R[vsebina],
     )
@@ -76,12 +80,14 @@ object KontaktSqlRepo : KontaktRepo, SqlRepo<Kontakt>(name<Kontakt>()) {
     val tip = varchar(Kontakt::tip.name, STR_SHORT)
 
     override fun map(obj: Kontakt, any: UpdateBuilder<Number>) {
+        any[id] = obj.id.value
         any[id_oseba] = obj.id_oseba.value
         any[data] = obj.data
         any[tip] = obj.tip.name
     }
 
     override fun resultRow(R: ResultRow): Kontakt = Kontakt(
+        id=Id(R[id]),
         id_oseba = Id(R[id_oseba]),
         data = R[data],
         tip = Kontakt.Tip.valueOf(R[tip])
@@ -93,11 +99,13 @@ object SporociloSqlRepo : SporociloRepo, SqlRepo<Sporocilo>(name<Sporocilo>()) {
     val vsebina = varchar(Sporocilo::vsebina.name, STR_LONG)
 
     override fun map(obj: Sporocilo, any: UpdateBuilder<Number>) {
+        any[id] = obj.id.value
         any[id_kontakt] = obj.id_kontakt.value
         any[vsebina] = obj.vsebina
     }
 
     override fun resultRow(R: ResultRow): Sporocilo = Sporocilo(
+        id=Id(R[id]),
         id_kontakt = Id(R[id_kontakt]),
         vsebina = R[vsebina],
     )

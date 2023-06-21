@@ -52,6 +52,19 @@ class DbExposed(
     }
 
     override fun seed() = transaction {
+        zvezekRepo.seed()
+        tematikaRepo.seed()
+        nalogaRepo.seed()
+        statusRepo.seed()
+        testRepo.seed()
+        osebaRepo.seed()
+        naslovRepo.seed()
+        zaznamekRepo.seed()
+        kontaktRepo.seed()
+        sporociloRepo.seed()
+        auditRepo.seed()
+
+
         for (i in 0..10) {
 
             /**
@@ -97,6 +110,7 @@ class DbExposed(
                     for (l in 0..5) {
 
                         val naloga = Entiteta.random<Naloga>().copy(id_tematika = tematika.id)
+                        println(naloga)
                         nalogaRepo.post(naloga)
 
                         val status = Entiteta.random<Status>().copy(id_naloga = naloga.id, id_test = test.id)

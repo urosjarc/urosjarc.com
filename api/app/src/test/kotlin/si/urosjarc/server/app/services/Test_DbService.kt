@@ -28,6 +28,7 @@ class Test_DbService : KoinTest {
 
 
     @Test
-    fun naloge() {
+    fun seed() {
+        service.seed()
     }
 }
