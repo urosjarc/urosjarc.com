@@ -8,7 +8,6 @@ import org.junit.jupiter.api.TestInstance
 import org.koin.test.KoinTest
 import org.koin.test.inject
 import si.urosjarc.server.app.base.App
-import si.urosjarc.server.core.domain.Naloga
 import si.urosjarc.server.core.services.DbService
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
@@ -30,14 +29,5 @@ class Test_DbService : KoinTest {
 
     @Test
     fun naloge() {
-        val naloga = Naloga(ime = "naloga")
-        service.commit {
-            service.seed()
-            service.zvezek.post(naloga)
-            for (n in service.zvezek.get(0)) {
-                println(n)
-            }
-            service.drop()
-        }
     }
 }

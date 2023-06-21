@@ -3,17 +3,17 @@ package si.urosjarc.server.core.services
 import si.urosjarc.server.core.repos.*
 
 interface DbService {
-    val zvezek: ZvezekRepo
-    val tematika: TematikaRepo
-    val naloga: NalogaRepo
-    val status: StatusRepo
-    val test: TestRepo
-    val oseba: OsebaRepo
-    val naslov: NaslovRepo
-    val zaznamek: ZaznamekRepo
-    val kontakt: KontaktRepo
-    val sporocilo: SporociloRepo
-    val audit: AuditRepo
+    val zvezekRepo: ZvezekRepo
+    val tematikaRepo: TematikaRepo
+    val nalogaRepo: NalogaRepo
+    val statusRepo: StatusRepo
+    val testRepo: TestRepo
+    val osebaRepo: OsebaRepo
+    val naslovRepo: NaslovRepo
+    val zaznamekRepo: ZaznamekRepo
+    val kontaktRepo: KontaktRepo
+    val sporociloRepo: SporociloRepo
+    val auditRepo: AuditRepo
 
     fun seed()
     fun drop()
