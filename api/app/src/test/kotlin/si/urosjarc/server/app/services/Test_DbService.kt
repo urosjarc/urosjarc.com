@@ -8,7 +8,7 @@ import org.junit.jupiter.api.TestInstance
 import org.koin.test.KoinTest
 import org.koin.test.inject
 import si.urosjarc.server.app.base.App
-import si.urosjarc.server.core.domain.delovni_zvezki.Naloga
+import si.urosjarc.server.core.domain.Naloga
 import si.urosjarc.server.core.services.DbService
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)

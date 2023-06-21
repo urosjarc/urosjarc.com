@@ -9,7 +9,9 @@ import si.urosjarc.server.core.extends.today
 val fake = Faker()
 var counters = mutableMapOf<String, Int>()
 
-abstract class Entiteta<T>(val id: Id<T> = Id()) {
+abstract class Entiteta<T>(
+    val id: Id<T> = Id()
+) {
     fun enak(entiteta: Entiteta<T>): Boolean = this.id == entiteta.id
 
     companion object {
