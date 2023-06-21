@@ -110,7 +110,6 @@ class DbExposed(
                     for (l in 0..5) {
 
                         val naloga = Entiteta.random<Naloga>().copy(id_tematika = tematika.id)
-                        println(naloga)
                         nalogaRepo.post(naloga)
 
                         val status = Entiteta.random<Status>().copy(id_naloga = naloga.id, id_test = test.id)
