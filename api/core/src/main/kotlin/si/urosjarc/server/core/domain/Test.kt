@@ -6,16 +6,18 @@ import si.urosjarc.server.core.base.Id
 
 
 data class Test(
+    override val id: Id<Test> = Id(),
     val naslov: String,
     val podnaslov: String,
     val deadline: LocalDate,
     val id_oseba: Id<Oseba>,
-): Entiteta<Test>()
+) : Entiteta<Test>(id = id)
 
 data class Status(
+    override val id: Id<Status> = Id(),
     val tip: Tip,
     val id_naloga: Id<Naloga>,
     val id_test: Id<Test>
-) : Entiteta<Status>() {
+) : Entiteta<Status>(id = id) {
     enum class Tip { USPEH, NEUSPEH }
 }

@@ -10,7 +10,7 @@ val fake = Faker()
 var counters = mutableMapOf<String, Int>()
 
 abstract class Entiteta<T>(
-    val id: Id<T> = Id()
+    open val id: Id<T>
 ) {
     fun enak(entiteta: Entiteta<T>): Boolean = this.id == entiteta.id
 

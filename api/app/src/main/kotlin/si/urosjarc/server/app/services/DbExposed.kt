@@ -3,8 +3,8 @@ package si.urosjarc.server.app.services
 import org.apache.logging.log4j.kotlin.logger
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.transactions.transaction
-import si.urosjarc.server.app.repos.NalogeSqlRepo
-import si.urosjarc.server.core.repos.NalogeRepo
+import si.urosjarc.server.app.repos.ZvezekSqlRepo
+import si.urosjarc.server.core.repos.ZvezekRepo
 import si.urosjarc.server.core.services.DbService
 
 
@@ -23,13 +23,13 @@ class DbExposed(
         password = this.password
     )
 
-    override val naloge: NalogeRepo = NalogeSqlRepo()
+    override val zvezek: ZvezekRepo = ZvezekSqlRepo()
     override fun drop() = transaction {
-        naloge.drop()
+        zvezek.drop()
     }
 
     override fun seed() = transaction {
-        naloge.seed()
+        zvezek.seed()
     }
 
     override fun commit(code: () -> Unit) = transaction(statement = { code() })

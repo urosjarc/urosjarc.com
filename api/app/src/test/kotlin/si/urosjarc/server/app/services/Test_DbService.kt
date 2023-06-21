@@ -33,8 +33,8 @@ class Test_DbService : KoinTest {
         val naloga = Naloga(ime = "naloga")
         service.commit {
             service.seed()
-            service.naloge.post(naloga)
-            for (n in service.naloge.get(0)) {
+            service.zvezek.post(naloga)
+            for (n in service.zvezek.get(0)) {
                 println(n)
             }
             service.drop()

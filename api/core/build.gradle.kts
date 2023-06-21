@@ -111,7 +111,7 @@ tasks.register<DefaultTask>("domainMap") {
             val cls = Cls.parse(it)
             if (cls.size > 1) plantUML += "package ${it.nameWithoutExtension}-KT <<Folder>> {\n\n"
             for (c in cls) {
-                plantUML += c.class_plantUML(includePar = false)
+                plantUML += c.class_plantUML(includePar = true)
                 relations += c.rel_plantUML(includeLabels = false)
             }
             if (cls.size > 1) plantUML += "\n}\n\n"

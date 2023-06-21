@@ -11,7 +11,8 @@ import si.urosjarc.server.core.repos.DbRepo
 
 abstract class SqlRepo<T : Entiteta<T>>(table: String) : Table(name = table), DbRepo<T> {
 
-    val id: Column<Int> = integer("id").autoIncrement()
+    val id: Column<String> = varchar(Entiteta<Any>::id.name, 20)
+
     override val primaryKey = PrimaryKey(id)
     abstract fun map(obj: T, any: UpdateBuilder<Number>)
     abstract fun resultRow(R: ResultRow): T;
@@ -53,5 +54,11 @@ abstract class SqlRepo<T : Entiteta<T>>(table: String) : Table(name = table), Db
             limit = 1
         )
         return result == 1;
+    }
+
+    companion object {
+        const val STR_SHORT = 20
+        const val STR_MEDIUM = 50
+        const val STR_LONG = 100
     }
 }
