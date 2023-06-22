@@ -10,20 +10,26 @@ dependencies {
 }
 
 data class Par(
-    val def: String, val ime: String, val tip: String
+    val def: String, val ime: String, val tip: String, val rel: String?
 ) {
 
     fun planUML(): String = "\t${this.ime}\n"
 
     companion object {
         fun parse(line: String): Par {
-            val info = line.trim().removeSuffix(",").split(":")
+            val info = line.trim().removeSuffix("override").trim().removeSuffix(",").split(":")
             val paramInfo = info.first().split(" ")
             var type = info.last()
+            var rel: String? = null
             if (type.contains("=")) {
                 type = type.split("=").first()
             }
-            return Par(def = paramInfo.first(), ime = paramInfo.last(), tip = type.trim())
+
+            if (type.contains("Id<") && !line.contains("override")) {
+                rel = type.split("Id<").last().split(">").first()
+                rel = rel.split("<").first()
+            }
+            return Par(def = paramInfo.first(), ime = paramInfo.last(), tip = type.trim(), rel = rel)
         }
     }
 }
@@ -64,10 +70,9 @@ data class Cls(
     fun rel_plantUML(includeLabels: Boolean): String {
         var rel = ""
         for (l in lastnosti) {
-            if (l.ime.startsWith("id_")) {
-                val name = l.ime.replace("id_", "")
-                rel += "${this.ime} --> ${name.capitalize()}"
-                rel += if (includeLabels) ": ${ime}\n" else "\n"
+            if (l.rel != null) {
+                rel += "${this.ime} --> ${l.rel}"
+                rel += if (includeLabels) ": ${l.rel}\n" else "\n"
             }
         }
         return rel
@@ -79,11 +84,15 @@ data class Cls(
             val clses = mutableListOf<Cls>()
             for (line in file.readLines()) {
                 val cleanLine = line.trim()
+                println(cleanLine)
                 if (cleanLine.startsWith("data class")) {
                     clses.add(Cls(ime = this.parseName(cleanLine)))
                     continue
                 }
-                if (cleanLine.startsWith("val") || cleanLine.startsWith("var")) {
+
+                if (clses.isEmpty()) continue
+
+                if (cleanLine.contains("val ") || cleanLine.contains("var ")) {
                     clses.last().lastnosti.add(Par.parse(cleanLine))
                     continue
                 }

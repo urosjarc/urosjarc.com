@@ -16,7 +16,7 @@ class FakeEntity(
     val time: LocalDateTime,
     val name: String,
     val spisek: MutableSet<String>
-) : Entiteta<FakeEntity>
+) : Entiteta<FakeEntity>()
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class Test_Entiteta : KoinTest {

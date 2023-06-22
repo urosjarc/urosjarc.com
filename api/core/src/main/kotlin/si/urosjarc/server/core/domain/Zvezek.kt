@@ -1,10 +1,9 @@
 package si.urosjarc.server.core.domain
 
-import kotlinx.datetime.LocalDate
 import si.urosjarc.server.core.base.Entiteta
 import si.urosjarc.server.core.base.Id
 
-class Zvezek(
+data class Zvezek(
     override val id: Id<Zvezek> = Id(),
     val tip: Tip,
     val naslov: String,

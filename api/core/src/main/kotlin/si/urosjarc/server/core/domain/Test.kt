@@ -17,7 +17,8 @@ data class Status(
     override val id: Id<Status> = Id(),
     val tip: Tip,
     val id_naloga: Id<Naloga>,
-    val id_test: Id<Test>
+    val id_test: Id<Test>,
+    val pojasnilo: String
 ) : Entiteta<Status>(id = id) {
     enum class Tip { USPEH, NEUSPEH }
 }

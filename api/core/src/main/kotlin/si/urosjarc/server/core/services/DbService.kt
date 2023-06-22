@@ -10,10 +10,10 @@ interface DbService {
     val testRepo: TestRepo
     val osebaRepo: OsebaRepo
     val naslovRepo: NaslovRepo
-    val zaznamekRepo: ZaznamekRepo
     val kontaktRepo: KontaktRepo
-    val sporociloRepo: SporociloRepo
     val auditRepo: AuditRepo
+    val ucenjeRepo: UcenjeRepo
+    val sporociloRepo: SporociloRepo
 
     fun seed()
     fun drop()

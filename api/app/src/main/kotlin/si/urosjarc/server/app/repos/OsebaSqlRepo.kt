@@ -57,23 +57,6 @@ object NaslovSqlRepo : NaslovRepo, SqlRepo<Naslov>(name<Naslov>()) {
     )
 }
 
-object ZaznamekSqlRepo : ZaznamekRepo, SqlRepo<Zaznamek>(name<Zaznamek>()) {
-    val id_oseba = reference(Zaznamek::id_oseba.name, OsebaSqlRepo.id)
-    val vsebina = varchar(Zaznamek::vsebina.name, STR_LONG)
-
-    override fun map(obj: Zaznamek, any: UpdateBuilder<Number>) {
-        any[id] = obj.id.value
-        any[id_oseba] = obj.id_oseba.value
-        any[vsebina] = obj.vsebina
-    }
-
-    override fun resultRow(R: ResultRow): Zaznamek = Zaznamek(
-        id=Id(R[id]),
-        id_oseba = Id(R[id_oseba]),
-        vsebina = R[vsebina],
-    )
-}
-
 object KontaktSqlRepo : KontaktRepo, SqlRepo<Kontakt>(name<Kontakt>()) {
     val id_oseba = reference(Kontakt::id_oseba.name, OsebaSqlRepo.id)
     val data = varchar(Kontakt::data.name, STR_SHORT)
@@ -87,7 +70,7 @@ object KontaktSqlRepo : KontaktRepo, SqlRepo<Kontakt>(name<Kontakt>()) {
     }
 
     override fun resultRow(R: ResultRow): Kontakt = Kontakt(
-        id=Id(R[id]),
+        id = Id(R[id]),
         id_oseba = Id(R[id_oseba]),
         data = R[data],
         tip = Kontakt.Tip.valueOf(R[tip])
@@ -95,18 +78,21 @@ object KontaktSqlRepo : KontaktRepo, SqlRepo<Kontakt>(name<Kontakt>()) {
 }
 
 object SporociloSqlRepo : SporociloRepo, SqlRepo<Sporocilo>(name<Sporocilo>()) {
-    val id_kontakt = reference(Sporocilo::id_kontakt.name, KontaktSqlRepo.id)
+    val id_posiljatelj = reference(Sporocilo::id_posiljatelj.name, KontaktSqlRepo.id)
+    val id_prejemnik = reference(Sporocilo::id_prejemnik.name, KontaktSqlRepo.id)
     val vsebina = varchar(Sporocilo::vsebina.name, STR_LONG)
 
     override fun map(obj: Sporocilo, any: UpdateBuilder<Number>) {
         any[id] = obj.id.value
-        any[id_kontakt] = obj.id_kontakt.value
+        any[id_posiljatelj] = obj.id_posiljatelj.value
+        any[id_prejemnik] = obj.id_prejemnik.value
         any[vsebina] = obj.vsebina
     }
 
     override fun resultRow(R: ResultRow): Sporocilo = Sporocilo(
-        id=Id(R[id]),
-        id_kontakt = Id(R[id_kontakt]),
+        id = Id(R[id]),
+        id_posiljatelj = Id(R[id_posiljatelj]),
+        id_prejemnik = Id(R[id_prejemnik]),
         vsebina = R[vsebina],
     )
 }

@@ -18,12 +18,14 @@ object StatusSqlRepo : StatusRepo, SqlRepo<Status>(name<Status>()) {
     val tip = varchar(Status::tip.name, STR_SHORT)
     val id_naloga = reference(Status::id_naloga.name, NalogaSqlRepo.id)
     val id_test = reference(Status::id_test.name, TestSqlRepo.id)
+    val pojasnilo = varchar(Status::pojasnilo.name, STR_LONG)
 
     override fun map(obj: Status, any: UpdateBuilder<Number>) {
         any[id] = obj.id.value
         any[tip] = obj.tip.name
         any[id_naloga] = obj.tip.name
         any[id_test] = obj.id_test.value
+        any[pojasnilo] = obj.pojasnilo
     }
 
     override fun resultRow(R: ResultRow): Status = Status(
@@ -31,6 +33,7 @@ object StatusSqlRepo : StatusRepo, SqlRepo<Status>(name<Status>()) {
         tip = Status.Tip.valueOf(R[tip]),
         id_naloga = Id(R[id_naloga]),
         id_test = Id(R[id_test]),
+        pojasnilo = R[pojasnilo]
     )
 }
 

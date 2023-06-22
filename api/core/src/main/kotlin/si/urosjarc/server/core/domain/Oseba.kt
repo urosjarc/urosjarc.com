@@ -2,7 +2,6 @@ package si.urosjarc.server.core.domain
 
 import si.urosjarc.server.core.base.Entiteta
 import si.urosjarc.server.core.base.Id
-import si.urosjarc.server.core.repos.ZaznamekRepo
 
 data class Oseba(
     override val id: Id<Oseba> = Id(),
@@ -11,7 +10,7 @@ data class Oseba(
     val username: String,
     val tip: Tip,
 ) : Entiteta<Oseba>(id = id) {
-    enum class Tip { UCENEC, ADMIN }
+    enum class Tip { UCENEC, UCITELJ, INSTRUKTOR, ADMIN }
 }
 
 data class Kontakt(
@@ -33,14 +32,9 @@ data class Naslov(
     val dodatno: String
 ) : Entiteta<Naslov>(id = id)
 
-data class Zaznamek(
-    override val id: Id<Zaznamek> = Id(),
-    val id_oseba: Id<Oseba>,
-    val vsebina: String
-) : Entiteta<Zaznamek>(id = id)
-
 data class Sporocilo(
     override val id: Id<Sporocilo> = Id(),
-    val id_kontakt: Id<Kontakt>,
+    val id_posiljatelj: Id<Kontakt>,
+    val id_prejemnik: Id<Kontakt>,
     val vsebina: String,
 ) : Entiteta<Sporocilo>(id = id)

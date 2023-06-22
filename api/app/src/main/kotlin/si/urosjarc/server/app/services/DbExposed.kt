@@ -31,10 +31,10 @@ class DbExposed(
     override val testRepo: TestRepo = TestSqlRepo
     override val osebaRepo: OsebaRepo = OsebaSqlRepo
     override val naslovRepo: NaslovRepo = NaslovSqlRepo
-    override val zaznamekRepo: ZaznamekRepo = ZaznamekSqlRepo
     override val kontaktRepo: KontaktRepo = KontaktSqlRepo
-    override val sporociloRepo: SporociloRepo = SporociloSqlRepo
     override val auditRepo: AuditRepo = AuditSqlRepo
+    override val ucenjeRepo: UcenjeRepo = UcenjeSqlRepo
+    override val sporociloRepo: SporociloRepo = SporociloSqlRepo
 
 
     override fun drop() = transaction {
@@ -45,10 +45,10 @@ class DbExposed(
         testRepo.drop()
         osebaRepo.drop()
         naslovRepo.drop()
-        zaznamekRepo.drop()
         kontaktRepo.drop()
-        sporociloRepo.drop()
         auditRepo.drop()
+        ucenjeRepo.drop()
+        sporociloRepo.drop()
     }
 
     override fun seed() = transaction {
@@ -59,11 +59,10 @@ class DbExposed(
         testRepo.seed()
         osebaRepo.seed()
         naslovRepo.seed()
-        zaznamekRepo.seed()
         kontaktRepo.seed()
-        sporociloRepo.seed()
         auditRepo.seed()
-
+        ucenjeRepo.seed()
+        sporociloRepo.seed()
 
         for (i in 0..10) {
 
@@ -78,15 +77,12 @@ class DbExposed(
 
             for (j in 0..5) {
 
-                val zaznamek = Entiteta.random<Zaznamek>().copy(id_oseba = oseba.id)
-                zaznamekRepo.post(zaznamek)
-
                 val kontakt = Entiteta.random<Kontakt>().copy(id_oseba = oseba.id)
                 kontaktRepo.post(kontakt)
 
                 for (k in 0..5) {
 
-                    val sporocilo = Entiteta.random<Sporocilo>().copy(id_kontakt = kontakt.id)
+                    val sporocilo = Entiteta.random<Sporocilo>().copy(id_posiljatelj = kontakt.id, id_prejemnik = kontakt.id)
                     sporociloRepo.post(sporocilo)
 
                 }
