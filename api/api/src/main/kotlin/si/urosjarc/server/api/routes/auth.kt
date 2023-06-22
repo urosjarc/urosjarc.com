@@ -7,7 +7,7 @@ import io.ktor.resources.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
-import io.ktor.server.resources.get
+import io.ktor.server.resources.*
 import io.ktor.server.resources.post
 import io.ktor.server.response.*
 import io.ktor.server.routing.Route
@@ -19,7 +19,7 @@ import si.urosjarc.server.api.models.Profil
 import si.urosjarc.server.api.models.profil
 import si.urosjarc.server.api.response.PrijavaReq
 import si.urosjarc.server.app.base.Env
-import si.urosjarc.server.core.domain.uprava.Oseba
+import si.urosjarc.server.core.domain.Oseba
 import si.urosjarc.server.core.services.DbService
 import java.security.KeyFactory
 import java.security.interfaces.RSAPrivateKey
@@ -44,7 +44,7 @@ fun Route.auth(jwkProvider: JwkProvider) {
         val body = this.call.receive<PrijavaReq>()
 
         //TODO: Naredi pravilno logiko
-        val oseba: Oseba = db.osebe.vse().first()
+        val oseba: Oseba = db.osebaRepo.get(page = 0).first()
         //TODO: Naredi pravilno logiko
 
         val publicKey = jwkProvider.get("6f8856ed-9189-488f-9011-0ff4b6c08edc").publicKey

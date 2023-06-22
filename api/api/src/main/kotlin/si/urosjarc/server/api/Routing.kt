@@ -14,14 +14,13 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
-import org.litote.kmongo.id.serialization.IdKotlinXSerializationModule
 import si.urosjarc.server.api.extend.client_unauthorized
 import si.urosjarc.server.api.models.Profil
 import si.urosjarc.server.api.plugins.PreveriProfil
 import si.urosjarc.server.api.routes.*
 import si.urosjarc.server.app.base.App
 import si.urosjarc.server.app.base.Env
-import si.urosjarc.server.core.domain.uprava.Oseba
+import si.urosjarc.server.core.domain.Oseba
 import java.util.concurrent.TimeUnit
 
 fun Application.configureRouting() {
@@ -39,7 +38,6 @@ fun Application.configureRouting() {
     this.install(Resources)
     this.install(ContentNegotiation) {
         this.json(Json {
-            this.serializersModule = IdKotlinXSerializationModule
             this.prettyPrint = true
             this.isLenient = true
         })
@@ -77,8 +75,6 @@ fun Application.configureRouting() {
 
         //PUBLIC ROUTES
         this.index()
-        this.kontakt()
-        this.clanarine()
 
         //AUTH ROUTES
         this.auth(jwkProvider = jwkProvider)
@@ -86,16 +82,14 @@ fun Application.configureRouting() {
         //PRIVATE ROUTES
         this.authenticate {
             this.install(PreveriProfil) {
-                this.tip_profila = Oseba.Tip.CLAN
+                this.tip_profila = listOf(Oseba.Tip.UCENEC)
             }
 
-            this.profil()
-            this.narocila()
         }
 
         this.authenticate {
             this.install(PreveriProfil) {
-                this.tip_profila = Oseba.Tip.ADMIN
+                this.tip_profila = listOf(Oseba.Tip.ADMIN)
             }
 
             this.admin()

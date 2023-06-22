@@ -2,18 +2,10 @@ package si.urosjarc.server.api.routes
 
 import io.ktor.resources.*
 import io.ktor.server.application.*
-import io.ktor.server.request.*
 import io.ktor.server.resources.*
-import io.ktor.server.resources.post
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import si.urosjarc.server.api.extend.system_error
-import si.urosjarc.server.app.extend.toID
-import si.urosjarc.server.core.domain.napredovanje.Postaja
-import si.urosjarc.server.core.repos.DbRezultatIskanja
-import si.urosjarc.server.core.repos.DbDeleteRezultat
-import si.urosjarc.server.core.repos.DbPostRezultat
 import si.urosjarc.server.core.services.DbService
 
 
@@ -44,37 +36,6 @@ fun Route.admin() {
 
     this.get<admin> {
         this.call.respond("OK YOU ARE ADMIN :)")
-    }
-    this.get<admin.osebe> {
-        this.call.respond(db.osebe.vse())
-    }
-    this.get<admin.narocila> {
-        this.call.respond(db.narocila.vsa())
-    }
-    this.get<admin.programi> {
-        this.call.respond(db.postaje.zacetne())
-    }
-    this.get<admin.programi.id> {
-        when (val r = db.postaje.dedici(it.id.toID())) {
-            is DbRezultatIskanja.DATA -> this.call.respond(r.data)
-            is DbRezultatIskanja.PASS -> this.call.system_error(r)
-        }
-    }
-    this.post<admin.postaje> {
-        val postaje: List<Postaja> = this.call.receive()
-        when (val r = db.postaje.shrani(postaje = postaje)) {
-            is DbPostRezultat.DATA -> this.call.respond(r.data)
-            is DbPostRezultat.FATAL_DB_NAPAKA -> this.call.system_error(r)
-        }
-    }
-
-    this.delete<admin.postaje> {
-        val postaje: List<String> = this.call.receive()
-        when (val r = db.postaje.izbrisi(ids = postaje.map { it.toID() })) {
-            DbDeleteRezultat.ERROR_DB_IZBRIS_NI_DOVOLJEN -> this.call.system_error(r)
-            DbDeleteRezultat.PASS -> this.call.respond(postaje)
-            DbDeleteRezultat.WARN_DELNI_IZBRIS -> this.call.system_error(r)
-        }
     }
 
 }
