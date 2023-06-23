@@ -1,8 +1,3 @@
-export function formData(e: HTMLFormElement) {
-  // @ts-ignore
-  const formData = new FormData(e.target)
-  return Object.fromEntries(formData.entries())
-}
 
 export function dateISO(leto: number, mesec: number, dan: number) {
   try {

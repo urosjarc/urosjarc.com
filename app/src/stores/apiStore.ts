@@ -1,6 +1,6 @@
 import {token} from "./tokenStore.js";
 
-const DOMAIN = "http://localhost:8000"
+const DOMAIN = "http://localhost:8080"
 
 export function GET(url: string) {
   return () => new Promise(async (resolve, reject) => {
@@ -56,4 +56,9 @@ export function DELETE(url: string, body: object) {
   })
 }
 
-export const api = {}
+export const api = {
+  auth: {
+    prijava: (body) => POST("auth/prijava", body),
+    whois: GET("auth/whois"),
+  }
+}

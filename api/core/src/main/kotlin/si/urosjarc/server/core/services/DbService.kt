@@ -17,6 +17,6 @@ interface DbService {
 
     fun seed()
     fun drop()
-    fun commit(code: () -> Unit)
+    fun exe(code: () -> Unit)
 
 }

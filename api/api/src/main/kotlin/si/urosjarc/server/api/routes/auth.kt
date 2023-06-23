@@ -13,6 +13,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.Route
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
 import si.urosjarc.server.api.extend.profil
 import si.urosjarc.server.api.models.Profil
@@ -39,12 +40,19 @@ class auth {
 fun Route.auth(jwkProvider: JwkProvider) {
 
     val db by this.inject<DbService>()
+    val log = this.logger()
 
     this.post<auth.prijava> {
         val body = this.call.receive<PrijavaReq>()
 
+        log.info("Body: $body")
+
         //TODO: Naredi pravilno logiko
-        val oseba: Oseba = db.osebaRepo.get(page = 0).first()
+        var oseba: Oseba? = null
+        db.exe {
+            oseba = db.osebaRepo.get(page = 0).first()
+        }
+        log.info("Oseba: $oseba")
         //TODO: Naredi pravilno logiko
 
         val publicKey = jwkProvider.get("6f8856ed-9189-488f-9011-0ff4b6c08edc").publicKey
@@ -53,7 +61,7 @@ fun Route.auth(jwkProvider: JwkProvider) {
         val token = JWT.create()
             .withAudience(Env.JWT_AUDIENCE)
             .withIssuer(Env.JWT_ISSUER)
-            .withClaim(Profil.claim, Json.encodeToString(oseba.profil()))
+            .withClaim(Profil.claim, Json.encodeToString(oseba?.profil()))
             .withExpiresAt(Date(System.currentTimeMillis() + 5 * 60000))
             .sign(Algorithm.RSA256(publicKey as RSAPublicKey, privateKey as RSAPrivateKey))
 

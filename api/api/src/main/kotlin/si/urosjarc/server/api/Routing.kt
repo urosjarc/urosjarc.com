@@ -12,15 +12,19 @@ import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.resources.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
+import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 import si.urosjarc.server.api.extend.client_unauthorized
 import si.urosjarc.server.api.models.Profil
 import si.urosjarc.server.api.plugins.PreveriProfil
-import si.urosjarc.server.api.routes.*
+import si.urosjarc.server.api.routes.admin
+import si.urosjarc.server.api.routes.auth
+import si.urosjarc.server.api.routes.index
 import si.urosjarc.server.app.base.App
 import si.urosjarc.server.app.base.Env
 import si.urosjarc.server.core.domain.Oseba
+import si.urosjarc.server.core.services.DbService
 import java.util.concurrent.TimeUnit
 
 fun Application.configureRouting() {
@@ -46,6 +50,7 @@ fun Application.configureRouting() {
         this.slf4jLogger(level = org.koin.core.logger.Level.INFO)
         this.modules(modules = App.modul(tip = App.Tip.TEST))
     }
+
 
     val jwkProvider = JwkProviderBuilder(Env.JWT_ISSUER)
         .cached(10, 24, TimeUnit.HOURS)
@@ -95,4 +100,11 @@ fun Application.configureRouting() {
             this.admin()
         }
     }
+
+//    val db: DbService by this.inject()
+//    println(db)
+//    db.exe {
+//        db.seed()
+//    }
+
 }

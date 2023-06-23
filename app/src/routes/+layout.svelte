@@ -42,11 +42,11 @@
             <p><b>Kontakt</b></p>
           </div>
           <div class="col-3">
-            <Fab href="/ucenci">
+            <Fab href="/prijava">
               <Icon class="material-icons">person</Icon>
-              <p class="link">Učenci</p>
+              <p class="link">Prijava</p>
             </Fab>
-            <p><b>Učenci</b></p>
+            <p><b>Prijava</b></p>
           </div>
         </div>
 

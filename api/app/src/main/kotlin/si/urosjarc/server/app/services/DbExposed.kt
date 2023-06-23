@@ -116,5 +116,5 @@ class DbExposed(
         }
     }
 
-    override fun commit(code: () -> Unit) = transaction(statement = { code() })
+    override fun exe(code: () -> Unit) = transaction(statement = { code() })
 }
