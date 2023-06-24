@@ -1,8 +1,7 @@
 <script lang="ts">
-  import {api} from "../../stores/apiStore.js";
-  import {goto} from "$app/navigation";
+  import {usecase} from "../../stores/usecaseStore";
 
-  api.auth.whois().then(data => console.log(data)).catch(() => goto("/prijava"))
+  usecase.neprijavljen_v_prijavo()
 </script>
 
 <slot/>

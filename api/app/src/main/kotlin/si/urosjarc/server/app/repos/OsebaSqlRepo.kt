@@ -1,11 +1,18 @@
 package si.urosjarc.server.app.repos
 
+import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.base.name
-import si.urosjarc.server.core.domain.*
-import si.urosjarc.server.core.repos.*
+import si.urosjarc.server.core.domain.Kontakt
+import si.urosjarc.server.core.domain.Naslov
+import si.urosjarc.server.core.domain.Oseba
+import si.urosjarc.server.core.domain.Sporocilo
+import si.urosjarc.server.core.repos.KontaktRepo
+import si.urosjarc.server.core.repos.NaslovRepo
+import si.urosjarc.server.core.repos.OsebaRepo
+import si.urosjarc.server.core.repos.SporociloRepo
 
 object OsebaSqlRepo : OsebaRepo, SqlRepo<Oseba>(name<Oseba>()) {
     val ime = varchar(Oseba::ime.name, STR_SHORT)
@@ -22,6 +29,7 @@ object OsebaSqlRepo : OsebaRepo, SqlRepo<Oseba>(name<Oseba>()) {
     }
 
     override fun resultRow(R: ResultRow): Oseba = Oseba(
+        id = Id(R[id]),
         ime = R[ime],
         priimek = R[priimek],
         username = R[username],

@@ -4,6 +4,7 @@
   import List, {Item, Separator} from '@smui/list';
   import {hacker} from "../libs/hacker";
   import {onMount} from "svelte";
+  import {route} from "../stores/routeStore";
 
   onMount(() => hacker(750));
 </script>
@@ -14,17 +15,17 @@
     <h1 class="hacker">Uroš Jarc</h1>
     <h2 class="hacker">Inštruktor programiranja, fizike, matematike</h2>
 
-    <Button href="/kontakt">
+    <Button href="{route.kontakt}">
       <Icon class="material-icons">email</Icon>
       <b class="hacker">jar.fmf@gmail.com</b>
     </Button>
-    <Button href="/kontakt">
+    <Button href="{route.kontakt}">
       <Icon class="material-icons">phone</Icon>
       <b class="hacker">051-240-885</b>
     </Button>
 
     <Group style="display: flex; justify-content: stretch;margin:20px 0;">
-      <Button variant="raised" href="/koledar" color="primary" style="flex-grow: 1;">
+      <Button variant="raised" href="{route.kontakt}" color="primary" style="flex-grow: 1;">
         <b class="hacker">Naroči inštrukcije</b>
       </Button>
     </Group>

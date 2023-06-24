@@ -1,9 +1,10 @@
-<script>
+<script lang="ts">
   import {fade} from 'svelte/transition'
   import {cubicIn, cubicOut} from 'svelte/easing'
   import Fab from '@smui/fab';
   import {Icon} from '@smui/common';
   import OnMount from "../libs/OnMount.svelte";
+  import {route} from "../stores/routeStore";
 
   export let data = {url: null};
   const duration = 500;
@@ -21,28 +22,28 @@
 
         <div id="navigacija" class="row">
           <div class="col-3">
-            <Fab href="/">
+            <Fab href="{route.index}">
               <Icon class="material-icons">home</Icon>
               <p class="link">Domov</p>
             </Fab>
             <p><b>Domov</b></p>
           </div>
           <div class="col-3">
-            <Fab href="/koledar">
+            <Fab href="{route.koledar}">
               <Icon class="material-icons">event</Icon>
               <p class="link">Koledar</p>
             </Fab>
             <p><b>Koledar</b></p>
           </div>
           <div class="col-3">
-            <Fab href="/kontakt">
+            <Fab href="{route.kontakt}">
               <Icon class="material-icons">email</Icon>
               <p class="link">Kontakt</p>
             </Fab>
             <p><b>Kontakt</b></p>
           </div>
           <div class="col-3">
-            <Fab href="/prijava">
+            <Fab href="{route.prijava}">
               <Icon class="material-icons">person</Icon>
               <p class="link">Prijava</p>
             </Fab>

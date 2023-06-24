@@ -2,26 +2,14 @@
   import Button, {Group} from '@smui/button';
   import Textfield from '@smui/textfield';
   import Icon from '@smui/textfield/icon';
-  import {api} from "../../../stores/apiStore";
-  import {token} from "../../../stores/tokenStore";
-  import {goto} from "$app/navigation";
+  import {usecase} from "../../../stores/usecaseStore";
 
   let response: Object = {}
   let username = "";
 
-  async function poslji() {
-    console.log("poslji")
-    api.auth.prijava({
-      username
-    }).then(data => {
-      token.set(data.token)
-      goto("/profil")
-    }).catch(data => {
-      console.log(data)
-    })
-  }
+  let poslji = () => usecase.prijava_v_profil(username)
+  usecase.prijavljen_v_profil()
 
-  if (token.get()) api.auth.whois().then(() => goto("/profil")).catch(data => console.log(data))
 </script>
 
 <form class="row">

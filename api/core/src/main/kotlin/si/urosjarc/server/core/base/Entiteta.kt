@@ -3,15 +3,16 @@ package si.urosjarc.server.core.base
 import io.github.serpro69.kfaker.Faker
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.Serializable
 import si.urosjarc.server.core.extends.now
 import si.urosjarc.server.core.extends.today
 
 val fake = Faker()
 var counters = mutableMapOf<String, Int>()
 
-abstract class Entiteta<T>(
-    open val id: Id<T>
-) {
+@Serializable
+abstract class Entiteta<T> {
+    abstract val id: Id<T>
     fun enak(entiteta: Entiteta<T>): Boolean = this.id == entiteta.id
 
     companion object {

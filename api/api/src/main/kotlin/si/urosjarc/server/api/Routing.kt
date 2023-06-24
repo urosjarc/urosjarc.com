@@ -21,6 +21,7 @@ import si.urosjarc.server.api.plugins.PreveriProfil
 import si.urosjarc.server.api.routes.admin
 import si.urosjarc.server.api.routes.auth
 import si.urosjarc.server.api.routes.index
+import si.urosjarc.server.api.routes.profil
 import si.urosjarc.server.app.base.App
 import si.urosjarc.server.app.base.Env
 import si.urosjarc.server.core.domain.Oseba
@@ -86,25 +87,21 @@ fun Application.configureRouting() {
 
         //PRIVATE ROUTES
         this.authenticate {
-            this.install(PreveriProfil) {
-                this.tip_profila = listOf(Oseba.Tip.UCENEC)
-            }
-
+            this.profil()
         }
 
         this.authenticate {
             this.install(PreveriProfil) {
                 this.tip_profila = listOf(Oseba.Tip.ADMIN)
             }
-
             this.admin()
         }
     }
 
-//    val db: DbService by this.inject()
-//    println(db)
-//    db.exe {
-//        db.seed()
-//    }
+    val db: DbService by this.inject()
+    db.drop()
+    db.exe {
+        db.seed()
+    }
 
 }

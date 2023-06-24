@@ -16,13 +16,13 @@ object AuditSqlRepo : AuditRepo, SqlRepo<Audit>(name<Audit>()) {
         any[id] = obj.id.value
         any[opis] = obj.opis
         any[entiteta] = obj.entiteta
-        any[id_entiteta] = obj.id_entiteta.value
+        any[id_entiteta] = obj.id_entiteta
     }
 
     override fun resultRow(R: ResultRow): Audit = Audit(
         id=Id(R[id]),
         opis = R[opis],
         entiteta = R[entiteta],
-        id_entiteta = Id(R[id_entiteta]),
+        id_entiteta = R[id_entiteta],
     )
 }

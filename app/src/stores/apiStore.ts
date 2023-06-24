@@ -1,4 +1,4 @@
-import {token} from "./tokenStore.js";
+import {token} from "./tokenStore";
 
 const DOMAIN = "http://localhost:8080"
 
@@ -60,5 +60,8 @@ export const api = {
   auth: {
     prijava: (body) => POST("auth/prijava", body),
     whois: GET("auth/whois"),
+  },
+  profil: {
+    oseba: GET("profil/oseba")
   }
 }
