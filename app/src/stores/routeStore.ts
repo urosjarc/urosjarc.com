@@ -1,7 +1,5 @@
-import {persisted} from "svelte-local-storage-store";
-import {get} from "svelte/store";
-
 export const route = {
+  index: "/",
   prijava: "/prijava",
   kontakt: "/kontakt",
   koledar: "/koledar",

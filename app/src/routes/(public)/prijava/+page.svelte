@@ -3,12 +3,13 @@
   import Textfield from '@smui/textfield';
   import Icon from '@smui/textfield/icon';
   import {usecase} from "../../../stores/usecaseStore";
+  import {onMount} from "svelte";
 
   let response: Object = {}
   let username = "";
 
   let poslji = () => usecase.prijava_v_profil(username)
-  usecase.prijavljen_v_profil()
+  onMount(usecase.prijavljen_v_profil)
 
 </script>
 

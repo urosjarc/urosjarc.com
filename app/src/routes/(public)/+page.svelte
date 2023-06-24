@@ -2,11 +2,11 @@
   import {Icon} from '@smui/common';
   import Button, {Group} from '@smui/button';
   import List, {Item, Separator} from '@smui/list';
-  import {hacker} from "../libs/hacker";
+  import {hacker} from "../../libs/hacker";
   import {onMount} from "svelte";
-  import {route} from "../stores/routeStore";
+  import {route} from "../../stores/routeStore";
 
-  onMount(() => hacker(750));
+  onMount(() => hacker(0));
 </script>
 
 <div>

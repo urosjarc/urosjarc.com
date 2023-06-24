@@ -3,6 +3,7 @@
   import {goto} from "$app/navigation";
   import {route} from "../../../stores/routeStore";
   import {api} from "../../../stores/apiStore";
+  import {onMount} from "svelte";
 
   let token_str = token.get()
 
@@ -11,15 +12,12 @@
     goto(route.prijava)
   }
 
-  api.profil.oseba().then(data => {
-    console.log(data)
-  }).catch(data => {
-    console.error(data)
-  })
-
-  let whois = {}
-  api.auth.whois().then((data) => {
-    whois = data
+  onMount(() => {
+    api.profil.oseba().then(data => {
+      console.log(data)
+    }).catch(data => {
+      console.error(data)
+    })
   })
 
 </script>
@@ -29,7 +27,4 @@
   <h2>{token_str}</h2>
   <button on:click={logout}>Logout</button>
 
-  {#each Object.entries(whois) as [key, value]}
-    <h1>{key} {value}</h1>
-  {/each}
 </div>
