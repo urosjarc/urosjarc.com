@@ -19,7 +19,9 @@ private fun Any?.toJsonElement(): JsonElement {
         is ResultRow -> this.toJsonElement()
         is Iterable<*> -> JsonArray(this.map { it.toJsonElement() })
         is Map<*, *> -> JsonObject(this.map { it.key.toString() to it.value.toJsonElement() }.toMap())
-        else -> throw Exception("PROBLEM:  ${this::class}=${this}}")
+        else -> {
+            this.logger().error(this); JsonNull
+        }
     }
 }
 

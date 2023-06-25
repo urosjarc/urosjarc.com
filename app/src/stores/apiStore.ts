@@ -63,6 +63,7 @@ export const api = {
   },
   profil: {
     oseba: GET("profil/oseba"),
-    ucenje: GET("profil/ucenje")
+    ucenje: GET("profil/ucenje"),
+    sporocila: GET("profil/sporocila"),
   }
 }

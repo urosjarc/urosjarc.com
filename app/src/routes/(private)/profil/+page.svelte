@@ -11,16 +11,27 @@
     goto(route.prijava)
   }
 
-  onMount(() => {
+  function ucenje() {
     api.profil.ucenje().then(data => {
       console.log(data)
     }).catch(data => {
       console.error(data)
     })
-  })
+  }
+
+
+  function sporocila() {
+    api.profil.sporocila().then(data => {
+      console.log(data)
+    }).catch(data => {
+      console.error(data)
+    })
+  }
 
 </script>
 
 <div>
   <Button on:click={logout}>Logout</Button>
+  <Button on:click={ucenje}>Ucenje</Button>
+  <Button on:click={sporocila}>Sporocila</Button>
 </div>
