@@ -10,7 +10,7 @@ data class Ucenje(
     @Contextual
     override val id: Id<Ucenje> = Id(),
     @Contextual
-    val id_ucenec: Id<Oseba>,
+    val ucenec_id: Id<Oseba>,
     @Contextual
-    val id_ucitelj: Id<Oseba>
+    val ucitelj_id: Id<Oseba>
 ) : Entiteta<Ucenje>()

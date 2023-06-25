@@ -10,6 +10,6 @@ data class Audit(
     @Contextual
     override val id: Id<Audit> = Id(),
     val opis: String,
-    val id_entiteta: String,
+    val entiteta_id: String,
     val entiteta: String
 ) : Entiteta<Audit>()

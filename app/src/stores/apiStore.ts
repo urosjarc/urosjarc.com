@@ -65,5 +65,6 @@ export const api = {
     oseba: GET("profil/oseba"),
     ucenje: GET("profil/ucenje"),
     sporocila: GET("profil/sporocila"),
+    statusi: GET("profil/statusi"),
   }
 }

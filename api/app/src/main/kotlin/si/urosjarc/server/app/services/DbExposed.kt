@@ -72,10 +72,10 @@ class DbExposed(
             val ucitelj = Entiteta.random<Oseba>().copy(tip = Oseba.Tip.INSTRUKTOR)
             osebaRepo.post(ucitelj)
 
-            val kontakt_ucitelja = Entiteta.random<Kontakt>().copy(id_oseba = ucitelj.id)
+            val kontakt_ucitelja = Entiteta.random<Kontakt>().copy(oseba_id = ucitelj.id)
             kontaktRepo.post(kontakt_ucitelja)
 
-            val naslov = Entiteta.random<Naslov>().copy(id_oseba = ucitelj.id)
+            val naslov = Entiteta.random<Naslov>().copy(oseba_id = ucitelj.id)
             naslovRepo.post(naslov)
 
             for (j in 0..5) {
@@ -83,18 +83,18 @@ class DbExposed(
                 val ucenec = Entiteta.random<Oseba>().copy(tip = Oseba.Tip.UCENEC)
                 osebaRepo.post(ucenec)
 
-                val kontakt_ucenca = Entiteta.random<Kontakt>().copy(id_oseba = ucenec.id)
+                val kontakt_ucenca = Entiteta.random<Kontakt>().copy(oseba_id = ucenec.id)
                 kontaktRepo.post(kontakt_ucenca)
 
-                val ucenje = Entiteta.random<Ucenje>().copy(id_ucitelj = ucitelj.id, id_ucenec = ucenec.id)
+                val ucenje = Entiteta.random<Ucenje>().copy(ucitelj_id = ucitelj.id, ucenec_id = ucenec.id)
                 ucenjeRepo.post(ucenje)
 
                 for (k in 0..5) {
 
-                    val sporocilo_ucenca = Entiteta.random<Sporocilo>().copy(id_posiljatelj = kontakt_ucenca.id, id_prejemnik = kontakt_ucitelja.id)
+                    val sporocilo_ucenca = Entiteta.random<Sporocilo>().copy(posiljatelj_id = kontakt_ucenca.id, prejemnik_id = kontakt_ucitelja.id)
                     sporociloRepo.post(sporocilo_ucenca)
 
-                    val sporocilo_ucitelja = Entiteta.random<Sporocilo>().copy(id_posiljatelj = kontakt_ucitelja.id, id_prejemnik = kontakt_ucenca.id)
+                    val sporocilo_ucitelja = Entiteta.random<Sporocilo>().copy(posiljatelj_id = kontakt_ucitelja.id, prejemnik_id = kontakt_ucenca.id)
                     sporociloRepo.post(sporocilo_ucitelja)
 
                 }
@@ -109,18 +109,18 @@ class DbExposed(
 
                 for (j in 0..5) {
 
-                    val tematika = Entiteta.random<Tematika>().copy(id_zvezek = zvezek.id)
+                    val tematika = Entiteta.random<Tematika>().copy(zvezek_id = zvezek.id)
                     tematikaRepo.post(tematika)
 
-                    val test = Entiteta.random<Test>().copy(id_oseba = ucitelj.id)
+                    val test = Entiteta.random<Test>().copy(oseba_id = ucitelj.id)
                     testRepo.post(test)
 
                     for (l in 0..5) {
 
-                        val naloga = Entiteta.random<Naloga>().copy(id_tematika = tematika.id)
+                        val naloga = Entiteta.random<Naloga>().copy(tematika_id = tematika.id)
                         nalogaRepo.post(naloga)
 
-                        val status = Entiteta.random<Status>().copy(id_naloga = naloga.id, id_test = test.id)
+                        val status = Entiteta.random<Status>().copy(naloga_id = naloga.id, test_id = test.id)
                         statusRepo.post(status)
                     }
                 }

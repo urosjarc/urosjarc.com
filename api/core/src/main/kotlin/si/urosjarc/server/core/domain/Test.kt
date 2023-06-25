@@ -15,7 +15,7 @@ data class Test(
     val podnaslov: String,
     val deadline: LocalDate,
     @Contextual
-    val id_oseba: Id<Oseba>,
+    val oseba_id: Id<Oseba>,
 ) : Entiteta<Test>()
 
 @Serializable
@@ -24,9 +24,9 @@ data class Status(
     override val id: Id<Status> = Id(),
     val tip: Tip,
     @Contextual
-    val id_naloga: Id<Naloga>,
+    val naloga_id: Id<Naloga>,
     @Contextual
-    val id_test: Id<Test>,
+    val test_id: Id<Test>,
     val pojasnilo: String
 ) : Entiteta<Status>() {
     enum class Tip { USPEH, NEUSPEH }

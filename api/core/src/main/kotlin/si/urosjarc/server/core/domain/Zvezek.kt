@@ -20,7 +20,7 @@ data class Naloga(
     @Contextual
     override val id: Id<Naloga> = Id(),
     @Contextual
-    val id_tematika: Id<Tematika>,
+    val tematika_id: Id<Tematika>,
     val resitev: String,
     val vsebina: String,
 ) : Entiteta<Naloga>()
@@ -32,5 +32,5 @@ data class Tematika(
     override val id: Id<Tematika> = Id(),
     val naslov: String,
     @Contextual
-    val id_zvezek: Id<Zvezek>
+    val zvezek_id: Id<Zvezek>
 ) : Entiteta<Tematika>()

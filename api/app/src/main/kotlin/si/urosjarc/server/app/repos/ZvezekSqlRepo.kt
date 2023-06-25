@@ -30,34 +30,34 @@ object ZvezekSqlRepo : ZvezekRepo, SqlRepo<Zvezek>(name<Zvezek>()) {
 
 object TematikaSqlRepo : TematikaRepo, SqlRepo<Tematika>(name<Tematika>()) {
     val naslov = varchar(Tematika::naslov.name, STR_MEDIUM)
-    val id_zvezek = reference(Tematika::id_zvezek.name, ZvezekSqlRepo.id)
+    val id_zvezek = reference(Tematika::zvezek_id.name, ZvezekSqlRepo.id)
     override fun map(obj: Tematika, any: UpdateBuilder<Number>) {
         any[id] = obj.id.value
         any[naslov] = obj.naslov
-        any[id_zvezek] = obj.id_zvezek.value
+        any[id_zvezek] = obj.zvezek_id.value
     }
 
     override fun resultRow(R: ResultRow): Tematika = Tematika(
         id = Id(R[id]),
         naslov = R[naslov],
-        id_zvezek = Id(R[id_zvezek])
+        zvezek_id = Id(R[id_zvezek])
     )
 }
 
 object NalogaSqlRepo : NalogaRepo, SqlRepo<Naloga>(name<Naloga>()) {
     val resitev = varchar(Naloga::resitev.name, STR_LONG)
     val vsebina = varchar(Naloga::vsebina.name, STR_LONG)
-    val id_tematika = reference(Naloga::id_tematika.name, TematikaSqlRepo.id)
+    val id_tematika = reference(Naloga::tematika_id.name, TematikaSqlRepo.id)
     override fun map(obj: Naloga, any: UpdateBuilder<Number>) {
         any[id] = obj.id.value
-        any[id_tematika] = obj.id_tematika.value
+        any[id_tematika] = obj.tematika_id.value
         any[resitev] = obj.resitev
         any[vsebina] = obj.vsebina
     }
 
     override fun resultRow(R: ResultRow): Naloga = Naloga(
         id = Id(R[id]),
-        id_tematika = Id(R[id_tematika]),
+        tematika_id = Id(R[id_tematika]),
         resitev = R[resitev],
         vsebina = R[vsebina]
     )

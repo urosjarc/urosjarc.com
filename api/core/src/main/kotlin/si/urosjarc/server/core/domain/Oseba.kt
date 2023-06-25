@@ -22,7 +22,7 @@ data class Kontakt(
     @Contextual
     override val id: Id<Kontakt> = Id(),
     @Contextual
-    val id_oseba: Id<Oseba>,
+    val oseba_id: Id<Oseba>,
     val data: String,
     val tip: Tip
 ) : Entiteta<Kontakt>() {
@@ -34,7 +34,7 @@ data class Naslov(
     @Contextual
     override val id: Id<Naslov> = Id(),
     @Contextual
-    val id_oseba: Id<Oseba>,
+    val oseba_id: Id<Oseba>,
     val drzava: String,
     val mesto: String,
     val ulica: String,
@@ -47,8 +47,8 @@ data class Sporocilo(
     @Contextual
     override val id: Id<Sporocilo> = Id(),
     @Contextual
-    val id_posiljatelj: Id<Kontakt>,
+    val posiljatelj_id: Id<Kontakt>,
     @Contextual
-    val id_prejemnik: Id<Kontakt>,
+    val prejemnik_id: Id<Kontakt>,
     val vsebina: String,
 ) : Entiteta<Sporocilo>()

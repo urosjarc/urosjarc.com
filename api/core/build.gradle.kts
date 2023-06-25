@@ -118,6 +118,8 @@ tasks.register<DefaultTask>("domainMap") {
         @startuml
         skinparam backgroundColor darkgray 
         skinparam ClassBackgroundColor lightgray
+        
+        
     """.trimIndent()
 
     var relations = ""

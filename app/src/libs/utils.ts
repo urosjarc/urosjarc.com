@@ -6,3 +6,16 @@ export function dateISO(leto: number, mesec: number, dan: number) {
     return null
   }
 }
+
+// export function nestedRows(tables: Array<string>, rows: Array<object>){
+//   let tables = {}
+//
+//   for(let row of rows){
+//     let tableObj = {}
+//     for(let table of tables){
+//
+//
+//     }
+//   }
+//
+// }

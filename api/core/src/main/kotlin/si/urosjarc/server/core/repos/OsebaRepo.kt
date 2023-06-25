@@ -11,5 +11,5 @@ interface OsebaRepo : DbRepo<Oseba>
 interface KontaktRepo : DbRepo<Kontakt>
 interface NaslovRepo : DbRepo<Naslov>
 interface SporociloRepo : DbRepo<Sporocilo> {
-    fun get_posiljatelje(id_prejemnik: Id<Oseba>): JsonElement
+    fun get_posiljatelje(id_prejemnika: Id<Oseba>): JsonElement
 }

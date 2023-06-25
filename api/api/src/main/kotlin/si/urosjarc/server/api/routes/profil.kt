@@ -25,6 +25,9 @@ class profil {
 
     @Resource("sporocila")
     class sporocila(val parent: profil)
+
+    @Resource("statusi")
+    class statusi(val parent: profil)
 }
 
 fun Route.profil() {
@@ -44,15 +47,22 @@ fun Route.profil() {
             is DbGetRezultat.ERROR -> this.call.system_error(r)
         }
     }
+
     this.get<profil.ucenje> {
         val profil = this.call.profil()
-        val json = db.exe { db.ucenjeRepo.get_ucence(id_ucitelj = Id(profil.id)) }
+        val json = db.exe { db.ucenjeRepo.get_ucence(id_ucitelja = Id(profil.id)) }
         this.call.respond(json)
     }
 
     this.get<profil.sporocila> {
         val profil = this.call.profil()
-        val json = db.exe { db.sporociloRepo.get_posiljatelje(id_prejemnik = Id(profil.id)) }
+        val json = db.exe { db.sporociloRepo.get_posiljatelje(id_prejemnika = Id(profil.id)) }
+        this.call.respond(json)
+    }
+
+    this.get<profil.statusi> {
+        val profil = this.call.profil()
+        val json = db.exe { db.statusRepo.get_statuse(id_osebe = Id(profil.id)) }
         this.call.respond(json)
     }
 

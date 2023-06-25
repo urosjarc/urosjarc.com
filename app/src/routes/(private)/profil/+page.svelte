@@ -3,7 +3,6 @@
   import {goto} from "$app/navigation";
   import {route} from "../../../stores/routeStore";
   import {api} from "../../../stores/apiStore";
-  import {onMount} from "svelte";
   import Button from "@smui/button";
 
   function logout() {
@@ -28,10 +27,19 @@
     })
   }
 
+  function statusi() {
+    api.profil.statusi().then(data => {
+      console.log(data)
+    }).catch(data => {
+      console.error(data)
+    })
+  }
+
 </script>
 
 <div>
   <Button on:click={logout}>Logout</Button>
   <Button on:click={ucenje}>Ucenje</Button>
   <Button on:click={sporocila}>Sporocila</Button>
+  <Button on:click={statusi}>Statusi</Button>
 </div>
