@@ -1,7 +1,7 @@
 <script lang="ts">
-  import Navigation from "../../components/Navigation.svelte";
-  import Layout from "../../components/Layout.svelte";
-  import {route} from "../../stores/routeStore";
+  import Navigation from "../components/Navigation.svelte";
+  import Layout from "../components/Layout.svelte";
+  import {route} from "../stores/routeStore";
 </script>
 
 <Layout>

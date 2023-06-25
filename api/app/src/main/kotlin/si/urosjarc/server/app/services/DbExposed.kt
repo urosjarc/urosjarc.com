@@ -69,20 +69,27 @@ class DbExposed(
             /**
              * OSEBA
              */
-            val oseba = Entiteta.random<Oseba>()
-            osebaRepo.post(oseba)
+            val ucitelj = Entiteta.random<Oseba>().copy(tip=Oseba.Tip.INSTRUKTOR)
+            osebaRepo.post(ucitelj)
 
-            val naslov = Entiteta.random<Naslov>().copy(id_oseba = oseba.id)
+            val naslov = Entiteta.random<Naslov>().copy(id_oseba = ucitelj.id)
             naslovRepo.post(naslov)
 
             for (j in 0..5) {
 
-                val kontakt = Entiteta.random<Kontakt>().copy(id_oseba = oseba.id)
+                val ucenec = Entiteta.random<Oseba>().copy(tip=Oseba.Tip.UCENEC)
+                osebaRepo.post(ucenec)
+
+                val ucenje = Entiteta.random<Ucenje>().copy(id_ucitelj = ucitelj.id, id_ucenec = ucenec.id)
+                ucenjeRepo.post(ucenje)
+
+                val kontakt = Entiteta.random<Kontakt>().copy(id_oseba = ucitelj.id)
                 kontaktRepo.post(kontakt)
 
                 for (k in 0..5) {
 
-                    val sporocilo = Entiteta.random<Sporocilo>().copy(id_posiljatelj = kontakt.id, id_prejemnik = kontakt.id)
+                    val sporocilo =
+                        Entiteta.random<Sporocilo>().copy(id_posiljatelj = kontakt.id, id_prejemnik = kontakt.id)
                     sporociloRepo.post(sporocilo)
 
                 }
@@ -100,7 +107,7 @@ class DbExposed(
                     val tematika = Entiteta.random<Tematika>().copy(id_zvezek = zvezek.id)
                     tematikaRepo.post(tematika)
 
-                    val test = Entiteta.random<Test>().copy(id_oseba = oseba.id)
+                    val test = Entiteta.random<Test>().copy(id_oseba = ucitelj.id)
                     testRepo.post(test)
 
                     for (l in 0..5) {
@@ -116,5 +123,5 @@ class DbExposed(
         }
     }
 
-    override fun exe(code: () -> Unit) = transaction(statement = { code() })
+    override fun <T> exe(code: () -> T): T = transaction(statement = { code() })
 }

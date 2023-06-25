@@ -17,6 +17,6 @@ interface DbService {
 
     fun seed()
     fun drop()
-    fun exe(code: () -> Unit)
+    fun <T> exe(code: () -> T): T
 
 }
