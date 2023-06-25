@@ -7,5 +7,5 @@ import si.urosjarc.server.core.domain.Ucenje
 
 interface UcenjeRepo : DbRepo<Ucenje> {
     fun get_ucence(id_ucitelj: Id<Oseba>): JsonElement
-    fun get_ucenec(id_ucenec: Id<Oseba>): JsonElement
+    fun get_ucitelje(id_ucenec: Id<Oseba>): JsonElement
 }

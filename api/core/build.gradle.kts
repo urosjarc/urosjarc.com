@@ -114,7 +114,12 @@ tasks.register<DefaultTask>("domainMap") {
     val path = "src/main/kotlin/si/urosjarc/server/core/domain"
     val domain = File(root, path)
 
-    var plantUML = "@startuml\n"
+    var plantUML = """
+        @startuml
+        skinparam backgroundColor darkgray 
+        skinparam ClassBackgroundColor lightgray
+    """.trimIndent()
+
     var relations = ""
     domain.walkTopDown().forEach {
         if (it.isFile) {
