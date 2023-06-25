@@ -1,8 +1,13 @@
 package si.urosjarc.server.app.repos
 
-import org.jetbrains.exposed.dao.id.EntityID
+import kotlinx.serialization.json.JsonElement
+import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.alias
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
+import si.urosjarc.server.app.extend.toJsonElement
 import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.base.name
 import si.urosjarc.server.core.domain.Kontakt
@@ -103,4 +108,37 @@ object SporociloSqlRepo : SporociloRepo, SqlRepo<Sporocilo>(name<Sporocilo>()) {
         id_prejemnik = Id(R[id_prejemnik]),
         vsebina = R[vsebina],
     )
+
+    override fun get_posiljatelje(id_prejemnik: Id<Oseba>): JsonElement {
+
+        val kontakt_posiljatelja = KontaktSqlRepo.alias("kontakt_posiljatelja")
+        val kontakt_prejemnika = KontaktSqlRepo.alias("kontakt_prejemnika")
+        val posiljatelj = OsebaSqlRepo.alias("posiljatelj")
+
+        return join(
+            otherTable = kontakt_posiljatelja,
+            otherColumn = kontakt_posiljatelja[KontaktSqlRepo.id],
+            onColumn = id_posiljatelj,
+            joinType = JoinType.INNER
+        ).join(
+            otherTable = kontakt_prejemnika,
+            otherColumn = kontakt_prejemnika[KontaktSqlRepo.id],
+            onColumn = SporociloSqlRepo.id_prejemnik,
+            joinType = JoinType.INNER
+        ).join(
+            otherTable = posiljatelj,
+            otherColumn = posiljatelj[OsebaSqlRepo.id],
+            onColumn = kontakt_posiljatelja[KontaktSqlRepo.id_oseba],
+            joinType = JoinType.INNER
+        ).slice(
+            id, vsebina,
+            kontakt_posiljatelja[KontaktSqlRepo.data].alias("kontakt"),
+            kontakt_posiljatelja[KontaktSqlRepo.tip].alias("kontakt_tip"),
+            posiljatelj[OsebaSqlRepo.ime],
+            posiljatelj[OsebaSqlRepo.priimek],
+            posiljatelj[OsebaSqlRepo.tip].alias("oseba_tip")
+        ).select(
+            kontakt_prejemnika[KontaktSqlRepo.id_oseba].eq(id_prejemnik.value)
+        ).toJsonElement()
+    }
 }

@@ -22,6 +22,9 @@ class profil {
 
     @Resource("ucenje")
     class ucenje(val parent: profil)
+
+    @Resource("sporocila")
+    class sporocila(val parent: profil)
 }
 
 fun Route.profil() {
@@ -44,6 +47,12 @@ fun Route.profil() {
     this.get<profil.ucenje> {
         val profil = this.call.profil()
         val json = db.exe { db.ucenjeRepo.get_ucence(id_ucitelj = Id(profil.id)) }
+        this.call.respond(json)
+    }
+
+    this.get<profil.sporocila> {
+        val profil = this.call.profil()
+        val json = db.exe { db.sporociloRepo.get_posiljatelje(id_prejemnik = Id(profil.id)) }
         this.call.respond(json)
     }
 
