@@ -5,6 +5,7 @@ import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
+import si.urosjarc.server.app.extend.sliceAlias
 import si.urosjarc.server.app.extend.toJsonElement
 import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.base.name
@@ -14,35 +15,35 @@ import si.urosjarc.server.core.repos.UcenjeRepo
 
 
 object UcenjeSqlRepo : UcenjeRepo, SqlRepo<Ucenje>(name<Ucenje>()) {
-    val id_ucenec = reference(Ucenje::ucenec_id.name, OsebaSqlRepo.id)
-    val id_ucitelj = reference(Ucenje::ucitelj_id.name, OsebaSqlRepo.id)
+    val ucenec_id = reference(Ucenje::ucenec_id.name, OsebaSqlRepo.id)
+    val ucitelj_id = reference(Ucenje::ucitelj_id.name, OsebaSqlRepo.id)
 
     override fun map(obj: Ucenje, any: UpdateBuilder<Number>) {
         any[id] = obj.id.value
-        any[id_ucenec] = obj.ucenec_id.value
-        any[id_ucitelj] = obj.ucitelj_id.value
+        any[ucenec_id] = obj.ucenec_id.value
+        any[ucitelj_id] = obj.ucitelj_id.value
     }
 
     override fun resultRow(R: ResultRow): Ucenje = Ucenje(
         id = Id(R[id]),
-        ucenec_id = Id(R[id_ucenec]),
-        ucitelj_id = Id(R[id_ucitelj]),
+        ucenec_id = Id(R[ucenec_id]),
+        ucitelj_id = Id(R[ucitelj_id]),
     )
 
     override fun get_ucence(id_ucitelja: Id<Oseba>): JsonElement {
         return join(
             OsebaSqlRepo,
-            onColumn = id_ucenec, otherColumn = OsebaSqlRepo.id,
+            onColumn = ucenec_id, otherColumn = OsebaSqlRepo.id,
             joinType = JoinType.INNER
-        ).slice(OsebaSqlRepo.fields).select { UcenjeSqlRepo.id_ucitelj.eq(id_ucitelja.value) }.toJsonElement()
+        ).sliceAlias(OsebaSqlRepo).select { UcenjeSqlRepo.ucitelj_id.eq(id_ucitelja.value) }.toJsonElement()
     }
 
     override fun get_ucitelje(id_ucenca: Id<Oseba>): JsonElement {
         return join(
             OsebaSqlRepo,
-            onColumn = id_ucitelj, otherColumn = OsebaSqlRepo.id,
+            onColumn = ucitelj_id, otherColumn = OsebaSqlRepo.id,
             joinType = JoinType.INNER
-        ).slice(OsebaSqlRepo.fields).select { UcenjeSqlRepo.id_ucenec.eq(id_ucenca.value) }.toJsonElement()
+        ).sliceAlias(OsebaSqlRepo).select { UcenjeSqlRepo.ucenec_id.eq(id_ucenca.value) }.toJsonElement()
     }
 
 }

@@ -20,23 +20,23 @@ import si.urosjarc.server.core.repos.TestRepo
 
 object StatusSqlRepo : StatusRepo, SqlRepo<Status>(name<Status>()) {
     val tip = varchar(Status::tip.name, STR_SHORT)
-    val id_naloga = reference(Status::naloga_id.name, NalogaSqlRepo.id)
-    val id_test = reference(Status::test_id.name, TestSqlRepo.id)
+    val naloga_id = reference(Status::naloga_id.name, NalogaSqlRepo.id)
+    val test_id = reference(Status::test_id.name, TestSqlRepo.id)
     val pojasnilo = varchar(Status::pojasnilo.name, STR_LONG)
 
     override fun map(obj: Status, any: UpdateBuilder<Number>) {
         any[id] = obj.id.value
         any[tip] = obj.tip.name
-        any[id_naloga] = obj.naloga_id.value
-        any[id_test] = obj.test_id.value
+        any[naloga_id] = obj.naloga_id.value
+        any[test_id] = obj.test_id.value
         any[pojasnilo] = obj.pojasnilo
     }
 
     override fun resultRow(R: ResultRow): Status = Status(
         id = Id(R[id]),
         tip = Status.Tip.valueOf(R[tip]),
-        naloga_id = Id(R[id_naloga]),
-        test_id = Id(R[id_test]),
+        naloga_id = Id(R[naloga_id]),
+        test_id = Id(R[test_id]),
         pojasnilo = R[pojasnilo]
     )
 
@@ -44,22 +44,22 @@ object StatusSqlRepo : StatusRepo, SqlRepo<Status>(name<Status>()) {
         return join(
             otherTable = TestSqlRepo,
             joinType = JoinType.INNER,
-            onColumn = id_test,
+            onColumn = test_id,
             otherColumn = TestSqlRepo.id
         ).join(
             otherTable = NalogaSqlRepo,
             joinType = JoinType.INNER,
-            onColumn = id_naloga,
+            onColumn = naloga_id,
             otherColumn = NalogaSqlRepo.id
         ).join(
             otherTable = TematikaSqlRepo,
             joinType = JoinType.INNER,
-            onColumn = NalogaSqlRepo.id_tematika,
+            onColumn = NalogaSqlRepo.tematika_id,
             otherColumn = TematikaSqlRepo.id
         ).join(
             otherTable = ZvezekSqlRepo,
             joinType = JoinType.INNER,
-            onColumn = TematikaSqlRepo.id_zvezek,
+            onColumn = TematikaSqlRepo.zvezek_id,
             otherColumn = ZvezekSqlRepo.id
         ).sliceAlias(
             this,
@@ -67,7 +67,7 @@ object StatusSqlRepo : StatusRepo, SqlRepo<Status>(name<Status>()) {
             NalogaSqlRepo,
             TematikaSqlRepo,
             ZvezekSqlRepo
-        ).select(where = { TestSqlRepo.id_oseba.eq(id_osebe.value) }).toJsonElement()
+        ).select(where = { TestSqlRepo.oseba_id.eq(id_osebe.value) }).toJsonElement()
     }
 }
 
@@ -75,13 +75,13 @@ object TestSqlRepo : TestRepo, SqlRepo<Test>(name<Test>()) {
     val naslov = varchar(Test::naslov.name, STR_MEDIUM)
     val podnaslov = varchar(Test::podnaslov.name, STR_MEDIUM)
     val deadline = date(Test::deadline.name)
-    val id_oseba = reference(Test::oseba_id.name, OsebaSqlRepo.id)
+    val oseba_id = reference(Test::oseba_id.name, OsebaSqlRepo.id)
     override fun map(obj: Test, any: UpdateBuilder<Number>) {
         any[id] = obj.id.value
         any[naslov] = obj.naslov
         any[podnaslov] = obj.podnaslov
         any[deadline] = obj.deadline.toJavaLocalDate()
-        any[id_oseba] = obj.oseba_id.value
+        any[oseba_id] = obj.oseba_id.value
     }
 
     override fun resultRow(R: ResultRow): Test {
@@ -90,7 +90,7 @@ object TestSqlRepo : TestRepo, SqlRepo<Test>(name<Test>()) {
             id = Id(R[id]),
             naslov = R[naslov],
             podnaslov = R[podnaslov],
-            oseba_id = Id(R[id_oseba]),
+            oseba_id = Id(R[oseba_id]),
             deadline = deadline.toKotlinLocalDate()
         )
     }

@@ -1,8 +1,12 @@
 import {token} from "./tokenStore";
+import {linkedList} from "../libs/utils";
 
 const DOMAIN = "http://localhost:8080"
 
-export function GET(url: string) {
+export function GET(url: string, cb) {
+  let identity = (x) => x
+  cb = cb || identity
+
   return () => new Promise(async (resolve, reject) => {
     fetch(`${DOMAIN}/${url}`, {
       method: "GET",
@@ -12,7 +16,7 @@ export function GET(url: string) {
     }).then(async res => {
       if (!res.ok) reject()
       res.json()
-        .then(data => resolve(data))
+        .then(data => resolve(cb(data)))
         .catch(err => reject())
     }).catch(err => reject())
   })
@@ -55,16 +59,15 @@ export function DELETE(url: string, body: object) {
     }).catch(err => reject())
   })
 }
-
 export const api = {
   auth: {
     prijava: (body) => POST("auth/prijava", body),
-    whois: GET("auth/whois"),
+    whois: GET("auth/whois", null),
   },
   profil: {
-    oseba: GET("profil/oseba"),
-    ucenje: GET("profil/ucenje"),
-    sporocila: GET("profil/sporocila"),
-    statusi: GET("profil/statusi"),
+    oseba: GET("profil/oseba", linkedList),
+    ucenje: GET("profil/ucenje", linkedList),
+    sporocila: GET("profil/sporocila", linkedList),
+    statusi: GET("profil/statusi", linkedList),
   }
 }

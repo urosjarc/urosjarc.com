@@ -7,6 +7,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
+import si.urosjarc.server.app.extend.sliceAlias
 import si.urosjarc.server.app.extend.toJsonElement
 import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.base.name
@@ -91,52 +92,49 @@ object KontaktSqlRepo : KontaktRepo, SqlRepo<Kontakt>(name<Kontakt>()) {
 }
 
 object SporociloSqlRepo : SporociloRepo, SqlRepo<Sporocilo>(name<Sporocilo>()) {
-    val id_posiljatelj = reference(Sporocilo::posiljatelj_id.name, KontaktSqlRepo.id)
-    val id_prejemnik = reference(Sporocilo::prejemnik_id.name, KontaktSqlRepo.id)
+    val posiljatelj_id = reference(Sporocilo::posiljatelj_id.name, KontaktSqlRepo.id)
+    val prejemnik_id = reference(Sporocilo::prejemnik_id.name, KontaktSqlRepo.id)
     val vsebina = varchar(Sporocilo::vsebina.name, STR_LONG)
 
     override fun map(obj: Sporocilo, any: UpdateBuilder<Number>) {
         any[id] = obj.id.value
-        any[id_posiljatelj] = obj.posiljatelj_id.value
-        any[id_prejemnik] = obj.prejemnik_id.value
+        any[posiljatelj_id] = obj.posiljatelj_id.value
+        any[prejemnik_id] = obj.prejemnik_id.value
         any[vsebina] = obj.vsebina
     }
 
     override fun resultRow(R: ResultRow): Sporocilo = Sporocilo(
         id = Id(R[id]),
-        posiljatelj_id = Id(R[id_posiljatelj]),
-        prejemnik_id = Id(R[id_prejemnik]),
+        posiljatelj_id = Id(R[posiljatelj_id]),
+        prejemnik_id = Id(R[prejemnik_id]),
         vsebina = R[vsebina],
     )
 
     override fun get_posiljatelje(id_prejemnika: Id<Oseba>): JsonElement {
 
-        val kontakt_posiljatelja = KontaktSqlRepo.alias("kontakt_posiljatelja")
-        val kontakt_prejemnika = KontaktSqlRepo.alias("kontakt_prejemnika")
+        val kontakt_posiljatelja = KontaktSqlRepo.alias("kontaktPosiljatelja")
+        val kontakt_prejemnika = KontaktSqlRepo.alias("kontaktPrejemnika")
         val posiljatelj = OsebaSqlRepo.alias("posiljatelj")
 
         return join(
             otherTable = kontakt_posiljatelja,
             otherColumn = kontakt_posiljatelja[KontaktSqlRepo.id],
-            onColumn = id_posiljatelj,
+            onColumn = posiljatelj_id,
             joinType = JoinType.INNER
         ).join(
             otherTable = kontakt_prejemnika,
             otherColumn = kontakt_prejemnika[KontaktSqlRepo.id],
-            onColumn = SporociloSqlRepo.id_prejemnik,
+            onColumn = prejemnik_id,
             joinType = JoinType.INNER
         ).join(
             otherTable = posiljatelj,
             otherColumn = posiljatelj[OsebaSqlRepo.id],
             onColumn = kontakt_posiljatelja[KontaktSqlRepo.id_oseba],
             joinType = JoinType.INNER
-        ).slice(
-            id, vsebina,
-            kontakt_posiljatelja[KontaktSqlRepo.data].alias("kontakt"),
-            kontakt_posiljatelja[KontaktSqlRepo.tip].alias("kontakt_tip"),
-            posiljatelj[OsebaSqlRepo.ime],
-            posiljatelj[OsebaSqlRepo.priimek],
-            posiljatelj[OsebaSqlRepo.tip].alias("oseba_tip")
+        ).sliceAlias(
+            kontakt_posiljatelja,
+            kontakt_prejemnika,
+            posiljatelj
         ).select(
             kontakt_prejemnika[KontaktSqlRepo.id_oseba].eq(id_prejemnika.value)
         ).toJsonElement()
