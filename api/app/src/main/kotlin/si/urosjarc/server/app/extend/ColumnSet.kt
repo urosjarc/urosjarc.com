@@ -7,7 +7,7 @@ fun ColumnSet.sliceAlias(vararg tables: Table): FieldSet {
 
     for (table in tables)
         for (column in table.columns)
-            columns.add(column.alias("${table.tableName.lowercase()}_${column.name}"))
+            columns.add(column.alias("${table.tableName.lowercase()}__${column.name}"))
 
     return Slice(this, columns)
 }

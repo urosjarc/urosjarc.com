@@ -44,7 +44,7 @@ object OsebaSqlRepo : OsebaRepo, SqlRepo<Oseba>(name<Oseba>()) {
 }
 
 object NaslovSqlRepo : NaslovRepo, SqlRepo<Naslov>(name<Naslov>()) {
-    val id_oseba = reference(Naslov::oseba_id.name, OsebaSqlRepo.id)
+    val oseba_id = reference(Naslov::oseba_id.name, OsebaSqlRepo.id)
     val drzava = varchar(Naslov::drzava.name, STR_SHORT)
     val mesto = varchar(Naslov::mesto.name, STR_SHORT)
     val ulica = varchar(Naslov::ulica.name, STR_SHORT)
@@ -53,7 +53,7 @@ object NaslovSqlRepo : NaslovRepo, SqlRepo<Naslov>(name<Naslov>()) {
 
     override fun map(obj: Naslov, any: UpdateBuilder<Number>) {
         any[id] = obj.id.value
-        any[id_oseba] = obj.oseba_id.value
+        any[oseba_id] = obj.oseba_id.value
         any[drzava] = obj.drzava
         any[mesto] = obj.mesto
         any[ulica] = obj.ulica
@@ -62,7 +62,7 @@ object NaslovSqlRepo : NaslovRepo, SqlRepo<Naslov>(name<Naslov>()) {
     }
 
     override fun resultRow(R: ResultRow): Naslov = Naslov(
-        oseba_id = Id(R[id_oseba]),
+        oseba_id = Id(R[oseba_id]),
         drzava = R[drzava],
         mesto = R[mesto],
         ulica = R[ulica],
@@ -72,20 +72,20 @@ object NaslovSqlRepo : NaslovRepo, SqlRepo<Naslov>(name<Naslov>()) {
 }
 
 object KontaktSqlRepo : KontaktRepo, SqlRepo<Kontakt>(name<Kontakt>()) {
-    val id_oseba = reference(Kontakt::oseba_id.name, OsebaSqlRepo.id)
+    val oseba_id = reference(Kontakt::oseba_id.name, OsebaSqlRepo.id)
     val data = varchar(Kontakt::data.name, STR_SHORT)
     val tip = varchar(Kontakt::tip.name, STR_SHORT)
 
     override fun map(obj: Kontakt, any: UpdateBuilder<Number>) {
         any[id] = obj.id.value
-        any[id_oseba] = obj.oseba_id.value
+        any[oseba_id] = obj.oseba_id.value
         any[data] = obj.data
         any[tip] = obj.tip.name
     }
 
     override fun resultRow(R: ResultRow): Kontakt = Kontakt(
         id = Id(R[id]),
-        oseba_id = Id(R[id_oseba]),
+        oseba_id = Id(R[oseba_id]),
         data = R[data],
         tip = Kontakt.Tip.valueOf(R[tip])
     )
@@ -112,9 +112,9 @@ object SporociloSqlRepo : SporociloRepo, SqlRepo<Sporocilo>(name<Sporocilo>()) {
 
     override fun get_posiljatelje(id_prejemnika: Id<Oseba>): JsonElement {
 
-        val kontakt_posiljatelja = KontaktSqlRepo.alias("kontaktPosiljatelja")
-        val kontakt_prejemnika = KontaktSqlRepo.alias("kontaktPrejemnika")
-        val posiljatelj = OsebaSqlRepo.alias("posiljatelj")
+        val kontakt_posiljatelja = KontaktSqlRepo.alias("kontakt_posiljatelja")
+        val kontakt_prejemnika = KontaktSqlRepo.alias("kontakt_prejemnika")
+        val oseba_posiljatelj = OsebaSqlRepo.alias("oseba_posiljatelj")
 
         return join(
             otherTable = kontakt_posiljatelja,
@@ -127,16 +127,16 @@ object SporociloSqlRepo : SporociloRepo, SqlRepo<Sporocilo>(name<Sporocilo>()) {
             onColumn = prejemnik_id,
             joinType = JoinType.INNER
         ).join(
-            otherTable = posiljatelj,
-            otherColumn = posiljatelj[OsebaSqlRepo.id],
-            onColumn = kontakt_posiljatelja[KontaktSqlRepo.id_oseba],
+            otherTable = oseba_posiljatelj,
+            otherColumn = oseba_posiljatelj[OsebaSqlRepo.id],
+            onColumn = kontakt_posiljatelja[KontaktSqlRepo.oseba_id],
             joinType = JoinType.INNER
         ).sliceAlias(
             kontakt_posiljatelja,
             kontakt_prejemnika,
-            posiljatelj
+            oseba_posiljatelj
         ).select(
-            kontakt_prejemnika[KontaktSqlRepo.id_oseba].eq(id_prejemnika.value)
+            kontakt_prejemnika[KontaktSqlRepo.oseba_id].eq(id_prejemnika.value)
         ).toJsonElement()
     }
 }
