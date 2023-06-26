@@ -1,12 +1,9 @@
 import {token} from "./tokenStore";
-import {linkedList} from "../libs/utils";
+import {adjacencyList} from "../libs/mapping";
 
 const DOMAIN = "http://localhost:8080"
 
-export function GET(url: string, cb) {
-  let identity = (x) => x
-  cb = cb || identity
-
+function GET(url: string, cb) {
   return () => new Promise(async (resolve, reject) => {
     fetch(`${DOMAIN}/${url}`, {
       method: "GET",
@@ -22,7 +19,15 @@ export function GET(url: string, cb) {
   })
 }
 
-export function POST(url: string, body: object) {
+function GET_IDENTITY(url: string): () => Promise<Array<object>> {
+  return GET(url, (x) => x)
+}
+
+function GET_ADJACENCY_LIST(url: string): () => Promise<LinkedList> {
+  return GET(url, adjacencyList)
+}
+
+function POST(url: string, body: object) {
   return new Promise(async (resolve, reject) => {
     fetch(`${DOMAIN}/${url}`, {
       method: "POST",
@@ -41,7 +46,7 @@ export function POST(url: string, body: object) {
   })
 }
 
-export function DELETE(url: string, body: object) {
+function DELETE(url: string, body: object) {
   return new Promise(async (resolve, reject) => {
     fetch(`${DOMAIN}/${url}`, {
       method: "DELETE",
@@ -59,15 +64,16 @@ export function DELETE(url: string, body: object) {
     }).catch(err => reject())
   })
 }
+
 export const api = {
   auth: {
     prijava: (body) => POST("auth/prijava", body),
-    whois: GET("auth/whois", null),
+    whois: GET_IDENTITY("auth/whois"),
   },
   profil: {
-    oseba: GET("profil/oseba", linkedList),
-    ucenje: GET("profil/ucenje", linkedList),
-    sporocila: GET("profil/sporocila", linkedList),
-    statusi: GET("profil/statusi", linkedList),
+    oseba: GET_ADJACENCY_LIST("profil/oseba"),
+    ucenje: GET_ADJACENCY_LIST("profil/ucenje"),
+    sporocila: GET_ADJACENCY_LIST("profil/sporocila"),
+    statusi: GET_ADJACENCY_LIST("profil/statusi"),
   }
 }

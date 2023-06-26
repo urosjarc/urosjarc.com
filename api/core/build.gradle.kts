@@ -15,6 +15,7 @@ data class Par(
 ) {
 
     fun planUML(): String = "\t${this.ime}\n"
+    fun typescript(): String = "\t${this.ime}: string;\n"
 
     companion object {
         fun parse(line: String): Par {
@@ -68,6 +69,14 @@ data class Cls(
         return text
     }
 
+    fun class_typescript(): String {
+        var text = "interface $ime {\n"
+        for (l in lastnosti) {
+            text += l.typescript()
+        }
+        text += "}\n"
+        return text
+    }
     fun rel_plantUML(includeLabels: Boolean): String {
         var rel = ""
         for (l in lastnosti) {
@@ -78,6 +87,7 @@ data class Cls(
         }
         return rel
     }
+
 
     companion object {
         fun parseName(line: String): String = line.split(" ").last().removeSuffix("(")
@@ -122,6 +132,8 @@ tasks.register<DefaultTask>("domainMap") {
         
     """.trimIndent()
 
+    var typescript = ""
+    var typescript_linkedList = "interface LinkedList {\n"
     var relations = ""
     domain.walkTopDown().forEach {
         if (it.isFile) {
@@ -130,11 +142,15 @@ tasks.register<DefaultTask>("domainMap") {
             for (c in cls) {
                 plantUML += c.class_plantUML(includePar = true)
                 relations += c.rel_plantUML(includeLabels = false)
+                typescript += c.class_typescript()
+                typescript_linkedList += "\t${c.ime.toLowerCase()}: {[key: string]: ${c.ime}};\n"
             }
             if (cls.size > 1) plantUML += "\n}\n\n"
         }
     }
+    typescript_linkedList += "\n}\n\n"
     plantUML += "\n$relations\n@enduml"
 
     File(build, "domain.plantuml").writeText(plantUML)
+    File(build, "domain.ts").writeText(typescript + typescript_linkedList)
 }
