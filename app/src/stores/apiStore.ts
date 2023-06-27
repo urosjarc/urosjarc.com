@@ -1,9 +1,8 @@
 import {token} from "./tokenStore";
-import {adjacencyList} from "../libs/mapping";
 
 const DOMAIN = "http://localhost:8080"
 
-function GET(url: string, cb) {
+function GET<T>(url: string): () => Promise<T> {
   return () => new Promise(async (resolve, reject) => {
     fetch(`${DOMAIN}/${url}`, {
       method: "GET",
@@ -13,18 +12,10 @@ function GET(url: string, cb) {
     }).then(async res => {
       if (!res.ok) reject()
       res.json()
-        .then(data => resolve(cb(data)))
+        .then((data: T) => resolve(data))
         .catch(err => reject())
     }).catch(err => reject())
   })
-}
-
-function GET_IDENTITY(url: string): () => Promise<Array<object>> {
-  return GET(url, (x) => x)
-}
-
-function GET_ADJACENCY_LIST(url: string): () => Promise<LinkedList> {
-  return GET(url, adjacencyList)
 }
 
 function POST(url: string, body: object) {
@@ -68,12 +59,12 @@ function DELETE(url: string, body: object) {
 export const api = {
   auth: {
     prijava: (body) => POST("auth/prijava", body),
-    whois: GET_IDENTITY("auth/whois"),
+    whois: GET("auth/whois"),
   },
   profil: {
-    oseba: GET_ADJACENCY_LIST("profil/oseba"),
-    ucenje: GET_ADJACENCY_LIST("profil/ucenje"),
-    sporocila: GET_ADJACENCY_LIST("profil/sporocila"),
-    statusi: GET_ADJACENCY_LIST("profil/statusi"),
+    oseba: GET("profil/oseba"),
+    ucenje: GET("profil/ucenje"),
+    sporocila: GET("profil/sporocila"),
+    statusi: GET("profil/statusi"),
   }
 }

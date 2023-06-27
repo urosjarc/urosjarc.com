@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.extend.sliceAlias
-import si.urosjarc.server.app.extend.toJsonElement
+import si.urosjarc.server.app.extend.toAdjecentJsonElement
 import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.base.name
 import si.urosjarc.server.core.domain.Kontakt
@@ -111,7 +111,6 @@ object SporociloSqlRepo : SporociloRepo, SqlRepo<Sporocilo>(name<Sporocilo>()) {
     )
 
     override fun get_posiljatelje(id_prejemnika: Id<Oseba>): JsonElement {
-
         val kontakt_posiljatelja = KontaktSqlRepo.alias("kontakt_posiljatelja")
         val kontakt_prejemnika = KontaktSqlRepo.alias("kontakt_prejemnika")
         val oseba_posiljatelj = OsebaSqlRepo.alias("oseba_posiljatelj")
@@ -137,6 +136,6 @@ object SporociloSqlRepo : SporociloRepo, SqlRepo<Sporocilo>(name<Sporocilo>()) {
             oseba_posiljatelj
         ).select(
             kontakt_prejemnika[KontaktSqlRepo.oseba_id].eq(id_prejemnika.value)
-        ).toJsonElement()
+        ).toAdjecentJsonElement()
     }
 }

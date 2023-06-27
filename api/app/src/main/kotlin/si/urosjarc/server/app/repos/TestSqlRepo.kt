@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.javatime.date
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.extend.sliceAlias
-import si.urosjarc.server.app.extend.toJsonElement
+import si.urosjarc.server.app.extend.toAdjecentJsonElement
 import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.base.name
 import si.urosjarc.server.core.domain.Oseba
@@ -67,8 +67,11 @@ object StatusSqlRepo : StatusRepo, SqlRepo<Status>(name<Status>()) {
             NalogaSqlRepo,
             TematikaSqlRepo,
             ZvezekSqlRepo
-        ).select(where = { TestSqlRepo.oseba_id.eq(id_osebe.value) }).toJsonElement()
+        )
+            .select(where = { TestSqlRepo.oseba_id.eq(id_osebe.value) })
+            .toAdjecentJsonElement(children = true)
     }
+
 }
 
 object TestSqlRepo : TestRepo, SqlRepo<Test>(name<Test>()) {
