@@ -1,15 +1,15 @@
-package si.urosjarc.server.app.repos
+package si.urosjarc.server.app.base
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.core.base.Entiteta
 import si.urosjarc.server.core.base.Id
-import si.urosjarc.server.core.repos.DbGetRezultat
-import si.urosjarc.server.core.repos.DbPostRezultat
-import si.urosjarc.server.core.repos.DbRepo
+import si.urosjarc.server.core.base.DbGetRezultat
+import si.urosjarc.server.core.base.DbPostRezultat
+import si.urosjarc.server.core.base.Repo
 
-abstract class SqlRepo<T : Entiteta<T>>(table: String) : Table(name = table), DbRepo<T> {
+abstract class SqlRepo<T : Entiteta<T>>(table: String) : Table(name = table), Repo<T> {
 
     val id: Column<String> = varchar(Entiteta<Any>::id.name, 20)
 

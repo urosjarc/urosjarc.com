@@ -1,4 +1,4 @@
-package si.urosjarc.server.core.repos
+package si.urosjarc.server.core.base
 
 sealed interface DbPostRezultat<T> {
     class FATAL_DB_NAPAKA<T> : DbPostRezultat<T>

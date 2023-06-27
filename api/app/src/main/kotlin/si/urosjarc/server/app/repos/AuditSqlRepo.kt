@@ -2,9 +2,10 @@ package si.urosjarc.server.app.repos
 
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
+import si.urosjarc.server.app.base.SqlRepo
 import si.urosjarc.server.core.base.Id
-import si.urosjarc.server.core.base.name
 import si.urosjarc.server.core.domain.Audit
+import si.urosjarc.server.core.extends.name
 import si.urosjarc.server.core.repos.AuditRepo
 
 object AuditSqlRepo : AuditRepo, SqlRepo<Audit>(name<Audit>()) {

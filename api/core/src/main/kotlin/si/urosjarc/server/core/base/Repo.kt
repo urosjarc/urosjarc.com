@@ -1,8 +1,6 @@
-package si.urosjarc.server.core.repos
+package si.urosjarc.server.core.base
 
-import si.urosjarc.server.core.base.Id
-
-interface DbRepo<T> {
+interface Repo<T> {
     fun get(page: Int): List<T>
     fun get(key: Id<T>): DbGetRezultat<T>
     fun post(entity: T): DbPostRezultat<T>

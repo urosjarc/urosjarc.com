@@ -5,12 +5,13 @@ import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
+import si.urosjarc.server.app.base.SqlRepo
 import si.urosjarc.server.app.extend.sliceAlias
 import si.urosjarc.server.app.extend.toAdjecentJsonElement
 import si.urosjarc.server.core.base.Id
-import si.urosjarc.server.core.base.name
 import si.urosjarc.server.core.domain.Oseba
 import si.urosjarc.server.core.domain.Ucenje
+import si.urosjarc.server.core.extends.name
 import si.urosjarc.server.core.repos.UcenjeRepo
 
 

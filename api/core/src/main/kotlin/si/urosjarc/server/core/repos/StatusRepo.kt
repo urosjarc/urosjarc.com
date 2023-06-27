@@ -4,9 +4,8 @@ import kotlinx.serialization.json.JsonElement
 import si.urosjarc.server.core.base.Repo
 import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.domain.Oseba
-import si.urosjarc.server.core.domain.Ucenje
+import si.urosjarc.server.core.domain.Status
 
-interface UcenjeRepo : Repo<Ucenje> {
-    fun get_ucence(id_ucitelja: Id<Oseba>): JsonElement
-    fun get_ucitelje(id_ucenca: Id<Oseba>): JsonElement
+interface StatusRepo : Repo<Status> {
+    fun get_statuse(id_osebe: Id<Oseba>): JsonElement
 }

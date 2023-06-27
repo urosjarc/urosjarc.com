@@ -10,7 +10,7 @@ import org.koin.ktor.ext.inject
 import si.urosjarc.server.api.extend.profil
 import si.urosjarc.server.api.extend.system_error
 import si.urosjarc.server.core.base.Id
-import si.urosjarc.server.core.repos.DbGetRezultat
+import si.urosjarc.server.core.base.DbGetRezultat
 import si.urosjarc.server.core.services.DbService
 
 

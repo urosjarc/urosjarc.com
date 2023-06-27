@@ -1,6 +1,6 @@
 package si.urosjarc.server.core.repos
 
 import si.urosjarc.server.core.base.Repo
-import si.urosjarc.server.core.domain.Zvezek
+import si.urosjarc.server.core.domain.Naslov
 
-interface ZvezekRepo : Repo<Zvezek>
+interface NaslovRepo : Repo<Naslov>
