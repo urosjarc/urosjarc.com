@@ -62,9 +62,9 @@ export const api = {
     whois: GET("auth/whois"),
   },
   profil: {
-    oseba: GET("profil/oseba"),
-    ucenje: GET("profil/ucenje"),
-    sporocila: GET("profil/sporocila"),
-    statusi: GET("profil/statusi"),
+    oseba: GET<AdjecentRes>("profil/oseba"),
+    ucenje: GET<AdjecentRes>("profil/ucenje"),
+    sporocila: GET<AdjecentRes>("profil/sporocila"),
+    statusi: GET<AdjecentRes>("profil/statusi"),
   }
 }

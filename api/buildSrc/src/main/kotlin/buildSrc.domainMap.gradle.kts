@@ -28,7 +28,7 @@ data class Enumerator(
         fun parse(line: String): Enumerator {
             val lineInfo = line.trim().removePrefix("enum class ").replace(",", "").split(" ")
             val enum = Enumerator(ime = lineInfo.first())
-            for (i in 2 until lineInfo.size) {
+            for (i in 2 until lineInfo.size-1) {
                 enum.vrednosti.add(lineInfo[i])
             }
             return enum
@@ -115,7 +115,7 @@ class DomainMap : Plugin<Project> {
 
     fun typescript(packages: List<Package>): String {
         val text = mutableListOf("// FILE AUTO GENERATED !!!\n")
-        val response = mutableListOf("interface Response {")
+        val response = mutableListOf("interface AdjecentRes {")
 
         //Relationship
         //                parent(lower case) child(lower case)
@@ -136,18 +136,29 @@ class DomainMap : Plugin<Project> {
         for (pac in packages) {
             for (dataClass in pac.dataClasses) {
                 val lowerDataClassName = dataClass.ime.toLowerCase()
-                text.add("interface ${dataClass.ime} {")
+
+                //RESPONSE
                 response.add("\t${lowerDataClassName}: {[key: string]: ${dataClass.ime}};")
+
+                //INTERFACES
+                text.add("interface ${dataClass.ime} {")
                 for (lastnost in dataClass.lastnosti) {
                     text.add("\t${lastnost.ime}: string;")
                 }
-
                 val children = rel.getOrDefault(lowerDataClassName, mutableListOf())
                 for (child in children) {
                     text.add("\t${child}: Array<String>;")
                 }
-
                 text.add("}\n")
+
+                //ENUMS
+                for(enum in dataClass.enums){
+                    text.add("enum ${dataClass.ime}${enum.ime} {")
+                    for(enumVal in enum.vrednosti){
+                        text.add("\t${enumVal} = \"${enumVal}\",")
+                    }
+                    text.add("}\n")
+                }
             }
         }
         response.add("}\n")

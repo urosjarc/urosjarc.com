@@ -1,100 +1,124 @@
+// FILE AUTO GENERATED !!!
+
 interface Ucenje {
-	id: string;
-	ucenec_id: string;
-	ucitelj_id: string;
+  id: string;
+  ucenec_id: string;
+  ucitelj_id: string;
 }
 
 interface Test {
-	id: string;
-	naslov: string;
-	podnaslov: string;
-	deadline: string;
-	oseba_id: string;
-	status: Array<String>;
+  id: string;
+  naslov: string;
+  podnaslov: string;
+  deadline: string;
+  oseba_id: string;
+  status: Array<String>;
 }
 
 interface Status {
-	id: string;
-	tip: string;
-	naloga_id: string;
-	test_id: string;
-	pojasnilo: string;
+  id: string;
+  tip: string;
+  naloga_id: string;
+  test_id: string;
+  pojasnilo: string;
+}
+
+enum StatusTip {
+  USPEH = "USPEH",
+  NEUSPEH = "NEUSPEH",
 }
 
 interface Audit {
-	id: string;
-	opis: string;
-	entiteta_id: string;
-	entiteta: string;
+  id: string;
+  opis: string;
+  entiteta_id: string;
+  entiteta: string;
 }
 
 interface Oseba {
-	id: string;
-	ime: string;
-	priimek: string;
-	username: string;
-	tip: string;
-	test: Array<String>;
-	kontakt: Array<String>;
-	naslov: Array<String>;
+  id: string;
+  ime: string;
+  priimek: string;
+  username: string;
+  tip: string;
+  test: Array<String>;
+  kontakt: Array<String>;
+  naslov: Array<String>;
+}
+
+enum OsebaTip {
+  UCENEC = "UCENEC",
+  UCITELJ = "UCITELJ",
+  INSTRUKTOR = "INSTRUKTOR",
+  ADMIN = "ADMIN",
 }
 
 interface Kontakt {
-	id: string;
-	oseba_id: string;
-	data: string;
-	tip: string;
+  id: string;
+  oseba_id: string;
+  data: string;
+  tip: string;
+}
+
+enum KontaktTip {
+  EMAIL = "EMAIL",
+  TELEFON = "TELEFON",
 }
 
 interface Naslov {
-	id: string;
-	oseba_id: string;
-	drzava: string;
-	mesto: string;
-	ulica: string;
-	zip: string;
-	dodatno: string;
+  id: string;
+  oseba_id: string;
+  drzava: string;
+  mesto: string;
+  ulica: string;
+  zip: string;
+  dodatno: string;
 }
 
 interface Sporocilo {
-	id: string;
-	posiljatelj_id: string;
-	prejemnik_id: string;
-	vsebina: string;
+  id: string;
+  posiljatelj_id: string;
+  prejemnik_id: string;
+  vsebina: string;
 }
 
 interface Zvezek {
-	id: string;
-	tip: string;
-	naslov: string;
-	tematika: Array<String>;
+  id: string;
+  tip: string;
+  naslov: string;
+  tematika: Array<String>;
+}
+
+enum ZvezekTip {
+  DELOVNI = "DELOVNI",
+  TEORETSKI = "TEORETSKI",
 }
 
 interface Naloga {
-	id: string;
-	tematika_id: string;
-	resitev: string;
-	vsebina: string;
-	status: Array<String>;
+  id: string;
+  tematika_id: string;
+  resitev: string;
+  vsebina: string;
+  status: Array<String>;
 }
 
 interface Tematika {
-	id: string;
-	naslov: string;
-	zvezek_id: string;
-	naloga: Array<String>;
+  id: string;
+  naslov: string;
+  zvezek_id: string;
+  naloga: Array<String>;
 }
 
-interface Response {
-	ucenje: {[key: string]: Ucenje};
-	test: {[key: string]: Test};
-	status: {[key: string]: Status};
-	audit: {[key: string]: Audit};
-	oseba: {[key: string]: Oseba};
-	kontakt: {[key: string]: Kontakt};
-	naslov: {[key: string]: Naslov};
-	sporocilo: {[key: string]: Sporocilo};
-	zvezek: {[key: string]: Zvezek};
-	naloga: {[key: string]: Naloga};
-	tematika: {[key: string]: Tematika};
+interface AdjecentRes {
+  ucenje: {[key: string]: Ucenje};
+  test: {[key: string]: Test};
+  status: {[key: string]: Status};
+  audit: {[key: string]: Audit};
+  oseba: {[key: string]: Oseba};
+  kontakt: {[key: string]: Kontakt};
+  naslov: {[key: string]: Naslov};
+  sporocilo: {[key: string]: Sporocilo};
+  zvezek: {[key: string]: Zvezek};
+  naloga: {[key: string]: Naloga};
+  tematika: {[key: string]: Tematika};
 }
