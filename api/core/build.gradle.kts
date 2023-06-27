@@ -122,27 +122,35 @@ fun typescript(packages: List<Package>): String {
     val response = mutableListOf("interface Response {")
 
     //Relationship
-    //                      parent  child
-    val rel = mutableListOf<String, String>()
+    //                parent(lower case) child(lower case)
+    val rel = mutableMapOf<String, MutableList<String>>()
     for (pac in packages) {
         for (dataClass in pac.dataClasses) {
             for (lastnost in dataClass.lastnosti) {
-                if(lastnost.ime.endsWith("_id")){
+                if (lastnost.ime.endsWith("_id")) {
                     val parent = lastnost.ime.replace("_id", "")
-                    val child = dataClass.ime
-                    rel[parent] = child
+                    val child = dataClass.ime.toLowerCase()
+                    rel
+                        .getOrPut(parent, { mutableListOf() })
+                        .add(child)
                 }
             }
         }
     }
     for (pac in packages) {
         for (dataClass in pac.dataClasses) {
+            val lowerDataClassName = dataClass.ime.toLowerCase()
             text.add("interface ${dataClass.ime} {")
-            response.add("\t${dataClass.ime.toLowerCase()}: {[key: string]: ${dataClass.ime}};")
+            response.add("\t${lowerDataClassName}: {[key: string]: ${dataClass.ime}};")
             for (lastnost in dataClass.lastnosti) {
                 text.add("\t${lastnost.ime}: string;")
             }
-            //TODO: Build relationships here!
+
+            val children = rel.getOrDefault(lowerDataClassName, mutableListOf())
+            for(child in children){
+                text.add("\t${child}: Array<String>;")
+            }
+
             text.add("}\n")
         }
     }
