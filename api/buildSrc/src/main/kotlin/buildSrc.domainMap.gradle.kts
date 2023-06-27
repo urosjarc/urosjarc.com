@@ -114,7 +114,7 @@ class DomainMap : Plugin<Project> {
     }
 
     fun typescript(packages: List<Package>): String {
-        val text = mutableListOf<String>("// FILE AUTO GENERATED !!!\n")
+        val text = mutableListOf("// FILE AUTO GENERATED !!!\n")
         val response = mutableListOf("interface Response {")
 
         //Relationship
