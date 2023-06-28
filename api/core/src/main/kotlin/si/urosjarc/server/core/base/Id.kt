@@ -7,6 +7,11 @@ import java.util.*
 
 @JvmInline
 @Serializable
-value class Id<T>(val value: String = UUID.randomUUID().toBase64()) {
-    override fun toString(): String = "${name<Id<T>>()}(${this.value})"
+value class Id<T>(val value: String) {
+    companion object {
+        @JvmStatic
+        inline fun <reified T : Any> new(): Id<T> {
+            return Id("${name<T>()}_${UUID.randomUUID().toBase64()}")
+        }
+    }
 }

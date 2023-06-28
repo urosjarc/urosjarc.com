@@ -11,7 +11,7 @@ import si.urosjarc.server.core.base.Repo
 
 abstract class SqlRepo<T : Entiteta<T>>(table: String) : Table(name = table), Repo<T> {
 
-    val id: Column<String> = varchar(Entiteta<Any>::id.name, 20)
+    val id: Column<String> = varchar(Entiteta<Any>::id.name, STR_MEDIUM)
 
     override val primaryKey = PrimaryKey(id)
     abstract fun map(obj: T, any: UpdateBuilder<Number>)

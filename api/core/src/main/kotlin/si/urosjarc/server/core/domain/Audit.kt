@@ -8,7 +8,7 @@ import si.urosjarc.server.core.base.Id
 @Serializable
 data class Audit(
     @Contextual
-    override val id: Id<Audit> = Id(),
+    override val id: Id<Audit> = Id.new(),
     val opis: String,
     val entiteta_id: String,
     val entiteta: String

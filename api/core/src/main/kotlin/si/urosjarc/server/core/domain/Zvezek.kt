@@ -8,7 +8,7 @@ import si.urosjarc.server.core.base.Id
 @Serializable
 data class Zvezek(
     @Contextual
-    override val id: Id<Zvezek> = Id(),
+    override val id: Id<Zvezek> = Id.new(),
     val tip: Tip,
     val naslov: String,
 ) : Entiteta<Zvezek>() {
@@ -18,7 +18,7 @@ data class Zvezek(
 @Serializable
 data class Naloga(
     @Contextual
-    override val id: Id<Naloga> = Id(),
+    override val id: Id<Naloga> = Id.new(),
     @Contextual
     val tematika_id: Id<Tematika>,
     val resitev: String,
@@ -29,7 +29,7 @@ data class Naloga(
 @Serializable
 data class Tematika(
     @Contextual
-    override val id: Id<Tematika> = Id(),
+    override val id: Id<Tematika> = Id.new(),
     val naslov: String,
     @Contextual
     val zvezek_id: Id<Zvezek>

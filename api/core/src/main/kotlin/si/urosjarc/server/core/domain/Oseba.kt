@@ -8,7 +8,7 @@ import si.urosjarc.server.core.base.Id
 @Serializable
 data class Oseba(
     @Contextual
-    override val id: Id<Oseba> = Id(),
+    override val id: Id<Oseba> = Id.new(),
     val ime: String,
     val priimek: String,
     val username: String,
@@ -20,7 +20,7 @@ data class Oseba(
 @Serializable
 data class Kontakt(
     @Contextual
-    override val id: Id<Kontakt> = Id(),
+    override val id: Id<Kontakt> = Id.new(),
     @Contextual
     val oseba_id: Id<Oseba>,
     val data: String,
@@ -32,7 +32,7 @@ data class Kontakt(
 @Serializable
 data class Naslov(
     @Contextual
-    override val id: Id<Naslov> = Id(),
+    override val id: Id<Naslov> = Id.new(),
     @Contextual
     val oseba_id: Id<Oseba>,
     val drzava: String,
@@ -45,7 +45,7 @@ data class Naslov(
 @Serializable
 data class Sporocilo(
     @Contextual
-    override val id: Id<Sporocilo> = Id(),
+    override val id: Id<Sporocilo> = Id.new(),
     @Contextual
     val posiljatelj_id: Id<Kontakt>,
     @Contextual

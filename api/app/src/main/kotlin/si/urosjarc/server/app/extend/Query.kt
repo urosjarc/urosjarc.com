@@ -1,7 +1,9 @@
 package si.urosjarc.server.app.extend
 
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonPrimitive
 import org.jetbrains.exposed.sql.Query
+import si.urosjarc.server.core.base.Entiteta
 
 
 fun Query.toJsonElement(): JsonElement = this.toList().toJsonElement()
@@ -15,7 +17,7 @@ fun Query.toAdjecentJsonElement(children: Boolean = false): JsonElement {
     this.forEach {
         //                           table                key     value
         val splited_row = mutableMapOf<String, MutableMap<String, JsonElement>>()
-        //                                        table           key references
+        //                                        child           parent parameter
         val splited_row_references = mutableMapOf<String, MutableSet<String>>()
 
         /**
@@ -50,7 +52,7 @@ fun Query.toAdjecentJsonElement(children: Boolean = false): JsonElement {
                 returned_references
                     .getOrPut(parent_table) { mutableMapOf() }
                     .getOrPut(parent_id.toString()) { mutableMapOf() }
-                    .getOrPut(child_table) { mutableSetOf() }
+                    .getOrPut("_otroci") { mutableSetOf() } //TODO: MAKE THIS SAFE!
                     .add(child_id)
             }
         }

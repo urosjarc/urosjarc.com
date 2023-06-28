@@ -8,7 +8,7 @@ import si.urosjarc.server.core.base.Id
 @Serializable
 data class Ucenje(
     @Contextual
-    override val id: Id<Ucenje> = Id(),
+    override val id: Id<Ucenje> = Id.new(),
     @Contextual
     val ucenec_id: Id<Oseba>,
     @Contextual
