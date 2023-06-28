@@ -7,9 +7,8 @@ import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.base.SqlRepo
-import si.urosjarc.server.app.extend.sliceAlias
 import si.urosjarc.server.app.extend.toDomainMap
-import si.urosjarc.server.core.base.DomainMap
+import si.urosjarc.server.app.extend.sliceAlias
 import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.domain.Oseba
 import si.urosjarc.server.core.domain.Sporocilo
@@ -35,7 +34,8 @@ object SporociloSqlRepo : SporociloRepo, SqlRepo<Sporocilo>(name<Sporocilo>()) {
         vsebina = R[vsebina],
     )
 
-    override fun get_posiljatelje(id_prejemnika: Id<Oseba>): DomainMap {
+
+    override fun get_posiljatelje(id_prejemnika: Id<Oseba>): SporociloRepo.GetPosiljatelje {
         val kontakt_posiljatelja = KontaktSqlRepo.alias("kontakt_posiljatelja")
         val kontakt_prejemnika = KontaktSqlRepo.alias("kontakt_prejemnika")
         val oseba_posiljatelj = OsebaSqlRepo.alias("oseba_posiljatelj")

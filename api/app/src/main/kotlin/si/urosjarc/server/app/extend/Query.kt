@@ -2,9 +2,8 @@ package si.urosjarc.server.app.extend
 
 import kotlinx.serialization.json.*
 import org.jetbrains.exposed.sql.Query
-import si.urosjarc.server.core.base.DomainMap
 
-fun Query.toDomainMap(children: Boolean = false): DomainMap {
+inline fun <reified T : Any> Query.toDomainMap(children: Boolean = false): T {
     //                          table                id                key       value
     val returned = mutableMapOf<String, MutableMap<String, MutableMap<String, JsonElement>>>()
     //                                     table                id                key       references
@@ -75,19 +74,17 @@ fun Query.toDomainMap(children: Boolean = false): DomainMap {
             for ((id, row) in table_data) {
                 val returned_row = returned_ids[id] ?: continue
                 for ((key, value) in row) {
-                    returned_row.getOrPut(key) { JsonArray(value.toList())}
+                    returned_row.getOrPut(key) { JsonArray(value.toList()) }
                 }
             }
         }
     }
 
-    /**
-     * CONVERT TO DOMAIN MAP!
-     */
+
     val json = Json {
         this.isLenient = true
         this.ignoreUnknownKeys = true
     }
     val jsonElement = json.encodeToJsonElement(returned)
-    return json.decodeFromJsonElement(jsonElement)
+    return json.decodeFromJsonElement<T>(jsonElement)
 }
