@@ -1,10 +1,20 @@
 package si.urosjarc.server.app.extend
 
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.decodeFromJsonElement
 import org.jetbrains.exposed.sql.Query
-import si.urosjarc.server.core.base.Entiteta
+import si.urosjarc.server.core.base.DomainMap
 
+fun Query.toDomain(): DomainMap {
+    val data = this.toAdjecentJsonElement(children = true)
+    println(data)
+    val json = Json {
+        this.isLenient = true
+        this.ignoreUnknownKeys = true
+    }
+    return json.decodeFromJsonElement<DomainMap>(data)
+}
 
 fun Query.toJsonElement(): JsonElement = this.toList().toJsonElement()
 

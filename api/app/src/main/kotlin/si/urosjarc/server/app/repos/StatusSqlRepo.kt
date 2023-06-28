@@ -1,13 +1,13 @@
 package si.urosjarc.server.app.repos
 
-import kotlinx.serialization.json.JsonElement
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.base.SqlRepo
 import si.urosjarc.server.app.extend.sliceAlias
-import si.urosjarc.server.app.extend.toAdjecentJsonElement
+import si.urosjarc.server.app.extend.toDomain
+import si.urosjarc.server.core.base.DomainMap
 import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.domain.Oseba
 import si.urosjarc.server.core.domain.Status
@@ -36,7 +36,7 @@ object StatusSqlRepo : StatusRepo, SqlRepo<Status>(name<Status>()) {
         pojasnilo = R[pojasnilo]
     )
 
-    override fun get_statuse(id_osebe: Id<Oseba>): JsonElement {
+    override fun get_statuse(id_osebe: Id<Oseba>): DomainMap {
         return join(
             otherTable = TestSqlRepo,
             joinType = JoinType.INNER,
@@ -65,7 +65,7 @@ object StatusSqlRepo : StatusRepo, SqlRepo<Status>(name<Status>()) {
             ZvezekSqlRepo
         )
             .select(where = { TestSqlRepo.oseba_id.eq(id_osebe.value) })
-            .toAdjecentJsonElement(children = true)
+            .toDomain()
     }
 
 }

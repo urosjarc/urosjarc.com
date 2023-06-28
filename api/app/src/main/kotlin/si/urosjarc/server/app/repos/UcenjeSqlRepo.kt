@@ -4,13 +4,15 @@ import kotlinx.serialization.json.JsonElement
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.base.SqlRepo
 import si.urosjarc.server.app.extend.sliceAlias
 import si.urosjarc.server.app.extend.toAdjecentJsonElement
+import si.urosjarc.server.app.extend.toDomain
+import si.urosjarc.server.core.base.DomainMap
 import si.urosjarc.server.core.base.Id
-import si.urosjarc.server.core.domain.Oseba
-import si.urosjarc.server.core.domain.Ucenje
+import si.urosjarc.server.core.domain.*
 import si.urosjarc.server.core.extends.name
 import si.urosjarc.server.core.repos.UcenjeRepo
 
@@ -31,7 +33,7 @@ object UcenjeSqlRepo : UcenjeRepo, SqlRepo<Ucenje>(name<Ucenje>()) {
         ucitelj_id = Id(R[ucitelj_id]),
     )
 
-    override fun get_ucence(id_ucitelja: Id<Oseba>): JsonElement {
+    override fun get_ucence(id_ucitelja: Id<Oseba>): DomainMap {
         return join(
             OsebaSqlRepo,
             onColumn = ucenec_id, otherColumn = OsebaSqlRepo.id,
@@ -39,10 +41,10 @@ object UcenjeSqlRepo : UcenjeRepo, SqlRepo<Ucenje>(name<Ucenje>()) {
         )
             .sliceAlias(OsebaSqlRepo)
             .select { ucitelj_id.eq(id_ucitelja.value) }
-            .toAdjecentJsonElement()
+            .toDomain()
     }
 
-    override fun get_ucitelje(id_ucenca: Id<Oseba>): JsonElement {
+    override fun get_ucitelje(id_ucenca: Id<Oseba>): DomainMap {
         return join(
             OsebaSqlRepo,
             onColumn = ucitelj_id, otherColumn = OsebaSqlRepo.id,
@@ -50,7 +52,8 @@ object UcenjeSqlRepo : UcenjeRepo, SqlRepo<Ucenje>(name<Ucenje>()) {
         )
             .sliceAlias(OsebaSqlRepo)
             .select { ucenec_id.eq(id_ucenca.value) }
-            .toAdjecentJsonElement()
+            .toDomain()
+
     }
 
 }

@@ -1,5 +1,8 @@
 package si.urosjarc.server.app.extend
 
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone.Companion.UTC
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.*
 import org.apache.logging.log4j.kotlin.logger
 import org.jetbrains.exposed.sql.Column
@@ -9,10 +12,15 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
 
 fun Any?.toJsonElement(): JsonElement {
+    println(this)
     return when (this) {
         null -> JsonNull
         is JsonElement -> this
         is Boolean -> JsonPrimitive(this)
+        /**
+         * TODO: Make this better!
+         */
+        is Long -> JsonPrimitive(Instant.fromEpochMilliseconds(this).toLocalDateTime(UTC).date.toString())
         is Number -> JsonPrimitive(this)
         is String -> JsonPrimitive(this)
         is ResultRow -> this.toJsonElement()
