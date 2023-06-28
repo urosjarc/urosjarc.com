@@ -28,7 +28,7 @@ data class Enumerator(
         fun parse(line: String): Enumerator {
             val lineInfo = line.trim().removePrefix("enum class ").replace(",", "").split(" ")
             val enum = Enumerator(ime = lineInfo.first())
-            for (i in 2 until lineInfo.size-1) {
+            for (i in 2 until lineInfo.size - 1) {
                 enum.vrednosti.add(lineInfo[i])
             }
             return enum
@@ -84,6 +84,54 @@ class DomainMap : Plugin<Project> {
 
     val className = DomainMap::class.simpleName.toString()
 
+    private fun relationships(packages: List<Package>): Map<String, List<String>> {
+        //Relationship
+        //                parent(lower case) child(lower case)
+        val rel = mutableMapOf<String, MutableList<String>>()
+        for (pac in packages) {
+            for (dataClass in pac.dataClasses) {
+                for (lastnost in dataClass.lastnosti) {
+                    if (lastnost.ime.endsWith("_id")) {
+                        val parent = lastnost.ime.replace("_id", "")
+                        val child = dataClass.ime.toLowerCase()
+                        rel
+                            .getOrPut(parent, { mutableListOf() })
+                            .add(child)
+                    }
+                }
+            }
+        }
+        return rel
+    }
+
+    override fun apply(project: Project) {
+        val extension = project.extensions.create<DomainMapExtension>(className)
+
+        project.task(className) {
+            doLast {
+                val buildDir = this.project.buildDir
+                val inputDir = File(this.project.projectDir, extension.inputDir.get())
+
+                logger.warn("\nInput dir: $inputDir\n")
+
+                val packages = mutableListOf<Package>()
+                inputDir.walkTopDown().forEach {
+                    if (it.isFile) {
+                        logger.warn(" - ${it.name}")
+                        packages.add(Package.parse(it))
+                    }
+                }
+
+                logger.warn("\nBuild dir: $buildDir")
+
+                mapOf(
+                    ::plantUML to "plantuml",
+                    ::typescript to "ts"
+                ).forEach { File(buildDir, "domain.${it.value}").writeText(it.key(packages)) }
+            }
+        }
+    }
+
     fun plantUML(packages: List<Package>): String {
         val text = mutableListOf(
             "@startuml",
@@ -116,23 +164,8 @@ class DomainMap : Plugin<Project> {
     fun typescript(packages: List<Package>): String {
         val text = mutableListOf("// FILE AUTO GENERATED !!!\n")
         val response = mutableListOf("interface AdjecentRes {")
+        val rel = relationships(packages)
 
-        //Relationship
-        //                parent(lower case) child(lower case)
-        val rel = mutableMapOf<String, MutableList<String>>()
-        for (pac in packages) {
-            for (dataClass in pac.dataClasses) {
-                for (lastnost in dataClass.lastnosti) {
-                    if (lastnost.ime.endsWith("_id")) {
-                        val parent = lastnost.ime.replace("_id", "")
-                        val child = dataClass.ime.toLowerCase()
-                        rel
-                            .getOrPut(parent, { mutableListOf() })
-                            .add(child)
-                    }
-                }
-            }
-        }
         for (pac in packages) {
             for (dataClass in pac.dataClasses) {
                 val lowerDataClassName = dataClass.ime.toLowerCase()
@@ -152,9 +185,9 @@ class DomainMap : Plugin<Project> {
                 text.add("}\n")
 
                 //ENUMS
-                for(enum in dataClass.enums){
+                for (enum in dataClass.enums) {
                     text.add("enum ${dataClass.ime}${enum.ime} {")
-                    for(enumVal in enum.vrednosti){
+                    for (enumVal in enum.vrednosti) {
                         text.add("\t${enumVal} = \"${enumVal}\",")
                     }
                     text.add("}\n")
@@ -164,34 +197,6 @@ class DomainMap : Plugin<Project> {
         response.add("}\n")
         text += response
         return text.joinToString(separator = "\n")
-    }
-
-    override fun apply(project: Project) {
-        val extension = project.extensions.create<DomainMapExtension>(className)
-
-        project.task(className) {
-            doLast {
-                val buildDir = this.project.buildDir
-                val inputDir = File(this.project.projectDir, extension.inputDir.get())
-
-                logger.warn("\nInput dir: $inputDir\n")
-
-                val packages = mutableListOf<Package>()
-                inputDir.walkTopDown().forEach {
-                    if (it.isFile) {
-                        logger.warn(" - ${it.name}")
-                        packages.add(Package.parse(it))
-                    }
-                }
-
-                logger.warn("\nBuild dir: $buildDir")
-
-                mapOf(
-                    ::plantUML to "plantuml",
-                    ::typescript to "ts"
-                ).forEach { File(buildDir, "domain.${it.value}").writeText(it.key(packages)) }
-            }
-        }
     }
 }
 
