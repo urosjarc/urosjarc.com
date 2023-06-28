@@ -2,11 +2,11 @@ package si.urosjarc.server.app.repos
 
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.base.SqlRepo
 import si.urosjarc.server.app.extend.sliceAlias
-import si.urosjarc.server.app.extend.toDomain
+import si.urosjarc.server.app.extend.toDomainMap
 import si.urosjarc.server.core.base.DomainMap
 import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.domain.Oseba
@@ -64,8 +64,9 @@ object StatusSqlRepo : StatusRepo, SqlRepo<Status>(name<Status>()) {
             TematikaSqlRepo,
             ZvezekSqlRepo
         )
-            .select(where = { TestSqlRepo.oseba_id.eq(id_osebe.value) })
-            .toDomain()
+            .selectAll()
+//TODO            .select(where = { TestSqlRepo.oseba_id.eq(id_osebe.value) })
+            .toDomainMap()
     }
 
 }

@@ -1,24 +1,10 @@
 package si.urosjarc.server.app.extend
 
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.*
 import org.jetbrains.exposed.sql.Query
 import si.urosjarc.server.core.base.DomainMap
 
-fun Query.toDomain(): DomainMap {
-    val data = this.toAdjecentJsonElement(children = true)
-    println(data)
-    val json = Json {
-        this.isLenient = true
-        this.ignoreUnknownKeys = true
-    }
-    return json.decodeFromJsonElement<DomainMap>(data)
-}
-
-fun Query.toJsonElement(): JsonElement = this.toList().toJsonElement()
-
-fun Query.toAdjecentJsonElement(children: Boolean = false): JsonElement {
+fun Query.toDomainMap(children: Boolean = false): DomainMap {
     //                          table                id                key       value
     val returned = mutableMapOf<String, MutableMap<String, MutableMap<String, JsonElement>>>()
     //                                     table                id                key       references
@@ -33,14 +19,14 @@ fun Query.toAdjecentJsonElement(children: Boolean = false): JsonElement {
         /**
          * SPLITING ROW TO MULTIPLE ROWS
          */
-        it.columns { alias, value ->
-            if (alias.contains("__")) {
-                val nameInfo = alias.split("__", limit = 2)
+        it.columns { column, key, value ->
+            if (key.contains("__")) {
+                val nameInfo = key.split("__", limit = 2)
                 val table = nameInfo.first()
                 val parameter = nameInfo.last()
                 splited_row
                     .getOrPut(table) { mutableMapOf() }
-                    .set(parameter, value)
+                    .set(parameter, column.toJsonElement(key, value))
                 if (children && parameter.endsWith("_id")) {
                     splited_row_references
                         .getOrPut(table) { mutableSetOf(parameter) }
@@ -89,11 +75,19 @@ fun Query.toAdjecentJsonElement(children: Boolean = false): JsonElement {
             for ((id, row) in table_data) {
                 val returned_row = returned_ids[id] ?: continue
                 for ((key, value) in row) {
-                    returned_row.getOrPut(key) { value.toJsonElement() }
+                    returned_row.getOrPut(key) { JsonArray(value.toList())}
                 }
             }
         }
     }
 
-    return returned.toJsonElement()
+    /**
+     * CONVERT TO DOMAIN MAP!
+     */
+    val json = Json {
+        this.isLenient = true
+        this.ignoreUnknownKeys = true
+    }
+    val jsonElement = json.encodeToJsonElement(returned)
+    return json.decodeFromJsonElement(jsonElement)
 }
