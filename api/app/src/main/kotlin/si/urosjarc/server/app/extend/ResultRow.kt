@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.ResultRow
 fun ResultRow.obisci_stolpce(column: (column: Column<*>, name: String, value: Any?) -> Unit) {
     // ACCESS TO PRIVATE DATA FIELD!
     val dataProperty = this.ukradi_privateProperty<Array<*>>(name = "data")
-    return this.fieldIndex.entries.forEach { entry ->
+    this.fieldIndex.entries.forEach { entry ->
         val entry_name = when (entry.key) {
             is Column<*> -> (entry.key as Column<*>).name
             is ExpressionAlias<*> -> (entry.key as ExpressionAlias<*>).alias
