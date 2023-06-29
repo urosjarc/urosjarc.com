@@ -1,8 +1,8 @@
-package si.urosjarc.server.core.extends
+package si.urosjarc.server.core.extend
 
 import org.apache.logging.log4j.kotlin.KotlinLogger
 
-fun <T> KotlinLogger.test(rezultat: T, stack: Array<StackTraceElement> = Throwable().stackTrace): T {
+fun <T> KotlinLogger.testiraj(rezultat: T, stack: Array<StackTraceElement> = Throwable().stackTrace): T {
     val fileName = this.javaClass.simpleName + ".kt"
 
     val vsebina = mutableListOf<String>()

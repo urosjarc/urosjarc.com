@@ -29,6 +29,6 @@ class Test_DbService : KoinTest {
 
     @Test
     fun seed() {
-        service.seed()
+        service.nafilaj()
     }
 }

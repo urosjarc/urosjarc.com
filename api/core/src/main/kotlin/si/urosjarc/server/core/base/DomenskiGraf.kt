@@ -5,7 +5,7 @@ import si.urosjarc.server.core.domain.*
 
 
 @Serializable
-data class DomainMap(
+data class DomenskiGraf(
     val naloga: MutableMap<String, Naloga> = mutableMapOf(),
     val status: MutableMap<String, Status> = mutableMapOf(),
     val tematika: MutableMap<String, Tematika> = mutableMapOf(),

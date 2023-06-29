@@ -6,13 +6,11 @@ import kotlinx.datetime.Month
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.koin.test.KoinTest
-import si.urosjarc.server.core.extends.mladoletnik
-import si.urosjarc.server.core.extends.now
-import si.urosjarc.server.core.extends.starost
-import si.urosjarc.server.core.extends.today
-import kotlin.test.assertEquals
+import si.urosjarc.server.core.extend.mladoletnik
+import si.urosjarc.server.core.extend.zdaj
+import si.urosjarc.server.core.extend.starost
+import si.urosjarc.server.core.extend.danes
 import kotlin.test.assertFalse
-import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 
@@ -20,7 +18,7 @@ import kotlin.test.assertTrue
 class Test_LocalDate : KoinTest {
 
     val localDate = LocalDate(year = 2000, month = Month(10), dayOfMonth = 1)
-    val today = LocalDate.today()
+    val today = LocalDate.danes()
 
     @Test
     fun starost() {
@@ -37,11 +35,11 @@ class Test_LocalDate : KoinTest {
 
     @Test
     fun today() {
-        println(LocalDate.today())
+        println(LocalDate.danes())
     }
 
     @Test
     fun now() {
-        println(LocalDateTime.now())
+        println(LocalDateTime.zdaj())
     }
 }

@@ -7,14 +7,12 @@ interface EmailService {
     }
 
     @JvmInline
-    value class FormatiranEmail(private val value: String) {
-        override fun toString(): String = this.value
-    }
+    value class FormatiranEmail(private val value: String)
 
 
     fun obstaja(email: FormatiranEmail): Boolean
     fun formatiraj(email: String): RezultatEmailFormatiranja
-    fun poslji_email(from: String, to:String, subject: String, html: String): Boolean
+    fun poslji_email(from: String, to: String, subject: String, html: String): Boolean
 //    fun get_all(): List<Email>
 //    fun folder_status(folder: String): FolderStatus
 //    fun inbox_status(): FolderStatus

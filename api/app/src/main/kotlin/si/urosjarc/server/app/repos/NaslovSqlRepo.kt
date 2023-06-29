@@ -5,10 +5,10 @@ import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.base.SqlRepo
 import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.domain.Naslov
-import si.urosjarc.server.core.extends.name
+import si.urosjarc.server.core.extend.ime
 import si.urosjarc.server.core.repos.NaslovRepo
 
-object NaslovSqlRepo : NaslovRepo, SqlRepo<Naslov>(name<Naslov>()) {
+object NaslovSqlRepo : NaslovRepo, SqlRepo<Naslov>(ime<Naslov>()) {
     val oseba_id = reference(Naslov::oseba_id.name, OsebaSqlRepo.id)
     val drzava = varchar(Naslov::drzava.name, STR_SHORT)
     val mesto = varchar(Naslov::mesto.name, STR_SHORT)
@@ -16,7 +16,7 @@ object NaslovSqlRepo : NaslovRepo, SqlRepo<Naslov>(name<Naslov>()) {
     val zip = integer(Naslov::zip.name)
     val dodatno = varchar(Naslov::dodatno.name, STR_SHORT)
 
-    override fun map(obj: Naslov, any: UpdateBuilder<Number>) {
+    override fun zakodiraj(obj: Naslov, any: UpdateBuilder<Number>) {
         any[id] = obj.id.value
         any[oseba_id] = obj.oseba_id.value
         any[drzava] = obj.drzava
@@ -26,7 +26,7 @@ object NaslovSqlRepo : NaslovRepo, SqlRepo<Naslov>(name<Naslov>()) {
         any[dodatno] = obj.dodatno
     }
 
-    override fun resultRow(R: ResultRow): Naslov = Naslov(
+    override fun dekodiraj(R: ResultRow): Naslov = Naslov(
         oseba_id = Id(R[oseba_id]),
         drzava = R[drzava],
         mesto = R[mesto],

@@ -9,7 +9,6 @@ import org.koin.test.KoinTest
 import org.koin.test.inject
 import si.urosjarc.server.app.base.App
 import si.urosjarc.server.core.services.EmailService
-import si.urosjarc.server.core.services.PhoneService
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

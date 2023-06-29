@@ -15,8 +15,8 @@ interface DbService {
     val ucenjeRepo: UcenjeRepo
     val sporociloRepo: SporociloRepo
 
-    fun seed()
-    fun drop()
-    fun <T> exe(code: () -> T): T
+    fun nafilaj()
+    fun sprazni()
+    fun <T> izvedi(code: () -> T): T
 
 }

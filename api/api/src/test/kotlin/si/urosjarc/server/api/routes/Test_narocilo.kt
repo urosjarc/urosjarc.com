@@ -15,7 +15,7 @@ class narocilo_test {
 
     @Test
     fun `POST narocilo`() = testApplication {
-        val body = Entiteta.random<Narocilo>()
+        val body = Entiteta.nakljucni<Narocilo>()
 
         this.test_client().post(narocila()) {
             this.contentType(ContentType.Application.Json)

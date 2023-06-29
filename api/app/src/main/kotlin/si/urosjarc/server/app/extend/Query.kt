@@ -3,7 +3,7 @@ package si.urosjarc.server.app.extend
 import kotlinx.serialization.json.*
 import org.jetbrains.exposed.sql.Query
 
-inline fun <reified T : Any> Query.toDomainMap(children: Boolean = false): T {
+inline fun <reified T : Any> Query.vDomenskiGraf(otroci: Boolean = false): T {
     //                          table                id                key       value
     val returned = mutableMapOf<String, MutableMap<String, MutableMap<String, JsonElement>>>()
     //                                     table                id                key       references
@@ -18,15 +18,15 @@ inline fun <reified T : Any> Query.toDomainMap(children: Boolean = false): T {
         /**
          * SPLITING ROW TO MULTIPLE ROWS
          */
-        it.columns { column, key, value ->
+        it.obisci_stolpce { column, key, value ->
             if (key.contains("__")) {
                 val nameInfo = key.split("__", limit = 2)
                 val table = nameInfo.first()
                 val parameter = nameInfo.last()
                 splited_row
                     .getOrPut(table) { mutableMapOf() }
-                    .set(parameter, column.toJsonElement(key, value))
-                if (children && parameter.endsWith("_id")) {
+                    .set(parameter, column.vJsonElement(key, value))
+                if (otroci && parameter.endsWith("_id")) {
                     splited_row_references
                         .getOrPut(table) { mutableSetOf(parameter) }
                 }
@@ -36,7 +36,7 @@ inline fun <reified T : Any> Query.toDomainMap(children: Boolean = false): T {
         /**
          * MERGING SPLITED REFERENCE WITH RETURNED REFERENCES
          */
-        if (children) for ((table, references) in splited_row_references) {
+        if (otroci) for ((table, references) in splited_row_references) {
             val child_table = table
             val child_id = splited_row[table]?.get("id") ?: continue
 
@@ -68,7 +68,7 @@ inline fun <reified T : Any> Query.toDomainMap(children: Boolean = false): T {
     /**
      * MERGING PARENTS WITH REFERENCES
      */
-    if (children) for ((table, table_data) in returned_references) {
+    if (otroci) for ((table, table_data) in returned_references) {
         if (table in returned) {
             val returned_ids = returned[table] ?: continue
             for ((id, row) in table_data) {

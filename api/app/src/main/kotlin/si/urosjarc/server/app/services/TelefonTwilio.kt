@@ -8,17 +8,17 @@ import com.twilio.http.TwilioRestClient
 import com.twilio.rest.api.v2010.account.Message
 import com.twilio.type.PhoneNumber
 import org.apache.logging.log4j.kotlin.logger
-import si.urosjarc.server.core.services.PhoneService
+import si.urosjarc.server.core.services.TelefonService
 import com.twilio.rest.lookups.v1.PhoneNumber as PhoneNumberLookup
 import com.twilio.type.PhoneNumber as TwilioPhoneNumber
 
 
-class PhoneTwilio(
+class TelefonTwilio(
     val account_sid: String,
     val auth_token: String,
     val default_region: String,
     val phone: String
-) : PhoneService {
+) : TelefonService {
 
     val log = this.logger()
     val twilio: TwilioRestClient
@@ -30,7 +30,7 @@ class PhoneTwilio(
         this.phoneUtil = PhoneNumberUtil.getInstance()
     }
 
-    override fun obstaja(telefon: PhoneService.FormatiranTelefon): Boolean {
+    override fun obstaja(telefon: TelefonService.FormatiranTelefon): Boolean {
         return try {
             PhoneNumberLookup.fetcher(TwilioPhoneNumber(telefon.toString())).fetch();
             true
@@ -40,13 +40,13 @@ class PhoneTwilio(
         }
     }
 
-    override fun formatiraj(telefon: String): PhoneService.FormatirajRezultat {
+    override fun formatiraj(telefon: String): TelefonService.FormatirajRezultat {
         return try {
             val phone = this.phoneUtil.parse(telefon, this.default_region)
             when (this.phoneUtil.isValidNumber(phone)) {
-                false -> PhoneService.FormatirajRezultat.WARN_TELEFON_NI_PRAVILNE_OBLIKE
-                true -> PhoneService.FormatirajRezultat.DATA(
-                    telefon = PhoneService.FormatiranTelefon(
+                false -> TelefonService.FormatirajRezultat.WARN_TELEFON_NI_PRAVILNE_OBLIKE
+                true -> TelefonService.FormatirajRezultat.DATA(
+                    telefon = TelefonService.FormatiranTelefon(
                         value = this.phoneUtil.format(
                             phone,
                             PhoneNumberUtil.PhoneNumberFormat.E164
@@ -55,11 +55,11 @@ class PhoneTwilio(
                 )
             }
         } catch (err: NumberParseException) {
-            PhoneService.FormatirajRezultat.WARN_TELEFON_NI_PRAVILNE_OBLIKE
+            TelefonService.FormatirajRezultat.WARN_TELEFON_NI_PRAVILNE_OBLIKE
         }
     }
 
-    override fun poslji_sms(telefon: PhoneService.FormatiranTelefon, text: String): PhoneService.RezultatSmsPosiljanja {
+    override fun poslji_sms(telefon: TelefonService.FormatiranTelefon, text: String): TelefonService.RezultatSmsPosiljanja {
         val message: Message = Message.creator(PhoneNumber(telefon.value), PhoneNumber(this.phone), text).create()
         val poslan = !listOf(
             Message.Status.CANCELED,
@@ -67,8 +67,8 @@ class PhoneTwilio(
             Message.Status.UNDELIVERED
         ).contains(message.status) && message.errorCode == null && message.errorMessage == null
         return when (poslan) {
-            true -> PhoneService.RezultatSmsPosiljanja.PASS
-            false -> PhoneService.RezultatSmsPosiljanja.ERROR_SMS_NI_POSLAN(message.toString())
+            true -> TelefonService.RezultatSmsPosiljanja.PASS
+            false -> TelefonService.RezultatSmsPosiljanja.ERROR_SMS_NI_POSLAN(message.toString())
         }
     }
 }

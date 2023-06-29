@@ -1,8 +1,8 @@
 package si.urosjarc.server.core.base
 
 import kotlinx.serialization.Serializable
-import si.urosjarc.server.core.extends.name
-import si.urosjarc.server.core.extends.toBase64
+import si.urosjarc.server.core.extend.ime
+import si.urosjarc.server.core.extend.vBase64
 import java.util.*
 
 @JvmInline
@@ -11,7 +11,7 @@ value class Id<T>(val value: String) {
     companion object {
         @JvmStatic
         inline fun <reified T : Any> new(): Id<T> {
-            return Id("${name<T>()}_${UUID.randomUUID().toBase64()}")
+            return Id("${ime<T>()}_${UUID.randomUUID().vBase64()}")
         }
     }
 }

@@ -49,8 +49,8 @@ fun Route.auth(jwkProvider: JwkProvider) {
 
         //TODO: Naredi pravilno logiko
         var oseba: Oseba? = null
-        db.exe {
-            oseba = db.osebaRepo.get(page = 0).first()
+        db.izvedi {
+            oseba = db.osebaRepo.dobi(stran = 0).first()
         }
         log.info("Oseba: $oseba")
         //TODO: Naredi pravilno logiko

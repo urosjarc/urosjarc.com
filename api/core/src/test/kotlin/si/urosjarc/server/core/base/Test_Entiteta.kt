@@ -21,8 +21,8 @@ class FakeEntity(
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class Test_Entiteta : KoinTest {
 
-    val entiteta = Entiteta.random<FakeEntity>()
-    val entiteta2 = Entiteta.random<FakeEntity>()
+    val entiteta = Entiteta.nakljucni<FakeEntity>()
+    val entiteta2 = Entiteta.nakljucni<FakeEntity>()
 
     @Test
     fun enak() {

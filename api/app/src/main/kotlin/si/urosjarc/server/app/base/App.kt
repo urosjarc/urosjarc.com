@@ -5,10 +5,10 @@ import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import si.urosjarc.server.app.services.DbExposed
 import si.urosjarc.server.app.services.EmailSmtp
-import si.urosjarc.server.app.services.PhoneTwilio
+import si.urosjarc.server.app.services.TelefonTwilio
 import si.urosjarc.server.core.services.DbService
 import si.urosjarc.server.core.services.EmailService
-import si.urosjarc.server.core.services.PhoneService
+import si.urosjarc.server.core.services.TelefonService
 
 object App {
     enum class Tip { PRODUCTION, DEVELOPMENT, TEST }
@@ -22,8 +22,8 @@ object App {
                 password = Env.SMTP_PASSWORD
             )
         }
-        this.single<PhoneService> {
-            PhoneTwilio(
+        this.single<TelefonService> {
+            TelefonTwilio(
                 account_sid = Env.TWILIO_ACCOUNT_SID,
                 auth_token = Env.TWILIO_AUTH_TOKEN,
                 default_region = Env.TWILIO_DEFAULT_REGION,

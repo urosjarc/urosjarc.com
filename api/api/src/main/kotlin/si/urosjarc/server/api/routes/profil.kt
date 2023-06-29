@@ -10,7 +10,7 @@ import org.koin.ktor.ext.inject
 import si.urosjarc.server.api.extend.profil
 import si.urosjarc.server.api.extend.system_error
 import si.urosjarc.server.core.base.Id
-import si.urosjarc.server.core.base.DbGetRezultat
+import si.urosjarc.server.core.base.DbDobiRezultat
 import si.urosjarc.server.core.services.DbService
 
 
@@ -41,28 +41,28 @@ fun Route.profil() {
     this.get<profil.oseba> {
         val profil = this.call.profil()
 
-        val result = db.exe { db.osebaRepo.get(key = Id(profil.id)) }
+        val result = db.izvedi { db.osebaRepo.dobi(kljuc = Id(profil.id)) }
         when (val r = result) {
-            is DbGetRezultat.DATA -> this.call.respond(r.data)
-            is DbGetRezultat.ERROR -> this.call.system_error(r)
+            is DbDobiRezultat.DATA -> this.call.respond(r.data)
+            is DbDobiRezultat.ERROR -> this.call.system_error(r)
         }
     }
 
     this.get<profil.ucenje> {
         val profil = this.call.profil()
-        val json = db.exe { db.ucenjeRepo.get_ucence(id_ucitelja = Id(profil.id)) }
+        val json = db.izvedi { db.ucenjeRepo.dobi_ucence(id_ucitelja = Id(profil.id)) }
         this.call.respond(json)
     }
 
     this.get<profil.sporocila> {
         val profil = this.call.profil()
-        val json = db.exe { db.sporociloRepo.get_posiljatelje(id_prejemnika = Id(profil.id)) }
+        val json = db.izvedi { db.sporociloRepo.dobi_posiljatelje(id_prejemnika = Id(profil.id)) }
         this.call.respond(json)
     }
 
     this.get<profil.statusi> {
         val profil = this.call.profil()
-        val json = db.exe { db.statusRepo.get_statuse(id_osebe = Id(profil.id)) }
+        val json = db.izvedi { db.statusRepo.dobi_statuse(id_osebe = Id(profil.id)) }
         this.call.respond(json)
     }
 

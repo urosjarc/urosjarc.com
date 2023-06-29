@@ -3,62 +3,54 @@ package si.urosjarc.server.app.base
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
-import si.urosjarc.server.core.base.Entiteta
-import si.urosjarc.server.core.base.Id
-import si.urosjarc.server.core.base.DbGetRezultat
-import si.urosjarc.server.core.base.DbPostRezultat
-import si.urosjarc.server.core.base.Repo
+import si.urosjarc.server.core.base.*
 
-abstract class SqlRepo<T : Entiteta<T>>(table: String) : Table(name = table), Repo<T> {
-
-    val id: Column<String> = varchar(Entiteta<Any>::id.name, STR_MEDIUM)
-
-    override val primaryKey = PrimaryKey(id)
-    abstract fun map(obj: T, any: UpdateBuilder<Number>)
-    abstract fun resultRow(R: ResultRow): T;
-    private fun query(query: Query): List<T> = query.map { this.resultRow(it) }
-
-    override fun drop() = SchemaUtils.drop(this)
-    override fun seed() = SchemaUtils.create(this)
-    override fun post(entity: T): DbPostRezultat<T> {
-        val result: ResultRow? = insert(body = { this.map(entity, it) }).resultedValues?.get(0)
-
-        return when (result == null) {
-            false -> DbPostRezultat.DATA(data = resultRow(result))
-            true -> DbPostRezultat.FATAL_DB_NAPAKA()
-        }
-    }
-
-    override fun get(page: Int): List<T> = query(selectAll().limit(n = 100, offset = 100L * page))
-
-    override fun get(key: Id<T>): DbGetRezultat<T> {
-        val result = select(where = { id eq key.value }).limit(n = 1).singleOrNull()
-        return when (result == null) {
-            true -> DbGetRezultat.ERROR()
-            false -> DbGetRezultat.DATA(data = resultRow(result))
-        }
-    }
-
-    override fun put(entity: T): Boolean {
-        val result: Int = update(
-            where = { id eq entity.id.value },
-            body = { this.map(entity, it) },
-            limit = 1
-        )
-        return result == 1;
-    }
-
-    override fun delete(key: Id<T>): Boolean {
-        val result: Int = this.deleteWhere(
-            op = { id eq key.value },
-            limit = 1
-        )
-        return result == 1;
-    }
-
+abstract class SqlRepo<T : Entiteta<T>>(ime: String) : Table(name = ime), Repo<T> {
     companion object {
         const val STR_SHORT = 20
         const val STR_MEDIUM = 50
         const val STR_LONG = 100
+    }
+
+    val id: Column<String> = varchar(Entiteta<Any>::id.name, STR_MEDIUM)
+    override val primaryKey = PrimaryKey(id)
+    override fun sprazni() = SchemaUtils.drop(this)
+    override fun nafilaj() = SchemaUtils.create(this)
+    abstract fun zakodiraj(obj: T, any: UpdateBuilder<Number>)
+    abstract fun dekodiraj(R: ResultRow): T;
+    private fun dekodiraj(query: Query): List<T> = query.map { this.dekodiraj(it) }
+    override fun ustvari(entiteta: T): DbUstvariRezultat<T> {
+        val result: ResultRow? = insert(body = { this.zakodiraj(entiteta, it) }).resultedValues?.get(0)
+
+        return when (result == null) {
+            false -> DbUstvariRezultat.DATA(data = dekodiraj(result))
+            true -> DbUstvariRezultat.FATAL_DB_NAPAKA()
+        }
+    }
+
+    override fun dobi(stran: Int): List<T> = dekodiraj(selectAll().limit(n = 100, offset = 100L * stran))
+    override fun dobi(kljuc: Id<T>): DbDobiRezultat<T> {
+        val result = select(where = { id eq kljuc.value }).limit(n = 1).singleOrNull()
+        return when (result == null) {
+            true -> DbDobiRezultat.ERROR()
+            false -> DbDobiRezultat.DATA(data = dekodiraj(result))
+        }
+    }
+
+    override fun popravi(entiteta: T): Boolean {
+        val result: Int = update(
+            where = { id eq entiteta.id.value },
+            body = { this.zakodiraj(entiteta, it) },
+            limit = 1
+        )
+        return result == 1;
+    }
+
+    override fun izbrisi(kljuc: Id<T>): Boolean {
+        val result: Int = this.deleteWhere(
+            op = { id eq kljuc.value },
+            limit = 1
+        )
+        return result == 1;
     }
 }

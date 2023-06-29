@@ -10,11 +10,11 @@ import si.urosjarc.server.core.domain.Sporocilo
 interface SporociloRepo : Repo<Sporocilo> {
 
     @Serializable
-    data class GetPosiljatelje(
+    data class DobiPosiljateljeGraf(
         val kontakt_prejemnika: MutableMap<String, Kontakt> = mutableMapOf(),
         val kontakt_posiljatelja: MutableMap<String, Kontakt> = mutableMapOf(),
         val oseba_posiljatelj: MutableMap<String, Oseba> = mutableMapOf()
     )
 
-    fun get_posiljatelje(id_prejemnika: Id<Oseba>): GetPosiljatelje
+    fun dobi_posiljatelje(id_prejemnika: Id<Oseba>): DobiPosiljateljeGraf
 }

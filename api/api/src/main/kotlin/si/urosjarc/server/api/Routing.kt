@@ -99,9 +99,9 @@ fun Application.configureRouting() {
     }
 
     val db: DbService by this.inject()
-    db.drop()
-    db.exe {
-        db.seed()
+    db.sprazni()
+    db.izvedi {
+        db.nafilaj()
     }
 
 }

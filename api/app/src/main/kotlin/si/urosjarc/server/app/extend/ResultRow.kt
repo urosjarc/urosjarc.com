@@ -6,9 +6,9 @@ import org.jetbrains.exposed.sql.ExpressionAlias
 import org.jetbrains.exposed.sql.ResultRow
 
 
-fun ResultRow.columns(column: (column: Column<*>, name: String, value: Any?) -> Unit) {
+fun ResultRow.obisci_stolpce(column: (column: Column<*>, name: String, value: Any?) -> Unit) {
     // ACCESS TO PRIVATE DATA FIELD!
-    val dataProperty = this.privateProperty<Array<*>>(name = "data")
+    val dataProperty = this.ukradi_privateProperty<Array<*>>(name = "data")
     return this.fieldIndex.entries.forEach { entry ->
         val entry_name = when (entry.key) {
             is Column<*> -> (entry.key as Column<*>).name
@@ -17,7 +17,7 @@ fun ResultRow.columns(column: (column: Column<*>, name: String, value: Any?) -> 
                 this.logger().error(entry); "NULL"
             }
         }
-        val delegateProperty = entry.key.privateProperty<Column<*>>(name = "delegate")
+        val delegateProperty = entry.key.ukradi_privateProperty<Column<*>>(name = "delegate")
         column(delegateProperty, entry_name, dataProperty[entry.value])
     }
 }

@@ -8,15 +8,15 @@ import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.base.SqlRepo
 import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.domain.Test
-import si.urosjarc.server.core.extends.name
+import si.urosjarc.server.core.extend.ime
 import si.urosjarc.server.core.repos.TestRepo
 
-object TestSqlRepo : TestRepo, SqlRepo<Test>(name<Test>()) {
+object TestSqlRepo : TestRepo, SqlRepo<Test>(ime<Test>()) {
     val naslov = varchar(Test::naslov.name, STR_MEDIUM)
     val podnaslov = varchar(Test::podnaslov.name, STR_MEDIUM)
     val deadline = date(Test::deadline.name)
     val oseba_id = reference(Test::oseba_id.name, OsebaSqlRepo.id)
-    override fun map(obj: Test, any: UpdateBuilder<Number>) {
+    override fun zakodiraj(obj: Test, any: UpdateBuilder<Number>) {
         any[id] = obj.id.value
         any[naslov] = obj.naslov
         any[podnaslov] = obj.podnaslov
@@ -24,7 +24,7 @@ object TestSqlRepo : TestRepo, SqlRepo<Test>(name<Test>()) {
         any[oseba_id] = obj.oseba_id.value
     }
 
-    override fun resultRow(R: ResultRow): Test {
+    override fun dekodiraj(R: ResultRow): Test {
         val deadline = R[deadline]
         return Test(
             id = Id(R[id]),
