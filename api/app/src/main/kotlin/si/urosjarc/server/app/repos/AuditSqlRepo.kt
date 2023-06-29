@@ -12,4 +12,18 @@ object AuditSqlRepo : AuditRepo, SqlRepo<Audit>(ime<Audit>()) {
     val opis = varchar(Audit::opis.name, STR_LONG)
     val entiteta = varchar(Audit::entiteta.name, STR_SHORT)
     val entiteta_id = varchar(Audit::entiteta_id.name, STR_SHORT)
+
+    override fun zakodiraj(obj: Audit, any: UpdateBuilder<Number>) {
+        any[id] = obj.id.value
+        any[opis] = obj.opis
+        any[entiteta] = obj.entiteta
+        any[entiteta_id] = obj.entiteta_id
+    }
+
+    override fun dekodiraj(R: ResultRow): Audit = Audit(
+        id=Id(R[id]),
+        opis = R[opis],
+        entiteta = R[entiteta],
+        entiteta_id = R[entiteta_id],
+    )
 }

@@ -20,6 +20,22 @@ object StatusSqlRepo : StatusRepo, SqlRepo<Status>(ime<Status>()) {
     val test_id = reference(Status::test_id.name, TestSqlRepo.id)
     val pojasnilo = varchar(Status::pojasnilo.name, STR_LONG)
 
+    override fun zakodiraj(obj: Status, any: UpdateBuilder<Number>) {
+        any[id] = obj.id.value
+        any[tip] = obj.tip.name
+        any[naloga_id] = obj.naloga_id.value
+        any[test_id] = obj.test_id.value
+        any[pojasnilo] = obj.pojasnilo
+    }
+
+    override fun dekodiraj(R: ResultRow): Status = Status(
+        id = Id(R[id]),
+        tip = Status.Tip.valueOf(R[tip]),
+        naloga_id = Id(R[naloga_id]),
+        test_id = Id(R[test_id]),
+        pojasnilo = R[pojasnilo]
+    )
+
     override fun dobi_statuse(id_osebe: Id<Oseba>): DomenskiGraf {
         return join(
             otherTable = TestSqlRepo,

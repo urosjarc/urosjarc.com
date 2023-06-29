@@ -25,7 +25,7 @@ inline fun <reified T : Any> Query.vDomenskiGraf(otroci: Boolean = false): T {
                 val parameter = nameInfo.last()
                 splited_row
                     .getOrPut(table) { mutableMapOf() }
-                    .set(parameter, column.vJsonElement(key, value))
+                    .set(parameter, column.vJsonElement(value=value))
                 if (otroci && parameter.endsWith("_id")) {
                     splited_row_references
                         .getOrPut(table) { mutableSetOf(parameter) }

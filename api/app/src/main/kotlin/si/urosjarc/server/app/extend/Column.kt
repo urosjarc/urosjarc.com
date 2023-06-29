@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.javatime.JavaLocalDateTimeColumnType
 import si.urosjarc.server.core.extend.vLocalDate
 import si.urosjarc.server.core.extend.vLocalDateTime
 
-fun Column<*>.vJsonElement(key: String, value: Any?): JsonElement {
+fun Column<*>.vJsonElement(value: Any?): JsonElement {
     if (value == null) return JsonNull
 
     return when (this.columnType) {
@@ -19,6 +19,6 @@ fun Column<*>.vJsonElement(key: String, value: Any?): JsonElement {
         is FloatColumnType -> JsonPrimitive(value as Float)
         is VarCharColumnType -> JsonPrimitive(value as String)
         is BooleanColumnType -> JsonPrimitive(value as Boolean)
-        else -> throw RuntimeException("Could not convert ${this.columnType} -> $key = $value")
+        else -> throw RuntimeException("Could not convert ${this.columnType} -> $value")
     }
 }

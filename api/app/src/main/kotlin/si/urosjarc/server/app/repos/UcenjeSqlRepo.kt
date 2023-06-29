@@ -18,6 +18,18 @@ object UcenjeSqlRepo : UcenjeRepo, SqlRepo<Ucenje>(ime<Ucenje>()) {
     val ucenec_id = reference(Ucenje::ucenec_id.name, OsebaSqlRepo.id)
     val ucitelj_id = reference(Ucenje::ucitelj_id.name, OsebaSqlRepo.id)
 
+    override fun zakodiraj(obj: Ucenje, any: UpdateBuilder<Number>) {
+        any[id] = obj.id.value
+        any[ucenec_id] = obj.ucenec_id.value
+        any[ucitelj_id] = obj.ucitelj_id.value
+    }
+
+    override fun dekodiraj(R: ResultRow): Ucenje = Ucenje(
+        id = Id(R[id]),
+        ucenec_id = Id(R[ucenec_id]),
+        ucitelj_id = Id(R[ucitelj_id]),
+    )
+
     override fun dobi_ucence(id_ucitelja: Id<Oseba>): DomenskiGraf {
         return join(
             OsebaSqlRepo,
