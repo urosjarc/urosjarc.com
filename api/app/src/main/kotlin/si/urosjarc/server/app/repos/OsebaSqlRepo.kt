@@ -13,20 +13,4 @@ object OsebaSqlRepo : OsebaRepo, SqlRepo<Oseba>(ime<Oseba>()) {
     val priimek = varchar(Oseba::priimek.name, STR_SHORT)
     val username = varchar(Oseba::username.name, STR_SHORT)
     val tip = varchar(Oseba::tip.name, STR_SHORT)
-
-    override fun zakodiraj(obj: Oseba, any: UpdateBuilder<Number>) {
-        any[id] = obj.id.value
-        any[ime] = obj.ime
-        any[priimek] = obj.priimek
-        any[username] = obj.username
-        any[tip] = obj.tip.name
-    }
-
-    override fun dekodiraj(R: ResultRow): Oseba = Oseba(
-        id = Id(R[id]),
-        ime = R[ime],
-        priimek = R[priimek],
-        username = R[username],
-        tip = Oseba.Tip.valueOf(R[tip]),
-    )
 }

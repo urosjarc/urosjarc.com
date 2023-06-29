@@ -15,23 +15,4 @@ object NaslovSqlRepo : NaslovRepo, SqlRepo<Naslov>(ime<Naslov>()) {
     val ulica = varchar(Naslov::ulica.name, STR_SHORT)
     val zip = integer(Naslov::zip.name)
     val dodatno = varchar(Naslov::dodatno.name, STR_SHORT)
-
-    override fun zakodiraj(obj: Naslov, any: UpdateBuilder<Number>) {
-        any[id] = obj.id.value
-        any[oseba_id] = obj.oseba_id.value
-        any[drzava] = obj.drzava
-        any[mesto] = obj.mesto
-        any[ulica] = obj.ulica
-        any[zip] = obj.zip
-        any[dodatno] = obj.dodatno
-    }
-
-    override fun dekodiraj(R: ResultRow): Naslov = Naslov(
-        oseba_id = Id(R[oseba_id]),
-        drzava = R[drzava],
-        mesto = R[mesto],
-        ulica = R[ulica],
-        zip = R[zip],
-        dodatno = R[dodatno],
-    )
 }

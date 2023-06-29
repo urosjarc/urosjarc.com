@@ -16,22 +16,4 @@ object TestSqlRepo : TestRepo, SqlRepo<Test>(ime<Test>()) {
     val podnaslov = varchar(Test::podnaslov.name, STR_MEDIUM)
     val deadline = date(Test::deadline.name)
     val oseba_id = reference(Test::oseba_id.name, OsebaSqlRepo.id)
-    override fun zakodiraj(obj: Test, any: UpdateBuilder<Number>) {
-        any[id] = obj.id.value
-        any[naslov] = obj.naslov
-        any[podnaslov] = obj.podnaslov
-        any[deadline] = obj.deadline.toJavaLocalDate()
-        any[oseba_id] = obj.oseba_id.value
-    }
-
-    override fun dekodiraj(R: ResultRow): Test {
-        val deadline = R[deadline]
-        return Test(
-            id = Id(R[id]),
-            naslov = R[naslov],
-            podnaslov = R[podnaslov],
-            oseba_id = Id(R[oseba_id]),
-            deadline = deadline.toKotlinLocalDate()
-        )
-    }
 }
