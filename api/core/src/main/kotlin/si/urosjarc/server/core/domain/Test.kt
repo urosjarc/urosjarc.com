@@ -10,7 +10,7 @@ import si.urosjarc.server.core.base.Id
 @Serializable
 data class Test(
     @Contextual
-    override val id: Id<Test> = Id.new(),
+    override val id: Id<Test> = Id(),
     val naslov: String,
     val podnaslov: String,
     val deadline: LocalDate,
@@ -21,7 +21,7 @@ data class Test(
 @Serializable
 data class Status(
     @Contextual
-    override val id: Id<Status> = Id.new(),
+    override val id: Id<Status> = Id(),
     val tip: Tip,
     @Contextual
     val naloga_id: Id<Naloga>,

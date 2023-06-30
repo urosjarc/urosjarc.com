@@ -1,6 +1,7 @@
 package si.urosjarc.server.core.repos
 
 import kotlinx.serialization.Serializable
+import si.urosjarc.server.core.base.DomenskiGraf
 import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.base.Repo
 import si.urosjarc.server.core.domain.Kontakt
@@ -16,5 +17,5 @@ interface SporociloRepo : Repo<Sporocilo> {
         val oseba_posiljatelj: MutableMap<String, Oseba> = mutableMapOf()
     )
 
-    fun dobi_posiljatelje(id_prejemnika: Id<Oseba>): DobiPosiljateljeGraf
+    fun dobi_posiljatelje(id_prejemnika: Id<Oseba>): DomenskiGraf
 }

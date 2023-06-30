@@ -3,13 +3,13 @@ package si.urosjarc.server.core.base
 import kotlinx.serialization.Serializable
 import si.urosjarc.server.core.domain.*
 
-
 @Serializable
 data class DomenskiGraf(
-    val naloga: MutableMap<String, Naloga> = mutableMapOf(),
-    val status: MutableMap<String, Status> = mutableMapOf(),
-    val tematika: MutableMap<String, Tematika> = mutableMapOf(),
-    val test: MutableMap<String, Test> = mutableMapOf(),
-    val zvezek: MutableMap<String, Zvezek> = mutableMapOf(),
-    val oseba: MutableMap<String, Oseba> = mutableMapOf(),
+    val naloga: MutableMap<Int, Naloga> = mutableMapOf(),
+    val status: MutableMap<Int, Status> = mutableMapOf(),
+    val tematika: MutableMap<Int, Tematika> = mutableMapOf(),
+    val test: MutableMap<Int, Test> = mutableMapOf(),
+    val zvezek: MutableMap<Int, Zvezek> = mutableMapOf(),
+    val oseba: MutableMap<Int, Oseba> = mutableMapOf(),
+    val otroci: MutableMap<String, MutableMap<Int, MutableMap<String, MutableSet<Int>>>> = mutableMapOf()
 )

@@ -12,12 +12,12 @@ abstract class SqlRepo<T : Entiteta<T>>(ime: String) : Table(name = ime), Repo<T
         const val STR_LONG = 100
     }
 
-    val id: Column<String> = varchar(Entiteta<Any>::id.name, STR_MEDIUM)
+    val id: Column<Int> = integer(Entiteta<Any>::id.name).autoIncrement()
     override val primaryKey = PrimaryKey(id)
     override fun sprazni() = SchemaUtils.drop(this)
     override fun nafilaj() = SchemaUtils.create(this)
     abstract fun zakodiraj(obj: T, any: UpdateBuilder<Number>)
-    abstract fun dekodiraj(R: ResultRow): T;
+    abstract fun dekodiraj(R: ResultRow): T
     private fun dekodiraj(query: Query): List<T> = query.map { this.dekodiraj(it) }
     override fun ustvari(entiteta: T): DbUstvariRezultat<T> {
         val result: ResultRow? = insert(body = { this.zakodiraj(entiteta, it) }).resultedValues?.get(0)

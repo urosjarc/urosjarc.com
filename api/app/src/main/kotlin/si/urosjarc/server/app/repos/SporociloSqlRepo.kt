@@ -2,13 +2,11 @@ package si.urosjarc.server.app.repos
 
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.alias
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.base.SqlRepo
-import si.urosjarc.server.app.extend.vDomenskiGraf
 import si.urosjarc.server.app.extend.vzemi
+import si.urosjarc.server.core.base.DomenskiGraf
 import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.domain.Oseba
 import si.urosjarc.server.core.domain.Sporocilo
@@ -35,7 +33,7 @@ object SporociloSqlRepo : SporociloRepo, SqlRepo<Sporocilo>(ime<Sporocilo>()) {
     )
 
 
-    override fun dobi_posiljatelje(id_prejemnika: Id<Oseba>): SporociloRepo.DobiPosiljateljeGraf {
+    override fun dobi_posiljatelje(id_prejemnika: Id<Oseba>): DomenskiGraf {
         val kontakt_posiljatelja = KontaktSqlRepo.alias("kontakt_posiljatelja")
         val kontakt_prejemnika = KontaktSqlRepo.alias("kontakt_prejemnika")
         val oseba_posiljatelj = OsebaSqlRepo.alias("oseba_posiljatelj")
@@ -59,8 +57,8 @@ object SporociloSqlRepo : SporociloRepo, SqlRepo<Sporocilo>(ime<Sporocilo>()) {
             kontakt_posiljatelja,
             kontakt_prejemnika,
             oseba_posiljatelj
-        ).select(
+        ) {
             kontakt_prejemnika[KontaktSqlRepo.oseba_id].eq(id_prejemnika.value)
-        ).vDomenskiGraf()
+        }
     }
 }

@@ -2,14 +2,13 @@ package si.urosjarc.server.app.repos
 
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.base.SqlRepo
 import si.urosjarc.server.app.extend.vzemi
-import si.urosjarc.server.app.extend.vDomenskiGraf
 import si.urosjarc.server.core.base.DomenskiGraf
 import si.urosjarc.server.core.base.Id
-import si.urosjarc.server.core.domain.*
+import si.urosjarc.server.core.domain.Oseba
+import si.urosjarc.server.core.domain.Ucenje
 import si.urosjarc.server.core.extend.ime
 import si.urosjarc.server.core.repos.UcenjeRepo
 
@@ -36,9 +35,9 @@ object UcenjeSqlRepo : UcenjeRepo, SqlRepo<Ucenje>(ime<Ucenje>()) {
             onColumn = ucenec_id, otherColumn = OsebaSqlRepo.id,
             joinType = JoinType.INNER
         )
-            .vzemi(OsebaSqlRepo)
-            .select { ucitelj_id.eq(id_ucitelja.value) }
-            .vDomenskiGraf()
+            .vzemi(OsebaSqlRepo) {
+                ucitelj_id.eq(id_ucitelja.value)
+            }
     }
 
     override fun dobi_ucitelje(id_ucenca: Id<Oseba>): DomenskiGraf {
@@ -47,10 +46,9 @@ object UcenjeSqlRepo : UcenjeRepo, SqlRepo<Ucenje>(ime<Ucenje>()) {
             onColumn = ucitelj_id, otherColumn = OsebaSqlRepo.id,
             joinType = JoinType.INNER
         )
-            .vzemi(OsebaSqlRepo)
-            .select { ucenec_id.eq(id_ucenca.value) }
-            .vDomenskiGraf()
-
+            .vzemi(OsebaSqlRepo) {
+                ucenec_id.eq(id_ucenca.value)
+            }
     }
 
 }

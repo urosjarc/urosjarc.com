@@ -6,7 +6,7 @@ import si.urosjarc.server.core.extend.ime
 
 @Serializable
 data class Profil(
-    val id: String,
+    val id: Int,
     val tip: Oseba.Tip,
 ) {
     companion object {
