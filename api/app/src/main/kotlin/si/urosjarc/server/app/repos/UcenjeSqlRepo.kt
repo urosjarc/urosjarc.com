@@ -35,9 +35,9 @@ object UcenjeSqlRepo : UcenjeRepo, SqlRepo<Ucenje>(ime<Ucenje>()) {
             onColumn = ucenec_id, otherColumn = OsebaSqlRepo.id,
             joinType = JoinType.INNER
         )
-            .vzemi(OsebaSqlRepo) {
-                ucitelj_id.eq(id_ucitelja.value)
-            }
+            .vzemi(OsebaSqlRepo) //{
+                //ucitelj_id.eq(id_ucitelja.value)
+            //}
     }
 
     override fun dobi_ucitelje(id_ucenca: Id<Oseba>): DomenskiGraf {
@@ -46,9 +46,9 @@ object UcenjeSqlRepo : UcenjeRepo, SqlRepo<Ucenje>(ime<Ucenje>()) {
             onColumn = ucitelj_id, otherColumn = OsebaSqlRepo.id,
             joinType = JoinType.INNER
         )
-            .vzemi(OsebaSqlRepo) {
-                ucenec_id.eq(id_ucenca.value)
-            }
+            .vzemi(OsebaSqlRepo) //{
+                //ucenec_id.eq(id_ucenca.value)
+            //}
     }
 
 }

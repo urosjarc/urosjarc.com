@@ -49,7 +49,7 @@ inline fun <reified T : Any> ColumnSet.vzemi(vararg tables: Table): T {
             name_domain_map[tableName]?.let { prop ->
                 val entiteta: Entiteta<*> = when (table) {
                     is SqlRepo<*> -> table.dekodiraj(resultRow)
-                    is Alias<*> -> (table.delegate as SqlRepo<*>).dekodiraj(resultRow)
+                    is Alias<*> -> (table.delegate as SqlRepo<*>).dekodiraj(resultRow) //TODO: LOOK IN THE FIELD INDEX AND EXTRACT VALUES FROM THERE!
                     else -> throw Exception("Could not convert!")
                 }
                 (prop.call(domenskiGraf) as MutableMap<Int, Entiteta<*>>)?.putIfAbsent(entiteta.id.value, entiteta)
