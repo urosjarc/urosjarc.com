@@ -61,7 +61,7 @@ object StatusSqlRepo : StatusRepo, SqlRepo<Status>(ime<Status>()) {
             NalogaSqlRepo,
             TematikaSqlRepo,
             ZvezekSqlRepo
-        ) { TestSqlRepo.oseba_id.eq(id_osebe.value) }
+        )// { TestSqlRepo.oseba_id.eq(id_osebe.value) }
     }
 
 }

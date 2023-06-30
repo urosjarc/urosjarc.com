@@ -7,24 +7,25 @@ import si.urosjarc.server.core.base.Entiteta
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
-fun ColumnSet.vzemi(vararg tables: Table, cb: (SqlExpressionBuilder.() -> Op<Boolean>)? = null): DomenskiGraf {
+inline fun <reified T : Any> ColumnSet.vzemi(vararg tables: Table): T {
     val columns = mutableListOf<ExpressionAlias<*>>()
 
     /**
      * CREATE SQL REPO MAP
      */
     val names_tables = mutableMapOf<String, Table>()
-    val names_columns_refs = mutableMapOf<String, MutableMap<Column<*>, String>>()
+    val names_columns_refs = mutableMapOf<String, MutableMap<ExpressionAlias<*>, String>>()
     for (table in tables) {
         val tableName = table.tableName.lowercase()
         names_tables.putIfAbsent(tableName, table)
         for (column in table.columns) {
-            columns.add(column.alias("${tableName}__${column.name}"))
+            val aliased_column = column.alias("${tableName}__${column.name}")
+            columns.add(aliased_column)
             if (column.name.endsWith("_id")) {
                 val parentTableName = column.name.replace("_id", "")
                 names_columns_refs
                     .getOrPut(tableName) { mutableMapOf() }
-                    .putIfAbsent(column, parentTableName)
+                    .putIfAbsent(aliased_column, parentTableName)
             }
         }
     }
@@ -33,23 +34,20 @@ fun ColumnSet.vzemi(vararg tables: Table, cb: (SqlExpressionBuilder.() -> Op<Boo
      * CREATE DOMAIN MAP
      */
     val name_domain_map = mutableMapOf<String, KProperty1<*, *>>()
-    for (prop in DomenskiGraf::class.memberProperties) {
+    for (prop in T::class.memberProperties) {
         name_domain_map.putIfAbsent(prop.name, prop)
     }
 
     /**
      * INSERT TO DOMAIN MAP
      */
-    val domenskiGraf = DomenskiGraf()
+    val domenskiGraf = T::class.java.getDeclaredConstructor().newInstance() as DomenskiGraf
     val slice = Slice(this, columns)
 
-    when (cb == null) {
-        true -> slice.selectAll()
-        false -> slice.select(where = cb)
-    }.forEach { resultRow ->
+    slice.selectAll().forEach { resultRow ->
         for ((tableName, table) in names_tables) {
             name_domain_map[tableName]?.let { prop ->
-                val entiteta: Entiteta<*> = when(table){
+                val entiteta: Entiteta<*> = when (table) {
                     is SqlRepo<*> -> table.dekodiraj(resultRow)
                     is Alias<*> -> (table.delegate as SqlRepo<*>).dekodiraj(resultRow)
                     else -> throw Exception("Could not convert!")
@@ -71,5 +69,5 @@ fun ColumnSet.vzemi(vararg tables: Table, cb: (SqlExpressionBuilder.() -> Op<Boo
         }
     }
 
-    return domenskiGraf
+    return domenskiGraf as T
 }
