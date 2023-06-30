@@ -1,7 +1,7 @@
 package si.urosjarc.server.app.repos
 
+import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.JoinType
-import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.base.SqlRepo
@@ -25,11 +25,11 @@ object SporociloSqlRepo : SporociloRepo, SqlRepo<Sporocilo>(ime<Sporocilo>()) {
         any[vsebina] = obj.vsebina
     }
 
-    override fun dekodiraj(R: ResultRow): Sporocilo = Sporocilo(
-        id = Id(R[id]),
-        posiljatelj_id = Id(R[posiljatelj_id]),
-        prejemnik_id = Id(R[prejemnik_id]),
-        vsebina = R[vsebina],
+    override fun dekodiraj(row: (Column<*>) -> Any?): Sporocilo = Sporocilo(
+        id = Id(row(id) as Int),
+        posiljatelj_id = Id(row(posiljatelj_id) as Int),
+        prejemnik_id = Id(row(prejemnik_id) as Int),
+        vsebina = row(vsebina) as String,
     )
 
 

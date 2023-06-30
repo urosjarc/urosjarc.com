@@ -1,7 +1,7 @@
 package si.urosjarc.server.app.repos
 
+import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.JoinType
-import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.base.SqlRepo
 import si.urosjarc.server.app.extend.vzemi
@@ -26,12 +26,12 @@ object StatusSqlRepo : StatusRepo, SqlRepo<Status>(ime<Status>()) {
         any[pojasnilo] = obj.pojasnilo
     }
 
-    override fun dekodiraj(R: ResultRow): Status = Status(
-        id = Id(R[id]),
-        tip = Status.Tip.valueOf(R[tip]),
-        naloga_id = Id(R[naloga_id]),
-        test_id = Id(R[test_id]),
-        pojasnilo = R[pojasnilo]
+    override fun dekodiraj(row: (Column<*>) -> Any?): Status = Status(
+        id = Id(row(id) as Int),
+        tip = Status.Tip.valueOf(row(tip) as String),
+        naloga_id = Id(row(naloga_id) as Int),
+        test_id = Id(row(test_id) as Int),
+        pojasnilo = row(pojasnilo) as String
     )
 
     override fun dobi_statuse(id_osebe: Id<Oseba>): DomenskiGraf {
@@ -63,5 +63,4 @@ object StatusSqlRepo : StatusRepo, SqlRepo<Status>(ime<Status>()) {
             ZvezekSqlRepo
         )// { TestSqlRepo.oseba_id.eq(id_osebe.value) }
     }
-
 }

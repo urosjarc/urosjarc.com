@@ -1,6 +1,6 @@
 package si.urosjarc.server.app.repos
 
-import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.base.SqlRepo
 import si.urosjarc.server.core.base.Id
@@ -26,12 +26,13 @@ object NaslovSqlRepo : NaslovRepo, SqlRepo<Naslov>(ime<Naslov>()) {
         any[dodatno] = obj.dodatno
     }
 
-    override fun dekodiraj(R: ResultRow): Naslov = Naslov(
-        oseba_id = Id(R[oseba_id]),
-        drzava = R[drzava],
-        mesto = R[mesto],
-        ulica = R[ulica],
-        zip = R[zip],
-        dodatno = R[dodatno],
+    override fun dekodiraj(row: (Column<*>) -> Any?): Naslov = Naslov(
+        id = Id(row(id) as Int),
+        oseba_id = Id(row(oseba_id) as Int),
+        drzava = row(drzava) as String,
+        mesto = row(mesto) as String,
+        ulica = row(ulica) as String,
+        zip = row(zip) as Int,
+        dodatno = row(dodatno) as String,
     )
 }

@@ -17,23 +17,25 @@ abstract class SqlRepo<T : Entiteta<T>>(ime: String) : Table(name = ime), Repo<T
     override fun sprazni() = SchemaUtils.drop(this)
     override fun nafilaj() = SchemaUtils.create(this)
     abstract fun zakodiraj(obj: T, any: UpdateBuilder<Number>)
-    abstract fun dekodiraj(R: ResultRow): T
-    private fun dekodiraj(query: Query): List<T> = query.map { this.dekodiraj(it) }
+    abstract fun dekodiraj(row: (Column<*>) -> Any?): T
+    private fun dekodiraj(query: Query, alias: (Column<*>) -> Column<*>): List<T> =
+        query.map { rr -> this.dekodiraj { rr[alias(it)] } }
+
     override fun ustvari(entiteta: T): DbUstvariRezultat<T> {
         val result: ResultRow? = insert(body = { this.zakodiraj(entiteta, it) }).resultedValues?.get(0)
 
         return when (result == null) {
-            false -> DbUstvariRezultat.DATA(data = dekodiraj(result))
+            false -> DbUstvariRezultat.DATA(data = dekodiraj { result[it] ?: throw RuntimeException("Fuck") })
             true -> DbUstvariRezultat.FATAL_DB_NAPAKA()
         }
     }
 
-    override fun dobi(stran: Int): List<T> = dekodiraj(selectAll().limit(n = 100, offset = 100L * stran))
+    override fun dobi(stran: Int): List<T> = dekodiraj(selectAll().limit(n = 100, offset = 100L * stran)) { it }
     override fun dobi(kljuc: Id<T>): DbDobiRezultat<T> {
         val result = select(where = { id eq kljuc.value }).limit(n = 1).singleOrNull()
         return when (result == null) {
             true -> DbDobiRezultat.ERROR()
-            false -> DbDobiRezultat.DATA(data = dekodiraj(result))
+            false -> DbDobiRezultat.DATA(data = dekodiraj { result[it] ?: throw RuntimeException("FUCK") })
         }
     }
 
@@ -43,7 +45,7 @@ abstract class SqlRepo<T : Entiteta<T>>(ime: String) : Table(name = ime), Repo<T
             body = { this.zakodiraj(entiteta, it) },
             limit = 1
         )
-        return result == 1;
+        return result == 1
     }
 
     override fun izbrisi(kljuc: Id<T>): Boolean {
@@ -51,6 +53,6 @@ abstract class SqlRepo<T : Entiteta<T>>(ime: String) : Table(name = ime), Repo<T
             op = { id eq kljuc.value },
             limit = 1
         )
-        return result == 1;
+        return result == 1
     }
 }

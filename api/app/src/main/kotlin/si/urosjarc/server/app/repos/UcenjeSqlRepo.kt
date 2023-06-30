@@ -1,7 +1,7 @@
 package si.urosjarc.server.app.repos
 
+import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.JoinType
-import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.base.SqlRepo
 import si.urosjarc.server.app.extend.vzemi
@@ -23,10 +23,10 @@ object UcenjeSqlRepo : UcenjeRepo, SqlRepo<Ucenje>(ime<Ucenje>()) {
         any[ucitelj_id] = obj.ucitelj_id.value
     }
 
-    override fun dekodiraj(R: ResultRow): Ucenje = Ucenje(
-        id = Id(R[id]),
-        ucenec_id = Id(R[ucenec_id]),
-        ucitelj_id = Id(R[ucitelj_id]),
+    override fun dekodiraj(row: (Column<*>) -> Any?): Ucenje = Ucenje(
+        id = Id(row(id) as Int),
+        ucenec_id = Id(row(ucenec_id) as Int),
+        ucitelj_id = Id(row(ucitelj_id) as Int),
     )
 
     override fun dobi_ucence(id_ucitelja: Id<Oseba>): DomenskiGraf {
@@ -36,8 +36,8 @@ object UcenjeSqlRepo : UcenjeRepo, SqlRepo<Ucenje>(ime<Ucenje>()) {
             joinType = JoinType.INNER
         )
             .vzemi(OsebaSqlRepo) //{
-                //ucitelj_id.eq(id_ucitelja.value)
-            //}
+        //ucitelj_id.eq(id_ucitelja.value)
+        //}
     }
 
     override fun dobi_ucitelje(id_ucenca: Id<Oseba>): DomenskiGraf {
@@ -47,8 +47,8 @@ object UcenjeSqlRepo : UcenjeRepo, SqlRepo<Ucenje>(ime<Ucenje>()) {
             joinType = JoinType.INNER
         )
             .vzemi(OsebaSqlRepo) //{
-                //ucenec_id.eq(id_ucenca.value)
-            //}
+        //ucenec_id.eq(id_ucenca.value)
+        //}
     }
 
 }

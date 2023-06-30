@@ -1,6 +1,6 @@
 package si.urosjarc.server.app.repos
 
-import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.base.SqlRepo
 import si.urosjarc.server.core.base.Id
@@ -17,9 +17,9 @@ object TematikaSqlRepo : TematikaRepo, SqlRepo<Tematika>(ime<Tematika>()) {
         any[zvezek_id] = obj.zvezek_id.value
     }
 
-    override fun dekodiraj(R: ResultRow): Tematika = Tematika(
-        id = Id(R[id]),
-        naslov = R[naslov],
-        zvezek_id = Id(R[zvezek_id])
+    override fun dekodiraj(row: (Column<*>) -> Any?): Tematika = Tematika(
+        id = Id(row(id) as Int),
+        naslov = row(naslov) as String,
+        zvezek_id = Id(row(zvezek_id) as Int)
     )
 }

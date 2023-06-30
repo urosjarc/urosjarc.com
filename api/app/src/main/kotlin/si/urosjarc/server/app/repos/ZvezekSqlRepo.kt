@@ -1,6 +1,6 @@
 package si.urosjarc.server.app.repos
 
-import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.base.SqlRepo
 import si.urosjarc.server.core.base.Id
@@ -18,9 +18,9 @@ object ZvezekSqlRepo : ZvezekRepo, SqlRepo<Zvezek>(ime<Zvezek>()) {
         any[naslov] = obj.naslov
     }
 
-    override fun dekodiraj(R: ResultRow): Zvezek = Zvezek(
-        id = Id(R[id]),
-        tip = Zvezek.Tip.valueOf(R[tip]),
-        naslov = R[naslov],
+    override fun dekodiraj(row: (Column<*>) -> Any?): Zvezek = Zvezek(
+        id = Id(row(id) as Int),
+        tip = Zvezek.Tip.valueOf(row(tip) as String),
+        naslov = row(naslov) as String,
     )
 }

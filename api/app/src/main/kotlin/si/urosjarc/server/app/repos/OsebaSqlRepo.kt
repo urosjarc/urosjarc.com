@@ -1,6 +1,6 @@
 package si.urosjarc.server.app.repos
 
-import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.base.SqlRepo
 import si.urosjarc.server.core.base.Id
@@ -22,11 +22,11 @@ object OsebaSqlRepo : OsebaRepo, SqlRepo<Oseba>(ime<Oseba>()) {
         any[tip] = obj.tip.name
     }
 
-    override fun dekodiraj(R: ResultRow): Oseba = Oseba(
-        id = Id(R[id]),
-        ime = R[ime],
-        priimek = R[priimek],
-        username = R[username],
-        tip = Oseba.Tip.valueOf(R[tip]),
+    override fun dekodiraj(row: (Column<*>) -> Any?): Oseba = Oseba(
+        id = Id(row(id) as Int),
+        ime = row(ime) as String,
+        priimek = row(priimek) as String,
+        username = row(username) as String,
+        tip = Oseba.Tip.valueOf(row(tip) as String),
     )
 }
