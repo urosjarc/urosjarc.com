@@ -49,7 +49,11 @@ fun ColumnSet.vzemi(vararg tables: Table, cb: (SqlExpressionBuilder.() -> Op<Boo
     }.forEach { resultRow ->
         for ((tableName, table) in names_tables) {
             name_domain_map[tableName]?.let { prop ->
-                val entiteta: Entiteta<*> = (table as SqlRepo<*>).dekodiraj(resultRow)
+                val entiteta: Entiteta<*> = when(table){
+                    is SqlRepo<*> -> table.dekodiraj(resultRow)
+                    is Alias<*> -> (table.delegate as SqlRepo<*>).dekodiraj(resultRow)
+                    else -> throw Exception("Could not convert!")
+                }
                 (prop.call(domenskiGraf) as MutableMap<Int, Entiteta<*>>)?.putIfAbsent(entiteta.id.value, entiteta)
 
                 names_columns_refs.get(tableName)?.forEach { (column, parentTableName) ->
