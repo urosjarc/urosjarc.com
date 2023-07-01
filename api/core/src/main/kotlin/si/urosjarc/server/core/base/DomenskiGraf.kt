@@ -18,16 +18,26 @@ data class DomenskiGraf(
 ) {
     inline fun <reified T : Entiteta<T>, reified K : Entiteta<K>> vsi_otroci(
         stars: T, otrociCB: (domenskiGraf: DomenskiGraf) -> MutableMap<Int, K>
-    ): List<K?> {
+    ): MutableList<K> {
         val stars_ime = ime<T>()
         val otrok_ime = ime<K>()
         val property = otrociCB(this)
-        return otroci.get(stars_ime)?.get(stars.id.value)?.get(otrok_ime)?.map { property[it] } ?: listOf()
+        val defaultList: MutableList<K> = mutableListOf()
+
+        otroci
+            .get(stars_ime)
+            ?.get(stars.id.value)
+            ?.get(otrok_ime)
+            ?.forEach {
+                property[it]?.let { it1 -> defaultList.add(it1) }
+            }
+
+        return defaultList
     }
 }
 
 fun main() {
     val dm = DomenskiGraf()
     val oseba = Entiteta.nakljucni<Oseba>()
-    dm.vsi_otroci(oseba) { it.status }
+    val result: List<Status> = dm.vsi_otroci(oseba) { it.status }
 }
