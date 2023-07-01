@@ -33,33 +33,4 @@ object StatusSqlRepo : StatusRepo, SqlRepo<Status>(ime<Status>()) {
         pojasnilo = row(pojasnilo) as String
     )
 
-    override fun dobi_statuse(id_osebe: Id<Oseba>): DomenskiGraf {
-        return join(
-            otherTable = TestSqlRepo,
-            joinType = JoinType.INNER,
-            onColumn = test_id,
-            otherColumn = TestSqlRepo.id
-        ).join(
-            otherTable = NalogaSqlRepo,
-            joinType = JoinType.INNER,
-            onColumn = naloga_id,
-            otherColumn = NalogaSqlRepo.id
-        ).join(
-            otherTable = TematikaSqlRepo,
-            joinType = JoinType.INNER,
-            onColumn = NalogaSqlRepo.tematika_id,
-            otherColumn = TematikaSqlRepo.id
-        ).join(
-            otherTable = ZvezekSqlRepo,
-            joinType = JoinType.INNER,
-            onColumn = TematikaSqlRepo.zvezek_id,
-            otherColumn = ZvezekSqlRepo.id
-        ).izberi(
-            this,
-            TestSqlRepo,
-            NalogaSqlRepo,
-            TematikaSqlRepo,
-            ZvezekSqlRepo
-        ) { TestSqlRepo.oseba_id.eq(id_osebe.value) }
-    }
 }

@@ -30,34 +30,4 @@ object SporociloSqlRepo : SporociloRepo, SqlRepo<Sporocilo>(ime<Sporocilo>()) {
         prejemnik_id = Id(row(prejemnik_id) as Int),
         vsebina = row(vsebina) as String,
     )
-
-
-    override fun dobi_posiljatelje(id_prejemnika: Id<Oseba>): DomenskiGraf {
-        val kontakt_posiljatelja = KontaktSqlRepo.alias("kontakt_posiljatelja")
-        val kontakt_prejemnika = KontaktSqlRepo.alias("kontakt_prejemnika")
-
-        return join(
-            otherTable = kontakt_posiljatelja,
-            otherColumn = kontakt_posiljatelja[KontaktSqlRepo.id],
-            onColumn = posiljatelj_id,
-            joinType = JoinType.INNER
-        ).join(
-            otherTable = kontakt_prejemnika,
-            otherColumn = kontakt_prejemnika[KontaktSqlRepo.id],
-            onColumn = prejemnik_id,
-            joinType = JoinType.INNER
-        ).join(
-            otherTable = OsebaSqlRepo,
-            otherColumn = OsebaSqlRepo.id,
-            onColumn = kontakt_posiljatelja[KontaktSqlRepo.oseba_id],
-            joinType = JoinType.INNER
-        ).izberi(
-            kontakt_posiljatelja,
-            kontakt_prejemnika,
-            OsebaSqlRepo
-        )
-//        {
-//            kontakt_prejemnika[KontaktSqlRepo.oseba_id].eq(id_prejemnika.value)
-//        }
-    }
 }

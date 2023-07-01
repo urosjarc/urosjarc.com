@@ -3,6 +3,7 @@ package si.urosjarc.server.app.services
 import org.apache.logging.log4j.kotlin.logger
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.transactions.transaction
+import si.urosjarc.server.app.base.SqlRepo
 import si.urosjarc.server.app.repos.*
 import si.urosjarc.server.core.base.DbUstvariRezultat
 import si.urosjarc.server.core.base.Entiteta
@@ -11,18 +12,18 @@ import si.urosjarc.server.core.repos.*
 import si.urosjarc.server.core.services.DbService
 
 class DbExposed(
-    val url: String,
-    val driver: String,
-    val user: String,
-    val password: String
+        val url: String,
+        val driver: String,
+        val user: String,
+        val password: String
 ) : DbService {
 
     val log = this.logger()
     val db = Database.connect(
-        url = this.url,
-        driver = this.driver,
-        user = this.user,
-        password = this.password
+            url = this.url,
+            driver = this.driver,
+            user = this.user,
+            password = this.password
     )
 
     override val zvezekRepo: ZvezekRepo = ZvezekSqlRepo
@@ -52,6 +53,13 @@ class DbExposed(
         sporociloRepo.sprazni()
     }
 
+    fun <T : Entiteta<T>> nafilaj_enega(repo: SqlRepo<T>, obj: T): T {
+        return when (val r = repo.ustvari(obj)) {
+            is DbUstvariRezultat.DATA -> r.data
+            is DbUstvariRezultat.FATAL_DB_NAPAKA -> throw RuntimeException("Problems")
+        }
+    }
+
     override fun nafilaj() = transaction {
         zvezekRepo.nafilaj()
         tematikaRepo.nafilaj()
@@ -71,35 +79,32 @@ class DbExposed(
              * OSEBA
              */
             var ucitelj = Entiteta.nakljucni<Oseba>().copy(tip = Oseba.Tip.INSTRUKTOR)
-            when(val r = osebaRepo.ustvari(ucitelj)){
-                is DbUstvariRezultat.DATA -> ucitelj = r.data
-                is DbUstvariRezultat.FATAL_DB_NAPAKA -> TODO()
-            }
+            ucitelj = nafilaj_enega(OsebaSqlRepo, ucitelj)
 
-            val kontakt_ucitelja = Entiteta.nakljucni<Kontakt>().copy(oseba_id = ucitelj.id)
-            kontaktRepo.ustvari(kontakt_ucitelja)
+            var kontakt_ucitelja = Entiteta.nakljucni<Kontakt>().copy(oseba_id = ucitelj.id)
+            kontakt_ucitelja = nafilaj_enega(KontaktSqlRepo, kontakt_ucitelja)
 
             val naslov = Entiteta.nakljucni<Naslov>().copy(oseba_id = ucitelj.id)
-            naslovRepo.ustvari(naslov)
+            nafilaj_enega(NaslovSqlRepo, naslov)
 
             for (j in 0..5) {
 
-                val ucenec = Entiteta.nakljucni<Oseba>().copy(tip = Oseba.Tip.UCENEC)
-                osebaRepo.ustvari(ucenec)
+                var ucenec = Entiteta.nakljucni<Oseba>().copy(tip = Oseba.Tip.UCENEC)
+                ucenec = nafilaj_enega(OsebaSqlRepo, ucenec)
 
-                val kontakt_ucenca = Entiteta.nakljucni<Kontakt>().copy(oseba_id = ucenec.id)
-                kontaktRepo.ustvari(kontakt_ucenca)
+                var kontakt_ucenca = Entiteta.nakljucni<Kontakt>().copy(oseba_id = ucenec.id)
+                kontakt_ucenca = nafilaj_enega(KontaktSqlRepo, kontakt_ucenca)
 
                 val ucenje = Entiteta.nakljucni<Ucenje>().copy(ucitelj_id = ucitelj.id, ucenec_id = ucenec.id)
-                ucenjeRepo.ustvari(ucenje)
+                nafilaj_enega(UcenjeSqlRepo, ucenje)
 
                 for (k in 0..5) {
 
                     val sporocilo_ucenca = Entiteta.nakljucni<Sporocilo>().copy(posiljatelj_id = kontakt_ucenca.id, prejemnik_id = kontakt_ucitelja.id)
-                    sporociloRepo.ustvari(sporocilo_ucenca)
+                    nafilaj_enega(SporociloSqlRepo, sporocilo_ucenca)
 
                     val sporocilo_ucitelja = Entiteta.nakljucni<Sporocilo>().copy(posiljatelj_id = kontakt_ucitelja.id, prejemnik_id = kontakt_ucenca.id)
-                    sporociloRepo.ustvari(sporocilo_ucitelja)
+                    nafilaj_enega(SporociloSqlRepo, sporocilo_ucitelja)
 
                 }
             }
@@ -108,22 +113,22 @@ class DbExposed(
              * TEST & ZVEZEK
              */
             for (x in 0..5) {
-                val zvezek = Entiteta.nakljucni<Zvezek>()
-                zvezekRepo.ustvari(zvezek)
+                var zvezek = Entiteta.nakljucni<Zvezek>()
+                zvezek = nafilaj_enega(ZvezekSqlRepo, zvezek)
 
-                val test = Entiteta.nakljucni<Test>().copy(oseba_id = ucitelj.id)
-                testRepo.ustvari(test)
+                var test = Entiteta.nakljucni<Test>().copy(oseba_id = ucitelj.id)
+                test = nafilaj_enega(TestSqlRepo, test)
 
                 for (j in 0..5) {
 
                     val tematika = Entiteta.nakljucni<Tematika>().copy(zvezek_id = zvezek.id)
-                    tematikaRepo.ustvari(tematika)
+                    nafilaj_enega(TematikaSqlRepo, tematika)
 
                     val naloga = Entiteta.nakljucni<Naloga>().copy(tematika_id = tematika.id)
-                    nalogaRepo.ustvari(naloga)
+                    nafilaj_enega(NalogaSqlRepo, naloga)
 
                     val status = Entiteta.nakljucni<Status>().copy(naloga_id = naloga.id, test_id = test.id)
-                    statusRepo.ustvari(status)
+                    nafilaj_enega(StatusSqlRepo, status)
                 }
             }
         }
