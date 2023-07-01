@@ -35,9 +35,3 @@ data class DomenskiGraf(
         return defaultList
     }
 }
-
-fun main() {
-    val dm = DomenskiGraf()
-    val oseba = Entiteta.nakljucni<Oseba>()
-    val result: List<Status> = dm.vsi_otroci(oseba) { it.status }
-}
