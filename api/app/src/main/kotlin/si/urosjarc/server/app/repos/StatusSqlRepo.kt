@@ -4,7 +4,7 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.base.SqlRepo
-import si.urosjarc.server.app.extend.vzemi
+import si.urosjarc.server.app.extend.izberi
 import si.urosjarc.server.core.base.DomenskiGraf
 import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.domain.Oseba
@@ -55,12 +55,12 @@ object StatusSqlRepo : StatusRepo, SqlRepo<Status>(ime<Status>()) {
             joinType = JoinType.INNER,
             onColumn = TematikaSqlRepo.zvezek_id,
             otherColumn = ZvezekSqlRepo.id
-        ).vzemi(
+        ).izberi(
             this,
             TestSqlRepo,
             NalogaSqlRepo,
             TematikaSqlRepo,
             ZvezekSqlRepo
-        )// { TestSqlRepo.oseba_id.eq(id_osebe.value) }
+        ) { TestSqlRepo.oseba_id.eq(id_osebe.value) }
     }
 }

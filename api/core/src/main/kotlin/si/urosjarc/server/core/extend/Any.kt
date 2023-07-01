@@ -1,3 +1,3 @@
 package si.urosjarc.server.core.extend
 
-inline fun <reified T : Any> ime(): String = T::class.simpleName.toString()
+inline fun <reified T : Any> ime(): String = T::class.simpleName.toString().lowercase()

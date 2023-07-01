@@ -9,9 +9,10 @@ import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
 import si.urosjarc.server.api.extend.profil
 import si.urosjarc.server.api.extend.system_error
-import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.base.DbDobiRezultat
+import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.services.DbService
+import si.urosjarc.server.core.use_cases_api.Dobi_ucencev_profil
 
 
 @Resource("profil")
@@ -32,6 +33,8 @@ class profil {
 
 fun Route.profil() {
     val db: DbService by this.inject()
+    val dobi_ucencev_status: Dobi_ucencev_profil by this.inject()
+
     val log = this.logger()
 
     this.get<profil> {
@@ -62,8 +65,8 @@ fun Route.profil() {
 
     this.get<profil.statusi> {
         val profil = this.call.profil()
-        val json = db.izvedi { db.statusRepo.dobi_statuse(id_osebe = Id(profil.id)) }
-        this.call.respond(json)
+        val data = dobi_ucencev_status.zdaj(id = Id(profil.id))
+        this.call.respond(data)
     }
 
 }

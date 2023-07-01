@@ -5,24 +5,25 @@ import si.urosjarc.server.core.domain.*
 import si.urosjarc.server.core.extend.ime
 
 @Serializable
-data class DomenskiGraf(
-    val naloga: MutableMap<Int, Naloga> = mutableMapOf(),
-    val status: MutableMap<Int, Status> = mutableMapOf(),
-    val tematika: MutableMap<Int, Tematika> = mutableMapOf(),
-    val test: MutableMap<Int, Test> = mutableMapOf(),
-    val zvezek: MutableMap<Int, Zvezek> = mutableMapOf(),
-    val oseba: MutableMap<Int, Oseba> = mutableMapOf(),
-    val otroci: MutableMap<String, MutableMap<Int, MutableMap<String, MutableSet<Int>>>> = mutableMapOf(),
-    val kontakt_posiljatelja: MutableMap<Int, Kontakt> = mutableMapOf(),
-    val kontakt_prejemnika: MutableMap<Int, Kontakt> = mutableMapOf(),
-) {
-    inline fun <reified T : Entiteta<T>, reified K : Entiteta<K>> vsi_otroci(
-        stars: T, otrociCB: (domenskiGraf: DomenskiGraf) -> MutableMap<Int, K>
-    ): MutableList<K> {
-        val stars_ime = ime<T>()
-        val otrok_ime = ime<K>()
+class DomenskiGraf {
+    val naloga = mutableMapOf<Int, Naloga>()
+    val status = mutableMapOf<Int, Status>()
+    val tematika = mutableMapOf<Int, Tematika>()
+    val test = mutableMapOf<Int, Test>()
+    val zvezek = mutableMapOf<Int, Zvezek>()
+    val oseba = mutableMapOf<Int, Oseba>()
+    val otroci = mutableMapOf<String, MutableMap<Int, MutableMap<String, MutableSet<Int>>>>()
+    val kontakt_posiljatelja = mutableMapOf<Int, Kontakt>()
+    val kontakt_prejemnika = mutableMapOf<Int, Kontakt>()
+
+    inline fun <reified P : Entiteta<P>, reified C : Entiteta<C>> vsi_otroci(
+        stars: P,
+        otrociCB: (domenskiGraf: DomenskiGraf) -> MutableMap<Int, C>
+    ): MutableList<C> {
+        val stars_ime = ime<P>()
+        val otrok_ime = ime<C>()
         val property = otrociCB(this)
-        val defaultList: MutableList<K> = mutableListOf()
+        val defaultList: MutableList<C> = mutableListOf()
 
         otroci
             .get(stars_ime)

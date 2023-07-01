@@ -4,7 +4,7 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.base.SqlRepo
-import si.urosjarc.server.app.extend.vzemi
+import si.urosjarc.server.app.extend.izberi
 import si.urosjarc.server.core.base.DomenskiGraf
 import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.domain.Oseba
@@ -34,10 +34,7 @@ object UcenjeSqlRepo : UcenjeRepo, SqlRepo<Ucenje>(ime<Ucenje>()) {
             OsebaSqlRepo,
             onColumn = ucenec_id, otherColumn = OsebaSqlRepo.id,
             joinType = JoinType.INNER
-        )
-            .vzemi(OsebaSqlRepo) //{
-        //ucitelj_id.eq(id_ucitelja.value)
-        //}
+        ).izberi(OsebaSqlRepo) { ucitelj_id.eq(id_ucitelja.value) }
     }
 
     override fun dobi_ucitelje(id_ucenca: Id<Oseba>): DomenskiGraf {
@@ -45,10 +42,7 @@ object UcenjeSqlRepo : UcenjeRepo, SqlRepo<Ucenje>(ime<Ucenje>()) {
             OsebaSqlRepo,
             onColumn = ucitelj_id, otherColumn = OsebaSqlRepo.id,
             joinType = JoinType.INNER
-        )
-            .vzemi(OsebaSqlRepo) //{
-        //ucenec_id.eq(id_ucenca.value)
-        //}
+        ).izberi(OsebaSqlRepo) { ucenec_id.eq(id_ucenca.value) }
     }
 
 }

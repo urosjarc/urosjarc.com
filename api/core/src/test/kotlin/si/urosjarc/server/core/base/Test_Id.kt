@@ -14,16 +14,13 @@ class Test_Id : KoinTest {
     val id = Id<String>()
 
     @Test
-    fun value() {
-        assertEquals(22, id.value.length)
-        assertFalse(id.value.contains(' '))
-    }
+    fun value() = assertEquals(-1, id.value)
 
     @Test
     fun enakost() {
-        val id = Id<String>("1")
-        val id2 = Id<String>("1")
-        val id3 = Id<String>("2")
+        val id = Id<String>(1)
+        val id2 = Id<String>(1)
+        val id3 = Id<String>(2)
         assertTrue(id == id2)
         assertFalse(id == id3)
     }

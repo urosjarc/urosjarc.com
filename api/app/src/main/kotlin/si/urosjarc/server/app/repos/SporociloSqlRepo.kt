@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.JoinType
 import org.jetbrains.exposed.sql.alias
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import si.urosjarc.server.app.base.SqlRepo
-import si.urosjarc.server.app.extend.vzemi
+import si.urosjarc.server.app.extend.izberi
 import si.urosjarc.server.core.base.DomenskiGraf
 import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.domain.Oseba
@@ -52,7 +52,7 @@ object SporociloSqlRepo : SporociloRepo, SqlRepo<Sporocilo>(ime<Sporocilo>()) {
             otherColumn = OsebaSqlRepo.id,
             onColumn = kontakt_posiljatelja[KontaktSqlRepo.oseba_id],
             joinType = JoinType.INNER
-        ).vzemi(
+        ).izberi(
             kontakt_posiljatelja,
             kontakt_prejemnika,
             OsebaSqlRepo

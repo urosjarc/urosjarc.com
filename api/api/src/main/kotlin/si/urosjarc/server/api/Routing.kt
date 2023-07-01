@@ -45,6 +45,7 @@ fun Application.configureRouting() {
         this.json(Json {
             this.prettyPrint = true
             this.isLenient = true
+            this.allowSpecialFloatingPointValues = true
         })
     }
     this.install(Koin) {

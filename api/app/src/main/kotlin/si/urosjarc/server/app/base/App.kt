@@ -2,6 +2,7 @@ package si.urosjarc.server.app.base
 
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import si.urosjarc.server.app.services.DbExposed
 import si.urosjarc.server.app.services.EmailSmtp
@@ -9,6 +10,7 @@ import si.urosjarc.server.app.services.TelefonTwilio
 import si.urosjarc.server.core.services.DbService
 import si.urosjarc.server.core.services.EmailService
 import si.urosjarc.server.core.services.TelefonService
+import si.urosjarc.server.core.use_cases_api.*
 
 object App {
     enum class Tip { PRODUCTION, DEVELOPMENT, TEST }
@@ -38,6 +40,7 @@ object App {
                 password = Env.DB_PASSWORD
             )
         }
+        this.factoryOf(::Dobi_ucencev_profil)
     }
 
     fun pripravi_DI(tip: Tip = Tip.TEST) {

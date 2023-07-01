@@ -7,7 +7,11 @@ import si.urosjarc.server.core.base.Entiteta
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
-inline fun <reified T : Any> ColumnSet.vzemi(vararg tables: Table): T {
+@JvmOverloads
+inline fun <reified T : Any> ColumnSet.izberi(
+    vararg tables: Table,
+    noinline pogoj: (SqlExpressionBuilder.() -> Op<Boolean>)? = null
+): T {
     val columns = mutableListOf<ExpressionAlias<*>>()
 
     /**
@@ -16,7 +20,7 @@ inline fun <reified T : Any> ColumnSet.vzemi(vararg tables: Table): T {
     val names_tables = mutableMapOf<String, Table>()
     val names_columns_parents = mutableMapOf<String, MutableMap<ExpressionAlias<*>, String>>()
     for (table in tables) {
-        val tableName = table.tableName.lowercase()
+        val tableName = table.tableName
         names_tables.putIfAbsent(tableName, table)
         for (column in table.columns) {
             /**
@@ -51,7 +55,10 @@ inline fun <reified T : Any> ColumnSet.vzemi(vararg tables: Table): T {
     val domenskiGraf = T::class.java.getDeclaredConstructor().newInstance() as DomenskiGraf
     val slice = Slice(this, columns)
 
-    slice.selectAll().forEach { resultRow ->
+    when (pogoj == null) {
+        true -> slice.selectAll()
+        false -> slice.select(where = pogoj)
+    }.forEach { resultRow ->
         for ((tableName, table) in names_tables) {
             name_domain_map[tableName]?.let { prop ->
 
