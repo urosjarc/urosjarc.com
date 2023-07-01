@@ -14,7 +14,6 @@ object KontaktSqlRepo : KontaktRepo, SqlRepo<Kontakt>(ime<Kontakt>()) {
     val tip = varchar(Kontakt::tip.name, STR_SHORT)
 
     override fun zakodiraj(obj: Kontakt, any: UpdateBuilder<Number>) {
-        any[id] = obj.id.value
         any[oseba_id] = obj.oseba_id.value
         any[data] = obj.data
         any[tip] = obj.tip.name

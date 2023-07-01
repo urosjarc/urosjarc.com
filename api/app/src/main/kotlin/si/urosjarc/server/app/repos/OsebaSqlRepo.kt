@@ -15,7 +15,6 @@ object OsebaSqlRepo : OsebaRepo, SqlRepo<Oseba>(ime<Oseba>()) {
     val tip = varchar(Oseba::tip.name, STR_SHORT)
 
     override fun zakodiraj(obj: Oseba, any: UpdateBuilder<Number>) {
-        any[id] = obj.id.value
         any[ime] = obj.ime
         any[priimek] = obj.priimek
         any[username] = obj.username

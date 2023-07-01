@@ -13,7 +13,6 @@ object ZvezekSqlRepo : ZvezekRepo, SqlRepo<Zvezek>(ime<Zvezek>()) {
     val naslov = varchar(Zvezek::naslov.name, STR_MEDIUM)
 
     override fun zakodiraj(obj: Zvezek, any: UpdateBuilder<Number>) {
-        any[id] = obj.id.value
         any[tip] = obj.tip.name
         any[naslov] = obj.naslov
     }

@@ -12,7 +12,6 @@ object TematikaSqlRepo : TematikaRepo, SqlRepo<Tematika>(ime<Tematika>()) {
     val naslov = varchar(Tematika::naslov.name, STR_MEDIUM)
     val zvezek_id = reference(Tematika::zvezek_id.name, ZvezekSqlRepo.id)
     override fun zakodiraj(obj: Tematika, any: UpdateBuilder<Number>) {
-        any[id] = obj.id.value
         any[naslov] = obj.naslov
         any[zvezek_id] = obj.zvezek_id.value
     }

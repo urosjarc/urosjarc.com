@@ -17,7 +17,6 @@ object NaslovSqlRepo : NaslovRepo, SqlRepo<Naslov>(ime<Naslov>()) {
     val dodatno = varchar(Naslov::dodatno.name, STR_SHORT)
 
     override fun zakodiraj(obj: Naslov, any: UpdateBuilder<Number>) {
-        any[id] = obj.id.value
         any[oseba_id] = obj.oseba_id.value
         any[drzava] = obj.drzava
         any[mesto] = obj.mesto

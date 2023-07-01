@@ -14,7 +14,6 @@ object NalogaSqlRepo : NalogaRepo, SqlRepo<Naloga>(ime<Naloga>()) {
     val tematika_id = reference(Naloga::tematika_id.name, TematikaSqlRepo.id)
 
     override fun zakodiraj(obj: Naloga, any: UpdateBuilder<Number>) {
-        any[id] = obj.id.value
         any[tematika_id] = obj.tematika_id.value
         any[resitev] = obj.resitev
         any[vsebina] = obj.vsebina

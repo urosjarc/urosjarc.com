@@ -19,7 +19,6 @@ object StatusSqlRepo : StatusRepo, SqlRepo<Status>(ime<Status>()) {
     val pojasnilo = varchar(Status::pojasnilo.name, STR_LONG)
 
     override fun zakodiraj(obj: Status, any: UpdateBuilder<Number>) {
-        any[id] = obj.id.value
         any[tip] = obj.tip.name
         any[naloga_id] = obj.naloga_id.value
         any[test_id] = obj.test_id.value

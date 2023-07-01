@@ -18,7 +18,6 @@ object TestSqlRepo : TestRepo, SqlRepo<Test>(ime<Test>()) {
     val deadline = date(Test::deadline.name)
     val oseba_id = reference(Test::oseba_id.name, OsebaSqlRepo.id)
     override fun zakodiraj(obj: Test, any: UpdateBuilder<Number>) {
-        any[id] = obj.id.value
         any[naslov] = obj.naslov
         any[podnaslov] = obj.podnaslov
         any[deadline] = obj.deadline.toJavaLocalDate()

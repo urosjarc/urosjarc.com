@@ -19,7 +19,6 @@ object SporociloSqlRepo : SporociloRepo, SqlRepo<Sporocilo>(ime<Sporocilo>()) {
     val vsebina = varchar(Sporocilo::vsebina.name, STR_LONG)
 
     override fun zakodiraj(obj: Sporocilo, any: UpdateBuilder<Number>) {
-        any[id] = obj.id.value
         any[posiljatelj_id] = obj.posiljatelj_id.value
         any[prejemnik_id] = obj.prejemnik_id.value
         any[vsebina] = obj.vsebina

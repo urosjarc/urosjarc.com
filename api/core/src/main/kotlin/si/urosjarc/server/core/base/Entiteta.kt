@@ -5,6 +5,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 import si.urosjarc.server.core.extend.danes
+import si.urosjarc.server.core.extend.ime
 import si.urosjarc.server.core.extend.zdaj
 
 val fake = Faker()
@@ -21,8 +22,9 @@ abstract class Entiteta<T> {
         inline fun <reified T : Any> nakljucni(): T {
             val obj = fake.randomProvider.randomClassInstance<T> {
                 this.typeGenerator<Id<T>> { pInfo ->
-                    val value = counters.getOrDefault(pInfo.name, -1) + 1
-                    counters[pInfo.name] = value
+                    val tip = "${ime<T>()}_id_value"
+                    val value = counters.getOrDefault(tip, -1)
+                    counters[tip] = value
                     Id(value=value)
                 }
                 this.typeGenerator<MutableSet<T>> { mutableSetOf() }

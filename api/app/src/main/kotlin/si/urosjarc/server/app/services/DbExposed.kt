@@ -4,6 +4,7 @@ import org.apache.logging.log4j.kotlin.logger
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.transactions.transaction
 import si.urosjarc.server.app.repos.*
+import si.urosjarc.server.core.base.DbUstvariRezultat
 import si.urosjarc.server.core.base.Entiteta
 import si.urosjarc.server.core.domain.*
 import si.urosjarc.server.core.repos.*
@@ -69,8 +70,11 @@ class DbExposed(
             /**
              * OSEBA
              */
-            val ucitelj = Entiteta.nakljucni<Oseba>().copy(tip = Oseba.Tip.INSTRUKTOR)
-            osebaRepo.ustvari(ucitelj)
+            var ucitelj = Entiteta.nakljucni<Oseba>().copy(tip = Oseba.Tip.INSTRUKTOR)
+            when(val r = osebaRepo.ustvari(ucitelj)){
+                is DbUstvariRezultat.DATA -> ucitelj = r.data
+                is DbUstvariRezultat.FATAL_DB_NAPAKA -> TODO()
+            }
 
             val kontakt_ucitelja = Entiteta.nakljucni<Kontakt>().copy(oseba_id = ucitelj.id)
             kontaktRepo.ustvari(kontakt_ucitelja)
@@ -107,22 +111,19 @@ class DbExposed(
                 val zvezek = Entiteta.nakljucni<Zvezek>()
                 zvezekRepo.ustvari(zvezek)
 
+                val test = Entiteta.nakljucni<Test>().copy(oseba_id = ucitelj.id)
+                testRepo.ustvari(test)
+
                 for (j in 0..5) {
 
                     val tematika = Entiteta.nakljucni<Tematika>().copy(zvezek_id = zvezek.id)
                     tematikaRepo.ustvari(tematika)
 
-                    val test = Entiteta.nakljucni<Test>().copy(oseba_id = ucitelj.id)
-                    testRepo.ustvari(test)
+                    val naloga = Entiteta.nakljucni<Naloga>().copy(tematika_id = tematika.id)
+                    nalogaRepo.ustvari(naloga)
 
-                    for (l in 0..5) {
-
-                        val naloga = Entiteta.nakljucni<Naloga>().copy(tematika_id = tematika.id)
-                        nalogaRepo.ustvari(naloga)
-
-                        val status = Entiteta.nakljucni<Status>().copy(naloga_id = naloga.id, test_id = test.id)
-                        statusRepo.ustvari(status)
-                    }
+                    val status = Entiteta.nakljucni<Status>().copy(naloga_id = naloga.id, test_id = test.id)
+                    statusRepo.ustvari(status)
                 }
             }
         }

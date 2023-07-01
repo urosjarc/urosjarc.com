@@ -18,7 +18,6 @@ object UcenjeSqlRepo : UcenjeRepo, SqlRepo<Ucenje>(ime<Ucenje>()) {
     val ucitelj_id = reference(Ucenje::ucitelj_id.name, OsebaSqlRepo.id)
 
     override fun zakodiraj(obj: Ucenje, any: UpdateBuilder<Number>) {
-        any[id] = obj.id.value
         any[ucenec_id] = obj.ucenec_id.value
         any[ucitelj_id] = obj.ucitelj_id.value
     }

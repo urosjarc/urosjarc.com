@@ -14,7 +14,6 @@ object AuditSqlRepo : AuditRepo, SqlRepo<Audit>(ime<Audit>()) {
     val entiteta_id = integer(Audit::entiteta_id.name)
 
     override fun zakodiraj(obj: Audit, any: UpdateBuilder<Number>) {
-        any[id] = obj.id.value
         any[opis] = obj.opis
         any[entiteta] = obj.entiteta
         any[entiteta_id] = obj.entiteta_id
