@@ -4,7 +4,9 @@ import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
 import com.mongodb.ServerApi
 import com.mongodb.ServerApiVersion
+import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.MongoClient
+import org.bson.types.ObjectId
 import si.urosjarc.server.core.domain.*
 import si.urosjarc.server.core.extend.ime
 
@@ -60,17 +62,17 @@ class DbService(val db_url: String, val db_name: String) {
 
                 (1..5).forEach {
                     val sporocilo = Entiteta.nakljucni<Sporocilo>().apply {
-                        this.oseba_posiljatelj_id= all_oseba.random().id
+                        this.oseba_posiljatelj_id = all_oseba.random().id
                     }
                     all_sporocilo.add(sporocilo)
 
-                    val naloga = Entiteta.nakljucni<Naloga>().apply { this.tematika_id= tematika.id}
+                    val naloga = Entiteta.nakljucni<Naloga>().apply { this.tematika_id = tematika.id }
                     all_naloga.add(naloga)
 
                     (1..5).forEach {
                         val status = Entiteta.nakljucni<Status>().apply {
-                            this.naloga_id= naloga.id
-                            this.test_id= test.id
+                            this.naloga_id = naloga.id
+                            this.test_id = test.id
                         }
                         all_status.add(status)
                     }
@@ -95,19 +97,43 @@ class DbService(val db_url: String, val db_name: String) {
     fun sprazni() = db.listCollectionNames()
         .forEach { db.getCollection<Any>(collectionName = it).drop() }
 
-    inline fun <reified T : Entiteta> ustvari(entiteta: T) {
-        db.getCollection<T>(collectionName = ime<T>()).insertOne(entiteta).also {
-            entiteta.id = it.insertedId?.asObjectId()?.value
-        }
+    inline fun <reified T : Entiteta> ustvari(entiteta: T): Boolean {
+        return db.getCollection<T>(collectionName = ime<T>())
+            .insertOne(entiteta).also { entiteta.id = it.insertedId?.asObjectId()?.value }
+            .wasAcknowledged()
     }
 
-    inline fun <reified T : Entiteta> ustvari(entitete: Collection<T>) {
-        println(ime<T>())
-        db.getCollection<T>(collectionName = ime<T>())
+    inline fun <reified T : Entiteta> ustvari(entitete: Collection<T>): Boolean {
+        return db.getCollection<T>(collectionName = ime<T>())
             .insertMany(documents = entitete as List<T>)
+            .wasAcknowledged()
     }
 
-    inline fun <reified T : Entiteta> dobi(): List<T> {
-        return db.getCollection<T>(collectionName = ime<T>()).find().toList()
+    inline fun <reified T : Entiteta> dobi(stran: Int): List<T> {
+        return db.getCollection<T>(collectionName = ime<T>())
+            .find()
+            .skip(stran * 100)
+            .limit(100)
+            .toList()
+    }
+
+    fun filter_one(id: ObjectId?) = Filters.eq("_id", id)
+
+    inline fun <reified T : Entiteta> dobi(id: ObjectId): T? {
+        return db.getCollection<T>(collectionName = ime<T>())
+            .find(filter_one(id))
+            .firstOrNull()
+    }
+
+    inline fun <reified T : Entiteta> posodobi(entiteta: T): T? {
+        if (entiteta.id == null) return null
+        return db.getCollection<T>(collectionName = ime<T>())
+            .findOneAndReplace(filter_one(entiteta.id), entiteta)
+    }
+
+    inline fun <reified T : Entiteta> odstrani(id: ObjectId): Boolean {
+        return db.getCollection<T>(collectionName = ime<T>())
+            .deleteOne(filter_one(id))
+            .wasAcknowledged()
     }
 }

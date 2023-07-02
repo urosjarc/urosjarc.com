@@ -48,6 +48,8 @@ class Test_DbService : KoinTest {
     }
     @Test
     fun get_one() {
-        this.service.dobi<Oseba>()
+        for(o in this.service.dobi<Oseba>(0)){
+            println(o)
+        }
     }
 }
