@@ -10,4 +10,4 @@ data class Audit(
     @Contextual var entiteta_id: ObjectId? = null,
     val opis: String,
     val entiteta: String
-) : Entiteta<Audit>()
+) : Entiteta()

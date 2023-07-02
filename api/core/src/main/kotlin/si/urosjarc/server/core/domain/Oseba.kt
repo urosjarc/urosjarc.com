@@ -13,7 +13,7 @@ data class Oseba(
     val priimek: String,
     val username: String,
     val tip: Tip,
-) : Entiteta<Oseba>() {
+) : Entiteta() {
     enum class Tip { UCENEC, UCITELJ, INSTRUKTOR, ADMIN }
 }
 
@@ -24,7 +24,7 @@ data class Kontakt(
     @Contextual var oseba_id: ObjectId? = null,
     val data: String,
     val tip: Tip
-) : Entiteta<Kontakt>() {
+) : Entiteta() {
     enum class Tip { EMAIL, TELEFON }
 }
 
@@ -38,7 +38,7 @@ data class Naslov(
     val ulica: String,
     val zip: Int,
     val dodatno: String
-) : Entiteta<Naslov>()
+) : Entiteta()
 
 @Serializable
 data class Sporocilo(
@@ -47,4 +47,4 @@ data class Sporocilo(
     @Contextual var oseba_posiljatelj_id: ObjectId? = null,
     @Contextual var oseba_prejemnik_id: ObjectId? = null,
     val vsebina: String,
-) : Entiteta<Sporocilo>()
+) : Entiteta()

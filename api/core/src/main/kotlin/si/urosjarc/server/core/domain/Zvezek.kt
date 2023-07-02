@@ -11,7 +11,7 @@ data class Zvezek(
     @Contextual override var id: ObjectId? = null,
     val tip: Tip,
     val naslov: String,
-) : Entiteta<Zvezek>() {
+) : Entiteta() {
     enum class Tip { DELOVNI, TEORETSKI }
 }
 
@@ -22,7 +22,7 @@ data class Naloga(
     @Contextual var tematika_id: ObjectId? = null,
     val resitev: String,
     val vsebina: String,
-) : Entiteta<Naloga>()
+) : Entiteta()
 
 
 @Serializable
@@ -31,4 +31,4 @@ data class Tematika(
     @Contextual override var id: ObjectId? = null,
     @Contextual var zvezek_id: ObjectId? = null,
     val naslov: String,
-) : Entiteta<Tematika>()
+) : Entiteta()

@@ -13,7 +13,7 @@ val fake = Faker()
 var counters = mutableMapOf<String, Int>()
 
 @Serializable
-sealed class Entiteta<T> {
+sealed class Entiteta {
     @Serializable(with = ObjectIdSerializer::class)
     abstract var id: ObjectId?
 

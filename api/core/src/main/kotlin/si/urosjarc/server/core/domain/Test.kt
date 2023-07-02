@@ -15,7 +15,7 @@ data class Test(
     val naslov: String,
     val podnaslov: String,
     val deadline: LocalDate,
-) : Entiteta<Test>()
+) : Entiteta()
 
 @Serializable
 data class Status(
@@ -25,6 +25,6 @@ data class Status(
     @Contextual var test_id: ObjectId? = null,
     val tip: Tip,
     val pojasnilo: String
-) : Entiteta<Status>() {
+) : Entiteta() {
     enum class Tip { USPEH, NEUSPEH }
 }

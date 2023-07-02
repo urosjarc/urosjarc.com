@@ -11,4 +11,4 @@ data class Ucenje(
     @Contextual override var id: ObjectId? = null,
     @Contextual var oseba_ucenec_id: ObjectId? = null,
     @Contextual var oseba_ucitelj_id: ObjectId? = null,
-) : Entiteta<Ucenje>()
+) : Entiteta()
