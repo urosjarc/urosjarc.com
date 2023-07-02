@@ -14,4 +14,4 @@ data class Profil(
     }
 }
 
-fun Oseba.profil(): Profil = Profil(id = this.id.toString(), tip = this.tip)
+fun Oseba.profil(): Profil = Profil(id = this._id.toString(), tip = this.tip)

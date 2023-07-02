@@ -9,6 +9,7 @@ import com.mongodb.kotlin.client.MongoClient
 import org.bson.types.ObjectId
 import si.urosjarc.server.core.domain.*
 import si.urosjarc.server.core.extend.ime
+import si.urosjarc.server.core.repos.OsebaRepo
 
 
 class DbService(val db_url: String, val db_name: String) {
@@ -17,6 +18,8 @@ class DbService(val db_url: String, val db_name: String) {
         .applyConnectionString(ConnectionString(db_url)).serverApi(serverApi).build()
     private val mongoClient = MongoClient.create(settings)
     val db = mongoClient.getDatabase(db_name)
+
+    val osebaRepo = OsebaRepo(collection = db.getCollection(collectionName = ime<Oseba>()))
 
     fun nafilaj() {
         val all_oseba = mutableListOf<Oseba>()
@@ -40,39 +43,39 @@ class DbService(val db_url: String, val db_name: String) {
 
             (1..2).forEach {
 
-                val tematika = Entiteta.nakljucni<Tematika>().apply { this.zvezek_id = zvezek.id }
+                val tematika = Entiteta.nakljucni<Tematika>().apply { this.zvezek_id = zvezek._id }
                 all_tematika.add(tematika)
 
-                val kontakt = Entiteta.nakljucni<Kontakt>().apply { this.oseba_id = oseba.id }
+                val kontakt = Entiteta.nakljucni<Kontakt>().apply { this.oseba_id = oseba._id }
                 all_kontakt.add(kontakt)
 
-                val naslov = Entiteta.nakljucni<Naslov>().apply { this.oseba_id = oseba.id }
+                val naslov = Entiteta.nakljucni<Naslov>().apply { this.oseba_id = oseba._id }
                 all_naslov.add(naslov)
 
                 val ucenje0 = Entiteta.nakljucni<Ucenje>().apply {
-                    this.oseba_ucenec_id = oseba.id; this.oseba_ucitelj_id = all_oseba.random().id
+                    this.oseba_ucenec_id = oseba._id; this.oseba_ucitelj_id = all_oseba.random()._id
                 }; all_ucenje.add(ucenje0)
 
                 val ucenje1 = Entiteta.nakljucni<Ucenje>().apply {
-                    this.oseba_ucitelj_id = oseba.id; this.oseba_ucenec_id = all_oseba.random().id
+                    this.oseba_ucitelj_id = oseba._id; this.oseba_ucenec_id = all_oseba.random()._id
                 }; all_ucenje.add(ucenje1)
 
-                val test = Entiteta.nakljucni<Test>().apply { this.oseba_id = oseba.id }
+                val test = Entiteta.nakljucni<Test>().apply { this.oseba_id = oseba._id }
                 all_test.add(test)
 
                 (1..5).forEach {
                     val sporocilo = Entiteta.nakljucni<Sporocilo>().apply {
-                        this.oseba_posiljatelj_id = all_oseba.random().id
+                        this.oseba_posiljatelj_id = all_oseba.random()._id
                     }
                     all_sporocilo.add(sporocilo)
 
-                    val naloga = Entiteta.nakljucni<Naloga>().apply { this.tematika_id = tematika.id }
+                    val naloga = Entiteta.nakljucni<Naloga>().apply { this.tematika_id = tematika._id }
                     all_naloga.add(naloga)
 
                     (1..5).forEach {
                         val status = Entiteta.nakljucni<Status>().apply {
-                            this.naloga_id = naloga.id
-                            this.test_id = test.id
+                            this.naloga_id = naloga._id
+                            this.test_id = test._id
                         }
                         all_status.add(status)
                     }
@@ -99,7 +102,7 @@ class DbService(val db_url: String, val db_name: String) {
 
     inline fun <reified T : Entiteta> ustvari(entiteta: T): Boolean {
         return db.getCollection<T>(collectionName = ime<T>())
-            .insertOne(entiteta).also { entiteta.id = it.insertedId?.asObjectId()?.value }
+            .insertOne(entiteta).also { entiteta._id = it.insertedId?.asObjectId()?.value }
             .wasAcknowledged()
     }
 
@@ -117,23 +120,23 @@ class DbService(val db_url: String, val db_name: String) {
             .toList()
     }
 
-    fun filter_one(id: ObjectId?) = Filters.eq("_id", id)
+    fun filter_one(_id: ObjectId?) = Filters.eq("_id", _id)
 
-    inline fun <reified T : Entiteta> dobi(id: ObjectId): T? {
+    inline fun <reified T : Entiteta> dobi(_id: ObjectId): T? {
         return db.getCollection<T>(collectionName = ime<T>())
-            .find(filter_one(id))
+            .find(filter_one(_id))
             .firstOrNull()
     }
 
     inline fun <reified T : Entiteta> posodobi(entiteta: T): T? {
-        if (entiteta.id == null) return null
+        if (entiteta._id == null) return null
         return db.getCollection<T>(collectionName = ime<T>())
-            .findOneAndReplace(filter_one(entiteta.id), entiteta)
+            .findOneAndReplace(filter_one(entiteta._id), entiteta)
     }
 
-    inline fun <reified T : Entiteta> odstrani(id: ObjectId): Boolean {
+    inline fun <reified T : Entiteta> odstrani(_id: ObjectId): Boolean {
         return db.getCollection<T>(collectionName = ime<T>())
-            .deleteOne(filter_one(id))
+            .deleteOne(filter_one(_id))
             .wasAcknowledged()
     }
 }

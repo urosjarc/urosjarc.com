@@ -7,8 +7,7 @@ import org.bson.types.ObjectId
 
 @Serializable
 data class Ucenje(
-    @SerialName("_id")
-    @Contextual override var id: ObjectId? = null,
+    @Contextual override var _id: ObjectId? = null,
     @Contextual var oseba_ucenec_id: ObjectId? = null,
     @Contextual var oseba_ucitelj_id: ObjectId? = null,
-) : Entiteta()
+) : Entiteta

@@ -8,7 +8,6 @@ import org.junit.jupiter.api.TestInstance
 import org.koin.test.KoinTest
 import org.koin.test.inject
 import si.urosjarc.server.core.base.App
-import si.urosjarc.server.core.domain.Entiteta
 import si.urosjarc.server.core.domain.Oseba
 import si.urosjarc.server.core.services.DbService
 
@@ -39,17 +38,9 @@ class Test_DbService : KoinTest {
     }
 
     @Test
-    fun insert_one() {
-        val entity = Oseba(ime="asdf", priimek = "asdf", username = "asdf", tip = Oseba.Tip.UCENEC)
-        println("$entity  ===================")
-        this.service.ustvari(entity)
-        println(entity)
-
-    }
-    @Test
-    fun get_one() {
-        for(o in this.service.dobi<Oseba>(0)){
-            println(o)
+    fun get_profil() {
+        this.service.dobi<Oseba>(stran = 0).first().let {
+            it._id?.let { it1 -> this.service.osebaRepo.profil(it1) }
         }
     }
 }
