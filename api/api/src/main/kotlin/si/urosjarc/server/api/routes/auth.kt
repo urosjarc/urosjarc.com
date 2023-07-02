@@ -19,9 +19,9 @@ import si.urosjarc.server.api.extend.profil
 import si.urosjarc.server.api.models.Profil
 import si.urosjarc.server.api.models.profil
 import si.urosjarc.server.api.response.PrijavaReq
-import si.urosjarc.server.app.base.Env
+import si.urosjarc.server.core.base.Env
+import si.urosjarc.server.core.domain.Entiteta
 import si.urosjarc.server.core.domain.Oseba
-import si.urosjarc.server.core.services.DbService
 import java.security.KeyFactory
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
@@ -48,10 +48,7 @@ fun Route.auth(jwkProvider: JwkProvider) {
         log.info("Body: $body")
 
         //TODO: Naredi pravilno logiko
-        var oseba: Oseba? = null
-        db.izvedi {
-            oseba = db.osebaRepo.dobi(stran = 0).first()
-        }
+        val oseba = Entiteta.nakljucni<Oseba>()
         log.info("Oseba: $oseba")
         //TODO: Naredi pravilno logiko
 

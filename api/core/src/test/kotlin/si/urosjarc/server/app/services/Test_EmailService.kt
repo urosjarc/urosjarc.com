@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.koin.test.KoinTest
 import org.koin.test.inject
-import si.urosjarc.server.app.base.App
+import si.urosjarc.server.core.base.App
 import si.urosjarc.server.core.services.EmailService
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -37,7 +37,11 @@ class Test_EmailService : KoinTest {
             "  jar.fmf@gmail.com  ",
         ).forEach {
             when (val r = this.service.formatiraj(email = it)) {
-                is EmailService.RezultatEmailFormatiranja.DATA -> assertEquals(expected = it.trim(), actual = r.email.toString())
+                is EmailService.RezultatEmailFormatiranja.DATA -> assertEquals(
+                    expected = it.trim(),
+                    actual = r.email.toString()
+                )
+
                 else -> fail(it)
             }
         }
@@ -87,6 +91,11 @@ class Test_EmailService : KoinTest {
     @Test
     fun poslji_email() {
         log.error("Testing")
-        this.service.poslji_email(from="info@urosjarc.com", to="info@urosjarc.com", subject = "subjekt", html = "html")
+        this.service.poslji_email(
+            from = "info@urosjarc.com",
+            to = "info@urosjarc.com",
+            subject = "subjekt",
+            html = "html"
+        )
     }
 }

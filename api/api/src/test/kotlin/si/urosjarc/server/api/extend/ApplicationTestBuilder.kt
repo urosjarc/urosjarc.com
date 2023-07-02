@@ -6,7 +6,6 @@ import io.ktor.client.plugins.resources.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.testing.*
 import kotlinx.serialization.json.Json
-import org.litote.kmongo.id.serialization.IdKotlinXSerializationModule
 import si.urosjarc.plugins.configureRouting
 
 fun ApplicationTestBuilder.test_client(): HttpClient {
@@ -15,7 +14,10 @@ fun ApplicationTestBuilder.test_client(): HttpClient {
     }
     return this.createClient {
         this.install(ContentNegotiation) {
-            this.json(Json { this.serializersModule = IdKotlinXSerializationModule })
+            this.json(Json {
+                this.isLenient = true
+                this.allowSpecialFloatingPointValues = true
+            })
         }
         this.install(Resources)
     }

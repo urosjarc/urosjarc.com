@@ -1,36 +1,29 @@
 package si.urosjarc.server.core.domain
 
-import kotlinx.serialization.Contextual
-import kotlinx.serialization.Serializable
-import si.urosjarc.server.core.base.Entiteta
-import si.urosjarc.server.core.base.Id
+import org.bson.codecs.pojo.annotations.BsonId
+import org.bson.types.ObjectId
 
-@Serializable
 data class Zvezek(
-    @Contextual
-    override val id: Id<Zvezek> = Id(),
+    @BsonId
+    override var id: ObjectId? = null,
     val tip: Tip,
     val naslov: String,
 ) : Entiteta<Zvezek>() {
     enum class Tip { DELOVNI, TEORETSKI }
 }
 
-@Serializable
 data class Naloga(
-    @Contextual
-    override val id: Id<Naloga> = Id(),
-    @Contextual
-    val tematika_id: Id<Tematika>,
+    @BsonId
+    override var id: ObjectId? = null,
+    val tematika_id: String,
     val resitev: String,
     val vsebina: String,
 ) : Entiteta<Naloga>()
 
 
-@Serializable
 data class Tematika(
-    @Contextual
-    override val id: Id<Tematika> = Id(),
+    @BsonId
+    override var id: ObjectId? = null,
     val naslov: String,
-    @Contextual
-    val zvezek_id: Id<Zvezek>
+    val zvezek_id: String
 ) : Entiteta<Tematika>()

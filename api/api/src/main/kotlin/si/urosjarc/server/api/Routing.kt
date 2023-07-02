@@ -23,9 +23,8 @@ import si.urosjarc.server.api.routes.auth
 import si.urosjarc.server.api.routes.index
 import si.urosjarc.server.api.routes.profil
 import si.urosjarc.server.app.base.App
-import si.urosjarc.server.app.base.Env
+import si.urosjarc.server.core.base.Env
 import si.urosjarc.server.core.domain.Oseba
-import si.urosjarc.server.core.services.DbService
 import java.util.concurrent.TimeUnit
 
 fun Application.configureRouting() {
@@ -100,9 +99,4 @@ fun Application.configureRouting() {
     }
 
     val db: DbService by this.inject()
-    db.sprazni()
-    db.izvedi {
-        db.nafilaj()
-    }
-
 }

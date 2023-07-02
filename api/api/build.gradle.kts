@@ -7,6 +7,7 @@ plugins {
     this.id("buildSrc.serialization")
     this.id("buildSrc.datetime")
     this.id("buildSrc.injections")
+    this.id("buildSrc.db")
     this.id("io.ktor.plugin") version "2.2.3"
 }
 

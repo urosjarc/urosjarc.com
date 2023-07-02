@@ -1,23 +1,18 @@
-package si.urosjarc.server.app.base
+package si.urosjarc.server.core.base
 
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
-import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
-import si.urosjarc.server.app.services.DbExposed
-import si.urosjarc.server.app.services.EmailSmtp
-import si.urosjarc.server.app.services.TelefonTwilio
-import si.urosjarc.server.core.services.DbService
 import si.urosjarc.server.core.services.EmailService
+import si.urosjarc.server.core.services.DbService
 import si.urosjarc.server.core.services.TelefonService
-import si.urosjarc.server.core.use_cases_api.*
 
 object App {
     enum class Tip { PRODUCTION, DEVELOPMENT, TEST }
 
     fun modul(tip: Tip = Tip.TEST) = module {
         this.single<EmailService> {
-            EmailSmtp(
+            EmailService(
                 host = Env.SMTP_HOST,
                 port = Env.SMTP_PORT,
                 username = Env.SMTP_USERNAME,
@@ -25,7 +20,7 @@ object App {
             )
         }
         this.single<TelefonService> {
-            TelefonTwilio(
+            TelefonService(
                 account_sid = Env.TWILIO_ACCOUNT_SID,
                 auth_token = Env.TWILIO_AUTH_TOKEN,
                 default_region = Env.TWILIO_DEFAULT_REGION,
@@ -33,18 +28,15 @@ object App {
             )
         }
         this.single<DbService> {
-            DbExposed(
-                url = Env.DB_URL,
-                driver = Env.DB_DRIVER,
-                user = Env.DB_USER,
-                password = Env.DB_PASSWORD
+            DbService(
+                db_url = Env.DB_URL,
+                db_name= Env.DB_NAME
             )
         }
-        this.factoryOf(::Dobi_ucencev_profil)
     }
 
     fun pripravi_DI(tip: Tip = Tip.TEST) {
-        val app_module = this.modul(tip = tip)
+        val app_module = modul(tip = tip)
         startKoin {
             this.modules(app_module)
         }

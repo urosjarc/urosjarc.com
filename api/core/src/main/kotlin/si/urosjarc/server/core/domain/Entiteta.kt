@@ -1,32 +1,23 @@
-package si.urosjarc.server.core.base
+package si.urosjarc.server.core.domain
 
 import io.github.serpro69.kfaker.Faker
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import kotlinx.serialization.Serializable
+import org.bson.codecs.pojo.annotations.BsonId
+import org.bson.types.ObjectId
 import si.urosjarc.server.core.extend.danes
-import si.urosjarc.server.core.extend.ime
 import si.urosjarc.server.core.extend.zdaj
 
 val fake = Faker()
 var counters = mutableMapOf<String, Int>()
 
-@Serializable
-abstract class Entiteta<T> {
-    abstract val id: Id<T>
-
-    fun enak(entiteta: Entiteta<T>): Boolean = this.id == entiteta.id
+sealed class Entiteta<T> {
+    @get:BsonId
+    abstract var id: ObjectId?
 
     companion object {
-
         inline fun <reified T : Any> nakljucni(): T {
             val obj = fake.randomProvider.randomClassInstance<T> {
-                this.typeGenerator<Id<T>> { pInfo ->
-                    val tip = "${ime<T>()}_id_value"
-                    val value = counters.getOrDefault(tip, -1)
-                    counters[tip] = value
-                    Id(value=value)
-                }
                 this.typeGenerator<MutableSet<T>> { mutableSetOf() }
                 this.typeGenerator<LocalDate> { LocalDate.danes() }
                 this.typeGenerator<LocalDateTime> { LocalDateTime.zdaj() }

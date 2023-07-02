@@ -7,7 +7,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.koin.test.KoinTest
 import org.koin.test.inject
-import si.urosjarc.server.app.base.App
+import si.urosjarc.server.core.base.App
+import si.urosjarc.server.core.domain.Entiteta
+import si.urosjarc.server.core.domain.Oseba
 import si.urosjarc.server.core.services.DbService
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
@@ -26,9 +28,26 @@ class Test_DbService : KoinTest {
         App.resetiraj_DI()
     }
 
+    @Test
+    fun `nafilaj bazo`() {
+        this.service.nafilaj()
+    }
 
     @Test
-    fun seed() {
-        service.nafilaj()
+    fun `sprazni bazo`() {
+        this.service.sprazni()
+    }
+
+    @Test
+    fun insert_one() {
+        val entity = Oseba(ime="asdf", priimek = "asdf", username = "asdf", tip = Oseba.Tip.UCENEC)
+        println("$entity  ===================")
+        this.service.ustvari(entity)
+        println(entity)
+
+    }
+    @Test
+    fun get_one() {
+        this.service.dobi<Oseba>()
     }
 }

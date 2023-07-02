@@ -6,7 +6,7 @@ import si.urosjarc.server.core.extend.ime
 
 @Serializable
 data class Profil(
-    val id: Int,
+    val id: String,
     val tip: Oseba.Tip,
 ) {
     companion object {
@@ -14,4 +14,4 @@ data class Profil(
     }
 }
 
-fun Oseba.profil(): Profil = Profil(id = this.id.value, tip = this.tip)
+fun Oseba.profil(): Profil = Profil(id = this.id.toString(), tip = this.tip)
