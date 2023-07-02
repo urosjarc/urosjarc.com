@@ -7,8 +7,9 @@ import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 
 
+@Serializable
 data class Test(
-    @BsonId
+    @BsonId @Contextual
     override var id: ObjectId? = null,
     val naslov: String,
     val podnaslov: String,
@@ -16,8 +17,9 @@ data class Test(
     val oseba_id: String,
 ) : Entiteta<Test>()
 
+@Serializable
 data class Status(
-    @BsonId
+    @BsonId @Contextual
     override var id: ObjectId? = null,
     val tip: Tip,
     val naloga_id: String,

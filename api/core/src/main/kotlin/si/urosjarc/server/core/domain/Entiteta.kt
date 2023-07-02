@@ -3,6 +3,7 @@ package si.urosjarc.server.core.domain
 import io.github.serpro69.kfaker.Faker
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 import si.urosjarc.server.core.extend.danes
@@ -11,6 +12,7 @@ import si.urosjarc.server.core.extend.zdaj
 val fake = Faker()
 var counters = mutableMapOf<String, Int>()
 
+@Serializable
 sealed class Entiteta<T> {
     @get:BsonId
     abstract var id: ObjectId?

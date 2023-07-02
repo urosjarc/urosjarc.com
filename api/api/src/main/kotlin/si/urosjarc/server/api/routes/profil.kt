@@ -8,6 +8,9 @@ import io.ktor.server.routing.*
 import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
 import si.urosjarc.server.api.extend.profil
+import si.urosjarc.server.core.domain.Entiteta
+import si.urosjarc.server.core.domain.Oseba
+import si.urosjarc.server.core.services.DbService
 
 
 @Resource("profil")
@@ -37,7 +40,8 @@ fun Route.profil() {
 
     this.get<profil.oseba> {
         val profil = this.call.profil()
-        this.call.respond(profil)
+        val oseba = Entiteta.nakljucni<Oseba>()
+        this.call.respond(oseba)
     }
 
 }

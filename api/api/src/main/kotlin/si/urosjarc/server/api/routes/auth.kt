@@ -22,6 +22,7 @@ import si.urosjarc.server.api.response.PrijavaReq
 import si.urosjarc.server.core.base.Env
 import si.urosjarc.server.core.domain.Entiteta
 import si.urosjarc.server.core.domain.Oseba
+import si.urosjarc.server.core.services.DbService
 import java.security.KeyFactory
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
@@ -39,7 +40,7 @@ class auth {
 
 fun Route.auth(jwkProvider: JwkProvider) {
 
-    val db by this.inject<DbService>()
+    val db: DbService by this.inject()
     val log = this.logger()
 
     this.post<auth.prijava> {

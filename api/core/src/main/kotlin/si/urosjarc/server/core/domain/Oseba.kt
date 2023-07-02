@@ -1,10 +1,13 @@
 package si.urosjarc.server.core.domain
 
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 
+@Serializable
 data class Oseba(
-    @BsonId
+    @BsonId @Contextual
     override var id: ObjectId? = null,
     val ime: String,
     val priimek: String,
@@ -14,8 +17,9 @@ data class Oseba(
     enum class Tip { UCENEC, UCITELJ, INSTRUKTOR, ADMIN }
 }
 
+@Serializable
 data class Kontakt(
-    @BsonId
+    @BsonId @Contextual
     override var id: ObjectId? = null,
     val oseba_id: String,
     val data: String,
@@ -24,8 +28,9 @@ data class Kontakt(
     enum class Tip { EMAIL, TELEFON }
 }
 
+@Serializable
 data class Naslov(
-    @BsonId
+    @BsonId @Contextual
     override var id: ObjectId? = null,
     val oseba_id: String,
     val drzava: String,
@@ -35,8 +40,9 @@ data class Naslov(
     val dodatno: String
 ) : Entiteta<Naslov>()
 
+@Serializable
 data class Sporocilo(
-    @BsonId
+    @BsonId @Contextual
     override var id: ObjectId? = null,
     val posiljatelj_id: String,
     val prejemnik_id: String,

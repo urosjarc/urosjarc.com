@@ -12,6 +12,8 @@ import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.resources.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.contextual
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
@@ -22,10 +24,13 @@ import si.urosjarc.server.api.routes.admin
 import si.urosjarc.server.api.routes.auth
 import si.urosjarc.server.api.routes.index
 import si.urosjarc.server.api.routes.profil
-import si.urosjarc.server.app.base.App
+import si.urosjarc.server.core.base.App
 import si.urosjarc.server.core.base.Env
 import si.urosjarc.server.core.domain.Oseba
+import si.urosjarc.server.core.serializers.ObjectIdSerializer
+import si.urosjarc.server.core.services.DbService
 import java.util.concurrent.TimeUnit
+
 
 fun Application.configureRouting() {
     this.install(CallLogging) {
@@ -42,6 +47,9 @@ fun Application.configureRouting() {
     this.install(Resources)
     this.install(ContentNegotiation) {
         this.json(Json {
+            serializersModule = SerializersModule {
+                contextual(ObjectIdSerializer)
+            }
             this.prettyPrint = true
             this.isLenient = true
             this.allowSpecialFloatingPointValues = true

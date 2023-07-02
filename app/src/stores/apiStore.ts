@@ -63,8 +63,5 @@ export const api = {
   },
   profil: {
     oseba: GET<AdjecentRes>("profil/oseba"),
-    ucenje: GET<AdjecentRes>("profil/ucenje"),
-    sporocila: GET<AdjecentRes>("profil/sporocila"),
-    statusi: GET<AdjecentRes>("profil/statusi"),
   }
 }

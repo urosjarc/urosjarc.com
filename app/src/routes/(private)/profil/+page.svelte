@@ -10,25 +10,8 @@
     goto(route.prijava)
   }
 
-  function ucenje() {
-    api.profil.ucenje().then(data => {
-      console.log(data)
-    }).catch(data => {
-      console.error(data)
-    })
-  }
-
-
-  function sporocila() {
-    api.profil.sporocila().then(data => {
-      console.log(data)
-    }).catch(data => {
-      console.error(data)
-    })
-  }
-
-  function statusi() {
-    api.profil.statusi().then(data => {
+  function oseba() {
+    api.profil.oseba().then(data => {
       console.log(data)
     }).catch(data => {
       console.error(data)
@@ -39,7 +22,5 @@
 
 <div>
   <Button on:click={logout}>Logout</Button>
-  <Button on:click={ucenje}>Ucenje</Button>
-  <Button on:click={sporocila}>Sporocila</Button>
-  <Button on:click={statusi}>Statusi</Button>
+  <Button on:click={oseba}>Oseba</Button>
 </div>
