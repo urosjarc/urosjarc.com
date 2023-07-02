@@ -150,7 +150,7 @@ class DomainMap : Plugin<Project> {
                 text.add("${indent}class ${dataClass.ime} {")
                 for (lastnost in dataClass.lastnosti) {
                     text.add("${indent}\t${lastnost.ime}")
-                    if (lastnost.rel != null) relations.add("${dataClass.ime} --> ${lastnost.rel}")
+                    if (lastnost.rel != null) relations.add("${dataClass.ime} -up-> ${lastnost.rel}")
                 }
                 text.add("${indent}}\n")
             }

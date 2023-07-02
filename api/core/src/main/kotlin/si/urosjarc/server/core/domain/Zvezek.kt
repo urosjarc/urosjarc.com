@@ -3,12 +3,11 @@ package si.urosjarc.server.core.domain
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.bson.codecs.pojo.annotations.BsonId
-import org.bson.types.ObjectId
+import si.urosjarc.server.core.base.Id
 
 @Serializable
 data class Zvezek(
-    @BsonId @Contextual
-    override var id: ObjectId? = null,
+    @BsonId @Contextual override var id: Id<Zvezek> = Id(),
     val tip: Tip,
     val naslov: String,
 ) : Entiteta<Zvezek>() {
@@ -17,9 +16,8 @@ data class Zvezek(
 
 @Serializable
 data class Naloga(
-    @BsonId @Contextual
-    override var id: ObjectId? = null,
-    val tematika_id: String,
+    @BsonId @Contextual override var id: Id<Naloga> = Id(),
+    @BsonId @Contextual val tematika_id: Id<Tematika>,
     val resitev: String,
     val vsebina: String,
 ) : Entiteta<Naloga>()
@@ -27,8 +25,7 @@ data class Naloga(
 
 @Serializable
 data class Tematika(
-    @BsonId @Contextual
-    override var id: ObjectId? = null,
+    @BsonId @Contextual override var id: Id<Tematika> = Id(),
+    @BsonId @Contextual val zvezek_id: Id<Zvezek>,
     val naslov: String,
-    val zvezek_id: String
 ) : Entiteta<Tematika>()

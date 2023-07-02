@@ -1,12 +1,12 @@
 package si.urosjarc.server.core.domain
 
+import kotlinx.serialization.Contextual
 import org.bson.codecs.pojo.annotations.BsonId
-import org.bson.types.ObjectId
+import si.urosjarc.server.core.base.Id
 
 data class Audit(
-    @BsonId
-    override var id: ObjectId? = null,
+    @BsonId @Contextual override var id: Id<Audit> = Id(),
+    @BsonId @Contextual val entiteta_id: Id<Entiteta<Any>>,
     val opis: String,
-    val entiteta_id: Int,
     val entiteta: String
 ) : Entiteta<Audit>()

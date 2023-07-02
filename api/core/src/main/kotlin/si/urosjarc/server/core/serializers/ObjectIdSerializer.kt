@@ -7,17 +7,18 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import org.bson.types.ObjectId
+import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.extend.ime
 
-object ObjectIdSerializer : KSerializer<ObjectId> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(ime<ObjectId>(), PrimitiveKind.STRING)
+object ObjectIdSerializer : KSerializer<Id<Any>> {
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(ime<Id<Any>>(), PrimitiveKind.STRING)
 
-    override fun deserialize(decoder: Decoder): ObjectId {
+    override fun deserialize(decoder: Decoder): Id<Any> {
         val str: String = decoder.decodeString()
-        return ObjectId(str)
+        return Id(value = ObjectId(str))
     }
 
-    override fun serialize(encoder: Encoder, value: ObjectId) {
-        encoder.encodeString(value.toString())
+    override fun serialize(encoder: Encoder, value: Id<Any>) {
+        encoder.encodeString(value.value.toString())
     }
 }

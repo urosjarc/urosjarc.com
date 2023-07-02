@@ -21,6 +21,10 @@ class DbService(val db_url: String, val db_name: String) {
         }
     }
 
+    fun seed(){
+
+    }
+
     fun sprazni() = db.listCollectionNames()
         .forEach { db.getCollection<Any>(collectionName = it).drop() }
 
