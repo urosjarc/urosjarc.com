@@ -95,19 +95,19 @@ class DbService(val db_url: String, val db_name: String) {
     fun sprazni() = db.listCollectionNames()
         .forEach { db.getCollection<Any>(collectionName = it).drop() }
 
-    inline fun <reified T : Entiteta<out T>> ustvari(entiteta: T) {
+    inline fun <reified T : Entiteta> ustvari(entiteta: T) {
         db.getCollection<T>(collectionName = ime<T>()).insertOne(entiteta).also {
             entiteta.id = it.insertedId?.asObjectId()?.value
         }
     }
 
-    inline fun <reified T : Entiteta<out T>> ustvari(entitete: Collection<T>) {
+    inline fun <reified T : Entiteta> ustvari(entitete: Collection<T>) {
         println(ime<T>())
         db.getCollection<T>(collectionName = ime<T>())
             .insertMany(documents = entitete as List<T>)
     }
 
-    inline fun <reified T : Entiteta<out T>> dobi(): List<T> {
+    inline fun <reified T : Entiteta> dobi(): List<T> {
         return db.getCollection<T>(collectionName = ime<T>()).find().toList()
     }
 }
