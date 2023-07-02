@@ -10,7 +10,7 @@ import org.bson.types.ObjectId
 import si.urosjarc.server.core.base.Id
 import si.urosjarc.server.core.extend.ime
 
-object ObjectIdSerializer : KSerializer<Id<Any>> {
+object IdSerializer : KSerializer<Id<Any>> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(ime<Id<Any>>(), PrimitiveKind.STRING)
 
     override fun deserialize(decoder: Decoder): Id<Any> {

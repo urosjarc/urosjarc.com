@@ -27,7 +27,7 @@ import si.urosjarc.server.api.routes.profil
 import si.urosjarc.server.core.base.App
 import si.urosjarc.server.core.base.Env
 import si.urosjarc.server.core.domain.Oseba
-import si.urosjarc.server.core.serializers.ObjectIdSerializer
+import si.urosjarc.server.core.serializers.IdSerializer
 import si.urosjarc.server.core.services.DbService
 import java.util.concurrent.TimeUnit
 
@@ -48,7 +48,7 @@ fun Application.configureRouting() {
     this.install(ContentNegotiation) {
         this.json(Json {
             serializersModule = SerializersModule {
-                contextual(ObjectIdSerializer)
+                contextual(IdSerializer)
             }
             this.prettyPrint = true
             this.isLenient = true
