@@ -38,39 +38,39 @@ class DbService(val db_url: String, val db_name: String) {
 
             (1..2).forEach {
 
-                val tematika = Entiteta.nakljucni<Tematika>().apply { this.zvezek_id.value = zvezek.id.value }
+                val tematika = Entiteta.nakljucni<Tematika>().apply { this.zvezek_id = zvezek.id }
                 all_tematika.add(tematika)
 
-                val kontakt = Entiteta.nakljucni<Kontakt>().apply { this.oseba_id.value = oseba.id.value }
+                val kontakt = Entiteta.nakljucni<Kontakt>().apply { this.oseba_id = oseba.id }
                 all_kontakt.add(kontakt)
 
-                val naslov = Entiteta.nakljucni<Naslov>().apply { this.oseba_id.value = oseba.id.value }
+                val naslov = Entiteta.nakljucni<Naslov>().apply { this.oseba_id = oseba.id }
                 all_naslov.add(naslov)
 
                 val ucenje0 = Entiteta.nakljucni<Ucenje>().apply {
-                    this.ucenec_id.value = oseba.id.value; this.ucitelj_id.value = all_oseba.random().id.value
+                    this.oseba_ucenec_id = oseba.id; this.oseba_ucitelj_id = all_oseba.random().id
                 }; all_ucenje.add(ucenje0)
 
                 val ucenje1 = Entiteta.nakljucni<Ucenje>().apply {
-                    this.ucitelj_id.value = oseba.id.value; this.ucenec_id.value = all_oseba.random().id.value
+                    this.oseba_ucitelj_id = oseba.id; this.oseba_ucenec_id = all_oseba.random().id
                 }; all_ucenje.add(ucenje1)
 
-                val test = Entiteta.nakljucni<Test>().apply { this.oseba_id.value = oseba.id.value }
+                val test = Entiteta.nakljucni<Test>().apply { this.oseba_id = oseba.id }
                 all_test.add(test)
 
                 (1..5).forEach {
                     val sporocilo = Entiteta.nakljucni<Sporocilo>().apply {
-                        this.posiljatelj_id.value = all_oseba.random().id.value
+                        this.oseba_posiljatelj_id= all_oseba.random().id
                     }
                     all_sporocilo.add(sporocilo)
 
-                    val naloga = Entiteta.nakljucni<Naloga>().apply { this.tematika_id.value = tematika.id.value }
+                    val naloga = Entiteta.nakljucni<Naloga>().apply { this.tematika_id= tematika.id}
                     all_naloga.add(naloga)
 
                     (1..5).forEach {
                         val status = Entiteta.nakljucni<Status>().apply {
-                            this.naloga_id.value = naloga.id.value
-                            this.test_id.value = test.id.value
+                            this.naloga_id= naloga.id
+                            this.test_id= test.id
                         }
                         all_status.add(status)
                     }
@@ -97,7 +97,7 @@ class DbService(val db_url: String, val db_name: String) {
 
     inline fun <reified T : Entiteta<out T>> ustvari(entiteta: T) {
         db.getCollection<T>(collectionName = ime<T>()).insertOne(entiteta).also {
-            entiteta.id.value = it.insertedId?.asObjectId()?.value
+            entiteta.id = it.insertedId?.asObjectId()?.value
         }
     }
 

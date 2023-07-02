@@ -4,16 +4,18 @@ import io.github.serpro69.kfaker.Faker
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
-import si.urosjarc.server.core.base.Id
+import org.bson.types.ObjectId
 import si.urosjarc.server.core.extend.danes
 import si.urosjarc.server.core.extend.zdaj
+import si.urosjarc.server.core.serializers.ObjectIdSerializer
 
 val fake = Faker()
 var counters = mutableMapOf<String, Int>()
 
 @Serializable
 sealed class Entiteta<T> {
-    abstract var id: Id<T>
+    @Serializable(with = ObjectIdSerializer::class)
+    abstract var id: ObjectId?
 
     companion object {
         inline fun <reified T : Any> nakljucni(): T {

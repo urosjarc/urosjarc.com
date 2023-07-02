@@ -3,12 +3,12 @@ package si.urosjarc.server.core.domain
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import si.urosjarc.server.core.base.Id
+import org.bson.types.ObjectId
 
 @Serializable
 data class Oseba(
     @SerialName("_id")
-    @Contextual override var id: Id<Oseba> = Id(),
+    @Contextual override var id: ObjectId? = null,
     val ime: String,
     val priimek: String,
     val username: String,
@@ -20,8 +20,8 @@ data class Oseba(
 @Serializable
 data class Kontakt(
     @SerialName("_id")
-    @Contextual override var id: Id<Kontakt> = Id(),
-    @Contextual val oseba_id: Id<Oseba>,
+    @Contextual override var id: ObjectId? = null,
+    @Contextual var oseba_id: ObjectId? = null,
     val data: String,
     val tip: Tip
 ) : Entiteta<Kontakt>() {
@@ -31,8 +31,8 @@ data class Kontakt(
 @Serializable
 data class Naslov(
     @SerialName("_id")
-    @Contextual override var id: Id<Naslov> = Id(),
-    @Contextual var oseba_id: Id<Oseba>,
+    @Contextual override var id: ObjectId? = null,
+    @Contextual var oseba_id: ObjectId? = null,
     val drzava: String,
     val mesto: String,
     val ulica: String,
@@ -43,8 +43,8 @@ data class Naslov(
 @Serializable
 data class Sporocilo(
     @SerialName("_id")
-    @Contextual override var id: Id<Sporocilo> = Id(),
-    @Contextual val posiljatelj_id: Id<Kontakt>,
-    @Contextual val prejemnik_id: Id<Kontakt>,
+    @Contextual override var id: ObjectId? = null,
+    @Contextual var oseba_posiljatelj_id: ObjectId? = null,
+    @Contextual var oseba_prejemnik_id: ObjectId? = null,
     val vsebina: String,
 ) : Entiteta<Sporocilo>()

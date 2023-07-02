@@ -2,12 +2,12 @@ package si.urosjarc.server.core.domain
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
-import si.urosjarc.server.core.base.Id
+import org.bson.types.ObjectId
 
 data class Audit(
     @SerialName("_id")
-    @Contextual override var id: Id<Audit> = Id(),
-    @Contextual val entiteta_id: Id<Entiteta<Any>>,
+    @Contextual override var id: ObjectId? = null,
+    @Contextual var entiteta_id: ObjectId? = null,
     val opis: String,
     val entiteta: String
 ) : Entiteta<Audit>()
