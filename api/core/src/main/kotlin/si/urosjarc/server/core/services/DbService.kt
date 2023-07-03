@@ -75,6 +75,7 @@ class DbService(val db_url: String, val db_name: String) {
                     (1..5).forEach {
                         val status = Entiteta.nakljucni<Status>().apply {
                             this.naloga_id = naloga._id
+                            println(test._id)
                             this.test_id = test._id
                         }
                         all_status.add(status)

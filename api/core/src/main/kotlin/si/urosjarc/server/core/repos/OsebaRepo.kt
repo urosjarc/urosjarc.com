@@ -2,7 +2,6 @@ package si.urosjarc.server.core.repos
 
 import com.mongodb.client.model.Aggregates
 import com.mongodb.client.model.Filters
-import com.mongodb.client.model.Projections
 import com.mongodb.kotlin.client.MongoCollection
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
@@ -17,14 +16,12 @@ import si.urosjarc.server.core.serializers.ObjectIdSerializer
 
 class OsebaRepo(val collection: MongoCollection<Oseba>) {
 
-
     @Serializable
     data class Profil(
         val kontakti: List<Kontakt>,
         val naslovi: List<Naslov>,
         val ucitelji: List<Ucenje>,
         val ucenci: List<Ucenje>,
-        val testi: MutableList<Test>,
     )
 
     fun profil(id: ObjectId) {
@@ -35,7 +32,8 @@ class OsebaRepo(val collection: MongoCollection<Oseba>) {
                 Aggregates.lookup(ime<Naslov>(), "_id", "oseba_id", "naslovi"),
                 Aggregates.lookup(ime<Ucenje>(), "_id", "oseba_ucenec_id", "ucitelji"),
                 Aggregates.lookup(ime<Ucenje>(), "_id", "oseba_ucitelj_id", "ucenci"),
-                Aggregates.lookup(ime<Test>(), "_id", "oseba_id" ,"testi")
+//                Aggregates.unwind("\$testi"),
+//                Aggregates.lookup(ime<Test>(), "_id", "oseba_id", "testi.test"),
             )
         )
         val json = Json(builderAction = {
