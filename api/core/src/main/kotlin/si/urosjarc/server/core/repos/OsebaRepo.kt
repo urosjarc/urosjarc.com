@@ -23,15 +23,14 @@ class OsebaRepo(val collection: MongoCollection<Oseba>) {
     @Serializable
     data class DbSporocilo(
         val sporocilo: Sporocilo,
-        val kontakt_posiljatelj: Oseba? = null,
-        val kontakt_prejemnik: Oseba? = null,
+        val kontakt: List<DbKontakt>,
     )
 
     @Serializable
     data class DbKontakt(
         val kontakt: Kontakt,
-        val sporocila_poslana: List<DbSporocilo>,
-        val sporocila_prejeta: List<DbSporocilo>
+        val sporocila_posiljatelj: List<DbSporocilo>,
+        val sporocila_prejemnik: List<DbSporocilo>
     )
 
     @Serializable
@@ -105,8 +104,14 @@ class OsebaRepo(val collection: MongoCollection<Oseba>) {
                             to = Kontakt::_id,
                             pipeline = listOf(
                                 Aggregates_lookup(
-                                    from = Kontakt::oseba_id,
-                                    to = Oseba::_id
+                                    from = Kontakt::_id,
+                                    to = Sporocilo::kontakt_posiljatelj_id,
+                                    pipeline = listOf(
+                                        Aggregates_lookup(
+                                            from = Oseba::_id,
+                                            to = Kontakt::oseba_id
+                                        ),
+                                    )
                                 ),
                             )
                         ),
@@ -115,8 +120,14 @@ class OsebaRepo(val collection: MongoCollection<Oseba>) {
                             to = Kontakt::_id,
                             pipeline = listOf(
                                 Aggregates_lookup(
-                                    from = Kontakt::oseba_id,
-                                    to = Oseba::_id,
+                                    from = Kontakt::_id,
+                                    to = Sporocilo::kontakt_prejemnik_id,
+                                    pipeline = listOf(
+                                        Aggregates_lookup(
+                                            from = Oseba::_id,
+                                            to = Kontakt::oseba_id
+                                        ),
+                                    )
                                 ),
                             )
                         ),
