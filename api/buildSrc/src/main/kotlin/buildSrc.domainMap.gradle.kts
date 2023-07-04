@@ -4,17 +4,21 @@ data class Parameter(
 
     companion object {
         fun parse(line: String): Parameter {
-            val info = line.trim().removeSuffix("override").trim().removeSuffix(",").split(":")
+            val info = line
+                .trim()
+                .replace("override", "")
+                .replace("@Contextual", "")
+                .trim()
+                .removeSuffix(",")
+                .split(":")
+
             val paramInfo = info.first().split(" ")
+
             var type = info.last()
             var rel: String? = null
-            if (type.contains("=")) {
-                type = type.split("=").first()
-            }
-
-            if (type.contains("Id<") && !line.contains("override")) {
-                rel = type.split("Id<").last().split(">").first()
-                rel = rel.split("<").first()
+            if (type.contains("=")) type = type.split("=").first()
+            if (type.contains("ObjectId") && !line.contains("override")) {
+                rel = paramInfo.last().split("_").first().capitalize()
             }
             return Parameter(def = paramInfo.first(), ime = paramInfo.last(), tip = type.trim(), rel = rel)
         }
@@ -150,7 +154,7 @@ class DomainMap : Plugin<Project> {
                 text.add("${indent}class ${dataClass.ime} {")
                 for (lastnost in dataClass.lastnosti) {
                     text.add("${indent}\t${lastnost.ime}")
-                    if (lastnost.rel != null) relations.add("${dataClass.ime} -up-> ${lastnost.rel}")
+                    if (lastnost.rel != null) relations.add("${dataClass.ime} -down-> ${lastnost.rel}")
                 }
                 text.add("${indent}}\n")
             }

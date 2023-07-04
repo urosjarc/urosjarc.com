@@ -40,7 +40,7 @@ data class Naslov(
 @Serializable
 data class Sporocilo(
     @Contextual override var _id: ObjectId? = null,
-    @Contextual var oseba_posiljatelj_id: ObjectId? = null,
-    @Contextual var oseba_prejemnik_id: ObjectId? = null,
+    @Contextual var kontakt_posiljatelj_id: ObjectId? = null,
+    @Contextual var kontakt_prejemnik_id: ObjectId? = null,
     val vsebina: String,
 ) : Entiteta

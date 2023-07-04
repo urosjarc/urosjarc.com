@@ -65,7 +65,8 @@ class DbService(val db_url: String, val db_name: String) {
 
                 (1..5).forEach {
                     val sporocilo = Entiteta.nakljucni<Sporocilo>().apply {
-                        this.oseba_posiljatelj_id = all_oseba.random()._id
+                        this.kontakt_posiljatelj_id = all_kontakt.random()._id
+                        this.kontakt_prejemnik_id = all_kontakt.random()._id
                     }
                     all_sporocilo.add(sporocilo)
 
