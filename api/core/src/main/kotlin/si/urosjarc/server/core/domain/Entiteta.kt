@@ -12,7 +12,8 @@ import si.urosjarc.server.core.serializers.ObjectIdSerializer
 val fake = Faker()
 var counters = mutableMapOf<String, Int>()
 
-interface Entiteta {
+@Serializable
+sealed interface Entiteta {
     @Serializable(with = ObjectIdSerializer::class)
     var _id: ObjectId?
 

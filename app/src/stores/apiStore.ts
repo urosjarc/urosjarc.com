@@ -62,6 +62,7 @@ export const api = {
     whois: GET("auth/whois"),
   },
   profil: {
+    index: GET<AdjecentRes>("profil"),
     oseba: GET<AdjecentRes>("profil/oseba"),
   }
 }

@@ -49,7 +49,7 @@ fun Route.auth(jwkProvider: JwkProvider) {
         log.info("Body: $body")
 
         //TODO: Naredi pravilno logiko
-        val oseba = Entiteta.nakljucni<Oseba>()
+        val oseba = db.dobi<Oseba>(0).first()
         log.info("Oseba: $oseba")
         //TODO: Naredi pravilno logiko
 
@@ -59,7 +59,7 @@ fun Route.auth(jwkProvider: JwkProvider) {
         val token = JWT.create()
             .withAudience(Env.JWT_AUDIENCE)
             .withIssuer(Env.JWT_ISSUER)
-            .withClaim(Profil.claim, Json.encodeToString(oseba?.profil()))
+            .withClaim(Profil.claim, Json.encodeToString(oseba.profil()))
             .withExpiresAt(Date(System.currentTimeMillis() + 5 * 60000))
             .sign(Algorithm.RSA256(publicKey as RSAPublicKey, privateKey as RSAPrivateKey))
 
