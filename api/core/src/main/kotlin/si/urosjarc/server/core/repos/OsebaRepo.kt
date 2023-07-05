@@ -1,6 +1,7 @@
 package si.urosjarc.server.core.repos
 
 import com.mongodb.client.model.Aggregates
+import com.mongodb.client.model.Field
 import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.MongoCollection
 import org.bson.types.ObjectId
@@ -13,7 +14,7 @@ class OsebaRepo(val collection: MongoCollection<Oseba>) {
 
 
     fun profil(id: ObjectId): OsebaData {
-        return collection.aggregate<OsebaData>(
+        val aggregation = collection.aggregate<OsebaData>(
             listOf(
                 Aggregates.match(Filters.eq(Oseba::_id.name, id)),
                 Aggregates_project_root(Oseba::class),
@@ -28,7 +29,8 @@ class OsebaRepo(val collection: MongoCollection<Oseba>) {
                         Aggregates_lookup(
                             from = Status::test_id,
                             to = Test::_id,
-                        )
+                        ),
+                        Aggregates.addFields(Field("opravljeno", {Size})){ $addFields: { opravljeno: { $size: '$statusi' }
                     )
                 ),
                 Aggregates_lookup(
@@ -90,6 +92,12 @@ class OsebaRepo(val collection: MongoCollection<Oseba>) {
                     )
                 ),
             )
-        ).first()
+        )
+
+        println(aggregation.explain())
+
+        return aggregation.first()
+
+
     }
 }
