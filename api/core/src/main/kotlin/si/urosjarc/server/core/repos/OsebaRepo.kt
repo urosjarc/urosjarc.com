@@ -4,6 +4,8 @@ import com.mongodb.client.model.Aggregates
 import com.mongodb.client.model.Field
 import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.MongoCollection
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.bson.types.ObjectId
 import si.urosjarc.server.core.domain.*
 import si.urosjarc.server.core.extend.Aggregates_lookup
@@ -29,8 +31,12 @@ class OsebaRepo(val collection: MongoCollection<Oseba>) {
                         Aggregates_lookup(
                             from = Status::test_id,
                             to = Test::_id,
+                            pipeline = listOf(
+                                Aggregates.addFields(
+                                    Field("opravljeno", Aggregates.count("\$status_refs"))
+                                )
+                            )
                         ),
-                        Aggregates.addFields(Field("opravljeno", {Size})){ $addFields: { opravljeno: { $size: '$statusi' }
                     )
                 ),
                 Aggregates_lookup(
@@ -94,7 +100,11 @@ class OsebaRepo(val collection: MongoCollection<Oseba>) {
             )
         )
 
-        println(aggregation.explain())
+
+        val json = Json {
+            this.prettyPrint = true
+        }
+        println(json.encodeToString(aggregation.explain()))
 
         return aggregation.first()
 
