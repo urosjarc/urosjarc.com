@@ -11,7 +11,6 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":core"))
     implementation(kotlin("stdlib"))
     testImplementation(kotlin("test-junit"))
 }

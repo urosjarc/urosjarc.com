@@ -1,5 +1,8 @@
+
 plugins {
     kotlin("multiplatform")
+    kotlin("plugin.serialization")
+
     this.id("buildSrc.domainMap")
 }
 
@@ -10,12 +13,22 @@ repositories {
 }
 
 kotlin {
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+            }
+        }
+    }
+
     js(IR) {
         binaries.executable()
         browser {}
         useCommonJs()
     }
-    jvm()
+    jvm {
+    }
 }
 group = "si.urosjarc"
 version = "1.0-SNAPSHOT"

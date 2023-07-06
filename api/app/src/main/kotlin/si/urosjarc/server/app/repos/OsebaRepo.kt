@@ -8,6 +8,10 @@ import org.bson.types.ObjectId
 import si.urosjarc.server.app.extend.Aggregates_lookup
 import si.urosjarc.server.app.extend.Aggregates_project_root
 import si.urosjarc.server.app.extend.explain_aggregation
+import si.urosjarc.server.core.domain.Naslov
+import si.urosjarc.server.core.domain.Oseba.*
+import si.urosjarc.server.core.domain.Test
+import si.urosjarc.server.core.repos.OsebaData
 
 class OsebaRepo(val collection: MongoCollection<Oseba>) {
 
