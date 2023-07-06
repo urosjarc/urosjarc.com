@@ -3,20 +3,22 @@ package si.urosjarc.server.core.repos
 import com.mongodb.client.model.Aggregates
 import com.mongodb.client.model.Field
 import com.mongodb.client.model.Filters
+import com.mongodb.kotlin.client.AggregateIterable
 import com.mongodb.kotlin.client.MongoCollection
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import org.bson.BsonDocument
+import org.bson.BsonString
 import org.bson.types.ObjectId
 import si.urosjarc.server.core.domain.*
 import si.urosjarc.server.core.extend.Aggregates_lookup
 import si.urosjarc.server.core.extend.Aggregates_project_root
+import si.urosjarc.server.core.extend.explain_aggregation
 
 
 class OsebaRepo(val collection: MongoCollection<Oseba>) {
 
 
     fun profil(id: ObjectId): OsebaData {
-        val aggregation = collection.aggregate<OsebaData>(
+        val aggregation: AggregateIterable<OsebaData> = collection.aggregate<OsebaData>(
             listOf(
                 Aggregates.match(Filters.eq(Oseba::_id.name, id)),
                 Aggregates_project_root(Oseba::class),
@@ -30,14 +32,9 @@ class OsebaRepo(val collection: MongoCollection<Oseba>) {
                     pipeline = listOf(
                         Aggregates_lookup(
                             from = Status::test_id,
-                            to = Test::_id,
-                            pipeline = listOf(
-                                Aggregates.addFields(
-                                    Field("opravljeno", Aggregates.count("\$status_refs"))
-                                )
-                            )
+                            to = Test::_id
                         ),
-                    )
+                    ),
                 ),
                 Aggregates_lookup(
                     from = Kontakt::oseba_id,
@@ -100,11 +97,7 @@ class OsebaRepo(val collection: MongoCollection<Oseba>) {
             )
         )
 
-
-        val json = Json {
-            this.prettyPrint = true
-        }
-        println(json.encodeToString(aggregation.explain()))
+        aggregation.explain_aggregation()
 
         return aggregation.first()
 
