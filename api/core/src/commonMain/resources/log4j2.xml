@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration scan="true">
+
+    <Appenders>
+        <Console name="Console"
+                 target="SYSTEM_OUT">
+            <PatternLayout pattern="%30file:%-3line | %-5level | %msg%n"/>
+        </Console>
+
+        <RollingRandomAccessFile name="File"
+                                 append="true"
+                                 fileName="logs/today.log.json"
+                                 filePattern="logs/%d{yyyy_MM_dd}.log.json"
+                                 bufferedIO="true"
+                                 immediateFlush="false">
+            <JsonTemplateLayout eventTemplateUri="classpath:json_template_layout.json"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingRandomAccessFile>
+
+        <SMTP name="Email"
+              smtpProtocol="smtp"
+              smtpPort="${env:SMTP_PORT}"
+              smtpHost="${env:SMTP_HOST}"
+              smtpUsername="${env:SMTP_USERNAME}"
+              smtpPassword="${env:SMTP_PASSWORD}"
+              subject="${env:LOG_SMTP_SUBJECT}"
+              to="${env:LOG_SMTP_TO}"
+              from="${env:LOG_SMTP_FROM}">
+            <HtmlLayout charset="UTF-8"
+                        fontSize="small"
+                        fontName="monospace,arial,sans-serif"
+                        title="This is title"
+                        timezone="GMT+2"
+                        locationInfo="true"/>
+            <ThresholdFilter level="WARN"/>
+        </SMTP>
+
+        <Async name="Async-File"
+               includeLocation="true">
+            <AppenderRef ref="File"/>
+        </Async>
+        <Async name="Async-Console"
+               ignoreExceptions="false"
+               includeLocation="true">
+            <AppenderRef ref="Console"/>
+        </Async>
+        <Async name="Async-Email"
+               ignoreExceptions="false"
+               includeLocation="true">
+            <AppenderRef ref="Email"/>
+        </Async>
+
+    </Appenders>
+
+    <Loggers>
+        <Root includeLocation="true" level="TRACE">
+            <AppenderRef ref="Email"/>
+            <AppenderRef ref="Async-Console"/>
+            <AppenderRef ref="Async-File"/>
+            <AppenderRef ref="Async-Email"/>
+        </Root>
+    </Loggers>
+</Configuration>
