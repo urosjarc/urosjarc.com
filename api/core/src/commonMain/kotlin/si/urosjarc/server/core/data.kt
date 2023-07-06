@@ -16,9 +16,18 @@ data class OsebaData(
 @Serializable
 data class TestData(
     val test: Test,
-//    val opravljeno: Float,
     val status_refs: List<Status> = listOf()
-)
+) {
+    fun opravljeno(): Float {
+        var count = 0f
+        for (status in status_refs) {
+            if (status.tip == Status.Tip.USPEH) {
+                count += 1
+            }
+        }
+        return count / status_refs.size
+    }
+}
 
 @Serializable
 data class KontaktData(

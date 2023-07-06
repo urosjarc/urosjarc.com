@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
 
 plugins {
     kotlin("multiplatform")
@@ -22,13 +23,8 @@ kotlin {
         }
     }
 
-    js(IR) {
-        binaries.executable()
-        browser {}
-        useCommonJs()
-    }
-    jvm {
-    }
+    jvm {}
+    js(IR) { useCommonJs() }
 }
 group = "si.urosjarc"
 version = "1.0-SNAPSHOT"

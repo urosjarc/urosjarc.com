@@ -9,7 +9,6 @@ import com.mongodb.kotlin.client.MongoClient
 import io.github.serpro69.kfaker.Faker
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import org.bson.types.ObjectId
 import si.urosjarc.server.app.extend.danes
 import si.urosjarc.server.app.extend.ime
 import si.urosjarc.server.app.extend.zdaj
