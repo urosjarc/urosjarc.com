@@ -1,97 +1,62 @@
-<script>
+<script lang="ts">
   import {token} from "../../../stores/tokenStore";
   import {goto} from "$app/navigation";
   import {route} from "../../../stores/routeStore";
+  import DataTable, {Body, Head, Row, Cell} from "@smui/data-table"
+  import LinearProgress from '@smui/linear-progress';
   import {api} from "../../../stores/apiStore";
-  import Button from "@smui/button";
-  import {onMount} from "svelte";
-
-  let oseba = {}
-  let naslovi = []
-  let kontakti = []
-  let testi = []
-  let ucenci = []
-  let ucitelji = []
+  import type {core} from "../../../types/core";
+  import OsebaData = core.data.OsebaData;
 
   function logout() {
     token.clear()
     goto(route.prijava)
   }
 
-  onMount(() => {
-    api.profil.index().then(data => {
-      console.log("-------------------")
-      let osebaData = core.core.data.OsebaData.Companion.decode(JSON.stringify(data))
-      console.log(osebaData.test_refs[0].test._id)
-      console.log("-------------------")
+  function test_call(test_id) {
+    console.log(test_id)
+  }
 
-      oseba = data.oseba
-      naslovi = data.naslov_refs || []
-      kontakti = data.kontakt_refs || []
-      testi = data.test_refs || []
-      ucitelji = data.ucenje_ucitelj_refs || []
-      ucenci = data.ucenje_ucenci_refs || []
-    }).catch(data => {
-      console.error(data)
-    })
-  })
+  let testi_refs_promise = api.profil.index().then((osebaData: OsebaData) => osebaData.test_refs)
 
 </script>
 
 <div>
-  <Button on:click={logout}>Logout</Button>
-  <Button on:click={oseba}>Oseba</Button>
+  <DataTable table$aria-label="User list" style="width: 100%; text-align: center">
+    <Head>
+      <Row>
+        <Cell>Naslov</Cell>
+        <Cell numeric>Opravljeno</Cell>
+        <Cell>Deadline</Cell>
+      </Row>
+    </Head>
+    <Body>
+    {#await testi_refs_promise}
+      <LinearProgress
+        style="width: 100%"
+        indeterminate
+        aria-label="Data is being loaded..."
+        slot="progress"
+      />
+    {:then testi_refs}
+      {#each testi_refs as test_ref, i}
+        {@const test = test_ref.test}
+        <Row on:click={() => test_call(test._id)}>
+          <Cell>
+            {test.naslov}
+          </Cell>
+          <Cell numeric>
+            {test_ref.status_refs.length}
+          </Cell>
+          <Cell>
+            {test.deadline}
+          </Cell>
+        </Row>
+      {/each}
+    {:catch error}
+      {error}
+    {/await}
+    </Body>
 
-  <h1>Oseba</h1>
-  <h2>{oseba._id}</h2>
-  <h2>{oseba.ime} {oseba.priimek}</h2>
-  <h3>{oseba.tip} {oseba.username}</h3>
-
-
-  <h1>Naslovi</h1>
-  {#each naslovi as naslov}
-    <ul>
-      <li>{naslov.drzava}</li>
-      <li>{naslov.zip} {naslov.mesto}</li>
-      <li>{naslov.ulica}</li>
-    </ul>
-  {/each}
-
-  <h1>Kontakti</h1>
-  {#each kontakti as kontakt_ref}
-    {@const kontakt = kontakt_ref.kontakt}
-    <ul>
-      <li>{kontakt.tip}</li>
-      <li>{kontakt.data}</li>
-    </ul>
-  {/each}
-
-  <h1>Testi</h1>
-  {#each testi as test_ref}
-    {@const test = test_ref.test}
-    <ul>
-      <li>{test.deadline}</li>
-      <li>{test.naslov}</li>
-      <li>{test.podnaslov}</li>
-      <li>Naloge: {test_ref.status_refs.length}</li>
-    </ul>
-  {/each}
-
-  <h1>Ucenci</h1>
-  <ul>
-    {#each ucenci as ucenec_ref}
-      {@const ucenec = ucenec_ref.oseba_refs[0]}
-      <li>{ucenec.ime} {ucenec.priimek}</li>
-    {/each}
-  </ul>
-
-  <h1>Ucitelji</h1>
-  <ul>
-    {#each ucitelji as ucitelj_ref}
-      {@const ucitelj = ucitelj_ref.oseba_refs[0]}
-      <li>{ucitelj.ime} {ucitelj.priimek}</li>
-    {/each}
-  </ul>
-
-
+  </DataTable>
 </div>
