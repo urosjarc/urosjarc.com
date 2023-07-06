@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
 
 plugins {
     kotlin("multiplatform")
@@ -24,7 +23,21 @@ kotlin {
     }
 
     jvm {}
-    js(IR) { useCommonJs() }
+    js(IR) {
+        useCommonJs()
+        browser {
+            // either configure here
+            commonWebpackConfig {
+                outputPath = file("$projectDir/build/distributions/assets/js")
+            }
+
+            // or here
+            webpackTask {
+                destinationDirectory = file("$projectDir/build/distributions/assets/js")
+            }
+        }
+        binaries.executable()
+    }
 }
 group = "si.urosjarc"
 version = "1.0-SNAPSHOT"

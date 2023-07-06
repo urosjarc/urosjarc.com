@@ -1,8 +1,13 @@
+@file:OptIn(ExperimentalJsExport::class)
+
 package si.urosjarc.server.core.domain
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
+@JsExport
 @Serializable
 data class Zvezek(
     @Contextual override var _id: String? = null,
@@ -12,6 +17,7 @@ data class Zvezek(
     enum class Tip { DELOVNI, TEORETSKI }
 }
 
+@JsExport
 @Serializable
 data class Naloga(
     @Contextual override var _id: String? = null,
@@ -21,6 +27,7 @@ data class Naloga(
 ) : Entiteta
 
 
+@JsExport
 @Serializable
 data class Tematika(
     @Contextual override var _id: String? = null,

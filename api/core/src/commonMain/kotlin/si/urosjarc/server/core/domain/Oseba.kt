@@ -1,8 +1,13 @@
+@file:OptIn(ExperimentalJsExport::class)
+
 package si.urosjarc.server.core.domain
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
+@JsExport
 @Serializable
 data class Oseba(
     @Contextual override var _id: String? = null,
@@ -14,6 +19,7 @@ data class Oseba(
     enum class Tip { UCENEC, UCITELJ, INSTRUKTOR, ADMIN }
 }
 
+@JsExport
 @Serializable
 data class Kontakt(
     @Contextual override var _id: String? = null,
@@ -24,6 +30,7 @@ data class Kontakt(
     enum class Tip { EMAIL, TELEFON }
 }
 
+@JsExport
 @Serializable
 data class Naslov(
     @Contextual override var _id: String? = null,
@@ -35,6 +42,7 @@ data class Naslov(
     val dodatno: String
 ) : Entiteta
 
+@JsExport
 @Serializable
 data class Sporocilo(
     @Contextual override var _id: String? = null,

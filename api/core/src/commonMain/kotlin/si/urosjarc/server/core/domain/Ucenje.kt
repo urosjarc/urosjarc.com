@@ -1,8 +1,13 @@
+@file:OptIn(ExperimentalJsExport::class)
+
 package si.urosjarc.server.core.domain
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
+@JsExport
 @Serializable
 data class Ucenje(
     @Contextual override var _id: String? = null,
