@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import {Icon} from '@smui/common';
   import Button, {Group} from '@smui/button';
   import List, {Item, Separator} from '@smui/list';

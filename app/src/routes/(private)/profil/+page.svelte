@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import {token} from "../../../stores/tokenStore";
   import {goto} from "$app/navigation";
   import {route} from "../../../stores/routeStore";
@@ -20,7 +20,11 @@
 
   onMount(() => {
     api.profil.index().then(data => {
-      console.log(data)
+      console.log("-------------------")
+      let osebaData = core.core.data.OsebaData.Companion.decode(JSON.stringify(data))
+      console.log(osebaData.test_refs[0].test._id)
+      console.log("-------------------")
+
       oseba = data.oseba
       naslovi = data.naslov_refs || []
       kontakti = data.kontakt_refs || []

@@ -6,7 +6,7 @@ import io.ktor.client.plugins.resources.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.testing.*
 import kotlinx.serialization.json.Json
-import si.urosjarc.plugins.configureRouting
+import api.configureRouting
 
 fun ApplicationTestBuilder.test_client(): HttpClient {
     this.application {
