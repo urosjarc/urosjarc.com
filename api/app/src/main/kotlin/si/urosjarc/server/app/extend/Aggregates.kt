@@ -1,4 +1,4 @@
-package si.urosjarc.server.core.extend
+package si.urosjarc.server.app.extend
 
 import com.mongodb.ExplainVerbosity
 import com.mongodb.kotlin.client.AggregateIterable
@@ -16,7 +16,7 @@ fun Aggregates_lookup(
     from: KMutableProperty1<*, *>,
     to: KMutableProperty1<*, *>,
     pipeline: List<Bson>? = null,
-    dataclasses: Boolean = false
+    dataclasses: Boolean = true
 ): Bson {
     val local_class = (to as CallableReference).owner as KClass<*>
     val local_collection = local_class.simpleName.toString()
@@ -65,7 +65,7 @@ fun Aggregates_project_root(key: KClass<*>): Bson {
     )
 }
 
-fun AggregateIterable<*>.explain() {
+fun AggregateIterable<*>.explain_aggregation() {
     val explanation = this.explain(ExplainVerbosity.QUERY_PLANNER).get("command") as Document
     val jsonSetting = JsonWriterSettings.builder().indent(true).build()
     println(explanation.toJson(jsonSetting))

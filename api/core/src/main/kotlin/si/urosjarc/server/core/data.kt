@@ -12,10 +12,11 @@ data class OsebaData(
     val test_refs: List<TestData> = listOf()
 )
 
+
 @Serializable
 data class TestData(
     val test: Test,
-    val opravljeno: Float,
+//    val opravljeno: Float,
     val status_refs: List<Status> = listOf()
 )
 

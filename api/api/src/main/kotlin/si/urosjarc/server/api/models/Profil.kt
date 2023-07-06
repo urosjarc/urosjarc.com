@@ -1,8 +1,8 @@
 package si.urosjarc.server.api.models
 
 import kotlinx.serialization.Serializable
-import si.urosjarc.server.core.domain.Oseba
-import si.urosjarc.server.core.extend.ime
+import si.urosjarc.server.app.domain.Oseba
+import si.urosjarc.server.app.extend.ime
 
 @Serializable
 data class Profil(

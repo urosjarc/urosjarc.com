@@ -1,4 +1,4 @@
-package si.urosjarc.server.core.services
+package si.urosjarc.server.app.services
 
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil

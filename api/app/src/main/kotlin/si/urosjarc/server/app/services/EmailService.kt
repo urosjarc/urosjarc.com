@@ -1,4 +1,4 @@
-package si.urosjarc.server.core.services
+package si.urosjarc.server.app.services
 
 import org.apache.logging.log4j.kotlin.logger
 import java.net.InetAddress

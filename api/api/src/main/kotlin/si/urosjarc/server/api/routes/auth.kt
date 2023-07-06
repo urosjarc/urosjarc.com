@@ -19,10 +19,9 @@ import si.urosjarc.server.api.extend.profil
 import si.urosjarc.server.api.models.Profil
 import si.urosjarc.server.api.models.profil
 import si.urosjarc.server.api.response.PrijavaReq
-import si.urosjarc.server.core.base.Env
-import si.urosjarc.server.core.domain.Entiteta
-import si.urosjarc.server.core.domain.Oseba
-import si.urosjarc.server.core.services.DbService
+import si.urosjarc.server.app.base.Env
+import si.urosjarc.server.app.domain.Oseba
+import si.urosjarc.server.app.services.DbService
 import java.security.KeyFactory
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey

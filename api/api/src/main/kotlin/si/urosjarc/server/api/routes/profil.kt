@@ -9,9 +9,9 @@ import org.apache.logging.log4j.kotlin.logger
 import org.bson.types.ObjectId
 import org.koin.ktor.ext.inject
 import si.urosjarc.server.api.extend.profil
-import si.urosjarc.server.core.domain.Entiteta
-import si.urosjarc.server.core.domain.Oseba
-import si.urosjarc.server.core.services.DbService
+import si.urosjarc.server.app.domain.Entiteta
+import si.urosjarc.server.app.domain.Oseba
+import si.urosjarc.server.app.services.DbService
 
 
 @Resource("profil")

@@ -1,4 +1,4 @@
-package si.urosjarc.server.core.extend
+package si.urosjarc.server.app.extend
 
 import kotlinx.datetime.*
 

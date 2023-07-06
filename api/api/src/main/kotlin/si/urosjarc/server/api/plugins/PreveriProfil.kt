@@ -5,7 +5,7 @@ import io.ktor.server.auth.*
 import org.apache.logging.log4j.kotlin.logger
 import si.urosjarc.server.api.extend.client_unauthorized
 import si.urosjarc.server.api.extend.profil
-import si.urosjarc.server.core.domain.Oseba
+import si.urosjarc.server.app.domain.Oseba
 
 val PreveriProfil = createRouteScopedPlugin(
     name = "PreveriProfil",

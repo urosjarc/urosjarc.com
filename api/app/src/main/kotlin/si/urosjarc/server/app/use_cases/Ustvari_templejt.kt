@@ -1,4 +1,4 @@
-package si.urosjarc.server.core.use_cases
+package si.urosjarc.server.app.use_cases
 
 import org.apache.logging.log4j.kotlin.logger
 

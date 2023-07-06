@@ -1,4 +1,4 @@
 rootProject.name = "server"
-include("core")
 include("app")
+include("core")
 include("api")

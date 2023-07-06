@@ -1,4 +1,4 @@
-package si.urosjarc.server.core.base
+package si.urosjarc.server.app.base
 
 object Env {
     val PORT: Int = System.getenv("PORT").toInt()

@@ -1,18 +1,13 @@
-package si.urosjarc.server.core.repos
+package si.urosjarc.server.app.repos
 
 import com.mongodb.client.model.Aggregates
-import com.mongodb.client.model.Field
 import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.AggregateIterable
 import com.mongodb.kotlin.client.MongoCollection
-import org.bson.BsonDocument
-import org.bson.BsonString
 import org.bson.types.ObjectId
-import si.urosjarc.server.core.domain.*
-import si.urosjarc.server.core.extend.Aggregates_lookup
-import si.urosjarc.server.core.extend.Aggregates_project_root
-import si.urosjarc.server.core.extend.explain_aggregation
-
+import si.urosjarc.server.app.extend.Aggregates_lookup
+import si.urosjarc.server.app.extend.Aggregates_project_root
+import si.urosjarc.server.app.extend.explain_aggregation
 
 class OsebaRepo(val collection: MongoCollection<Oseba>) {
 

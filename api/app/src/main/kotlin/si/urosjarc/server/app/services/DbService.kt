@@ -1,4 +1,4 @@
-package si.urosjarc.server.core.services
+package si.urosjarc.server.app.services
 
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
@@ -7,9 +7,9 @@ import com.mongodb.ServerApiVersion
 import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.MongoClient
 import org.bson.types.ObjectId
-import si.urosjarc.server.core.domain.*
-import si.urosjarc.server.core.extend.ime
-import si.urosjarc.server.core.repos.OsebaRepo
+import si.urosjarc.server.app.domain.*
+import si.urosjarc.server.app.extend.ime
+import si.urosjarc.server.app.repos.OsebaRepo
 
 
 class DbService(val db_url: String, val db_name: String) {

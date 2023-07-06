@@ -13,6 +13,7 @@ plugins {
 
 dependencies {
     this.implementation(this.project(":core"))
+    this.implementation(this.project(":app"))
     this.implementation("io.insert-koin:koin-ktor:3.3.0")
     this.implementation("io.ktor:ktor-server-cors:$ktor_version")
     this.implementation("io.ktor:ktor-server-resources:$ktor_version")

@@ -1,11 +1,11 @@
-package si.urosjarc.server.core.base
+package si.urosjarc.server.app.base
 
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
-import si.urosjarc.server.core.services.EmailService
-import si.urosjarc.server.core.services.DbService
-import si.urosjarc.server.core.services.TelefonService
+import si.urosjarc.server.app.services.EmailService
+import si.urosjarc.server.app.services.DbService
+import si.urosjarc.server.app.services.TelefonService
 
 object App {
     enum class Tip { PRODUCTION, DEVELOPMENT, TEST }
