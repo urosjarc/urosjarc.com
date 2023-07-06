@@ -8,7 +8,7 @@ import org.junit.jupiter.api.TestInstance
 import org.koin.test.KoinTest
 import org.koin.test.inject
 import si.urosjarc.server.app.base.App
-import si.urosjarc.server.app.domain.Oseba
+import si.urosjarc.server.core.domain.Oseba
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class Test_DbService : KoinTest {

@@ -6,20 +6,42 @@ import com.mongodb.ServerApi
 import com.mongodb.ServerApiVersion
 import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.MongoClient
+import io.github.serpro69.kfaker.Faker
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import org.bson.types.ObjectId
-import si.urosjarc.server.app.domain.*
+import si.urosjarc.server.app.extend.danes
 import si.urosjarc.server.app.extend.ime
+import si.urosjarc.server.app.extend.zdaj
 import si.urosjarc.server.app.repos.OsebaRepo
+import si.urosjarc.server.core.domain.*
 
+val faker = Faker()
+var counters = mutableMapOf<String, Int>()
 
 class DbService(val db_url: String, val db_name: String) {
     private val serverApi = ServerApi.builder().version(ServerApiVersion.V1).build()
     private val settings = MongoClientSettings.builder()
         .applyConnectionString(ConnectionString(db_url)).serverApi(serverApi).build()
     private val mongoClient = MongoClient.create(settings)
-    val db = mongoClient.getDatabase(db_name)
 
+    val db = mongoClient.getDatabase(db_name)
     val osebaRepo = OsebaRepo(collection = db.getCollection(collectionName = ime<Oseba>()))
+
+    inline fun <reified T : Any> nakljucni(): T {
+        val obj = faker.randomProvider.randomClassInstance<T> {
+            this.typeGenerator<MutableSet<T>> { mutableSetOf() }
+            this.typeGenerator<LocalDate> { LocalDate.danes() }
+            this.typeGenerator<LocalDateTime> { LocalDateTime.zdaj() }
+            this.typeGenerator<String> { pInfo ->
+                val value = counters.getOrDefault(pInfo.name, -1) + 1
+                counters[pInfo.name] = value
+                "${pInfo.name}_${value}"
+            }
+        }
+        return obj
+    }
+
 
     fun nafilaj() {
         val all_oseba = mutableListOf<Oseba>()
@@ -35,48 +57,47 @@ class DbService(val db_url: String, val db_name: String) {
 
         (1..5).forEach {
 
-            val oseba = Entiteta.nakljucni<Oseba>()
+            val oseba = nakljucni<Oseba>()
             all_oseba.add(oseba)
 
-            val zvezek = Entiteta.nakljucni<Zvezek>()
+            val zvezek = nakljucni<Zvezek>()
             all_zvezek.add(zvezek)
 
             (1..2).forEach {
 
-                val tematika = Entiteta.nakljucni<Tematika>().apply { this.zvezek_id = zvezek._id }
+                val tematika = nakljucni<Tematika>().apply { this.zvezek_id = zvezek._id }
                 all_tematika.add(tematika)
 
-                val kontakt = Entiteta.nakljucni<Kontakt>().apply { this.oseba_id = oseba._id }
+                val kontakt = nakljucni<Kontakt>().apply { this.oseba_id = oseba._id }
                 all_kontakt.add(kontakt)
 
-                val naslov = Entiteta.nakljucni<Naslov>().apply { this.oseba_id = oseba._id }
+                val naslov = nakljucni<Naslov>().apply { this.oseba_id = oseba._id }
                 all_naslov.add(naslov)
 
-                val ucenje0 = Entiteta.nakljucni<Ucenje>().apply {
+                val ucenje0 = nakljucni<Ucenje>().apply {
                     this.oseba_ucenec_id = oseba._id; this.oseba_ucitelj_id = all_oseba.random()._id
                 }; all_ucenje.add(ucenje0)
 
-                val ucenje1 = Entiteta.nakljucni<Ucenje>().apply {
+                val ucenje1 = nakljucni<Ucenje>().apply {
                     this.oseba_ucitelj_id = oseba._id; this.oseba_ucenec_id = all_oseba.random()._id
                 }; all_ucenje.add(ucenje1)
 
-                val test = Entiteta.nakljucni<Test>().apply { this.oseba_id = oseba._id }
+                val test = nakljucni<Test>().apply { this.oseba_id = oseba._id }
                 all_test.add(test)
 
                 (1..5).forEach {
-                    val sporocilo = Entiteta.nakljucni<Sporocilo>().apply {
+                    val sporocilo = nakljucni<Sporocilo>().apply {
                         this.kontakt_posiljatelj_id = all_kontakt.random()._id
                         this.kontakt_prejemnik_id = all_kontakt.random()._id
                     }
                     all_sporocilo.add(sporocilo)
 
-                    val naloga = Entiteta.nakljucni<Naloga>().apply { this.tematika_id = tematika._id }
+                    val naloga = nakljucni<Naloga>().apply { this.tematika_id = tematika._id }
                     all_naloga.add(naloga)
 
                     (1..5).forEach {
-                        val status = Entiteta.nakljucni<Status>().apply {
+                        val status = nakljucni<Status>().apply {
                             this.naloga_id = naloga._id
-                            println(test._id)
                             this.test_id = test._id
                         }
                         all_status.add(status)
@@ -104,7 +125,7 @@ class DbService(val db_url: String, val db_name: String) {
 
     inline fun <reified T : Entiteta> ustvari(entiteta: T): Boolean {
         return db.getCollection<T>(collectionName = ime<T>())
-            .insertOne(entiteta).also { entiteta._id = it.insertedId?.asObjectId()?.value }
+            .insertOne(entiteta).also { entiteta._id = it.insertedId?.asObjectId()?.value.toString() }
             .wasAcknowledged()
     }
 
@@ -122,9 +143,9 @@ class DbService(val db_url: String, val db_name: String) {
             .toList()
     }
 
-    fun filter_one(_id: ObjectId?) = Filters.eq("_id", _id)
+    fun filter_one(_id: String?) = Filters.eq("_id", _id)
 
-    inline fun <reified T : Entiteta> dobi(_id: ObjectId): T? {
+    inline fun <reified T : Entiteta> dobi(_id: String): T? {
         return db.getCollection<T>(collectionName = ime<T>())
             .find(filter_one(_id))
             .firstOrNull()
@@ -136,7 +157,7 @@ class DbService(val db_url: String, val db_name: String) {
             .findOneAndReplace(filter_one(entiteta._id), entiteta)
     }
 
-    inline fun <reified T : Entiteta> odstrani(_id: ObjectId): Boolean {
+    inline fun <reified T : Entiteta> odstrani(_id: String): Boolean {
         return db.getCollection<T>(collectionName = ime<T>())
             .deleteOne(filter_one(_id))
             .wasAcknowledged()

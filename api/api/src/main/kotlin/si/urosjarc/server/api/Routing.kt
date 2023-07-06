@@ -11,9 +11,11 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.resources.*
 import io.ktor.server.routing.*
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.contextual
+import org.bson.codecs.kotlinx.ObjectIdSerializer
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
@@ -26,12 +28,12 @@ import si.urosjarc.server.api.routes.index
 import si.urosjarc.server.api.routes.profil
 import si.urosjarc.server.app.base.App
 import si.urosjarc.server.app.base.Env
-import si.urosjarc.server.app.domain.Oseba
-import si.urosjarc.server.app.serializers.ObjectIdSerializer
 import si.urosjarc.server.app.services.DbService
+import si.urosjarc.server.core.domain.Oseba
 import java.util.concurrent.TimeUnit
 
 
+@OptIn(ExperimentalSerializationApi::class)
 fun Application.configureRouting() {
     this.install(CallLogging) {
         this.level = org.slf4j.event.Level.INFO
