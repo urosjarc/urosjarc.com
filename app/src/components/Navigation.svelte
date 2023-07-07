@@ -6,10 +6,11 @@
   export let icon;
   export let text;
   export let link;
+  export let color = "none";
 </script>
 
 <div class="{cls}">
-  <Fab href="{link}">
+  <Fab style="background-color: {color}" href="{link}">
     <Icon class="material-icons">{icon}</Icon>
     <p class="link">{text}</p>
   </Fab>

@@ -1,7 +1,13 @@
+<script>
+  export let lg_size = 6
+  export let sm_size = 11
+</script>
+
+
 <div id="app" class="container">
 
   <div class="row justify-content-center" style="margin: 0">
-    <div class="col-12 col-sm-11 col-lg-6" style="padding: 0">
+    <div class="col-12 col-sm-{sm_size} col-lg-{lg_size}" style="padding: 0">
 
       <div id="navigacija" class="row">
         <slot name="navigation"/>

@@ -3,5 +3,6 @@ export const route = {
   prijava: "/prijava",
   kontakt: "/kontakt",
   koledar: "/koledar",
-  profil: "/profil"
+  profil: "/profil",
+  test: (test_id: String) => `/profil/test/${test_id}`
 }
