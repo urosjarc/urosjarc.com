@@ -1,5 +1,9 @@
 package app.services
 
+import app.extend.danes
+import app.extend.ime
+import app.extend.zdaj
+import app.repos.OsebaRepo
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
 import com.mongodb.ServerApi
@@ -10,11 +14,6 @@ import core.domain.*
 import io.github.serpro69.kfaker.Faker
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import app.extend.danes
-import app.extend.ime
-import app.extend.zdaj
-import app.repos.OsebaRepo
-import si.urosjarc.server.core.domain.*
 
 val faker = Faker()
 var counters = mutableMapOf<String, Int>()
@@ -63,6 +62,11 @@ class DbService(val db_url: String, val db_name: String) {
             val zvezek = nakljucni<Zvezek>()
             all_zvezek.add(zvezek)
 
+            (1..3).forEach {
+                val test = nakljucni<Test>().apply { this.oseba_id = oseba._id }
+                all_test.add(test)
+            }
+
             (1..2).forEach {
 
                 val tematika = nakljucni<Tematika>().apply { this.zvezek_id = zvezek._id }
@@ -82,8 +86,6 @@ class DbService(val db_url: String, val db_name: String) {
                     this.oseba_ucitelj_id = oseba._id; this.oseba_ucenec_id = all_oseba.random()._id
                 }; all_ucenje.add(ucenje1)
 
-                val test = nakljucni<Test>().apply { this.oseba_id = oseba._id }
-                all_test.add(test)
 
                 (1..5).forEach {
                     val sporocilo = nakljucni<Sporocilo>().apply {
@@ -97,8 +99,8 @@ class DbService(val db_url: String, val db_name: String) {
 
                     (1..5).forEach {
                         val status = nakljucni<Status>().apply {
-                            this.naloga_id = naloga._id
-                            this.test_id = test._id
+                            this.naloga_id = all_naloga.random()._id
+                            this.test_id = all_test.random()._id
                         }
                         all_status.add(status)
                     }

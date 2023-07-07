@@ -10,7 +10,7 @@ import kotlin.js.JsExport
 @JsExport
 @Serializable
 data class Oseba(
-    @Contextual override var _id: String? = null,
+    override var _id: String? = null,
     val ime: String,
     val priimek: String,
     val username: String,
@@ -22,8 +22,8 @@ data class Oseba(
 @JsExport
 @Serializable
 data class Kontakt(
-    @Contextual override var _id: String? = null,
-    @Contextual var oseba_id: String? = null,
+    override var _id: String? = null,
+    var oseba_id: String? = null,
     val data: String,
     val tip: Tip
 ) : Entiteta {
@@ -33,8 +33,8 @@ data class Kontakt(
 @JsExport
 @Serializable
 data class Naslov(
-    @Contextual override var _id: String? = null,
-    @Contextual var oseba_id: String? = null,
+    override var _id: String? = null,
+    var oseba_id: String? = null,
     val drzava: String,
     val mesto: String,
     val ulica: String,
@@ -45,8 +45,8 @@ data class Naslov(
 @JsExport
 @Serializable
 data class Sporocilo(
-    @Contextual override var _id: String? = null,
-    @Contextual var kontakt_posiljatelj_id: String? = null,
-    @Contextual var kontakt_prejemnik_id: String? = null,
+    override var _id: String? = null,
+    var kontakt_posiljatelj_id: String? = null,
+    var kontakt_prejemnik_id: String? = null,
     val vsebina: String,
 ) : Entiteta

@@ -8,8 +8,8 @@ import kotlin.js.JsExport
 
 @JsExport
 data class Audit(
-    @Contextual override var _id: String? = null,
-    @Contextual var entiteta_id: String? = null,
+    override var _id: String? = null,
+    var entiteta_id: String? = null,
     val opis: String,
     val entiteta: String
 ) : Entiteta

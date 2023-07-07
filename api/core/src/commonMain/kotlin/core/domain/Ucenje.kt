@@ -10,7 +10,7 @@ import kotlin.js.JsExport
 @JsExport
 @Serializable
 data class Ucenje(
-    @Contextual override var _id: String? = null,
-    @Contextual var oseba_ucenec_id: String? = null,
-    @Contextual var oseba_ucitelj_id: String? = null,
+    override var _id: String? = null,
+    var oseba_ucenec_id: String? = null,
+    var oseba_ucitelj_id: String? = null,
 ) : Entiteta

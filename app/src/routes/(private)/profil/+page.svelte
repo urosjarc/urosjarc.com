@@ -5,7 +5,7 @@
   import {profil} from "../../../stores/profilStore";
 
   function goto_test(id) {
-    goto(route.test(id))
+    goto(route.profil_test_id(id))
   }
 
   const testi_refs = profil.get().test_refs
@@ -16,9 +16,10 @@
   <DataTable table$aria-label="User list" style="width: 100%">
     <Head>
       <Row>
-        <Cell numeric>Opravljeno</Cell>
-        <Cell>Naslov</Cell>
-        <Cell>Deadline</Cell>
+        <Cell numeric><p class="naslov-stolpca">#</p></Cell>
+        <Cell><p class="naslov-stolpca">Naslov</p></Cell>
+        <Cell numeric><p class="naslov-stolpca">Opravljeno</p></Cell>
+        <Cell><p class="naslov-stolpca">Deadline</p></Cell>
       </Row>
     </Head>
     <Body>
@@ -26,10 +27,13 @@
       {@const test = test_ref.test}
       <Row on:click={() => goto_test(test._id)} style="cursor: pointer">
         <Cell numeric>
-          {test_ref.status_refs.length}%
+          {i+1}
         </Cell>
         <Cell>
           {test.naslov}
+        </Cell>
+        <Cell numeric>
+          {test_ref.opravljeno}%
         </Cell>
         <Cell>
           {test.deadline}
@@ -40,3 +44,9 @@
 
   </DataTable>
 </div>
+
+<style>
+  .naslov-stolpca {
+    font-weight: bolder;
+  }
+</style>

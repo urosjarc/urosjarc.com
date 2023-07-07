@@ -29,6 +29,7 @@ class Test_DbService : KoinTest {
 
     @Test
     fun `nafilaj bazo`() {
+        this.`sprazni bazo`()
         this.service.nafilaj()
     }
 

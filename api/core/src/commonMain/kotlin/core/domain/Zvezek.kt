@@ -2,7 +2,6 @@
 
 package core.domain
 
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
@@ -10,7 +9,7 @@ import kotlin.js.JsExport
 @JsExport
 @Serializable
 data class Zvezek(
-    @Contextual override var _id: String? = null,
+    override var _id: String? = null,
     val tip: Tip,
     val naslov: String,
 ) : Entiteta {
@@ -20,8 +19,8 @@ data class Zvezek(
 @JsExport
 @Serializable
 data class Naloga(
-    @Contextual override var _id: String? = null,
-    @Contextual var tematika_id: String? = null,
+    override var _id: String? = null,
+    var tematika_id: String? = null,
     val resitev: String,
     val vsebina: String,
 ) : Entiteta
@@ -30,7 +29,7 @@ data class Naloga(
 @JsExport
 @Serializable
 data class Tematika(
-    @Contextual override var _id: String? = null,
-    @Contextual var zvezek_id: String? = null,
+    override var _id: String? = null,
+    var zvezek_id: String? = null,
     val naslov: String,
 ) : Entiteta

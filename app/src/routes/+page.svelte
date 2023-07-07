@@ -10,7 +10,7 @@
 </script>
 
 <div>
-  <div id="glava">
+  <div style="padding-top: 5px !important; text-align: center;">
 
     <h1 class="hacker">Uroš Jarc</h1>
     <h2 class="hacker">Inštruktor programiranja, fizike, matematike</h2>
@@ -66,19 +66,14 @@
     padding: 12px 0 !important;
   }
 
-  #glava {
-    padding-top: 5px !important;
-    text-align: center;
-  }
-
-  p {
-    text-align: center;
-    width: 100%;
-  }
-
   /*Gumb brez border radiusa!*/
   :global(.mdc-button) {
     border-radius: 0 !important;
+  }
+
+  .hacker {
+    text-align: center;
+    width: 100%;
   }
 
 </style>

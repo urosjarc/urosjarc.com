@@ -7,10 +7,15 @@
   export let text;
   export let link;
   export let color = "none";
+
+  export let on_click = () => {
+  };
+
+  export let radius = "50%"
 </script>
 
-<div class="{cls}">
-  <Fab style="background-color: {color}" href="{link}">
+<div class="{cls}" on:click={on_click}>
+  <Fab style="background-color: {color}; border-radius: {radius}" href="{link}">
     <Icon class="material-icons">{icon}</Icon>
     <p class="link">{text}</p>
   </Fab>

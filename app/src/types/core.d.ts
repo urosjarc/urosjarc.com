@@ -25,21 +25,58 @@ export namespace core.data {
         } & any/* kotlinx.serialization.internal.GeneratedSerializer<core.data.OsebaData> */;
     }
     class TestData {
-        constructor(test: core.domain.Test, status_refs?: Array<core.domain.Status>);
+        constructor(test: core.domain.Test, status_refs?: Array<core.data.StatusData>, opravljeno: number);
         get test(): core.domain.Test;
-        get status_refs(): Array<core.domain.Status>;
+        get status_refs(): Array<core.data.StatusData>;
+        get opravljeno(): number;
+        set opravljeno(value: number);
         component1(): core.domain.Test;
-        component2(): Array<core.domain.Status>;
-        copy(test?: core.domain.Test, status_refs?: Array<core.domain.Status>): core.data.TestData;
+        component2(): Array<core.data.StatusData>;
+        component3(): number;
+        copy(test?: core.domain.Test, status_refs?: Array<core.data.StatusData>, opravljeno?: number): core.data.TestData;
         toString(): string;
         hashCode(): number;
         equals(other: Nullable<any>): boolean;
-        static TestData_init_$Create$(seen1: number, test: Nullable<core.domain.Test>, status_refs: Nullable<Array<core.domain.Status>>, serializationConstructorMarker: Nullable<any>/* Nullable<kotlinx.serialization.internal.SerializationConstructorMarker> */): core.data.TestData;
+        static TestData_init_$Create$(seen1: number, test: Nullable<core.domain.Test>, status_refs: Nullable<Array<core.data.StatusData>>, opravljeno: number, serializationConstructorMarker: Nullable<any>/* Nullable<kotlinx.serialization.internal.SerializationConstructorMarker> */): core.data.TestData;
         static get Companion(): {
             serializer(): any/* kotlinx.serialization.KSerializer<core.data.TestData> */;
         };
         static get $serializer(): {
         } & any/* kotlinx.serialization.internal.GeneratedSerializer<core.data.TestData> */;
+    }
+    class StatusData {
+        constructor(status: core.domain.Status, naloga_refs?: Array<core.data.NalogaData>);
+        get status(): core.domain.Status;
+        get naloga_refs(): Array<core.data.NalogaData>;
+        component1(): core.domain.Status;
+        component2(): Array<core.data.NalogaData>;
+        copy(status?: core.domain.Status, naloga_refs?: Array<core.data.NalogaData>): core.data.StatusData;
+        toString(): string;
+        hashCode(): number;
+        equals(other: Nullable<any>): boolean;
+        static StatusData_init_$Create$(seen1: number, status: Nullable<core.domain.Status>, naloga_refs: Nullable<Array<core.data.NalogaData>>, serializationConstructorMarker: Nullable<any>/* Nullable<kotlinx.serialization.internal.SerializationConstructorMarker> */): core.data.StatusData;
+        static get Companion(): {
+            serializer(): any/* kotlinx.serialization.KSerializer<core.data.StatusData> */;
+        };
+        static get $serializer(): {
+        } & any/* kotlinx.serialization.internal.GeneratedSerializer<core.data.StatusData> */;
+    }
+    class NalogaData {
+        constructor(naloga: core.domain.Naloga, tematika_refs?: Array<core.domain.Tematika>);
+        get naloga(): core.domain.Naloga;
+        get tematika_refs(): Array<core.domain.Tematika>;
+        component1(): core.domain.Naloga;
+        component2(): Array<core.domain.Tematika>;
+        copy(naloga?: core.domain.Naloga, tematika_refs?: Array<core.domain.Tematika>): core.data.NalogaData;
+        toString(): string;
+        hashCode(): number;
+        equals(other: Nullable<any>): boolean;
+        static NalogaData_init_$Create$(seen1: number, naloga: Nullable<core.domain.Naloga>, tematika_refs: Nullable<Array<core.domain.Tematika>>, serializationConstructorMarker: Nullable<any>/* Nullable<kotlinx.serialization.internal.SerializationConstructorMarker> */): core.data.NalogaData;
+        static get Companion(): {
+            serializer(): any/* kotlinx.serialization.KSerializer<core.data.NalogaData> */;
+        };
+        static get $serializer(): {
+        } & any/* kotlinx.serialization.internal.GeneratedSerializer<core.data.NalogaData> */;
     }
     class KontaktData {
         constructor(kontakt: core.domain.Kontakt, oseba_refs?: Array<core.domain.Oseba>, sporocilo_prejemnik_refs?: Array<core.data.SporociloData>, sporocilo_posiljatelj_refs?: Array<core.data.SporociloData>);

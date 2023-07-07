@@ -10,28 +10,28 @@ export const usecase = {
       .then(prijavaRes => {
         if ("token" in prijavaRes) {
           token.set(prijavaRes.token)
-          this.posodobi_profil().then(() => {
+          usecase.posodobi_profil().then(() => {
             goto(route.profil)
           })
         } else {
-          this.obvestilo_napake("API ne pošilja uporabniskega token ključa!")
+          usecase.obvestilo_napake("API ne pošilja uporabniskega token ključa!")
         }
       }).catch(data => {
-      this.obvestilo_napake("API ni mogel prijaviti uporabnika!")
+      usecase.obvestilo_napake("API ni mogel prijaviti uporabnika!")
     })
   },
   prijavljen_v_profil() {
-    if (token.exists()) api.auth.whois().then(() => goto(route.profil)).catch(() => token.clear())
+    if (token.exists()) api.auth.whois().then(() => goto(route.profil)).catch(() => usecase.odjava())
   },
   neprijavljen_v_prijavo() {
     if (token.exists()) {
       api.auth.whois().catch(() => {
-        token.clear()
+        usecase.odjava()
         goto(route.prijava)
       })
     } else goto(route.prijava)
   },
-  obvestilo_napake(sporocilo) {
+  obvestilo_napake(sporocilo: String) {
     alert(sporocilo)
   },
   posodobi_profil() {
@@ -39,7 +39,11 @@ export const usecase = {
       profil.set(profilRes)
     }).catch(data => {
       console.error(data)
-      this.obvestilo_napake("API ni vrnil uporabniskega profila!")
+      usecase.obvestilo_napake("API ni vrnil uporabniskega profila!")
     })
+  },
+  odjava() {
+    token.clear()
+    profil.clear()
   }
 }

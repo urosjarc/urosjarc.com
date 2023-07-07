@@ -28,7 +28,19 @@ class OsebaRepo(val collection: MongoCollection<Oseba>) {
                     pipeline = listOf(
                         Aggregates_lookup(
                             from = Status::test_id,
-                            to = Test::_id
+                            to = Test::_id,
+                            pipeline = listOf(
+                                Aggregates_lookup(
+                                    from = Naloga::_id,
+                                    to = Status::naloga_id,
+                                    pipeline = listOf(
+                                        Aggregates_lookup(
+                                            from = Tematika::_id,
+                                            to = Naloga::tematika_id,
+                                        ),
+                                    ),
+                                ),
+                            ),
                         ),
                     ),
                 ),

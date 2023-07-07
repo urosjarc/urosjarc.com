@@ -27,7 +27,32 @@ data class OsebaData(
 @Serializable
 data class TestData(
     val test: Test,
-    val status_refs: Array<Status> = arrayOf()
+    val status_refs: Array<StatusData> = arrayOf(),
+    var opravljeno: Float = 0f
+) {
+    init {
+
+        if (status_refs.size > 0) {
+            this.opravljeno = (this.status_refs
+                .count {
+                    it.status.tip == Status.Tip.USPEH
+                } / status_refs.size).toFloat()
+        }
+    }
+}
+
+@JsExport
+@Serializable
+data class StatusData(
+    val status: Status,
+    val naloga_refs: Array<NalogaData> = arrayOf(),
+)
+
+@JsExport
+@Serializable
+data class NalogaData(
+    val naloga: Naloga,
+    val tematika_refs: Array<Tematika> = arrayOf(),
 )
 
 @JsExport

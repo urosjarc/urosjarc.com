@@ -43,5 +43,5 @@ group = "si.urosjarc"
 version = "1.0-SNAPSHOT"
 
 configure<BuildSrc_domainMap_gradle.DomainMapExtension> {
-    this.inputDir.set("src/main/kotlin/si/urosjarc/server/core/domain")
+    this.inputDir.set("src/commonMain/kotlin/core/domain")
 }
