@@ -1,6 +1,6 @@
 import {persisted} from "svelte-local-storage-store";
 import {get} from "svelte/store";
-import type {core} from "../types/core";
+import type {core} from "../types/server.d.ts";
 
 export const profil = {
   store: persisted('profilStore', null),

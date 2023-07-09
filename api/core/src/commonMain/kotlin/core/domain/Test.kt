@@ -3,7 +3,6 @@
 package core.domain
 
 import kotlinx.datetime.LocalDate
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
@@ -25,8 +24,8 @@ data class Status(
     override var _id: String? = null,
     var naloga_id: String? = null,
     var test_id: String? = null,
-    val tip: Tip,
+    val tip: Tip = Tip.NEOPRAVLJENO,
     val pojasnilo: String
 ) : Entiteta {
-    enum class Tip { USPEH, NEUSPEH }
+    enum class Tip { NEOPRAVLJENO, NERESENO, NAPACNO, PRAVILNO }
 }

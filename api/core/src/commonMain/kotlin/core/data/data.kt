@@ -4,8 +4,6 @@ package core.data
 
 import core.domain.*
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport
 
@@ -17,11 +15,7 @@ data class OsebaData(
     val ucenje_ucitelj_refs: Array<UcenjeData> = arrayOf(),
     val kontakt_refs: Array<KontaktData> = arrayOf(),
     val test_refs: Array<TestData> = arrayOf()
-) {
-    companion object {
-        fun decode(string: String): OsebaData = Json.decodeFromString(string)
-    }
-}
+)
 
 @JsExport
 @Serializable
@@ -35,7 +29,7 @@ data class TestData(
         if (status_refs.size > 0) {
             this.opravljeno = (this.status_refs
                 .count {
-                    it.status.tip == Status.Tip.USPEH
+                    it.status.tip == Status.Tip.PRAVILNO
                 } / status_refs.size).toFloat()
         }
     }

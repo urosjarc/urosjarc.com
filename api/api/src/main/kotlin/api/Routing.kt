@@ -30,6 +30,10 @@ import app.base.App
 import app.base.Env
 import app.services.DbService
 import core.domain.Oseba
+import kotlinx.datetime.serializers.InstantIso8601Serializer
+import kotlinx.datetime.serializers.LocalDateIso8601Serializer
+import kotlinx.datetime.serializers.LocalDateTimeIso8601Serializer
+import kotlinx.datetime.serializers.LocalTimeIso8601Serializer
 import java.util.concurrent.TimeUnit
 
 
@@ -51,6 +55,9 @@ fun Application.configureRouting() {
         this.json(Json {
             serializersModule = SerializersModule {
                 contextual(ObjectIdSerializer)
+                contextual(LocalDateTimeIso8601Serializer)
+                contextual(LocalTimeIso8601Serializer)
+                contextual(LocalDateIso8601Serializer)
             }
             this.prettyPrint = true
             this.isLenient = true

@@ -17,6 +17,7 @@
       const info = {
         naloga_id: status_ref.naloga_refs[0].naloga._id,
         tema: status_ref.naloga_refs[0].tematika_refs[0].naslov,
+        tip: status_ref.status.tip
       }
       if (info.tema in tematike) tematike[info.tema].push(info)
       else {
@@ -39,6 +40,18 @@
     goto(route_naloge)
   }
 
+  function barba_naloge(tip) {
+    switch (tip) {
+      case "NERESENO":
+        return "background-color: red; color: white"
+      case "NAPACNO":
+        return "background-color: orange; color: black"
+      case "PRAVILNO":
+        return "background-color: green; color: white"
+      default:
+        return "background-color: lightgray; color: black"
+    }
+  }
 </script>
 
 <div class="row justify-content-center" style="padding: 0 12px 30px 12px">
@@ -46,7 +59,7 @@
     <h1 style="text-align: center; margin: 30px 0 0 0">{tema}</h1>
     {#each infos as info, i}
       {@const naloga_id = info.naloga_id}
-      <Button class="col-1" style="margin: 2px" variant="raised" href={route.profil_naloga_id(test_id, naloga_id)}>
+      <Button class="col-1" style="margin: 2px; {barba_naloge(info.tip)}" variant="raised" href={route.profil_naloga_id(test_id, naloga_id)}>
         <Label>{i + 1}</Label>
       </Button>
     {/each}

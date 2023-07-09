@@ -18,27 +18,23 @@
 </script>
 
 <div>
-  <DataTable table$aria-label="User list" style="width: 100%">
+  <DataTable style="width: 100%">
     <Head>
       <Row>
-        <Cell numeric><p class="naslov-stolpca">#</p></Cell>
-        <Cell><p class="naslov-stolpca">Naslov</p></Cell>
         <Cell numeric><p class="naslov-stolpca">Opravljeno</p></Cell>
+        <Cell><p class="naslov-stolpca">Naslov</p></Cell>
         <Cell><p class="naslov-stolpca">Deadline</p></Cell>
       </Row>
     </Head>
     <Body>
-    {#each testi_refs as test_ref, i}
+    {#each testi_refs as test_ref}
       {@const test = test_ref.test}
       <Row on:click={() => goto_test(test._id)} style="cursor: pointer">
         <Cell numeric>
-          {i + 1}
+          {test_ref.opravljeno || 0}%
         </Cell>
         <Cell>
           {test.naslov}
-        </Cell>
-        <Cell numeric>
-          {test_ref.opravljeno || 0}%
         </Cell>
         <Cell>
           {test.deadline}

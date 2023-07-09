@@ -97,7 +97,7 @@ class DbService(val db_url: String, val db_name: String) {
                     val naloga = nakljucni<Naloga>().apply { this.tematika_id = tematika._id }
                     all_naloga.add(naloga)
 
-                    (1..5).forEach {
+                    (1..15).forEach {
                         val status = nakljucni<Status>().apply {
                             this.naloga_id = all_naloga.random()._id
                             this.test_id = all_test.random()._id
