@@ -3,12 +3,17 @@
   import {route} from "../../../stores/routeStore";
   import DataTable, {Body, Head, Row, Cell} from "@smui/data-table"
   import {profil} from "../../../stores/profilStore";
+  import {onMount} from "svelte";
+
+  let testi_refs = []
 
   function goto_test(id) {
     goto(route.profil_test_id(id))
   }
 
-  const testi_refs = profil.get().test_refs
+  onMount(() => {
+    testi_refs = profil.get().test_refs
+  })
 
 </script>
 
@@ -27,13 +32,13 @@
       {@const test = test_ref.test}
       <Row on:click={() => goto_test(test._id)} style="cursor: pointer">
         <Cell numeric>
-          {i+1}
+          {i + 1}
         </Cell>
         <Cell>
           {test.naslov}
         </Cell>
         <Cell numeric>
-          {test_ref.opravljeno}%
+          {test_ref.opravljeno || 0}%
         </Cell>
         <Cell>
           {test.deadline}

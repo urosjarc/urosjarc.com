@@ -24,7 +24,7 @@ export const usecase = {
     if (token.exists()) api.auth.whois().then(() => goto(route.profil)).catch(() => usecase.odjava())
   },
   neprijavljen_v_prijavo() {
-    if (token.exists()) {
+    if (token.exists() && profil.exists()) {
       api.auth.whois().catch(() => {
         usecase.odjava()
         goto(route.prijava)

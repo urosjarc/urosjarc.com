@@ -35,6 +35,7 @@
     "vite": "^4.3.0"
   },
   "dependencies": {
+    "@smui-extra/accordion": "^7.0.0-beta.14",
     "@smui/button": "^7.0.0-beta.8",
     "@smui/common": "^7.0.0-beta.8",
     "@smui/data-table": "^7.0.0-beta.8",

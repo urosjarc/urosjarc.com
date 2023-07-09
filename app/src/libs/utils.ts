@@ -5,3 +5,9 @@ export function dateISO(leto: number, mesec: number, dan: number) {
     return null
   }
 }
+
+export function time(sec: number): String {
+  let min_pad = ('00' + (Math.floor(sec / 60))).slice(-2)
+  let sec_pad = ('00' + (sec % 60)).slice(-2)
+  return `${min_pad}:${sec_pad}`
+}
