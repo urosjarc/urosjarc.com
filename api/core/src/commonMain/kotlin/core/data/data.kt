@@ -30,7 +30,7 @@ data class TestData(
             this.opravljeno = (this.status_refs
                 .count {
                     it.status.tip == Status.Tip.PRAVILNO
-                } / status_refs.size).toFloat()
+                }.toFloat() / status_refs.size)
         }
     }
 }

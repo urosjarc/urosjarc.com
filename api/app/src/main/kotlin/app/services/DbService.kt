@@ -14,6 +14,7 @@ import core.domain.*
 import io.github.serpro69.kfaker.Faker
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import kotlin.random.Random
 
 val faker = Faker()
 var counters = mutableMapOf<String, Int>()
@@ -30,7 +31,7 @@ class DbService(val db_url: String, val db_name: String) {
     inline fun <reified T : Any> nakljucni(): T {
         val obj = faker.randomProvider.randomClassInstance<T> {
             this.typeGenerator<MutableSet<T>> { mutableSetOf() }
-            this.typeGenerator<LocalDate> { LocalDate.danes() }
+            this.typeGenerator<LocalDate> { LocalDate.danes(dDni = Random.nextInt(3, 20)) }
             this.typeGenerator<LocalDateTime> { LocalDateTime.zdaj() }
             this.typeGenerator<String> { pInfo ->
                 val value = counters.getOrDefault(pInfo.name, -1) + 1

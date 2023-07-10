@@ -2,7 +2,6 @@
 
 package core.domain
 
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import kotlin.js.ExperimentalJsExport
 import kotlin.js.JsExport

@@ -24,7 +24,7 @@ export const usecase = {
     if (token.exists()) api.auth.whois().then(() => goto(route.profil)).catch(() => usecase.odjava())
   },
   neprijavljen_v_prijavo() {
-    if (token.exists() && profil.exists()) {
+    if (token.exists()) {
       api.auth.whois().catch(() => {
         usecase.odjava()
         goto(route.prijava)
@@ -33,6 +33,16 @@ export const usecase = {
   },
   obvestilo_napake(sporocilo: String) {
     alert(sporocilo)
+  },
+  nastavi_profil() {
+    if (!profil.exists()) {
+      api.profil.index().then(profilRes => {
+        profil.set(profilRes)
+      }).catch(data => {
+        console.error(data)
+        usecase.obvestilo_napake("API ni vrnil uporabniskega profila!")
+      })
+    }
   },
   posodobi_profil() {
     return api.profil.index().then(profilRes => {

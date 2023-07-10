@@ -1,11 +1,11 @@
 package app.base
 
+import app.services.DbService
+import app.services.EmailService
+import app.services.TelefonService
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
-import app.services.EmailService
-import app.services.DbService
-import app.services.TelefonService
 
 object App {
     enum class Tip { PRODUCTION, DEVELOPMENT, TEST }
@@ -30,7 +30,7 @@ object App {
         this.single<DbService> {
             DbService(
                 db_url = Env.DB_URL,
-                db_name= Env.DB_NAME
+                db_name = Env.DB_NAME
             )
         }
     }

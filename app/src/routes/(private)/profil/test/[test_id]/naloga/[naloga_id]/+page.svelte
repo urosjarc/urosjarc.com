@@ -1,12 +1,13 @@
 <script lang="ts">
   import Accordion, {Panel, Header, Content} from '@smui-extra/accordion';
   import {page} from "$app/stores";
-  import Button, {Group} from "@smui/button";
+  import Button, {Group, Label} from "@smui/button";
   import {time} from "../../../../../../../libs/utils";
   import {goto} from "$app/navigation";
   import {route} from "../../../../../../../stores/routeStore";
 
   let seconds = 0
+  let open_naloga = false
 
   function koncaj(){
     console.log("kocaj nalogo")
@@ -39,13 +40,13 @@
              src="https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg">
 
         <Group style="display: flex; justify-content: stretch; width: 100%;">
-          <Button on:click={koncaj} variant="raised" style="flex-grow: 1; background-color: #ff3c3c">
+          <Button on:click={koncaj} variant="raised" class="red" style="flex-grow: 1">
             <b>NERESENO</b>
           </Button>
-          <Button on:click={koncaj} variant="raised" color="warning" style="flex-grow: 1; background-color: #ffb700">
+          <Button on:click={koncaj} variant="raised" class="orange" style="flex-grow: 1">
             <b>NAPACNO</b>
           </Button>
-          <Button on:click={koncaj} variant="raised" color="primary" style="flex-grow: 1; background-color: green">
+          <Button on:click={koncaj} variant="raised" class="green" style="flex-grow: 1">
             <b>PRAVILNO</b>
           </Button>
         </Group>

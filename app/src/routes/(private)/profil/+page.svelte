@@ -4,6 +4,7 @@
   import DataTable, {Body, Head, Row, Cell} from "@smui/data-table"
   import {profil} from "../../../stores/profilStore";
   import {onMount} from "svelte";
+  import {dateDistance, dateFormat, dateName} from "../../../libs/utils.js";
 
   let testi_refs = []
 
@@ -21,8 +22,9 @@
   <DataTable style="width: 100%">
     <Head>
       <Row>
-        <Cell numeric><p class="naslov-stolpca">Opravljeno</p></Cell>
         <Cell><p class="naslov-stolpca">Naslov</p></Cell>
+        <Cell numeric><p class="naslov-stolpca">Rešeno</p></Cell>
+        <Cell><p class="naslov-stolpca">Ostalo</p></Cell>
         <Cell><p class="naslov-stolpca">Deadline</p></Cell>
       </Row>
     </Head>
@@ -30,15 +32,10 @@
     {#each testi_refs as test_ref}
       {@const test = test_ref.test}
       <Row on:click={() => goto_test(test._id)} style="cursor: pointer">
-        <Cell numeric>
-          {test_ref.opravljeno || 0}%
-        </Cell>
-        <Cell>
-          {test.naslov}
-        </Cell>
-        <Cell>
-          {test.deadline}
-        </Cell>
+        <Cell>{test.naslov}</Cell>
+        <Cell numeric>{Math.round(test_ref.opravljeno*100)} %</Cell>
+        <Cell>{dateDistance(test.deadline)} dni</Cell>
+        <Cell>{dateFormat(test.deadline)} ({dateName(test.deadline)})</Cell>
       </Row>
     {/each}
     </Body>

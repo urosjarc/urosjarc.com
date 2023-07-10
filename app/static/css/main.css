@@ -26,9 +26,31 @@ body {
 body::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
+
 form {
   margin: 0 !important;
 }
+
 form > div {
   margin: 0 0 12px 0 !important;
+}
+
+.green {
+  background-color: green !important;
+  color: white !important;
+}
+
+.red {
+  background-color: red !important;
+  color: white !important;
+}
+
+.orange {
+  background-color: orange !important;
+  color: black !important;
+}
+
+.gray {
+  background-color: lightgray !important;
+  color: black !important;
 }
