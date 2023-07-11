@@ -4,17 +4,24 @@
   import Icon from '@smui/textfield/icon';
   import {usecase} from "../../../stores/usecaseStore";
   import {onMount} from "svelte";
+  import LinearProgress from '@smui/linear-progress';
 
   let response: Object = {}
+  let loading = false;
   let username = "";
 
-  let poslji = () => usecase.prijava_v_profil(username)
+  function poslji(){
+    loading = true
+    usecase.prijava_v_profil(username)
+  }
+
   onMount(usecase.prijavljen_v_profil)
 
 </script>
 
 <form class="row">
   <div class="col">
+    <LinearProgress indeterminate={loading}/>
     <Textfield
       style="width: 100%;margin-bottom: 10px;"
       helperLine$style="width: 100%;"
