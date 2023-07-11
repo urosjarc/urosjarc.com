@@ -54,7 +54,7 @@
         responsive: false,
         plugins: {
           legend: {
-            position: 'bottom',
+            position: '',
           }
         }
       }
@@ -78,7 +78,7 @@
 
 <div class="row justify-content-center" style="padding: 0 12px 30px 12px">
   <div class="row justify-content-center" style="padding: 0; margin: 0; border-style: solid; border-width: 1px; border-color: lightgray">
-    <canvas class="col-5" style="max-width: 230px; margin-top: 28px" id="chart"></canvas>
+    <canvas class="col-5" style="max-width: 220px; margin-top: 40px" id="chart"></canvas>
     <div class="col" style="padding: 13px">
       <DataTable style="width: 100%">
         <Body>
