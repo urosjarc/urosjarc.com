@@ -38,7 +38,7 @@
       {@const deadline = dateDistance(test.deadline)}
       <Row class="{barva_deadlina(deadline)}" on:click={() => goto_test(test._id)} style="cursor: pointer">
         <Cell>{test.naslov}</Cell>
-        <Cell numeric>{Math.round(test_ref.opravljeno*100)} %</Cell>
+        <Cell numeric>{Math.round(test_ref.opravljeno*100)}%</Cell>
         <Cell><b>{deadline} dni</b></Cell>
         <Cell>{dateFormat(test.deadline)} ({dateName(test.deadline)})</Cell>
       </Row>

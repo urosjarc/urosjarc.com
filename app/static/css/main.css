@@ -69,6 +69,11 @@ form > div {
   box-shadow: 0px 0px 10px -1px rgba(0, 0, 0, 0.75);
 }
 
+.noscrool {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
 @keyframes blink {
   100% {
     opacity: 1;
@@ -77,6 +82,6 @@ form > div {
     opacity: 1;
   }
   0% {
-    opacity: 0.0;
+    opacity: 0.3;
   }
 }

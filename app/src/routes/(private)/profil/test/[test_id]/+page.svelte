@@ -25,7 +25,7 @@
     testRef = profil.get().test_refs.find((test_ref) => test_ref.test._id == test_id)
     testRef.status_refs.forEach((status_ref) => {
       const info = {
-        naloga_id: status_ref.naloga_refs[0].naloga._id,
+        status_id: status_ref.status._id,
         tema: status_ref.naloga_refs[0].tematika_refs[0].naslov,
         tip: status_ref.status.tip || "OSTALO"
       }
@@ -76,10 +76,10 @@
   }
 </script>
 
-<div class="row justify-content-center" style="padding: 0 12px 30px 12px">
-  <div class="row justify-content-center" style="padding: 0; margin: 0; border-style: solid; border-width: 1px; border-color: lightgray">
-    <canvas class="col-5" style="max-width: 220px; margin-top: 40px" id="chart"></canvas>
-    <div class="col" style="padding: 13px">
+<div class="row justify-content-center" style="margin: 0" >
+  <div class="row justify-content-evenly align-items-center p-2" style="border-style: solid; border-width: 1px; border-color: lightgray">
+    <canvas class="col-4 p-0" id="chart"></canvas>
+    <div class="col p-2">
       <DataTable style="width: 100%">
         <Body>
         <Row>
@@ -88,15 +88,15 @@
         </Row>
         <Row>
           <Cell numeric><b>Rok:</b></Cell>
-          <Cell>{st_dni} dni ({dateName(test.deadline)})</Cell>
+          <Cell>{st_dni} dni, {dateName(test.deadline)}</Cell>
         </Row>
         <Row>
           <Cell numeric><b>Reseno:</b></Cell>
-          <Cell>{stevilo_statusov - manjkajoci}/{stevilo_statusov} ({Math.round(testRef.opravljeno * 100)} %)</Cell>
+          <Cell>{stevilo_statusov - manjkajoci}/{stevilo_statusov}, {Math.round(testRef.opravljeno * 100)}%</Cell>
         </Row>
         <Row>
           <Cell numeric><b>Manjka:</b></Cell>
-          <Cell>{manjkajoci}/{stevilo_statusov} ({100 - Math.round(testRef.opravljeno * 100)} %)</Cell>
+          <Cell>{manjkajoci}/{stevilo_statusov}, {100 - Math.round(testRef.opravljeno * 100)}%</Cell>
         </Row>
         <Row>
           <Cell numeric><b>Delo:</b></Cell>
@@ -110,8 +110,8 @@
   {#each Object.entries(tematike) as [tema, infos], i}
     <h1 style="text-align: center; margin: 30px 0 0 0">{tema}</h1>
     {#each infos as info, i}
-      {@const naloga_id = info.naloga_id}
-      <Button class="col-1 {barva_statusa(info.tip)}" style="margin: 2px" variant="raised" href={route.profil_naloga_id(test_id, naloga_id)}>
+      {@const status_id = info.status_id}
+      <Button class="col-1 {barva_statusa(info.tip)}" style="margin: 2px" variant="raised" href={route.profil_status_id(test_id, status_id)}>
         <Label>{i + 1}</Label>
       </Button>
     {/each}

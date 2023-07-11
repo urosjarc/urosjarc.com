@@ -1,5 +1,5 @@
 <script>
-  export let lg_size = 7
+  export let lg_size = 6
   export let sm_size = 11
   export let cls = ""
 </script>

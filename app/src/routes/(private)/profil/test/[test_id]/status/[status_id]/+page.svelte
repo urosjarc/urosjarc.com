@@ -2,17 +2,37 @@
   import Accordion, {Panel, Header, Content} from '@smui-extra/accordion';
   import {page} from "$app/stores";
   import Button, {Group, Label} from "@smui/button";
-  import {time} from "../../../../../../../libs/utils";
+  import {dateDistance, time} from "../../../../../../../libs/utils";
   import {goto} from "$app/navigation";
   import {route} from "../../../../../../../stores/routeStore";
+  import {onMount} from "svelte";
+  import {profil} from "../../../../../../../stores/profilStore";
+  import Chart from "chart.js/auto";
+  import {core} from "../../../../../../../types/server-core.d.ts";
+  import TestData = core.data.TestData;
+  import StatusData = core.data.StatusData;
+  import NalogaData = core.data.NalogaData;
+  import Naloga = core.domain.Naloga;
 
+  const test_id = $page.params.test_id
+  const status_id = $page.params.status_id
   let seconds = 0
-  let open_naloga = false
+  let testRef: TestData = {}
+  let statusRef: StatusData = {}
+  let naloga: Naloga = {}
 
-  function koncaj(){
+  function koncaj() {
     console.log("kocaj nalogo")
     goto(route.profil_test_id($page.params.test_id))
   }
+
+  onMount(() => {
+    testRef = profil.get().test_refs.find((test_ref) => test_ref.test._id == test_id)
+    statusRef = testRef.status_refs.find((status_ref) => status_ref.status._id == status_id)
+    console.log(testRef)
+    console.log(statusRef)
+    naloga = statusRef.naloga_refs[0].naloga
+  })
 
   setInterval(() => {
     seconds += 1
@@ -27,8 +47,7 @@
         <h1 style="text-align: center">{time(seconds)}</h1>
       </Header>
       <Content>
-        <img width="100%"
-             src="https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg">
+        <img width="100%" src="{naloga.vsebina}">
       </Content>
     </Panel>
     <Panel>
@@ -36,8 +55,7 @@
         <h3 style="text-align: center">Resitev</h3>
       </Header>
       <Content>
-        <img width="100%"
-             src="https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg">
+        <img width="100%" src="{naloga.resitev}">
 
         <Group style="display: flex; justify-content: stretch; width: 100%;">
           <Button on:click={koncaj} variant="raised" class="red" style="flex-grow: 1">
