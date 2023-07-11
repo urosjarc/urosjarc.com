@@ -21,8 +21,10 @@
   let statusRef: StatusData = {}
   let naloga: Naloga = {}
 
-  function koncaj() {
-    console.log("kocaj nalogo")
+  function koncaj(status_tip) {
+    console.log({
+      status_tip, test_id, status_id, seconds
+    })
     goto(route.profil_test_id($page.params.test_id))
   }
 
@@ -52,19 +54,19 @@
     </Panel>
     <Panel>
       <Header>
-        <h3 style="text-align: center">Resitev</h3>
+        <h2 style="text-align: center">Resitev</h2>
       </Header>
       <Content>
         <img width="100%" src="{naloga.resitev}">
 
         <Group style="display: flex; justify-content: stretch; width: 100%;">
-          <Button on:click={koncaj} variant="raised" class="red" style="flex-grow: 1">
+          <Button on:click={() => koncaj("NERESENO")} variant="raised" class="red" style="flex-grow: 1">
             <b>NERESENO</b>
           </Button>
-          <Button on:click={koncaj} variant="raised" class="orange" style="flex-grow: 1">
+          <Button on:click={() => koncaj("NAPACNO")} variant="raised" class="orange" style="flex-grow: 1">
             <b>NAPACNO</b>
           </Button>
-          <Button on:click={koncaj} variant="raised" class="green" style="flex-grow: 1">
+          <Button on:click={() => koncaj("PRAVILNO")} variant="raised" class="green" style="flex-grow: 1">
             <b>PRAVILNO</b>
           </Button>
         </Group>
@@ -72,7 +74,7 @@
     </Panel>
     <Panel>
       <Header color="primary">
-        <h3 style="text-align: center">Zgodovina</h3>
+        <h2 style="text-align: center">Audits</h2>
       </Header>
       <Content>
         <b>TODO: Zgodovina</b>
@@ -80,3 +82,9 @@
     </Panel>
   </Accordion>
 </div>
+
+<style>
+  h1, h2 {
+    margin: 0;
+  }
+</style>
