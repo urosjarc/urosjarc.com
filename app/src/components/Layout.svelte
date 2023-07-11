@@ -1,6 +1,7 @@
 <script>
-  export let lg_size = 6
+  export let lg_size = 7
   export let sm_size = 11
+  export let cls = ""
 </script>
 
 
@@ -12,7 +13,7 @@
       <div id="navigacija" class="row">
         <slot name="navigation"/>
       </div>
-      <div id="vsebina">
+      <div id="vsebina" class="{cls}">
         <slot name="body"/>
       </div>
 
@@ -34,8 +35,5 @@
   #vsebina {
     background-color: white;
     border-radius: 5px;
-    -webkit-box-shadow: 0px 0px 10px -1px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 0px 0px 10px -1px rgba(0, 0, 0, 0.75);
-    box-shadow: 0px 0px 10px -1px rgba(0, 0, 0, 0.75);
   }
 </style>

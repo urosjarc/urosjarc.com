@@ -5,16 +5,24 @@
   import Button, {Label} from '@smui/button';
   import {onMount} from "svelte";
   import Chart from "chart.js/auto";
+  import {dateDistance, dateName} from "../../../../../libs/utils";
+  import {core} from "../../../../../types/server-core.d.ts";
+  import TestData = core.data.TestData;
+  import Test = core.domain.Test;
+  import Status = core.domain.Status;
+  import DataTable, {Body, Cell, Row} from "@smui/data-table";
 
   const test_id = $page.params.test_id
   const tematike = {}
-  const statusi = {}
-  let test = {};
+  const statusi: Status.Tip = {}
+  let testRef: TestData = {}
+  let test: Test = {};
   let stevilo_statusov = 0
+  let manjkajoci = 0
+  let st_dni = 0
 
   onMount(() => {
-    const testRef = profil.get().test_refs.find((test_ref) => test_ref.test._id == test_id)
-    test = testRef.test
+    testRef = profil.get().test_refs.find((test_ref) => test_ref.test._id == test_id)
     testRef.status_refs.forEach((status_ref) => {
       const info = {
         naloga_id: status_ref.naloga_refs[0].naloga._id,
@@ -29,6 +37,10 @@
       stevilo_statusov += 1
     })
 
+    test = testRef.test
+    st_dni = dateDistance(test.deadline)
+    manjkajoci = stevilo_statusov - statusi.PRAVILNO
+
     new Chart("chart", {
       type: "pie",
       data: {
@@ -42,7 +54,7 @@
         responsive: false,
         plugins: {
           legend: {
-            position: 'right',
+            position: 'bottom',
           }
         }
       }
@@ -59,18 +71,41 @@
       case "PRAVILNO":
         return "green"
       default:
-        return "gray"
+        return "lightgrey"
     }
   }
 </script>
 
 <div class="row justify-content-center" style="padding: 0 12px 30px 12px">
-  <div style="text-align: center">
-    <h1>{test.naslov}</h1>
-    <h2>{test.podnaslov}</h2>
-    <h2>({stevilo_statusov} nalog)</h2>
+  <div class="row justify-content-center" style="padding: 0; margin: 0; border-style: solid; border-width: 1px; border-color: lightgray">
+    <canvas class="col-5" style="max-width: 230px; margin-top: 28px" id="chart"></canvas>
+    <div class="col" style="padding: 13px">
+      <DataTable style="width: 100%">
+        <Body>
+        <Row>
+          <Cell numeric><b>Datum:</b></Cell>
+          <Cell>{test.deadline}</Cell>
+        </Row>
+        <Row>
+          <Cell numeric><b>Rok:</b></Cell>
+          <Cell>{st_dni} dni ({dateName(test.deadline)})</Cell>
+        </Row>
+        <Row>
+          <Cell numeric><b>Reseno:</b></Cell>
+          <Cell>{stevilo_statusov - manjkajoci}/{stevilo_statusov} ({Math.round(testRef.opravljeno * 100)} %)</Cell>
+        </Row>
+        <Row>
+          <Cell numeric><b>Manjka:</b></Cell>
+          <Cell>{manjkajoci}/{stevilo_statusov} ({100 - Math.round(testRef.opravljeno * 100)} %)</Cell>
+        </Row>
+        <Row>
+          <Cell numeric><b>Delo:</b></Cell>
+          <Cell>{Math.ceil(manjkajoci / (st_dni - 1))} nal/dan</Cell>
+        </Row>
+        </Body>
+      </DataTable>
+    </div>
   </div>
-  <canvas class="col-7" id="chart"></canvas>
 
   {#each Object.entries(tematike) as [tema, infos], i}
     <h1 style="text-align: center; margin: 30px 0 0 0">{tema}</h1>

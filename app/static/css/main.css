@@ -50,7 +50,33 @@ form > div {
   color: black !important;
 }
 
-.gray {
-  background-color: lightgray !important;
+.lightgrey {
+  background-color: lightgrey !important;
   color: black !important;
+}
+
+.blink {
+  animation-name: blink;
+  width: 280px;
+  animation-duration: 1s;
+  animation-timing-function: ease-in;
+  animation-iteration-count: Infinite;
+}
+
+.shadow {
+  -webkit-box-shadow: 0px 0px 10px -1px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 10px -1px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 10px -1px rgba(0, 0, 0, 0.75);
+}
+
+@keyframes blink {
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  0% {
+    opacity: 0.0;
+  }
 }

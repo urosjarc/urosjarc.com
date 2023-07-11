@@ -11,7 +11,11 @@
   function goto_test(id) {
     goto(route.profil_test_id(id))
   }
-
+  function barva_deadlina(deadline) {
+    if(deadline > 7) return ""
+    else if(deadline > 3) return "orange blink"
+    else return "red blink"
+  }
   onMount(() => {
     testi_refs = profil.get().test_refs
   })
@@ -31,10 +35,11 @@
     <Body>
     {#each testi_refs as test_ref}
       {@const test = test_ref.test}
-      <Row on:click={() => goto_test(test._id)} style="cursor: pointer">
+      {@const deadline = dateDistance(test.deadline)}
+      <Row class="{barva_deadlina(deadline)}" on:click={() => goto_test(test._id)} style="cursor: pointer">
         <Cell>{test.naslov}</Cell>
         <Cell numeric>{Math.round(test_ref.opravljeno*100)} %</Cell>
-        <Cell>{dateDistance(test.deadline)} dni</Cell>
+        <Cell><b>{deadline} dni</b></Cell>
         <Cell>{dateFormat(test.deadline)} ({dateName(test.deadline)})</Cell>
       </Row>
     {/each}
@@ -44,6 +49,9 @@
 </div>
 
 <style>
+  :global(.mdc-data-table__cell) {
+    color: inherit !important;
+  }
   .naslov-stolpca {
     font-weight: bolder;
   }

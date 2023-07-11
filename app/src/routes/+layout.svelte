@@ -4,7 +4,7 @@
   import {route} from "../stores/routeStore";
 </script>
 
-<Layout>
+<Layout cls="shadow">
   <svelte:fragment slot="navigation">
     <Navigation cls="col-3" text="Domov" icon="home" link="{route.index}"/>
     <Navigation cls="col-3" text="Koledar" icon="event" link="{route.koledar}"/>

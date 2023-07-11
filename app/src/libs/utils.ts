@@ -18,9 +18,11 @@ export function dateDistance(isoDate: String) {
 }
 
 export function dateName(isoDate: String) {
-  // @ts-ignore
-  let date = toDate(isoDate);
-  return date.toLocaleDateString(locale, {weekday: 'short'});
+  if(isoDate && isoDate.includes("-")){
+    // @ts-ignore
+    let date = toDate(isoDate);
+    return date.toLocaleDateString(locale, {weekday: 'short'});
+  }
 }
 
 export function toDate(isoDate: String) {
