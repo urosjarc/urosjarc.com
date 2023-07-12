@@ -8,7 +8,7 @@
   import {onMount} from "svelte";
   import {profil} from "../../../../../../../stores/profilStore";
   import Chart from "chart.js/auto";
-  import {core} from "../../../../../../../types/server-core.d.ts";
+  import {core} from "../../../../../../../api/server-core";
   import TestData = core.data.TestData;
   import StatusData = core.data.StatusData;
   import NalogaData = core.data.NalogaData;

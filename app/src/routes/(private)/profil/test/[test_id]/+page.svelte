@@ -6,7 +6,7 @@
   import {onMount} from "svelte";
   import Chart from "chart.js/auto";
   import {dateDistance, dateName} from "../../../../../libs/utils";
-  import {core} from "../../../../../types/server-core.d.ts";
+  import {core} from "../../../../../api/server-core";
   import TestData = core.data.TestData;
   import Test = core.domain.Test;
   import Status = core.domain.Status;
@@ -14,7 +14,7 @@
 
   const test_id = $page.params.test_id
   const tematike = {}
-  const statusi: Status.Tip = {}
+  const statusi: Map<Status.Tip, number> = {}
   let testRef: TestData = {}
   let test: Test = {};
   let stevilo_statusov = 0
@@ -22,12 +22,12 @@
   let st_dni = 0
 
   onMount(() => {
-    testRef = profil.get().test_refs.find((test_ref) => test_ref.test._id == test_id)
+    testRef: TestData = profil.get().test_refs.find((test_ref) => test_ref.test._id == test_id)
     testRef.status_refs.forEach((status_ref) => {
       const info = {
         status_id: status_ref.status._id,
         tema: status_ref.naloga_refs[0].tematika_refs[0].naslov,
-        tip: status_ref.status.tip || "OSTALO"
+        tip: status_ref.status.tip || Status.Tip.OSTALO
       }
       if (info.tema in tematike) tematike[info.tema].push(info)
       else tematike[info.tema] = [info]
@@ -39,7 +39,7 @@
 
     test = testRef.test
     st_dni = dateDistance(test.deadline)
-    manjkajoci = stevilo_statusov - statusi.PRAVILNO
+    manjkajoci = stevilo_statusov - statusi[Status.Tip.PRAVILNO]
 
     new Chart("chart", {
       type: "pie",
@@ -76,7 +76,7 @@
   }
 </script>
 
-<div class="row justify-content-center pb-3" style="margin: 0" >
+<div class="row justify-content-center pb-3" style="margin: 0">
   <div class="row justify-content-evenly align-items-center p-2" style="border-style: solid; border-width: 1px; border-color: lightgray">
     <canvas class="col-4 p-0" id="chart"></canvas>
     <div class="col p-2">

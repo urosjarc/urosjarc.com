@@ -2,7 +2,7 @@
   import DataTable, {Head, Body, Row, Cell} from '@smui/data-table';
   import {onMount} from "svelte";
   import {profil} from "../../../../stores/profilStore";
-  import type {core} from "../../../../types/server-core.d.ts";
+  import type {core} from "../../../../api/server-core";
   import Naslov = core.domain.Naslov;
   import KontaktData = core.data.KontaktData;
 

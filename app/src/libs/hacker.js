@@ -43,7 +43,7 @@ export function hacker(delay) {
   let elements = document.getElementsByClassName("hacker");
   let maxWordSize = 0;
   for (let ele of elements) {
-    if(ele.textContent.length > maxWordSize){
+    if (ele.textContent.length > maxWordSize) {
       maxWordSize = ele.textContent.length;
     }
   }

@@ -1,9 +1,9 @@
 /node_modules
-/build
-/.svelte-kit
-.env
-.env.*
+/venv
 
-venv
-src/api
-sitemap.xml
+/.svelte-kit
+/build
+
+.env
+/src/api
+/static/sitemap.xml
