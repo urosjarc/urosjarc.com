@@ -76,7 +76,7 @@
   }
 </script>
 
-<div class="row justify-content-center" style="margin: 0" >
+<div class="row justify-content-center pb-3" style="margin: 0" >
   <div class="row justify-content-evenly align-items-center p-2" style="border-style: solid; border-width: 1px; border-color: lightgray">
     <canvas class="col-4 p-0" id="chart"></canvas>
     <div class="col p-2">
