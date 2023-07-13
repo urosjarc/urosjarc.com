@@ -1,24 +1,24 @@
 <script lang="ts">
-  import Accordion, {Panel, Header, Content} from '@smui-extra/accordion';
+  import Accordion, {Content, Header, Panel} from '@smui-extra/accordion';
   import {page} from "$app/stores";
-  import Button, {Group, Label} from "@smui/button";
-  import {dateName, time, timeFormat} from "../../../../../../../libs/utils";
-  import {goto} from "$app/navigation";
-  import {route} from "../../../../../../../stores/routeStore";
+  import Button, {Group} from "@smui/button";
+  import {time, timeFormat} from "../../../../../../../libs/utils";
   import {onMount} from "svelte";
   import {profil} from "../../../../../../../stores/profilStore";
   import type {data, domain} from "../../../../../../../types/server-core.d.ts";
-  import TestData = data.TestData;
-  import StatusData = data.StatusData;
-  import Naloga = domain.Naloga;
   import {api} from "../../../../../../../stores/apiStore";
   import DataTable, {Body, Cell, Head, Row} from "@smui/data-table";
   import {dateFormat} from "../../../../../../../libs/utils.js";
   import {barva_statusa} from "../../../../../../../libs/stili";
+  import {usecase} from "../../../../../../../stores/usecaseStore";
+  import TestData = data.TestData;
+  import StatusData = data.StatusData;
+  import Naloga = domain.Naloga;
 
   const test_id = $page.params.test_id
   const status_id = $page.params.status_id
   let loaded = false
+  let audits_loaded = false
   let seconds = 0
   let testRef: TestData = {}
   let statusRef: StatusData = {}
@@ -26,25 +26,26 @@
   let audits: Array<domain.Audit> = []
 
   function koncaj(status_tip) {
-    api.profil_status_update(test_id, status_id, status_tip).then(data => {
-      profil.posodobi_status_tip(status_id, status_tip)
-      goto(route.profil_test_id(test_id))
-    }).catch(err => {
-      console.error(err)
-    })
+    usecase.posodobi_status(test_id, status_id, status_tip)
+  }
+
+  function load_audits() {
+    if (!audits_loaded) {
+      api.profil_status_audits(test_id, status_id).then(data => {
+        audits = data
+      }).catch(err => {
+        console.error(err)
+      })
+    }
+    audits_loaded = true
   }
 
   onMount(() => {
     testRef = profil.get().test_refs.find((test_ref) => test_ref.test._id == test_id)
     statusRef = testRef.status_refs.find((status_ref) => status_ref.status._id == status_id)
     naloga = statusRef.naloga_refs[0].naloga
+    loaded = true
 
-    api.profil_status_audits(test_id, status_id).then(data => {
-      audits = data
-      loaded = true
-    }).catch(err => {
-      console.error(err)
-    })
   })
 
   setInterval(() => {
@@ -57,7 +58,7 @@
   {#if loaded}
     <Accordion>
       <Panel open>
-        <Header style="background-color: {barva_statusa(statusRef.status.tip)}">
+        <Header class="{barva_statusa(statusRef.status.tip)}">
           <h1 style="text-align: center">{time(seconds)}</h1>
         </Header>
         <Content style="padding: 0">
@@ -65,8 +66,8 @@
         </Content>
       </Panel>
       <Panel>
-        <Header>
-          <h2 style="text-align: center">Resitev</h2>
+        <Header class="blue">
+          <h3 style="text-align: center; margin: 0">Resitev</h3>
         </Header>
         <Content style="padding: 0">
           <img width="100%" src="{naloga.resitev}">
@@ -85,8 +86,8 @@
         </Content>
       </Panel>
       <Panel>
-        <Header>
-          <h2 style="text-align: center">Audits</h2>
+        <Header class="blue" on:click={load_audits}>
+          <h3 style="text-align: center; margin: 0">Dejavnost</h3>
         </Header>
         <Content style="padding: 0">
           <DataTable style="width: 100%">

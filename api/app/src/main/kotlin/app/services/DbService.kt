@@ -2,13 +2,12 @@ package app.services
 
 import app.extend.Aggregates_lookup
 import app.extend.Aggregates_project_root
+import app.extend.stran
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
 import com.mongodb.ServerApi
 import com.mongodb.ServerApiVersion
-import com.mongodb.client.model.Aggregates
-import com.mongodb.client.model.Filters
-import com.mongodb.client.model.Updates
+import com.mongodb.client.model.*
 import com.mongodb.kotlin.client.AggregateIterable
 import com.mongodb.kotlin.client.MongoClient
 import data.OsebaData
@@ -19,6 +18,7 @@ import extends.zdaj
 import io.github.serpro69.kfaker.Faker
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import org.apache.logging.log4j.kotlin.logger
 import org.bson.types.ObjectId
 import kotlin.random.Random
 
@@ -31,6 +31,7 @@ class DbService(val db_url: String, val db_name: String) {
         .applyConnectionString(ConnectionString(db_url)).serverApi(serverApi).build()
     private val mongoClient = MongoClient.create(settings)
 
+    val log = this.logger()
     val db = mongoClient.getDatabase(db_name)
     val audits = db.getCollection<Audit>(collectionName = ime<Audit>())
     val osebe = db.getCollection<Oseba>(collectionName = ime<Oseba>())
@@ -61,6 +62,7 @@ class DbService(val db_url: String, val db_name: String) {
         val all_naloga = mutableListOf<Naloga>()
         val all_tematika = mutableListOf<Tematika>()
         val all_zvezek = mutableListOf<Zvezek>()
+        val all_audit = mutableListOf<Audit>()
 
         (1..5).forEach {
 
@@ -111,6 +113,19 @@ class DbService(val db_url: String, val db_name: String) {
                             this.test_id = all_test.random()._id
                         }
                         all_status.add(status)
+
+                        (1..Random.nextInt(0, 5)).forEach {
+                            val audit = Audit(
+                                entitete_id = arrayOf(oseba._id.toString(), status.test_id.toString(), status._id.toString()),
+                                tip = Audit.Tip.STATUS_POSODOBITEV,
+                                opis="opis",
+                                entiteta = "entiteta",
+                                ustvarjeno = LocalDateTime.zdaj(dDni=Random.nextInt(0, 20))
+                            )
+                            all_audit.add(audit)
+
+                        }
+
                     }
 
                 }
@@ -127,6 +142,7 @@ class DbService(val db_url: String, val db_name: String) {
         this.ustvari(all_naloga)
         this.ustvari(all_tematika)
         this.ustvari(all_zvezek)
+        this.ustvari(all_audit)
 
     }
 
@@ -149,9 +165,7 @@ class DbService(val db_url: String, val db_name: String) {
 
     inline fun <reified T : Entiteta> dobi(stran: Int): List<T> {
         return db.getCollection<T>(collectionName = ime<T>())
-            .find()
-            .skip(stran * 100)
-            .limit(100)
+            .find().stran(n = stran)
             .toList()
     }
 
@@ -175,9 +189,9 @@ class DbService(val db_url: String, val db_name: String) {
             .wasAcknowledged()
     }
 
-    fun audits(entity_id: String): List<Audit> = audits.find(
+    fun audits(entity_id: String, stran: Int = 0): List<Audit> = audits.find(
         filter = Filters.eq(Audit::entitete_id.name, entity_id)
-    ).toList()
+    ).stran(n = stran).toList()
 
 
     fun profil(id: String): OsebaData {
@@ -305,7 +319,10 @@ class DbService(val db_url: String, val db_name: String) {
             filter = Filters.and(
                 Filters.eq(Status::_id.name, id),
                 Filters.eq(Status::test_id.name, test_id)
-            ), update = Updates.set(Status::tip.name, tip.name)
+            ),
+            update = Updates.set(Status::tip.name, tip),
+            options = FindOneAndUpdateOptions()
+                .returnDocument(ReturnDocument.AFTER)
         ) ?: return null
 
         val audit = Audit(

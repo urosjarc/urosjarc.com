@@ -47,5 +47,6 @@ export const api = {
   },
   profil: GET<data.OsebaData>("profil"),
   profil_status_update: (test_id: string, status_id: string, status: domain.Status.Tip) => REQ<domain.Status>("PUT", `profil/test/${test_id}/status/${status_id}`, {tip: status}),
-  profil_status_audits: (test_id: string, status_id: string) => GET<Array<domain.Audit>>(`profil/test/${test_id}/status/${status_id}/audits`)()
+  profil_status_audits: (test_id: string, status_id: string) => GET<Array<domain.Audit>>(`profil/test/${test_id}/status/${status_id}/audits`)(),
+  profil_audits: GET<Array<domain.Audit>>(`profil/audits`)
 }

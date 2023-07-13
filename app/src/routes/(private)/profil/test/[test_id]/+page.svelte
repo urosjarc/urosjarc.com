@@ -8,11 +8,10 @@
   import {dateDistance, dateName} from "../../../../../libs/utils";
   import {data, domain} from "../../../../../types/server-core.d.ts";
   import DataTable, {Body, Cell, Row} from "@smui/data-table";
-
+  import {barva_statusa} from "../../../../../libs/stili";
   import TestData = data.TestData;
   import Test = domain.Test;
   import Status = domain.Status;
-  import {barva_statusa} from "../../../../../libs/stili";
 
   const test_id = $page.params.test_id
 

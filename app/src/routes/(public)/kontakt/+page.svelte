@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Button, {Group, Label} from '@smui/button';
+  import Button, {Group} from '@smui/button';
   import Textfield from '@smui/textfield';
   import Icon from '@smui/textfield/icon';
 

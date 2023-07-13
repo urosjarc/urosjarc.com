@@ -55,6 +55,11 @@ form > div {
   color: black !important;
 }
 
+.blue {
+  background-color: #1976d2 !important;
+  color: white !important;
+}
+
 .blink {
   animation-name: blink;
   width: 280px;

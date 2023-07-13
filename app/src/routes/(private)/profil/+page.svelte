@@ -1,7 +1,7 @@
 <script lang="ts">
   import {goto} from "$app/navigation";
   import {route} from "../../../stores/routeStore";
-  import DataTable, {Body, Head, Row, Cell} from "@smui/data-table"
+  import DataTable, {Body, Cell, Head, Row} from "@smui/data-table"
   import {profil} from "../../../stores/profilStore";
   import {onMount} from "svelte";
   import {dateDistance, dateFormat, dateName} from "../../../libs/utils.js";
@@ -33,11 +33,11 @@
       {@const test = test_ref.test}
       {@const deadline = dateDistance(test.deadline)}
       {@const opravljeno = core.data.TestData.Companion.opravljeno(test_ref)}
-      <Row class="{barva_testa(deadline)}" on:click={() => goto_test(test._id)} style="cursor: pointer">
-        <Cell>{test.naslov}</Cell>
-        <Cell numeric>{Math.round(opravljeno*100)}%</Cell>
-        <Cell><b>{deadline} dni</b></Cell>
-        <Cell>{dateFormat(test.deadline)} ({dateName(test.deadline)})</Cell>
+      <Row on:click={() => goto_test(test._id)} style="cursor: pointer">
+        <Cell class="{barva_testa(deadline)}">{test.naslov}</Cell>
+        <Cell class="{barva_testa(deadline)}" numeric>{Math.round(opravljeno*100)}%</Cell>
+        <Cell class="{barva_testa(deadline)}"><b>{deadline} dni</b></Cell>
+        <Cell class="{barva_testa(deadline)}">{dateFormat(test.deadline)} ({dateName(test.deadline)})</Cell>
       </Row>
     {/each}
     </Body>

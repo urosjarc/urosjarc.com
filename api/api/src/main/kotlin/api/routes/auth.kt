@@ -48,7 +48,7 @@ fun Route.auth(jwkProvider: JwkProvider) {
         log.info("Body: $body")
 
         //TODO: Naredi pravilno logiko
-        val oseba = db.audits<Oseba>(0).random()
+        val oseba = db.dobi<Oseba>(0).random()
         log.info("Oseba: $oseba")
         //TODO: Naredi pravilno logiko
 
@@ -59,7 +59,7 @@ fun Route.auth(jwkProvider: JwkProvider) {
             .withAudience(Env.JWT_AUDIENCE)
             .withIssuer(Env.JWT_ISSUER)
             .withClaim(Profil.claim, Json.encodeToString(oseba.profil()))
-            .withExpiresAt(Date(System.currentTimeMillis() + 5 * 60000))
+            .withExpiresAt(Date(System.currentTimeMillis() + 5 * 60 * 1000))
             .sign(Algorithm.RSA256(publicKey as RSAPublicKey, privateKey as RSAPrivateKey))
 
         this.call.respond(mapOf("token" to token))

@@ -3,6 +3,7 @@ import {token} from "./tokenStore";
 import {goto} from "$app/navigation";
 import {route} from "./routeStore";
 import {profil} from "./profilStore";
+import type {domain} from "../types/server-core.d.ts";
 
 export const usecase = {
   prijava_v_profil(username: String) {
@@ -50,6 +51,25 @@ export const usecase = {
     }).catch(data => {
       console.error(data)
       usecase.obvestilo_napake("API ni vrnil uporabniskega profila!")
+    })
+  },
+  posodobi_status(test_id: string, status_id: string, status_tip: domain.Status.Tip) {
+    api.profil_status_update(test_id, status_id, status_tip).then(status => {
+
+      let p = profil.get()
+      for (let i = 0; i < p.test_refs.length; i++) {
+        for (let j = 0; j < p.test_refs[i].status_refs.length; j++) {
+          if (status_id == p.test_refs[i].status_refs[j].status._id) {
+            p.test_refs[i].status_refs[j].status = status
+            profil.set(p)
+            goto(route.profil_test_id(test_id))
+            return true
+          }
+        }
+      }
+      console.error("Status se ni posodobil :(")
+    }).catch(err => {
+      console.error(err)
     })
   },
   odjava() {

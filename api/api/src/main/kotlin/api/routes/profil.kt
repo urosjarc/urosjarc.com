@@ -19,6 +19,10 @@ import si.urosjarc.server.api.response.StatusUpdateReq
 
 @Resource("profil")
 class profil {
+
+    @Resource("audits")
+    class audits(val parent: profil, val stran: Int = 0)
+
     @Resource("test")
     class test(val parent: profil) {
 
@@ -32,7 +36,7 @@ class profil {
                 class status_id(val parent: status, val status_id: String) {
 
                     @Resource("audits")
-                    class audits(val parent: status_id, val stran: Int=0)
+                    class audits(val parent: status_id, val stran: Int = 0)
 
                 }
 
@@ -62,7 +66,12 @@ fun Route.profil() {
         when (db.status_obstaja(id = profil.id, test_id = test_id, status_id = status_id)) {
             true -> this.call.client_error(info = "${ime<Status>()} ne obstaja!")
             false -> when (val r =
-                db.status_update(id = it.status_id, oseba_id=profil.id, test_id = it.parent.parent.test_id, tip = body.tip)) {
+                db.status_update(
+                    id = it.status_id,
+                    oseba_id = profil.id,
+                    test_id = it.parent.parent.test_id,
+                    tip = body.tip
+                )) {
                 null -> this.call.client_error(info = "${ime<Status>()} ni posodobljen!")
                 else -> this.call.respond(r)
             }
@@ -71,8 +80,12 @@ fun Route.profil() {
 
     this.get<profil.test.test_id.status.status_id.audits> {
         val status_id = it.parent.status_id
-        val stran = it.stran
-        this.call.respond(db.audits(entity_id=status_id))
+        this.call.respond(db.audits(entity_id = status_id))
+    }
+
+    this.get<profil.audits> {
+        val profil = this.call.profil()
+        this.call.respond(db.audits(entity_id = profil.id, stran = it.stran))
     }
 
 }
