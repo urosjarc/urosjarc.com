@@ -36,7 +36,7 @@ export const usecase = {
   },
   nastavi_profil() {
     if (!profil.exists()) {
-      api.profil.index().then(profilRes => {
+      api.profil().then(profilRes => {
         profil.set(profilRes)
       }).catch(data => {
         console.error(data)
@@ -45,7 +45,7 @@ export const usecase = {
     }
   },
   posodobi_profil() {
-    return api.profil.index().then(profilRes => {
+    return api.profil().then(profilRes => {
       profil.set(profilRes)
     }).catch(data => {
       console.error(data)

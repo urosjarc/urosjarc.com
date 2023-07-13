@@ -5,5 +5,5 @@
 /build
 
 .env
-/src/api
+/src/types
 /static/sitemap.xml

@@ -9,7 +9,7 @@ import org.koin.test.KoinTest
 import org.koin.test.inject
 import app.base.App
 import app.services.DbService
-import core.domain.Oseba
+import domain.Oseba
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class Test_DbService : KoinTest {

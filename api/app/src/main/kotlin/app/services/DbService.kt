@@ -1,19 +1,22 @@
 package app.services
 
-import app.extend.danes
-import app.extend.ime
-import app.extend.zdaj
+import app.repos.AuditRepo
 import app.repos.OsebaRepo
+import app.repos.StatusRepo
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
 import com.mongodb.ServerApi
 import com.mongodb.ServerApiVersion
 import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.MongoClient
-import core.domain.*
+import domain.*
+import extends.danes
+import extends.ime
+import extends.zdaj
 import io.github.serpro69.kfaker.Faker
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import org.bson.types.ObjectId
 import kotlin.random.Random
 
 val faker = Faker()
@@ -26,7 +29,9 @@ class DbService(val db_url: String, val db_name: String) {
     private val mongoClient = MongoClient.create(settings)
 
     val db = mongoClient.getDatabase(db_name)
-    val osebaRepo = OsebaRepo(collection = db.getCollection(collectionName = ime<Oseba>()))
+    val auditRepo = AuditRepo(service = this)
+    val osebaRepo = OsebaRepo(service = this)
+    val statusRepo = StatusRepo(service = this)
 
     inline fun <reified T : Any> nakljucni(): T {
         val obj = faker.randomProvider.randomClassInstance<T> {
@@ -127,12 +132,14 @@ class DbService(val db_url: String, val db_name: String) {
         .forEach { db.getCollection<Any>(collectionName = it).drop() }
 
     inline fun <reified T : Entiteta> ustvari(entiteta: T): Boolean {
+        entiteta._id = ObjectId().toHexString()
         return db.getCollection<T>(collectionName = ime<T>())
-            .insertOne(entiteta).also { entiteta._id = it.insertedId?.asObjectId()?.value.toString() }
+            .insertOne(entiteta)
             .wasAcknowledged()
     }
 
     inline fun <reified T : Entiteta> ustvari(entitete: Collection<T>): Boolean {
+        entitete.forEach { if(it._id == null) it._id = ObjectId().toHexString() }
         return db.getCollection<T>(collectionName = ime<T>())
             .insertMany(documents = entitete as List<T>)
             .wasAcknowledged()

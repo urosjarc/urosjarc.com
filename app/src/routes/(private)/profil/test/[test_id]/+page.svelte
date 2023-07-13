@@ -6,28 +6,31 @@
   import {onMount} from "svelte";
   import Chart from "chart.js/auto";
   import {dateDistance, dateName} from "../../../../../libs/utils";
-  import {core} from "../../../../../api/server-core";
-  import TestData = core.data.TestData;
-  import Test = core.domain.Test;
-  import Status = core.domain.Status;
+  import {data, domain} from "../../../../../types/core.d.ts";
   import DataTable, {Body, Cell, Row} from "@smui/data-table";
 
+  import TestData = data.TestData;
+  import Test = domain.Test;
+  import Status = domain.Status;
+
   const test_id = $page.params.test_id
+
   const tematike = {}
   const statusi: Map<Status.Tip, number> = {}
   let testRef: TestData = {}
   let test: Test = {};
+
   let stevilo_statusov = 0
   let manjkajoci = 0
   let st_dni = 0
 
   onMount(() => {
-    testRef: TestData = profil.get().test_refs.find((test_ref) => test_ref.test._id == test_id)
+    testRef = profil.get().test_refs.find((test_ref) => test_ref.test._id == test_id)
     testRef.status_refs.forEach((status_ref) => {
       const info = {
         status_id: status_ref.status._id,
         tema: status_ref.naloga_refs[0].tematika_refs[0].naslov,
-        tip: status_ref.status.tip || Status.Tip.OSTALO
+        tip: status_ref.status.tip || core.domain.Status.Tip.NEZACETO.name
       }
       if (info.tema in tematike) tematike[info.tema].push(info)
       else tematike[info.tema] = [info]
@@ -39,7 +42,7 @@
 
     test = testRef.test
     st_dni = dateDistance(test.deadline)
-    manjkajoci = stevilo_statusov - statusi[Status.Tip.PRAVILNO]
+    manjkajoci = stevilo_statusov - statusi[core.domain.Status.Tip.PRAVILNO.name]
 
     new Chart("chart", {
       type: "pie",
@@ -64,12 +67,14 @@
 
   function barva_statusa(tip) {
     switch (tip) {
-      case "NAPACNO":
+      case core.domain.Status.Tip.NAPACNO.name:
         return "red"
-      case "NERESENO":
+      case core.domain.Status.Tip.NERESENO.name:
         return "orange"
-      case "PRAVILNO":
+      case core.domain.Status.Tip.PRAVILNO.name:
         return "green"
+      case core.domain.Status.Tip.NEZACETO.name:
+        return "lightgrey"
       default:
         return "lightgrey"
     }

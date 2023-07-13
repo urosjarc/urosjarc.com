@@ -10,8 +10,6 @@ export function dateFormat(isoDate: String) {
 export function dateDistance(isoDate: String) {
   let end = toDate(isoDate)
   let start = new Date()
-  console.log(end)
-  console.log(start)
   // @ts-ignore
   const diffTime = Math.abs(start - end);
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));

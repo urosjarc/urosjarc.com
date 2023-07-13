@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalJsExport::class)
 
-package core.domain
+package domain
 
 import kotlinx.serialization.Serializable
 import kotlin.js.ExperimentalJsExport

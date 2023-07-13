@@ -1,5 +1,7 @@
 package api.extend
 
+import api.models.Profil
+import api.response.ErrorRes
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -7,8 +9,6 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import api.models.Profil
-import api.response.ErrorRes
 
 fun ApplicationCall.profil(): Profil {
     val principal = this.principal<JWTPrincipal>()
@@ -16,12 +16,12 @@ fun ApplicationCall.profil(): Profil {
     return Json.decodeFromString(data)
 }
 
-suspend fun ApplicationCall.client_error(cls: Any, info: String? = null) {
+suspend fun ApplicationCall.client_error(cls: Any? = null, info: String? = null) {
     return this.respond(
         status = HttpStatusCode.BadRequest,
         message = ErrorRes(
             napaka = ErrorRes.Tip.UPORABNISKA,
-            rezultat = cls::class.simpleName.toString(),
+            razred = if (cls != null) cls::class.simpleName.toString() else null,
             info = info
         )
     )
@@ -33,7 +33,7 @@ suspend fun ApplicationCall.client_unauthorized() {
         status = status,
         message = ErrorRes(
             napaka = ErrorRes.Tip.UPORABNISKA,
-            rezultat = status.description,
+            razred = status.description,
             info = null
         )
     )
@@ -44,7 +44,7 @@ suspend fun ApplicationCall.system_error(cls: Any, info: String? = null) {
         status = HttpStatusCode.InternalServerError,
         message = ErrorRes(
             napaka = ErrorRes.Tip.SISTEMSKA,
-            rezultat = cls::class.simpleName.toString(),
+            razred = cls::class.simpleName.toString(),
             info = info
         )
     )

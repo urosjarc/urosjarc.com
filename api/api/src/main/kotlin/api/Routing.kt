@@ -29,7 +29,7 @@ import api.routes.profil
 import app.base.App
 import app.base.Env
 import app.services.DbService
-import core.domain.Oseba
+import domain.Oseba
 import kotlinx.datetime.serializers.InstantIso8601Serializer
 import kotlinx.datetime.serializers.LocalDateIso8601Serializer
 import kotlinx.datetime.serializers.LocalDateTimeIso8601Serializer
@@ -47,6 +47,7 @@ fun Application.configureRouting() {
         this.allowHeader(HttpHeaders.Authorization)
         this.anyHost()
         this.allowMethod(HttpMethod.Post)
+        this.allowMethod(HttpMethod.Put)
         this.allowMethod(HttpMethod.Get)
         this.allowMethod(HttpMethod.Delete)
     }

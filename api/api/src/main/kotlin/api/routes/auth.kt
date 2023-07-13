@@ -21,7 +21,7 @@ import api.models.profil
 import si.urosjarc.server.api.response.PrijavaReq
 import app.base.Env
 import app.services.DbService
-import core.domain.Oseba
+import domain.Oseba
 import java.security.KeyFactory
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey

@@ -2,38 +2,46 @@
   import Accordion, {Panel, Header, Content} from '@smui-extra/accordion';
   import {page} from "$app/stores";
   import Button, {Group, Label} from "@smui/button";
-  import {dateDistance, time} from "../../../../../../../libs/utils";
+  import {time} from "../../../../../../../libs/utils";
   import {goto} from "$app/navigation";
   import {route} from "../../../../../../../stores/routeStore";
   import {onMount} from "svelte";
   import {profil} from "../../../../../../../stores/profilStore";
-  import Chart from "chart.js/auto";
-  import {core} from "../../../../../../../api/server-core";
-  import TestData = core.data.TestData;
-  import StatusData = core.data.StatusData;
-  import NalogaData = core.data.NalogaData;
-  import Naloga = core.domain.Naloga;
+  import type {data, domain} from "../../../../../../../types/core.d.ts";
+  import TestData = data.TestData;
+  import StatusData = data.StatusData;
+  import Naloga = domain.Naloga;
+  import {api} from "../../../../../../../stores/apiStore";
 
   const test_id = $page.params.test_id
   const status_id = $page.params.status_id
+  let loaded = false
   let seconds = 0
   let testRef: TestData = {}
   let statusRef: StatusData = {}
   let naloga: Naloga = {}
+  let audits: Array<domain.Audit> = []
 
   function koncaj(status_tip) {
-    console.log({
-      status_tip, test_id, status_id, seconds
+    api.profil_status_update(test_id, status_id, status_tip).then(data => {
+      profil.posodobi_status_tip(status_id, status_tip)
+      goto(route.profil_test_id(test_id))
+    }).catch(err => {
+      console.error(err)
     })
-    goto(route.profil_test_id($page.params.test_id))
   }
 
   onMount(() => {
     testRef = profil.get().test_refs.find((test_ref) => test_ref.test._id == test_id)
     statusRef = testRef.status_refs.find((status_ref) => status_ref.status._id == status_id)
-    console.log(testRef)
-    console.log(statusRef)
     naloga = statusRef.naloga_refs[0].naloga
+
+    api.profil_status_audits(test_id, status_id).then(data => {
+      audits = data
+      loaded = true
+    }).catch(err => {
+      console.error(err)
+    })
   })
 
   setInterval(() => {
@@ -60,15 +68,17 @@
         <img width="100%" src="{naloga.resitev}">
 
         <Group style="display: flex; justify-content: stretch; width: 100%;">
-          <Button on:click={() => koncaj("NERESENO")} variant="raised" class="red" style="flex-grow: 1">
-            <b>NERESENO</b>
-          </Button>
-          <Button on:click={() => koncaj("NAPACNO")} variant="raised" class="orange" style="flex-grow: 1">
-            <b>NAPACNO</b>
-          </Button>
-          <Button on:click={() => koncaj("PRAVILNO")} variant="raised" class="green" style="flex-grow: 1">
-            <b>PRAVILNO</b>
-          </Button>
+          {#if loaded}
+            <Button on:click={() => koncaj(core.domain.Status.Tip.NERESENO.name)} variant="raised" class="red" style="flex-grow: 1">
+              <b>{core.domain.Status.Tip.NERESENO.name}</b>
+            </Button>
+            <Button on:click={() => koncaj(core.domain.Status.Tip.NAPACNO.name)} variant="raised" class="orange" style="flex-grow: 1">
+              <b>{core.domain.Status.Tip.NAPACNO.name}</b>
+            </Button>
+            <Button on:click={() => koncaj(core.domain.Status.Tip.PRAVILNO.name)} variant="raised" class="green" style="flex-grow: 1">
+              <b>{core.domain.Status.Tip.PRAVILNO.name}</b>
+            </Button>
+          {/if}
         </Group>
       </Content>
     </Panel>
@@ -77,7 +87,9 @@
         <h2 style="text-align: center">Audits</h2>
       </Header>
       <Content>
-        <b>TODO: Zgodovina</b>
+        {#each audits as audit}
+          <b>{JSON.stringify(audit)}</b>
+        {/each}
       </Content>
     </Panel>
   </Accordion>

@@ -1,13 +1,15 @@
 <script lang="ts">
+
   import DataTable, {Head, Body, Row, Cell} from '@smui/data-table';
   import {onMount} from "svelte";
   import {profil} from "../../../../stores/profilStore";
-  import type {core} from "../../../../api/server-core";
-  import Naslov = core.domain.Naslov;
-  import KontaktData = core.data.KontaktData;
+  import type {data, domain} from "../../../../types/core.d.ts";
+  import Oseba = domain.Oseba;
+  import Naslov = domain.Naslov;
+  import KontaktData = data.KontaktData;
 
 
-  let oseba = {}//: Oseba
+  let oseba: Oseba = {}
   let naslovi: Array<Naslov> = []
   let kontakt_refs: Array<KontaktData> = []
 

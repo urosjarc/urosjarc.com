@@ -1,8 +1,8 @@
 package api.models
 
 import kotlinx.serialization.Serializable
-import app.extend.ime
-import core.domain.Oseba
+import extends.ime
+import domain.Oseba
 
 @Serializable
 data class Profil(

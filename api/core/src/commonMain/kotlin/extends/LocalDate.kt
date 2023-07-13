@@ -1,4 +1,4 @@
-package app.extend
+package extends
 
 import kotlinx.datetime.*
 
