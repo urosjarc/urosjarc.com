@@ -13,19 +13,7 @@ import kotlin.js.JsExport
 data class TestData(
     val test: Test,
     val status_refs: Array<StatusData> = arrayOf()
-) {
-    companion object {
-        fun opravljeno(testData: TestData): Float {
-            if (testData.status_refs.isNotEmpty()) {
-                return testData
-                    .status_refs.count {
-                        it.status.tip != null && it.status.tip.toString() == Status.Tip.PRAVILNO.name
-                    }.toFloat() / testData.status_refs.size
-            }
-            return 0f
-        }
-    }
-}
+)
 
 @JsExport
 @Serializable

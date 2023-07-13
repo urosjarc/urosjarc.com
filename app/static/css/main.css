@@ -15,6 +15,9 @@ i {
   font-family: 'Material Icons', monospace !important;
 }
 
+html {
+  background-color: skyblue;
+}
 
 body {
   margin: 10px 0 30px 0;
@@ -35,8 +38,8 @@ form > div {
   margin: 0 0 12px 0 !important;
 }
 
-.green {
-  background-color: green !important;
+.forestgreen {
+  background-color: forestgreen !important;
   color: white !important;
 }
 
@@ -55,8 +58,8 @@ form > div {
   color: black !important;
 }
 
-.blue {
-  background-color: #1976d2 !important;
+.royalblue {
+  background-color: royalblue !important;
   color: white !important;
 }
 
@@ -72,6 +75,12 @@ form > div {
   -webkit-box-shadow: 0px 0px 10px -1px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px 0px 10px -1px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 10px -1px rgba(0, 0, 0, 0.75);
+}
+
+.shadow-low {
+  -webkit-box-shadow: 0px 0px 7px -1px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 7px -1px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 7px -1px rgba(0, 0, 0, 0.75);
 }
 
 .noscrool {

@@ -53,8 +53,8 @@ export const usecase = {
       usecase.obvestilo_napake("API ni vrnil uporabniskega profila!")
     })
   },
-  posodobi_status(test_id: string, status_id: string, status_tip: domain.Status.Tip) {
-    api.profil_status_update(test_id, status_id, status_tip).then(status => {
+  posodobi_status(test_id: string, status_id: string, status_tip: domain.Status.Tip, sekund: number) {
+    api.profil_status_update(test_id, status_id, status_tip, sekund).then(status => {
 
       let p = profil.get()
       for (let i = 0; i < p.test_refs.length; i++) {

@@ -4,8 +4,8 @@
 
 // Svelte Colors!
 @use '@material/theme/index' as theme with (
-  $primary: #1976d2,
-  $secondary: #1976d2,
+  $primary: royalblue,
+  $secondary: royalblue,
   $surface: #fff,
   $background: #fff,
   $error: color-palette.$red-900
@@ -18,8 +18,8 @@ body {
 }
 
 a {
-  color: #40b3ff;
+  color: royalblue;
 }
 a:visited {
-  color: color.scale(#40b3ff, $lightness: -35%);
+  color: color.scale(royalblue, $lightness: 0%);
 }

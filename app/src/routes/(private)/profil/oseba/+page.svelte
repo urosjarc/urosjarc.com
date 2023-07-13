@@ -25,13 +25,18 @@
   })
 
   function load_audits() {
-    if(!audits_loaded){
+    if (!audits_loaded) {
       api.profil_audits().then(data => {
         let datum_audits = {}
         for (let audit of data) {
           let datum = dateFormat(audit.ustvarjeno)
-          if (datum in datum_audits) datum_audits[datum].value += 1
-          else datum_audits[datum] = { value: 1, dni: dateDistance(audit.ustvarjeno), datum: datum}
+          let trajanje = core.trajanje_minut(audit.trajanje)
+          console.log(trajanje, '==================')
+          if (datum in datum_audits){
+            datum_audits[datum].value += 1
+            datum_audits[datum].trajanje += trajanje
+          }
+          else datum_audits[datum] = {value: 1, dni: dateDistance(audit.ustvarjeno), datum: datum, trajanje: trajanje}
         }
         audits = Object.values(datum_audits).sort((e0, e1) => e0.dni - e1.dni).slice(0, 30)
       }).catch(err => {
@@ -47,7 +52,7 @@
 <div>
   <Accordion>
     <Panel open>
-      <Header on:click={load_audits} class="blue">
+      <Header on:click={load_audits} class="royalblue">
         <h3 style="text-align: center; margin: 0">Profil</h3>
       </Header>
       <Content style="padding: 0">
@@ -81,20 +86,35 @@
       </Content>
     </Panel>
     <Panel close>
-      <Header on:click={load_audits} class="blue">
+      <Header on:click={load_audits} class="royalblue">
         <h3 style="text-align: center; margin: 0">Dejavnost</h3>
       </Header>
       <Content style="padding: 0">
 
         <DataTable style="width: 100%">
-          <Body>
-          {#each audits as audit}
+          <Head>
             <Row>
-              <Cell style="width: 43%" numeric>{audit.datum}</Cell>
-              <Cell>{audit.dni} dni</Cell>
-              <Cell>{audit.value} akcij</Cell>
+              <Cell><b>Datum</b></Cell>
+              <Cell><b>Pred...</b></Cell>
+              <Cell><b>Aktivnost</b></Cell>
+              <Cell><b>Trajanje</b></Cell>
             </Row>
-          {/each}
+          </Head>
+          <Body>
+          {#if audits_loaded}
+            {#if audits.length > 0}
+              {#each audits as audit}
+                <Row>
+                  <Cell>{audit.datum}</Cell>
+                  <Cell>{audit.dni} dni</Cell>
+                  <Cell>{audit.value} akcij</Cell>
+                  <Cell>{Math.round(audit.trajanje)} min.</Cell>
+                </Row>
+              {/each}
+            {:else}
+              <h3 style="text-align: center">Uporabnik še brez dejavnosti!</h3>
+            {/if}
+          {/if}
           </Body>
         </DataTable>
 

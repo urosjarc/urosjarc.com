@@ -26,7 +26,7 @@
   let audits: Array<domain.Audit> = []
 
   function koncaj(status_tip) {
-    usecase.posodobi_status(test_id, status_id, status_tip)
+    usecase.posodobi_status(test_id, status_id, status_tip, seconds)
   }
 
   function load_audits() {
@@ -66,7 +66,7 @@
         </Content>
       </Panel>
       <Panel>
-        <Header class="blue">
+        <Header class="royalblue">
           <h3 style="text-align: center; margin: 0">Resitev</h3>
         </Header>
         <Content style="padding: 0">
@@ -79,32 +79,32 @@
             <Button on:click={() => koncaj(core.domain.Status.Tip.NAPACNO.name)} class="orange" style="flex-grow: 1">
               <b>{core.domain.Status.Tip.NAPACNO.name}</b>
             </Button>
-            <Button on:click={() => koncaj(core.domain.Status.Tip.PRAVILNO.name)} class="green" style="flex-grow: 1; border-radius: 0">
+            <Button on:click={() => koncaj(core.domain.Status.Tip.PRAVILNO.name)} class="forestgreen" style="flex-grow: 1; border-radius: 0">
               <b>{core.domain.Status.Tip.PRAVILNO.name}</b>
             </Button>
           </Group>
         </Content>
       </Panel>
       <Panel>
-        <Header class="blue" on:click={load_audits}>
+        <Header class="royalblue" on:click={load_audits}>
           <h3 style="text-align: center; margin: 0">Dejavnost</h3>
         </Header>
         <Content style="padding: 0">
           <DataTable style="width: 100%">
             <Head>
               <Row>
-                <Cell numeric><b>#</b></Cell>
                 <Cell><b>Datum</b></Cell>
-                <Cell><b>Čas</b></Cell>
+                <Cell><b>Ura</b></Cell>
+                <Cell><b>Trajanje</b></Cell>
                 <Cell><b>Opis</b></Cell>
               </Row>
             </Head>
             <Body>
             {#each audits as audit, i}
               <Row>
-                <Cell numeric>{i + 1}</Cell>
                 <Cell>{dateFormat(audit.ustvarjeno)}</Cell>
                 <Cell>{timeFormat(audit.ustvarjeno)}</Cell>
+                <Cell>{core.trajanje_minut(audit.trajanje)} min</Cell>
                 <Cell>{audit.opis}</Cell>
               </Row>
             {/each}

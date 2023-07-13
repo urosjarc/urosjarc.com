@@ -1,7 +1,7 @@
 import type {domain} from "../types/server-core.d.ts";
 
 export function barva_testa(deadline: number) {
-  if (deadline > 7) return "blue"
+  if (deadline > 7) return "royalblue"
   else if (deadline > 3) return "orange blink"
   else return "red blink"
 }
@@ -13,10 +13,10 @@ export function barva_statusa(tip: domain.Status.Tip) {
     case core.domain.Status.Tip.NAPACNO.name:
       return "orange"
     case core.domain.Status.Tip.PRAVILNO.name:
-      return "green"
+      return "forestgreen"
     case core.domain.Status.Tip.NEZACETO.name:
-      return "blue"
+      return "royalblue"
     default:
-      return "blue"
+      return "royalblue"
   }
 }

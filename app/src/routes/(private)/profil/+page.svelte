@@ -12,6 +12,7 @@
   function goto_test(id) {
     goto(route.profil_test_id(id))
   }
+
   onMount(() => {
     testi_refs = profil.get().test_refs
   })
@@ -32,10 +33,10 @@
     {#each testi_refs as test_ref}
       {@const test = test_ref.test}
       {@const deadline = dateDistance(test.deadline)}
-      {@const opravljeno = core.data.TestData.Companion.opravljeno(test_ref)}
+      {@const opravljeno = core.opravljeno(test_ref)}
       <Row on:click={() => goto_test(test._id)} style="cursor: pointer">
         <Cell class="{barva_testa(deadline)}">{test.naslov}</Cell>
-        <Cell class="{barva_testa(deadline)}" numeric>{Math.round(opravljeno*100)}%</Cell>
+        <Cell class="{barva_testa(deadline)}" numeric>{Math.round(opravljeno * 100)}%</Cell>
         <Cell class="{barva_testa(deadline)}"><b>{deadline} dni</b></Cell>
         <Cell class="{barva_testa(deadline)}">{dateFormat(test.deadline)} ({dateName(test.deadline)})</Cell>
       </Row>

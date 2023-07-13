@@ -29,6 +29,9 @@ class profil {
         @Resource("{test_id}")
         class test_id(val parent: test, val test_id: String) {
 
+            @Resource("audits")
+            class audits(val parent: test_id, val stran: Int = 0)
+
             @Resource("status")
             class status(val parent: test_id) {
 
@@ -70,6 +73,7 @@ fun Route.profil() {
                     id = it.status_id,
                     oseba_id = profil.id,
                     test_id = it.parent.parent.test_id,
+                    sekund = body.sekund,
                     tip = body.tip
                 )) {
                 null -> this.call.client_error(info = "${ime<Status>()} ni posodobljen!")
@@ -80,7 +84,11 @@ fun Route.profil() {
 
     this.get<profil.test.test_id.status.status_id.audits> {
         val status_id = it.parent.status_id
-        this.call.respond(db.audits(entity_id = status_id))
+        this.call.respond(db.audits(entity_id = status_id, stran = it.stran))
+    }
+    this.get<profil.test.test_id.audits> {
+        val test_id = it.parent.test_id
+        this.call.respond(db.audits(entity_id = test_id, stran = it.stran))
     }
 
     this.get<profil.audits> {

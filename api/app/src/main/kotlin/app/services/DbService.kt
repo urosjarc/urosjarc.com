@@ -21,6 +21,8 @@ import kotlinx.datetime.LocalDateTime
 import org.apache.logging.log4j.kotlin.logger
 import org.bson.types.ObjectId
 import kotlin.random.Random
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 val faker = Faker()
 var counters = mutableMapOf<String, Int>()
@@ -116,11 +118,16 @@ class DbService(val db_url: String, val db_name: String) {
 
                         (1..Random.nextInt(0, 5)).forEach {
                             val audit = Audit(
-                                entitete_id = arrayOf(oseba._id.toString(), status.test_id.toString(), status._id.toString()),
+                                entitete_id = arrayOf(
+                                    oseba._id.toString(),
+                                    status.test_id.toString(),
+                                    status._id.toString()
+                                ),
                                 tip = Audit.Tip.STATUS_POSODOBITEV,
-                                opis="opis",
+                                opis = Status.Tip.values().random().name,
                                 entiteta = "entiteta",
-                                ustvarjeno = LocalDateTime.zdaj(dDni=Random.nextInt(0, 20))
+                                ustvarjeno = LocalDateTime.zdaj(dDni = Random.nextInt(0, 20)),
+                                trajanje = Random.nextInt(2, 20).toDuration(unit = DurationUnit.MINUTES)
                             )
                             all_audit.add(audit)
 
@@ -314,7 +321,7 @@ class DbService(val db_url: String, val db_name: String) {
         return aggregation.firstOrNull()?.test_refs?.get(0)?.status_refs?.get(0)?.status?._id == status_id
     }
 
-    fun status_update(id: String, oseba_id: String, test_id: String, tip: Status.Tip): Status? {
+    fun status_update(id: String, oseba_id: String, test_id: String, tip: Status.Tip, sekund: Int): Status? {
         val r = statusi.findOneAndUpdate(
             filter = Filters.and(
                 Filters.eq(Status::_id.name, id),
@@ -328,6 +335,7 @@ class DbService(val db_url: String, val db_name: String) {
         val audit = Audit(
             entiteta = ime<Status>(),
             tip = Audit.Tip.STATUS_POSODOBITEV,
+            trajanje = sekund.toDuration(unit = DurationUnit.SECONDS),
             opis = r.tip.name,
             entitete_id = arrayOf(id, oseba_id, test_id)
         )
