@@ -1,5 +1,6 @@
 const locale = "sl"
-export function dateFormat(isoDate: String) {
+
+export function dateFormat(isoDate: string) {
   try {
     return toDate(isoDate).toLocaleDateString(locale).replaceAll(" ", "")
   } catch (e) {
@@ -7,7 +8,15 @@ export function dateFormat(isoDate: String) {
   }
 }
 
-export function dateDistance(isoDate: String) {
+export function timeFormat(isoDate: string) {
+  try {
+    return toDate(isoDate).toLocaleTimeString(locale)
+  } catch (e) {
+    return null
+  }
+}
+
+export function dateDistance(isoDate: string) {
   let end = toDate(isoDate)
   let start = new Date()
   // @ts-ignore
@@ -16,20 +25,23 @@ export function dateDistance(isoDate: String) {
 }
 
 export function dateName(isoDate: String) {
-  if(isoDate && isoDate.includes("-")){
+  if (isoDate && isoDate.includes("-")) {
     // @ts-ignore
     let date = toDate(isoDate);
     return date.toLocaleDateString(locale, {weekday: 'short'});
   }
 }
 
-export function toDate(isoDate: String) {
-  // @ts-ignore
-  let date = isoDate.split("-")
-  return new Date(date[0], date[1] - 1, date[2])
+export function toDate(isoDate: string) {
+  if (isoDate.includes("T")) {
+    isoDate += "Z"
+  } else {
+    isoDate += "T12:00:00.000Z"
+  }
+  return new Date(isoDate)
 }
 
-export function time(sec: number): String {
+export function time(sec: number): string {
   let min_pad = ('00' + (Math.floor(sec / 60))).slice(-2)
   let sec_pad = ('00' + (sec % 60)).slice(-2)
   return `${min_pad}:${sec_pad}`

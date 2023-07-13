@@ -2,16 +2,19 @@
   import Accordion, {Panel, Header, Content} from '@smui-extra/accordion';
   import {page} from "$app/stores";
   import Button, {Group, Label} from "@smui/button";
-  import {time} from "../../../../../../../libs/utils";
+  import {dateName, time, timeFormat} from "../../../../../../../libs/utils";
   import {goto} from "$app/navigation";
   import {route} from "../../../../../../../stores/routeStore";
   import {onMount} from "svelte";
   import {profil} from "../../../../../../../stores/profilStore";
-  import type {data, domain} from "../../../../../../../types/core.d.ts";
+  import type {data, domain} from "../../../../../../../types/server-core.d.ts";
   import TestData = data.TestData;
   import StatusData = data.StatusData;
   import Naloga = domain.Naloga;
   import {api} from "../../../../../../../stores/apiStore";
+  import DataTable, {Body, Cell, Head, Row} from "@smui/data-table";
+  import {dateFormat} from "../../../../../../../libs/utils.js";
+  import {barva_statusa} from "../../../../../../../libs/stili";
 
   const test_id = $page.params.test_id
   const status_id = $page.params.status_id
@@ -51,52 +54,70 @@
 
 <div class="row">
 
-  <Accordion>
-    <Panel open>
-      <Header color="primary">
-        <h1 style="text-align: center">{time(seconds)}</h1>
-      </Header>
-      <Content>
-        <img width="100%" src="{naloga.vsebina}">
-      </Content>
-    </Panel>
-    <Panel>
-      <Header>
-        <h2 style="text-align: center">Resitev</h2>
-      </Header>
-      <Content>
-        <img width="100%" src="{naloga.resitev}">
+  {#if loaded}
+    <Accordion>
+      <Panel open>
+        <Header style="background-color: {barva_statusa(statusRef.status.tip)}">
+          <h1 style="text-align: center">{time(seconds)}</h1>
+        </Header>
+        <Content style="padding: 0">
+          <img width="100%" src="{naloga.vsebina}">
+        </Content>
+      </Panel>
+      <Panel>
+        <Header>
+          <h2 style="text-align: center">Resitev</h2>
+        </Header>
+        <Content style="padding: 0">
+          <img width="100%" src="{naloga.resitev}">
 
-        <Group style="display: flex; justify-content: stretch; width: 100%;">
-          {#if loaded}
-            <Button on:click={() => koncaj(core.domain.Status.Tip.NERESENO.name)} variant="raised" class="red" style="flex-grow: 1">
+          <Group style="display: flex; justify-content: stretch; width: 100%">
+            <Button on:click={() => koncaj(core.domain.Status.Tip.NERESENO.name)} class="red" style="flex-grow: 1; border-radius: 0">
               <b>{core.domain.Status.Tip.NERESENO.name}</b>
             </Button>
-            <Button on:click={() => koncaj(core.domain.Status.Tip.NAPACNO.name)} variant="raised" class="orange" style="flex-grow: 1">
+            <Button on:click={() => koncaj(core.domain.Status.Tip.NAPACNO.name)} class="orange" style="flex-grow: 1">
               <b>{core.domain.Status.Tip.NAPACNO.name}</b>
             </Button>
-            <Button on:click={() => koncaj(core.domain.Status.Tip.PRAVILNO.name)} variant="raised" class="green" style="flex-grow: 1">
+            <Button on:click={() => koncaj(core.domain.Status.Tip.PRAVILNO.name)} class="green" style="flex-grow: 1; border-radius: 0">
               <b>{core.domain.Status.Tip.PRAVILNO.name}</b>
             </Button>
-          {/if}
-        </Group>
-      </Content>
-    </Panel>
-    <Panel>
-      <Header color="primary">
-        <h2 style="text-align: center">Audits</h2>
-      </Header>
-      <Content>
-        {#each audits as audit}
-          <b>{JSON.stringify(audit)}</b>
-        {/each}
-      </Content>
-    </Panel>
-  </Accordion>
+          </Group>
+        </Content>
+      </Panel>
+      <Panel>
+        <Header>
+          <h2 style="text-align: center">Audits</h2>
+        </Header>
+        <Content style="padding: 0">
+          <DataTable style="width: 100%">
+            <Head>
+              <Row>
+                <Cell numeric><b>#</b></Cell>
+                <Cell><b>Datum</b></Cell>
+                <Cell><b>Čas</b></Cell>
+                <Cell><b>Opis</b></Cell>
+              </Row>
+            </Head>
+            <Body>
+            {#each audits as audit, i}
+              <Row>
+                <Cell numeric>{i + 1}</Cell>
+                <Cell>{dateFormat(audit.ustvarjeno)}</Cell>
+                <Cell>{timeFormat(audit.ustvarjeno)}</Cell>
+                <Cell>{audit.opis}</Cell>
+              </Row>
+            {/each}
+            </Body>
+          </DataTable>
+        </Content>
+      </Panel>
+    </Accordion>
+  {/if}
 </div>
 
 <style>
   h1, h2 {
     margin: 0;
   }
+
 </style>

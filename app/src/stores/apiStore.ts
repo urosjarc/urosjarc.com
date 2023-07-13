@@ -1,5 +1,5 @@
 import {token} from "./tokenStore";
-import type {data, domain} from "../types/core.d.ts";
+import type {data, domain} from "../types/server-core.d.ts";
 
 const DOMAIN = "http://localhost:8080"
 

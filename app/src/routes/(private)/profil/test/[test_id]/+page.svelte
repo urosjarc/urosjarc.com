@@ -6,12 +6,13 @@
   import {onMount} from "svelte";
   import Chart from "chart.js/auto";
   import {dateDistance, dateName} from "../../../../../libs/utils";
-  import {data, domain} from "../../../../../types/core.d.ts";
+  import {data, domain} from "../../../../../types/server-core.d.ts";
   import DataTable, {Body, Cell, Row} from "@smui/data-table";
 
   import TestData = data.TestData;
   import Test = domain.Test;
   import Status = domain.Status;
+  import {barva_statusa} from "../../../../../libs/stili";
 
   const test_id = $page.params.test_id
 
@@ -22,6 +23,7 @@
 
   let stevilo_statusov = 0
   let manjkajoci = 0
+  let opravljeni = 0
   let st_dni = 0
 
   onMount(() => {
@@ -42,7 +44,8 @@
 
     test = testRef.test
     st_dni = dateDistance(test.deadline)
-    manjkajoci = stevilo_statusov - statusi[core.domain.Status.Tip.PRAVILNO.name]
+    opravljeni = statusi[core.domain.Status.Tip.PRAVILNO.name]
+    manjkajoci = stevilo_statusov - opravljeni
 
     new Chart("chart", {
       type: "pie",
@@ -65,20 +68,6 @@
   })
 
 
-  function barva_statusa(tip) {
-    switch (tip) {
-      case core.domain.Status.Tip.NAPACNO.name:
-        return "red"
-      case core.domain.Status.Tip.NERESENO.name:
-        return "orange"
-      case core.domain.Status.Tip.PRAVILNO.name:
-        return "green"
-      case core.domain.Status.Tip.NEZACETO.name:
-        return "lightgrey"
-      default:
-        return "lightgrey"
-    }
-  }
 </script>
 
 <div class="row justify-content-center pb-3" style="margin: 0">
@@ -93,15 +82,15 @@
         </Row>
         <Row>
           <Cell numeric><b>Rok:</b></Cell>
-          <Cell>{st_dni} dni, {dateName(test.deadline)}</Cell>
+          <Cell>{st_dni} dni ({dateName(test.deadline)})</Cell>
         </Row>
         <Row>
           <Cell numeric><b>Reseno:</b></Cell>
-          <Cell>{stevilo_statusov - manjkajoci}/{stevilo_statusov}, {Math.round(testRef.opravljeno * 100)}%</Cell>
+          <Cell>{stevilo_statusov - manjkajoci}/{stevilo_statusov} ({Math.round(opravljeni/stevilo_statusov * 100)}%)</Cell>
         </Row>
         <Row>
           <Cell numeric><b>Manjka:</b></Cell>
-          <Cell>{manjkajoci}/{stevilo_statusov}, {100 - Math.round(testRef.opravljeno * 100)}%</Cell>
+          <Cell>{manjkajoci}/{stevilo_statusov} ({100 - Math.round(opravljeni/stevilo_statusov * 100)}%)</Cell>
         </Row>
         <Row>
           <Cell numeric><b>Delo:</b></Cell>

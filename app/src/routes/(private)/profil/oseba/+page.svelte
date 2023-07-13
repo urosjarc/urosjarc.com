@@ -3,7 +3,7 @@
   import DataTable, {Head, Body, Row, Cell} from '@smui/data-table';
   import {onMount} from "svelte";
   import {profil} from "../../../../stores/profilStore";
-  import type {data, domain} from "../../../../types/core.d.ts";
+  import type {data, domain} from "../../../../types/server-core.d.ts";
   import Oseba = domain.Oseba;
   import Naslov = domain.Naslov;
   import KontaktData = data.KontaktData;

@@ -1,14 +1,17 @@
 package app.services
 
-import app.repos.AuditRepo
-import app.repos.OsebaRepo
-import app.repos.StatusRepo
+import app.extend.Aggregates_lookup
+import app.extend.Aggregates_project_root
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
 import com.mongodb.ServerApi
 import com.mongodb.ServerApiVersion
+import com.mongodb.client.model.Aggregates
 import com.mongodb.client.model.Filters
+import com.mongodb.client.model.Updates
+import com.mongodb.kotlin.client.AggregateIterable
 import com.mongodb.kotlin.client.MongoClient
+import data.OsebaData
 import domain.*
 import extends.danes
 import extends.ime
@@ -29,9 +32,9 @@ class DbService(val db_url: String, val db_name: String) {
     private val mongoClient = MongoClient.create(settings)
 
     val db = mongoClient.getDatabase(db_name)
-    val auditRepo = AuditRepo(service = this)
-    val osebaRepo = OsebaRepo(service = this)
-    val statusRepo = StatusRepo(service = this)
+    val audits = db.getCollection<Audit>(collectionName = ime<Audit>())
+    val osebe = db.getCollection<Oseba>(collectionName = ime<Oseba>())
+    val statusi = db.getCollection<Status>(collectionName = ime<Status>())
 
     inline fun <reified T : Any> nakljucni(): T {
         val obj = faker.randomProvider.randomClassInstance<T> {
@@ -46,7 +49,6 @@ class DbService(val db_url: String, val db_name: String) {
         }
         return obj
     }
-
 
     fun nafilaj() {
         val all_oseba = mutableListOf<Oseba>()
@@ -139,7 +141,7 @@ class DbService(val db_url: String, val db_name: String) {
     }
 
     inline fun <reified T : Entiteta> ustvari(entitete: Collection<T>): Boolean {
-        entitete.forEach { if(it._id == null) it._id = ObjectId().toHexString() }
+        entitete.forEach { if (it._id == null) it._id = ObjectId().toHexString() }
         return db.getCollection<T>(collectionName = ime<T>())
             .insertMany(documents = entitete as List<T>)
             .wasAcknowledged()
@@ -171,5 +173,150 @@ class DbService(val db_url: String, val db_name: String) {
         return db.getCollection<T>(collectionName = ime<T>())
             .deleteOne(filter_one(_id))
             .wasAcknowledged()
+    }
+
+    fun audits(entity_id: String): List<Audit> = audits.find(
+        filter = Filters.eq(Audit::entitete_id.name, entity_id)
+    ).toList()
+
+
+    fun profil(id: String): OsebaData {
+        val aggregation: AggregateIterable<OsebaData> = osebe.aggregate<OsebaData>(
+            listOf(
+                Aggregates.match(Filters.eq(Oseba::_id.name, id)),
+                Aggregates_project_root(Oseba::class),
+                Aggregates_lookup(
+                    from = Naslov::oseba_id,
+                    to = Oseba::_id
+                ),
+                Aggregates_lookup(
+                    from = Test::oseba_id,
+                    to = Oseba::_id,
+                    pipeline = listOf(
+                        Aggregates_lookup(
+                            from = Status::test_id,
+                            to = Test::_id,
+                            pipeline = listOf(
+                                Aggregates_lookup(
+                                    from = Naloga::_id,
+                                    to = Status::naloga_id,
+                                    pipeline = listOf(
+                                        Aggregates_lookup(
+                                            from = Tematika::_id,
+                                            to = Naloga::tematika_id,
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+                Aggregates_lookup(
+                    from = Kontakt::oseba_id,
+                    to = Oseba::_id,
+                    pipeline = listOf(
+                        Aggregates_lookup(
+                            from = Sporocilo::kontakt_prejemnik_id,
+                            to = Kontakt::_id,
+                            pipeline = listOf(
+                                Aggregates_lookup(
+                                    from = Kontakt::_id,
+                                    to = Sporocilo::kontakt_posiljatelj_id,
+                                    pipeline = listOf(
+                                        Aggregates_lookup(
+                                            from = Oseba::_id,
+                                            to = Kontakt::oseba_id
+                                        ),
+                                    )
+                                ),
+                            )
+                        ),
+                        Aggregates_lookup(
+                            from = Sporocilo::kontakt_posiljatelj_id,
+                            to = Kontakt::_id,
+                            pipeline = listOf(
+                                Aggregates_lookup(
+                                    from = Kontakt::_id,
+                                    to = Sporocilo::kontakt_prejemnik_id,
+                                    pipeline = listOf(
+                                        Aggregates_lookup(
+                                            from = Oseba::_id,
+                                            to = Kontakt::oseba_id
+                                        ),
+                                    )
+                                ),
+                            )
+                        ),
+                    )
+                ),
+                Aggregates_lookup(
+                    from = Ucenje::oseba_ucenec_id,
+                    to = Ucenje::_id,
+                    pipeline = listOf(
+                        Aggregates_lookup(
+                            from = Oseba::_id,
+                            to = Ucenje::oseba_ucitelj_id,
+                        )
+                    )
+                ),
+                Aggregates_lookup(
+                    from = Ucenje::oseba_ucitelj_id,
+                    to = Oseba::_id,
+                    pipeline = listOf(
+                        Aggregates_lookup(
+                            from = Oseba::_id,
+                            to = Ucenje::oseba_ucenec_id
+                        )
+                    )
+                ),
+            )
+        )
+
+        return aggregation.first()
+    }
+
+    fun status_obstaja(id: String, test_id: String, status_id: String): Boolean {
+        val aggregation: AggregateIterable<OsebaData> = osebe.aggregate<OsebaData>(
+            listOf(
+                Aggregates.match(Filters.eq(Test::oseba_id.name, id)),
+                Aggregates_project_root(Oseba::class),
+                Aggregates_lookup(
+                    from = Test::oseba_id,
+                    to = Oseba::_id,
+                    pipeline = listOf(
+                        Aggregates.match(Filters.eq(Test::_id.name, test_id)),
+                        Aggregates_lookup(
+                            from = Status::test_id,
+                            to = Test::_id,
+                            pipeline = listOf(
+                                Aggregates.match(Filters.eq(Status::_id.name, status_id)),
+                            )
+                        ),
+                    ),
+                ),
+            )
+        )
+
+        return aggregation.firstOrNull()?.test_refs?.get(0)?.status_refs?.get(0)?.status?._id == status_id
+    }
+
+    fun status_update(id: String, oseba_id: String, test_id: String, tip: Status.Tip): Status? {
+        val r = statusi.findOneAndUpdate(
+            filter = Filters.and(
+                Filters.eq(Status::_id.name, id),
+                Filters.eq(Status::test_id.name, test_id)
+            ), update = Updates.set(Status::tip.name, tip.name)
+        ) ?: return null
+
+        val audit = Audit(
+            entiteta = ime<Status>(),
+            tip = Audit.Tip.STATUS_POSODOBITEV,
+            opis = r.tip.name,
+            entitete_id = arrayOf(id, oseba_id, test_id)
+        )
+
+        this.ustvari(audit)
+
+        return r
     }
 }

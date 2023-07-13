@@ -1,5 +1,7 @@
 package si.urosjarc.server.app.services
 
+import app.base.App
+import app.services.DbService
 import org.apache.logging.log4j.kotlin.logger
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -7,9 +9,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.koin.test.KoinTest
 import org.koin.test.inject
-import app.base.App
-import app.services.DbService
-import domain.Oseba
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class Test_DbService : KoinTest {
@@ -36,12 +35,5 @@ class Test_DbService : KoinTest {
     @Test
     fun `sprazni bazo`() {
         this.service.sprazni()
-    }
-
-    @Test
-    fun get_profil() {
-        this.service.dobi<Oseba>(stran = 0).first().let {
-            it._id?.let { it1 -> this.service.osebaRepo.profil(it1) }
-        }
     }
 }

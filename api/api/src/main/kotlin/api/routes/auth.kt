@@ -48,7 +48,7 @@ fun Route.auth(jwkProvider: JwkProvider) {
         log.info("Body: $body")
 
         //TODO: Naredi pravilno logiko
-        val oseba = db.dobi<Oseba>(0).random()
+        val oseba = db.audits<Oseba>(0).random()
         log.info("Oseba: $oseba")
         //TODO: Naredi pravilno logiko
 

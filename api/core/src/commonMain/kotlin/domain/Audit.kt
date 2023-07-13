@@ -12,7 +12,7 @@ import kotlin.js.JsExport
 @Serializable
 data class Audit(
     override var _id: String? = null,
-    var entiteta_id: String? = null,
+    var entitete_id: Array<String> = arrayOf(),
     val tip: Tip,
     val opis: String,
     val entiteta: String,

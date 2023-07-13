@@ -12,16 +12,17 @@ import kotlin.js.JsExport
 @Serializable
 data class TestData(
     val test: Test,
-    val status_refs: Array<StatusData> = arrayOf(),
-    var opravljeno: Float = 0f
+    val status_refs: Array<StatusData> = arrayOf()
 ) {
-    init {
-
-        if (status_refs.size > 0) {
-            this.opravljeno = (this.status_refs
-                .count {
-                    it.status.tip == Status.Tip.PRAVILNO
-                }.toFloat() / status_refs.size)
+    companion object {
+        fun opravljeno(testData: TestData): Float {
+            if (testData.status_refs.isNotEmpty()) {
+                return testData
+                    .status_refs.count {
+                        it.status.tip != null && it.status.tip.toString() == Status.Tip.PRAVILNO.name
+                    }.toFloat() / testData.status_refs.size
+            }
+            return 0f
         }
     }
 }

@@ -3,7 +3,6 @@ package api.routes
 import api.extend.client_error
 import api.extend.profil
 import app.services.DbService
-import domain.Audit
 import domain.Status
 import extends.ime
 import io.ktor.resources.*
@@ -51,7 +50,7 @@ fun Route.profil() {
 
     this.get<profil> {
         val profil = this.call.profil()
-        val oseba_profil = db.osebaRepo.profil(id = profil.id)
+        val oseba_profil = db.profil(id = profil.id)
         this.call.respond(oseba_profil)
     }
 
@@ -60,10 +59,10 @@ fun Route.profil() {
         val body = this.call.receive<StatusUpdateReq>()
         val test_id = it.parent.parent.test_id
         val status_id = it.status_id
-        when (db.osebaRepo.status_obstaja(id = profil.id, test_id = test_id, status_id = status_id)) {
+        when (db.status_obstaja(id = profil.id, test_id = test_id, status_id = status_id)) {
             true -> this.call.client_error(info = "${ime<Status>()} ne obstaja!")
             false -> when (val r =
-                db.statusRepo.posodobi_tip(id = it.status_id, test_id = it.parent.parent.test_id, tip = body.tip)) {
+                db.status_update(id = it.status_id, oseba_id=profil.id, test_id = it.parent.parent.test_id, tip = body.tip)) {
                 null -> this.call.client_error(info = "${ime<Status>()} ni posodobljen!")
                 else -> this.call.respond(r)
             }
@@ -73,7 +72,7 @@ fun Route.profil() {
     this.get<profil.test.test_id.status.status_id.audits> {
         val status_id = it.parent.status_id
         val stran = it.stran
-        this.call.respond(db.auditRepo.dobi(entity_id=status_id))
+        this.call.respond(db.audits(entity_id=status_id))
     }
 
 }

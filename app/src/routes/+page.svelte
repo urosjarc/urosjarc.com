@@ -24,53 +24,27 @@
       <b class="hacker">051-240-885</b>
     </Button>
 
-    <Group style="display: flex; justify-content: stretch;margin:20px 0;">
-      <Button variant="raised" href="{route.kontakt}" color="primary" style="flex-grow: 1;">
+    <Group style="display: flex; justify-content: stretch;margin:20px 0 0 0;">
+      <Button variant="raised" href="{route.kontakt}" color="primary" style="flex-grow: 1; border-radius: 0">
         <b class="hacker">Naroči inštrukcije</b>
       </Button>
     </Group>
   </div>
 
-  <List nonInteractive>
-    <Separator/>
-    <Item>
-      <p class="hacker">Izvajam kvalitetne inštrukcije programiranja, fizike, matematike.</p>
-    </Item>
-    <Separator/>
-    <Item>
-      <p class="hacker">Pripravljam študente vseh fakultet na izpite iz programiranja.</p>
-    </Item>
-    <Separator/>
-    <Item>
-      <p class="hacker">Pomagam pri programiranju diplomskih in mag. nalog.</p>
-    </Item>
-    <Separator/>
-    <Item>
-      <p class="hacker">Pomagam pri prekvalifikaciji za programersko službo</p>
-    </Item>
-  </List>
+  <Separator/>
+  <p class="hacker">Izvajam kvalitetne inštrukcije programiranja, fizike, matematike.</p>
+  <Separator/>
+  <p class="hacker">Pripravljam študente vseh fakultet na izpite iz programiranja.</p>
+  <Separator/>
+  <p class="hacker">Pomagam pri programiranju diplomskih in mag. nalog.</p>
+  <Separator/>
+  <p class="hacker">Pomagam pri prekvalifikaciji za programersko službo</p>
+  <Separator/>
 
 </div>
 
 
 <style>
-
-  :global(.smui-paper), :global(.mdc-deprecated-list), :global(.mdc-deprecated-list-item) {
-    padding: 0 !important;
-    padding-left: 10px;
-    padding-right: 10px;
-    text-align: center;
-  }
-
-  :global(.mdc-deprecated-list-item) {
-    padding: 12px 0 !important;
-  }
-
-  /*Gumb brez border radiusa!*/
-  :global(.mdc-button) {
-    border-radius: 0 !important;
-  }
-
   .hacker {
     text-align: center;
     width: 100%;
