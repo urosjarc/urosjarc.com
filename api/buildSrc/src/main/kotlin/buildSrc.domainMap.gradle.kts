@@ -131,7 +131,6 @@ class DomainMap : Plugin<Project> {
 
                 mapOf(
                     ::plantUML to "plantuml",
-                    ::typescript to "ts"
                 ).forEach { File(buildDir, "domain.${it.value}").writeText(it.key(packages)) }
             }
         }
@@ -163,44 +162,6 @@ class DomainMap : Plugin<Project> {
         }
         text += relations
         text.add("@enduml")
-        return text.joinToString(separator = "\n")
-    }
-
-    fun typescript(packages: List<Package>): String {
-        val text = mutableListOf("// FILE AUTO GENERATED !!!\n")
-        val response = mutableListOf("interface AdjecentRes {")
-        val rel = relationships(packages)
-
-        for (pac in packages) {
-            for (dataClass in pac.dataClasses) {
-                val lowerDataClassName = dataClass.ime.toLowerCase()
-
-                //RESPONSE
-                response.add("\t${lowerDataClassName}: {[key: string]: ${dataClass.ime}};")
-
-                //INTERFACES
-                text.add("interface ${dataClass.ime} {")
-                for (lastnost in dataClass.lastnosti) {
-                    text.add("\t${lastnost.ime}: string;")
-                }
-                val children = rel.getOrDefault(lowerDataClassName, mutableListOf())
-                for (child in children) {
-                    text.add("\t${child}: Array<String>;")
-                }
-                text.add("}\n")
-
-                //ENUMS
-                for (enum in dataClass.enums) {
-                    text.add("enum ${dataClass.ime}${enum.ime} {")
-                    for (enumVal in enum.vrednosti) {
-                        text.add("\t${enumVal} = \"${enumVal}\",")
-                    }
-                    text.add("}\n")
-                }
-            }
-        }
-        response.add("}\n")
-        text += response
         return text.joinToString(separator = "\n")
     }
 }

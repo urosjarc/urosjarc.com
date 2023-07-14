@@ -2,9 +2,15 @@
 
 import data.TestData
 import domain.Status
-import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toLocalDate
 import kotlin.time.Duration
+
+
+@JsExport
+fun toDate(isoDate: String): LocalDate {
+    return isoDate.toLocalDate()
+}
 
 @JsExport
 fun trajanje_minut(trajanje: String): Int = Duration.parse(trajanje).inWholeMinutes.toInt()
