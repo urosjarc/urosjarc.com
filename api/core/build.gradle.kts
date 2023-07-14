@@ -1,67 +1,29 @@
 import org.gradle.kotlin.dsl.support.listFilesOrdered
 
 plugins {
-    kotlin("multiplatform")
-    kotlin("plugin.serialization")
-
-    this.id("buildSrc.domainMap")
+    this.id("buildSrc.common")
+    this.id("buildSrc.logging")
+    this.id("buildSrc.serialization")
+    this.id("buildSrc.datetime")
 }
 
-repositories {
-    mavenCentral()
-    jcenter()
-    maven { url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-js-wrappers") }
-}
+//configure<BuildSrc_domainMap_gradle.DomainMapExtension> {
+//    this.inputDir.set("src/commonMain/kotlin/domain")
+//}
 
-val js_dist = file("$projectDir/build/distributions/assets/js")
-val js_target = file("$projectDir/../../app/static/js")
 
-val ts_dist = file("$projectDir/build/compileSync/js/main/productionExecutable/kotlin/")
-val ts_target = file("$projectDir/../../app/src/types")
-
-kotlin {
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-css:1.0.0-pre.202-kotlin-1.5.0")
-            }
-        }
-    }
-
-    jvm {}
-
-    js(IR) {
-        useCommonJs()
-        browser {
-            webpackTask {
-                destinationDirectory = js_dist
-            }
-        }
-        binaries.executable()
-    }
-}
-group = "si.urosjarc"
-version = "1.0-SNAPSHOT"
-
-configure<BuildSrc_domainMap_gradle.DomainMapExtension> {
-    this.inputDir.set("src/commonMain/kotlin/domain")
-}
-
+val openapi_dist = file("$projectDir/../api/src/main/resources/openapi")
+val openapi_target = file("$projectDir/../../app/src/api")
 tasks.register("client") {
-    dependsOn("jsBrowserProductionWebpack")
     doLast {
         logger.warn("")
-        js_dist.listFilesOrdered { it.isFile && listOf("js", "map").contains(it.extension) }.forEach {
-            val distFile = "${js_target.absolutePath}/${it.name}"
-            logger.warn("MOVING: $distFile")
-            it.copyTo(file(distFile), overwrite = true)
-        }
-        ts_dist.listFilesOrdered { it.isFile && it.extension == "ts" }.forEach {
-            val distFile = "${ts_target.absolutePath}/${it.name}"
-            logger.warn("MOVING: $distFile")
-            it.copyTo(file(distFile), overwrite = true)
+        openapi_dist.listFilesOrdered { it.isFile && it.extension == "yaml" }.forEach {
+            val content = it.readText()
+                .replace("'*/*':", "'application/json':")
+                .replace("https://server", "http://0.0.0.0:8080")
+            val distFile = "${openapi_target.absolutePath}/${it.name}"
+            logger.warn("CREATING: $distFile")
+            file(distFile).writeText(content)
         }
     }
 }

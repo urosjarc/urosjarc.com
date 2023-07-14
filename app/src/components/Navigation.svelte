@@ -2,7 +2,7 @@
   import Fab from "@smui/fab";
   import {Icon} from "@smui/common";
 
-  export let cls;
+  export let classes;
   export let icon;
   export let text;
   export let link;
@@ -14,7 +14,7 @@
   export let radius = "50%"
 </script>
 
-<div class="{cls}" on:click={on_click}>
+<div class="{classes}" on:click={on_click}>
   <Fab style="background-color: {color}; border-radius: {radius}" href="{link}">
     <Icon class="material-icons">{icon}</Icon>
     <p class="link">{text}</p>

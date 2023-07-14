@@ -1,58 +1,33 @@
 <script lang="ts">
 
   import DataTable, {Body, Cell, Head, Row} from '@smui/data-table';
-  import {onMount} from "svelte";
-  import {profil} from "../../../../stores/profilStore";
-  import type {data, domain} from "../../../../types/server-core.d.ts";
-  import Oseba = domain.Oseba;
-  import Naslov = domain.Naslov;
-  import KontaktData = data.KontaktData;
-  import {dateDistance, dateFormat, toDate} from "../../../../libs/utils";
-  import {api} from "../../../../stores/apiStore";
   import Accordion, {Content, Header, Panel} from "@smui-extra/accordion";
+  import {API} from "../../../../stores/apiStore";
 
-  let oseba: Oseba = {}
-  let naslovi: Array<Naslov> = []
-  let kontakt_refs: Array<KontaktData> = []
   let audits = []
   let audits_loaded = false
 
-  onMount(() => {
-    let osebaData = profil.get()
-    oseba = osebaData.oseba
-    naslovi = osebaData.naslov_refs
-    kontakt_refs = osebaData.kontakt_refs
-  })
 
   function load_audits() {
     if (!audits_loaded) {
       api.profil_audits().then(data => {
-        let datum_audits = {}
-        for (let audit of data) {
-          let datum = dateFormat(audit.ustvarjeno)
-          let trajanje = core.trajanje_minut(audit.trajanje)
-          console.log(trajanje, '==================')
-          if (datum in datum_audits){
-            datum_audits[datum].value += 1
-            datum_audits[datum].trajanje += trajanje
-          }
-          else datum_audits[datum] = {value: 1, dni: dateDistance(audit.ustvarjeno), datum: datum, trajanje: trajanje}
-        }
-        audits = Object.values(datum_audits).sort((e0, e1) => e0.dni - e1.dni).slice(0, 30)
-      }).catch(err => {
-        console.error(err)
+        console.log(core.pogledi.ProfilOsebaAudits.Companion.decode(data))
       })
     }
     audits_loaded = true
   }
 
+  const api = API()
+  const vars = {
+    res =
 
+  }
 </script>
 
 <div>
   <Accordion>
     <Panel open>
-      <Header on:click={load_audits} class="royalblue">
+      <Header on:click={load_audits} class="col-royalblue">
         <h3 style="text-align: center; margin: 0">Profil</h3>
       </Header>
       <Content style="padding: 0">
@@ -86,7 +61,7 @@
       </Content>
     </Panel>
     <Panel close>
-      <Header on:click={load_audits} class="royalblue">
+      <Header on:click={load_audits} class="col-royalblue">
         <h3 style="text-align: center; margin: 0">Dejavnost</h3>
       </Header>
       <Content style="padding: 0">

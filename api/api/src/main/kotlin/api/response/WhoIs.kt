@@ -1,4 +1,4 @@
-package api.models
+package api.response
 
 import kotlinx.serialization.Serializable
 import extends.ime

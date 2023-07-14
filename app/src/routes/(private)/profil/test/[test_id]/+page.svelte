@@ -115,7 +115,7 @@
   <div class="row justify-content-evenly align-items-center p-2" style="border-style: solid; border-width: 1px; border-color: lightgray">
     <canvas class="col-4 p-0" id="chart"></canvas>
     <div class="col p-2">
-      <DataTable class="shadow-low" style="width: 100%">
+      <DataTable class="senca-mala" style="width: 100%">
         <Body>
         <Row>
           <Cell numeric><b>Datum:</b></Cell>

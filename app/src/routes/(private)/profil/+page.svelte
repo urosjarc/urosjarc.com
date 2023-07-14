@@ -20,13 +20,13 @@
 </script>
 
 <div>
-  <DataTable style="width: 100%">
+  <DataTable class="razsiri">
     <Head>
       <Row>
-        <Cell><p class="naslov-stolpca">Naslov</p></Cell>
-        <Cell numeric><p class="naslov-stolpca">Rešeno</p></Cell>
-        <Cell><p class="naslov-stolpca">Ostalo</p></Cell>
-        <Cell><p class="naslov-stolpca">Deadline</p></Cell>
+        <Cell><b>Naslov</b></Cell>
+        <Cell numeric><p>Rešeno</p></Cell>
+        <Cell><b>Ostalo</b></Cell>
+        <Cell><b>Deadline</b></Cell>
       </Row>
     </Head>
     <Body>
@@ -45,9 +45,3 @@
 
   </DataTable>
 </div>
-
-<style>
-  .naslov-stolpca {
-    font-weight: bolder;
-  }
-</style>

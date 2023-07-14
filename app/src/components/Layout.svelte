@@ -1,7 +1,7 @@
 <script>
   export let lg_size = 6
   export let sm_size = 11
-  export let cls = ""
+  export let vsebina_classes = ""
 </script>
 
 
@@ -13,7 +13,7 @@
       <div id="navigacija" class="row">
         <slot name="navigation"/>
       </div>
-      <div id="vsebina" class="{cls}">
+      <div id="vsebina" class="{vsebina_classes}">
         <slot name="body"/>
       </div>
 
@@ -33,7 +33,7 @@
   }
 
   #vsebina {
-    background-color: white;
+    background-color: #ffffff;
     border-radius: 5px;
   }
 </style>

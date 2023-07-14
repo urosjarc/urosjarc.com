@@ -4,12 +4,13 @@
   import {Separator} from '@smui/list';
   import {onMount} from "svelte";
   import {route} from "../stores/routeStore";
+  import {hacker} from "../libs/hacker";
 
-  onMount(() => core.hacker(0));
+  onMount(() => hacker(0));
 </script>
 
 <div>
-  <div style="padding-top: 5px !important; text-align: center;">
+  <div style="padding-top: 5px; text-align: center">
 
     <h1 class="hacker">Uroš Jarc</h1>
     <h2 class="hacker">Inštruktor programiranja, fizike, matematike</h2>
@@ -18,16 +19,16 @@
       <Icon class="material-icons">email</Icon>
       <b class="hacker">jar.fmf@gmail.com</b>
     </Button>
+
     <Button href="{route.kontakt}">
       <Icon class="material-icons">phone</Icon>
       <b class="hacker">051-240-885</b>
     </Button>
 
-    <Group style="display: flex; justify-content: stretch;margin:20px 0 0 0;">
-      <Button variant="raised" href="{route.kontakt}" color="primary" style="flex-grow: 1; border-radius: 0">
-        <b class="hacker">Naroči inštrukcije</b>
-      </Button>
-    </Group>
+    <Button style="margin-top: 15px" class="razsiri-gumb" variant="raised" href="{route.kontakt}">
+      <b class="hacker">Naroči inštrukcije</b>
+    </Button>
+
   </div>
 
   <Separator/>
@@ -48,5 +49,4 @@
     text-align: center;
     width: 100%;
   }
-
 </style>

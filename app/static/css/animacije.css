@@ -1,0 +1,28 @@
+#anim-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+}
+
+.anim-blink {
+  animation-name: anim-blink;
+  width: 280px;
+  animation-duration: 1s;
+  animation-timing-function: ease-in;
+  animation-iteration-count: Infinite;
+}
+
+@keyframes anim-blink {
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  0% {
+    opacity: 0.3;
+  }
+}

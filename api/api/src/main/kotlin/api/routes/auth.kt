@@ -1,8 +1,14 @@
 package api.routes
 
+import api.extend.profil
+import api.response.Profil
+import api.response.profil
+import app.base.Env
+import app.services.DbService
 import com.auth0.jwk.JwkProvider
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import domain.Oseba
 import io.ktor.resources.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -15,13 +21,8 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
-import api.extend.profil
-import api.models.Profil
-import api.models.profil
 import si.urosjarc.server.api.response.PrijavaReq
-import app.base.Env
-import app.services.DbService
-import domain.Oseba
+import si.urosjarc.server.api.response.PrijavaRes
 import java.security.KeyFactory
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
@@ -62,7 +63,7 @@ fun Route.auth(jwkProvider: JwkProvider) {
             .withExpiresAt(Date(System.currentTimeMillis() + 5 * 60 * 1000))
             .sign(Algorithm.RSA256(publicKey as RSAPublicKey, privateKey as RSAPrivateKey))
 
-        this.call.respond(mapOf("token" to token))
+        this.call.respond(PrijavaRes(token = token))
     }
 
     this.authenticate {

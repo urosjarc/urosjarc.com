@@ -3,6 +3,8 @@ package app.base
 object Env {
     val PORT: Int = System.getenv("PORT").toInt()
 
+    val SENTRY_URL: String = System.getenv("SENTRY_URL")
+
     val DB_URL: String = System.getenv("DB_URL")
     val DB_NAME: String = System.getenv("DB_NAME")
 

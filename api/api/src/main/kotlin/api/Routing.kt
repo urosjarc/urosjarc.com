@@ -1,6 +1,18 @@
 package api
 
+import api.extend.client_unauthorized
+import api.response.Profil
+import api.plugins.PreveriProfil
+import api.plugins.SentryPlugin
+import api.routes.admin
+import api.routes.auth
+import api.routes.index
+import api.routes.profil
+import app.base.App
+import app.base.Env
+import app.services.DbService
 import com.auth0.jwk.JwkProviderBuilder
+import domain.Oseba
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -11,34 +23,22 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.resources.*
 import io.ktor.server.routing.*
+import kotlinx.datetime.serializers.LocalDateIso8601Serializer
+import kotlinx.datetime.serializers.LocalDateTimeIso8601Serializer
+import kotlinx.datetime.serializers.LocalTimeIso8601Serializer
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.contextual
-import org.bson.codecs.kotlinx.ObjectIdSerializer
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
-import api.extend.client_unauthorized
-import api.models.Profil
-import api.plugins.PreveriProfil
-import api.routes.admin
-import api.routes.auth
-import api.routes.index
-import api.routes.profil
-import app.base.App
-import app.base.Env
-import app.services.DbService
-import domain.Oseba
-import kotlinx.datetime.serializers.InstantIso8601Serializer
-import kotlinx.datetime.serializers.LocalDateIso8601Serializer
-import kotlinx.datetime.serializers.LocalDateTimeIso8601Serializer
-import kotlinx.datetime.serializers.LocalTimeIso8601Serializer
 import java.util.concurrent.TimeUnit
 
 
 @OptIn(ExperimentalSerializationApi::class)
 fun Application.configureRouting() {
+    this.install(SentryPlugin)
     this.install(CallLogging) {
         this.level = org.slf4j.event.Level.INFO
     }
@@ -55,7 +55,6 @@ fun Application.configureRouting() {
     this.install(ContentNegotiation) {
         this.json(Json {
             serializersModule = SerializersModule {
-                contextual(ObjectIdSerializer)
                 contextual(LocalDateTimeIso8601Serializer)
                 contextual(LocalTimeIso8601Serializer)
                 contextual(LocalDateIso8601Serializer)

@@ -1,11 +1,7 @@
 package domain
 
 import kotlinx.serialization.Serializable
-import kotlin.js.ExperimentalJsExport
-import kotlin.js.JsExport
 
-@OptIn(ExperimentalJsExport::class)
-@JsExport
 @Serializable
 data class Ucenje(
     override var _id: String? = null,

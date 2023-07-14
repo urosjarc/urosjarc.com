@@ -15,7 +15,8 @@
     "scripts-sitemap": "./venv/bin/python scripts/sitemap.py",
     "scripts-upload": "./venv/bin/python scripts/upload.py",
     "prepare": "npm run smui-theme",
-    "smui-theme": "smui-theme compile static/css/smui.css -i src/theme"
+    "smui-theme": "smui-theme compile static/libs/css/smui.css -i src/theme",
+    "generate": "openapi --client fetch --name Api --postfixServices '' --input src/api/documentation.yaml --output ./src/api"
   },
   "devDependencies": {
     "@fontsource/fira-mono": "^4.5.10",
@@ -28,6 +29,8 @@
     "@typescript-eslint/parser": "^5.45.0",
     "eslint": "^8.28.0",
     "eslint-plugin-svelte3": "^4.0.0",
+    "openapi-typescript-codegen": "^0.25.0",
+    "smui-theme": "^7.0.0-beta.8",
     "svelte": "^3.54.0",
     "svelte-check": "^3.0.1",
     "tslib": "^2.4.1",
@@ -35,6 +38,7 @@
     "vite": "^4.3.0"
   },
   "dependencies": {
+    "@sentry/sveltekit": "^7.58.1",
     "@smui-extra/accordion": "^7.0.0-beta.14",
     "@smui/button": "^7.0.0-beta.8",
     "@smui/common": "^7.0.0-beta.8",
@@ -46,7 +50,6 @@
     "@smui/list": "^7.0.0-beta.8",
     "@smui/textfield": "^7.0.0-beta.8",
     "chart.js": "^4.3.0",
-    "smui-theme": "^7.0.0-beta.8",
     "svelte-local-storage-store": "^0.5.0"
   }
 }

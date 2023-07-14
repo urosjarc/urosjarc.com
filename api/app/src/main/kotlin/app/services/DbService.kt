@@ -21,6 +21,8 @@ import kotlinx.datetime.LocalDateTime
 import org.apache.logging.log4j.kotlin.logger
 import org.bson.types.ObjectId
 import kotlin.random.Random
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
@@ -118,7 +120,7 @@ class DbService(val db_url: String, val db_name: String) {
 
                         (1..Random.nextInt(0, 5)).forEach {
                             val audit = Audit(
-                                entitete_id = arrayOf(
+                                entitete_id = listOf(
                                     oseba._id.toString(),
                                     status.test_id.toString(),
                                     status._id.toString()
@@ -335,9 +337,9 @@ class DbService(val db_url: String, val db_name: String) {
         val audit = Audit(
             entiteta = ime<Status>(),
             tip = Audit.Tip.STATUS_POSODOBITEV,
-            trajanje = sekund.toDuration(unit = DurationUnit.SECONDS),
+            trajanje = sekund.toDuration(DurationUnit.MINUTES),
             opis = r.tip.name,
-            entitete_id = arrayOf(id, oseba_id, test_id)
+            entitete_id = listOf(id, oseba_id, test_id)
         )
 
         this.ustvari(audit)

@@ -1,0 +1,32 @@
+* {
+  font-family: 'Roboto Mono', monospace !important;
+}
+
+i {
+  font-family: 'Material Icons', monospace !important;
+}
+
+html {
+  background-color: skyblue;
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+body {
+  margin: 10px 0 30px 0;
+  background-color: rgba(0, 0, 0, 0.0) !important;
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+body::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+form {
+  margin: 0 !important;
+}
+
+form > div {
+  margin: 0 0 12px 0 !important;
+}

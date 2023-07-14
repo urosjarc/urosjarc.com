@@ -1,11 +1,19 @@
 import {persisted} from "svelte-local-storage-store";
 import {get} from "svelte/store";
-import type {data, domain} from "../types/server-core.d.ts";
+import type {OsebaData} from "../api";
 
 export const profil = {
-  store: persisted('profilStore', null),
-  get: (): core.data.OsebaData => get(profil.store),
-  set: (data: string) => profil.store.set(data),
-  clear: () => profil.set(null),
-  exists: () => profil.get() != null,
+  store: persisted('profilStore', {}),
+  get(): OsebaData {
+    return get(this.store)
+  },
+  set(osebaData: OsebaData) {
+    this.store.set(osebaData)
+  },
+  clear() {
+    this.set({})
+  },
+  exists() {
+    return Object.keys(this.get()).length > 0
+  },
 }

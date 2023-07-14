@@ -66,27 +66,27 @@
         </Content>
       </Panel>
       <Panel>
-        <Header class="royalblue">
+        <Header class="col-royalblue">
           <h3 style="text-align: center; margin: 0">Resitev</h3>
         </Header>
         <Content style="padding: 0">
           <img width="100%" src="{naloga.resitev}">
 
           <Group style="display: flex; justify-content: stretch; width: 100%">
-            <Button on:click={() => koncaj(core.domain.Status.Tip.NERESENO.name)} class="red" style="flex-grow: 1; border-radius: 0">
+            <Button on:click={() => koncaj(core.domain.Status.Tip.NERESENO.name)} class="col-red" style="flex-grow: 1; border-radius: 0">
               <b>{core.domain.Status.Tip.NERESENO.name}</b>
             </Button>
-            <Button on:click={() => koncaj(core.domain.Status.Tip.NAPACNO.name)} class="orange" style="flex-grow: 1">
+            <Button on:click={() => koncaj(core.domain.Status.Tip.NAPACNO.name)} class="col-orange" style="flex-grow: 1">
               <b>{core.domain.Status.Tip.NAPACNO.name}</b>
             </Button>
-            <Button on:click={() => koncaj(core.domain.Status.Tip.PRAVILNO.name)} class="forestgreen" style="flex-grow: 1; border-radius: 0">
+            <Button on:click={() => koncaj(core.domain.Status.Tip.PRAVILNO.name)} class="col-forestgreen" style="flex-grow: 1; border-radius: 0">
               <b>{core.domain.Status.Tip.PRAVILNO.name}</b>
             </Button>
           </Group>
         </Content>
       </Panel>
       <Panel>
-        <Header class="royalblue" on:click={load_audits}>
+        <Header class="col-royalblue" on:click={load_audits}>
           <h3 style="text-align: center; margin: 0">Dejavnost</h3>
         </Header>
         <Content style="padding: 0">

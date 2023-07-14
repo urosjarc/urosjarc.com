@@ -12,45 +12,45 @@
 <form class="row" action="https://formspree.io/f/mayaagwp" method="POST">
 
   <div class="col-sm-12 col-xl-4">
-    <Textfield
-      required
-      style="width: 100%;"
-      input$name="name" bind:value={ime_priimek} label="Ime in priimek">
+    <Textfield required class="razsiri"
+               input$name="name"
+               bind:value={ime_priimek}
+               label="Ime in priimek">
       <Icon class="material-icons" slot="leadingIcon">person</Icon>
     </Textfield>
   </div>
+
   <div class="col-sm-6 col-xl-4">
-    <Textfield
-      required
-      style="width: 100%;"
-      input$name="email" bind:value={email} label="Email">
+    <Textfield required class="razsiri"
+               input$name="email"
+               bind:value={email}
+               label="Email">
       <Icon class="material-icons" slot="leadingIcon">email</Icon>
     </Textfield>
   </div>
+
   <div class="col-sm-6 col-xl-4">
-    <Textfield
-      required
-      style="width: 100%;"
-      input$name="telefon" bind:value={telefon} label="Telefon">
+    <Textfield required class="razsiri"
+               input$name="telefon"
+               bind:value={telefon}
+               label="Telefon">
       <Icon class="material-icons" slot="leadingIcon">phone</Icon>
     </Textfield>
   </div>
+
   <div class="col-sm-12">
-    <Textfield
-      required
-      style="width: 100%; height:270px;"
-      input$name="vsebina"
-      textarea
-      bind:value={vsebina}
-      label="Sporočilo">
+    <Textfield required class="razsiri" style="height:270px;"
+               input$name="vsebina"
+               textarea
+               bind:value={vsebina}
+               label="Sporočilo">
     </Textfield>
   </div>
 
   <div class="col-12">
-    <Group style="display: flex; justify-content: stretch;">
-      <Button variant="raised" type="submit" color="primary" style="flex-grow: 1;">
+      <Button class="razsiri" variant="raised" type="submit">
         <b>Pošlji sporočilo</b>
       </Button>
-    </Group>
   </div>
+
 </form>
