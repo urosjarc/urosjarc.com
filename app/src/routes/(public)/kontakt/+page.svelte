@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Button, {Group} from '@smui/button';
+  import Button from '@smui/button';
   import Textfield from '@smui/textfield';
   import Icon from '@smui/textfield/icon';
 
@@ -39,7 +39,7 @@
   </div>
 
   <div class="col-sm-12">
-    <Textfield required class="razsiri" style="height:270px;"
+    <Textfield required class="razsiri" style="height:270px"
                input$name="vsebina"
                textarea
                bind:value={vsebina}

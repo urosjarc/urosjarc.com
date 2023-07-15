@@ -1,12 +1,12 @@
 <script>
   import {Icon} from '@smui/common';
-  import Button, {Group} from '@smui/button';
+  import Button from '@smui/button';
   import {Separator} from '@smui/list';
   import {onMount} from "svelte";
   import {route} from "../stores/routeStore";
   import {hacker} from "../libs/hacker";
 
-  onMount(() => hacker(0));
+  onMount(hacker);
 </script>
 
 <div>
@@ -26,7 +26,7 @@
     </Button>
 
     <Button style="margin-top: 15px" class="razsiri-gumb" variant="raised" href="{route.kontakt}">
-      <b class="hacker">Naroči inštrukcije</b>
+      <b class="hacker razsiri-gumb">Naroči inštrukcije</b>
     </Button>
 
   </div>

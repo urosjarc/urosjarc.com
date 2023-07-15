@@ -8,7 +8,7 @@
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "prepare": "npm run smui-theme && gzip -9 -f static/css/smui.css && rm static/css/smui.css",
+    "prepare": "npm run smui-theme && gzip -9 -f static/css/smui.css",
     "smui-theme": "smui-theme compile static/css/smui.css -i src/theme",
     "lint": "eslint .",
     "generate": "openapi --client fetch --name Api --postfixServices '' --input src/api/documentation.yaml --output ./src/api",

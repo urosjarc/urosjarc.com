@@ -8,7 +8,6 @@ export const usecase = {
 
 
   prijava_v_profil(username: string, geslo: string) {
-    if (username.length * geslo.length == 0) return null
     const api = API()
 
     api.postAuthPrijava({username}).then(res => {

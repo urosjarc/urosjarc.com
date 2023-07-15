@@ -62,7 +62,7 @@ function maxTextContentSize(elements: HTMLCollectionOf<Element>) {
   return maxWordSize
 }
 
-export function hacker(delay: number) {
+export function hacker() {
   let elements = document.getElementsByClassName("hacker");
   let maxWordSize = maxTextContentSize(elements);
 

@@ -2,10 +2,6 @@
   font-family: 'Roboto Mono', monospace !important;
 }
 
-i {
-  font-family: 'Material Icons', monospace !important;
-}
-
 html {
   background-color: skyblue;
   -ms-overflow-style: none; /* Internet Explorer 10+ */
@@ -23,10 +19,18 @@ body::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
 }
 
+iframe {
+  border: none;
+}
+
 form {
   margin: 0 !important;
 }
 
 form > div {
   margin: 0 0 12px 0 !important;
+}
+
+i {
+  font-family: 'Material Icons', monospace !important;
 }

@@ -15,17 +15,17 @@
   let geslo = ""
 </script>
 
-<form class="row justify-content-center">
+<form class="row">
 
   <LinearProgress indeterminate={loading}/>
 
-  <div class="col-6">
+  <div class="col-12 col-md-6">
     <Textfield bind:value={username} label="Uporabniško ime" class="razsiri" required>
       <Icon class="material-icons" slot="leadingIcon">person</Icon>
     </Textfield>
   </div>
 
-  <div class="col-6">
+  <div class="col-12 col-md-6">
     <Textfield bind:value={geslo} label="Geslo" class="razsiri" required>
       <Icon class="material-icons" slot="leadingIcon">lock</Icon>
     </Textfield>
