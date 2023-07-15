@@ -6,22 +6,17 @@
   import {onMount} from "svelte";
   import Chart from "chart.js/auto";
   import {average, dateDistance, dateName, mean_error, sum} from "../../../../../libs/utils";
-  import {data, domain} from "../../../../../types/server-core.d.ts";
   import DataTable, {Body, Cell, Row} from "@smui/data-table";
   import {barva_statusa} from "../../../../../libs/stili";
-  import TestData = data.TestData;
-  import Test = domain.Test;
-  import Status = domain.Status;
   import Dialog, {Title, Content, Actions} from '@smui/dialog';
-  import {api} from "../../../../../stores/apiStore";
   import {Separator} from "@smui/list";
 
   const test_id = $page.params.test_id
 
   const tematike = {}
-  const statusi: Map<Status.Tip, number> = {}
-  let testRef: TestData = {}
-  let test: Test = {};
+  const statusi = {}
+  let testRef = {}
+  let test = {};
 
   let stevilo_statusov = 0
   let manjkajoci = 0
@@ -40,70 +35,70 @@
   let mean = 0
   let mean_err = 0
 
-  function show_dialog() {
-    api.profil_test_audits(test_id).then(audits => {
-      for (let audit of audits) {
-        let min = core.trajanje_minut(audit.trajanje)
-        trajanje.push(min)
-        if (audit.opis == core.domain.Status.Tip.PRAVILNO.name) {
-          trajanje_pravilnih.push(min)
-        }
-      }
-      console.log(trajanje_pravilnih, trajanje)
-      min_trajanje = sum(trajanje)
-      min_trajanje_pravilnih = sum(trajanje_pravilnih)
-      st_trajanje = trajanje.length
-      st_trajanje_pravilnih = trajanje_pravilnih.length
-      pravilni_mean = Math.round(average(trajanje_pravilnih) * 10) / 10
-      pravilni_mean_err = Math.round(mean_error(trajanje_pravilnih) * 10) / 10
-      mean = Math.round(average(trajanje) * 10) / 10
-      mean_err = Math.round(mean_error(trajanje) * 10) / 10
-      open = true
-    })
-  }
-
-  onMount(() => {
-    testRef = profil.get().test_refs.find((test_ref) => test_ref.test._id == test_id)
-    testRef.status_refs.forEach((status_ref) => {
-      const info = {
-        status_id: status_ref.status._id,
-        tema: status_ref.naloga_refs[0].tematika_refs[0].naslov,
-        tip: status_ref.status.tip || core.domain.Status.Tip.NEZACETO.name
-      }
-      if (info.tema in tematike) tematike[info.tema].push(info)
-      else tematike[info.tema] = [info]
-
-      if (info.tip in statusi) statusi[info.tip] += 1
-      else statusi[info.tip] = 1
-
-      stevilo_statusov += 1
-    })
-
-    test = testRef.test
-    st_dni = dateDistance(test.deadline)
-    opravljeni = statusi[core.domain.Status.Tip.PRAVILNO.name]
-    nezaceto = statusi[core.domain.Status.Tip.NEZACETO.name]
-    manjkajoci = stevilo_statusov - opravljeni
-
-    new Chart("chart", {
-      type: "pie",
-      data: {
-        labels: Object.keys(statusi),
-        datasets: [{
-          backgroundColor: Object.keys(statusi).map((v) => barva_statusa(v)),
-          data: Object.values(statusi)
-        }]
-      },
-      options: {
-        responsive: false,
-        plugins: {
-          legend: {
-            position: '',
-          }
-        }
-      }
-    });
-  })
+  // function show_dialog() {
+  //   api.profil_test_audits(test_id).then(audits => {
+  //     for (let audit of audits) {
+  //       let min = core.trajanje_minut(audit.trajanje)
+  //       trajanje.push(min)
+  //       if (audit.opis == core.domain.Status.Tip.PRAVILNO.name) {
+  //         trajanje_pravilnih.push(min)
+  //       }
+  //     }
+  //     console.log(trajanje_pravilnih, trajanje)
+  //     min_trajanje = sum(trajanje)
+  //     min_trajanje_pravilnih = sum(trajanje_pravilnih)
+  //     st_trajanje = trajanje.length
+  //     st_trajanje_pravilnih = trajanje_pravilnih.length
+  //     pravilni_mean = Math.round(average(trajanje_pravilnih) * 10) / 10
+  //     pravilni_mean_err = Math.round(mean_error(trajanje_pravilnih) * 10) / 10
+  //     mean = Math.round(average(trajanje) * 10) / 10
+  //     mean_err = Math.round(mean_error(trajanje) * 10) / 10
+  //     open = true
+  //   })
+  // }
+  //
+  // onMount(() => {
+  //   testRef = profil.get().test_refs.find((test_ref) => test_ref.test._id == test_id)
+  //   testRef.status_refs.forEach((status_ref) => {
+  //     const info = {
+  //       status_id: status_ref.status._id,
+  //       tema: status_ref.naloga_refs[0].tematika_refs[0].naslov,
+  //       tip: status_ref.status.tip || core.domain.Status.Tip.NEZACETO.name
+  //     }
+  //     if (info.tema in tematike) tematike[info.tema].push(info)
+  //     else tematike[info.tema] = [info]
+  //
+  //     if (info.tip in statusi) statusi[info.tip] += 1
+  //     else statusi[info.tip] = 1
+  //
+  //     stevilo_statusov += 1
+  //   })
+  //
+  //   test = testRef.test
+  //   st_dni = dateDistance(test.deadline)
+  //   opravljeni = statusi[core.domain.Status.Tip.PRAVILNO.name]
+  //   nezaceto = statusi[core.domain.Status.Tip.NEZACETO.name]
+  //   manjkajoci = stevilo_statusov - opravljeni
+  //
+  //   new Chart("chart", {
+  //     type: "pie",
+  //     data: {
+  //       labels: Object.keys(statusi),
+  //       datasets: [{
+  //         backgroundColor: Object.keys(statusi).map((v) => barva_statusa(v)),
+  //         data: Object.values(statusi)
+  //       }]
+  //     },
+  //     options: {
+  //       responsive: false,
+  //       plugins: {
+  //         legend: {
+  //           position: '',
+  //         }
+  //       }
+  //     }
+  //   });
+  // })
 
 
 </script>

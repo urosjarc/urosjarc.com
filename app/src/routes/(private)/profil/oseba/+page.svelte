@@ -18,10 +18,6 @@
   }
 
   const api = API()
-  const vars = {
-    res =
-
-  }
 </script>
 
 <div>

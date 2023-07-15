@@ -11,15 +11,12 @@
   $error: color-palette.$red-900
 );
 
-html,
-body {
-  background-color: theme.$surface;
-  color: theme.$on-surface;
-}
+@import "libs/bootstrap-grid.min";
+@import "libs/material-icons";
+@import "libs/roboto-mono";
 
-a {
-  color: royalblue;
-}
-a:visited {
-  color: color.scale(royalblue, $lightness: 0%);
-}
+@import "style/dom";
+@import "style/animacije";
+@import "style/barve";
+@import "style/oblike";
+@import "style/sence";
