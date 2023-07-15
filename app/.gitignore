@@ -3,9 +3,9 @@ build
 node_modules
 venv
 
-src/types
 src/api
 
 static/sitemap.xml
+static/css
 
 .env
