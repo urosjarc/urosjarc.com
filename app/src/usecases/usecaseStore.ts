@@ -1,30 +1,13 @@
-import {token} from "./tokenStore";
-import {profil} from "./profilStore";
-import {API} from "./apiStore";
-import {route} from "./routeStore";
+import {token} from "../stores/tokenStore";
+import {profil} from "../stores/profilStore";
+import {API} from "../stores/apiStore";
+import {route} from "../stores/routeStore";
 import {goto} from "$app/navigation";
+import type {Profil} from "../api";
+
 
 export const usecase = {
 
-
-  prijava_v_profil(username: string, geslo: string) {
-    const api = API()
-
-    api.postAuthPrijava({username}).then(res => {
-
-      if (res.token) {
-        token.set(res.token)
-        return api.getProfil()
-      } else throw new Error("Token ne obstaja v requestu!")
-
-    }).then((res) => {
-
-      console.log(res)
-      profil.set(res)
-      goto(route.profil)
-
-    })
-  }
 
 
 }
