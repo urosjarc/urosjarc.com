@@ -10,6 +10,10 @@ export interface Prijavljen_v_profilParams {
   uspeh(): void;
 
   fatal(err: any): void;
+
+  error(err: any): void;
+
+  warn(err: any): void;
 }
 
 
@@ -20,6 +24,5 @@ export async function prijavljen_v_profil(CB: Prijavljen_v_profilParams) {
     const osebaData = await API().getProfil()
     profil.set(osebaData)
     CB.uspeh()
-    await goto(route.profil)
   })
 }

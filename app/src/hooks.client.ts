@@ -22,11 +22,11 @@ Sentry.init({
 // If you have a custom error handler, pass it to `handleErrorWithSentry`
 export const handleError = handleErrorWithSentry();
 
-console.group("Init")
+console.group("PATH", "/")
 navigating.subscribe(nav => {
   if (nav) {
-    console.groupEnd()
-    console.group(nav?.type, nav?.to?.route.id)
+    for (let i = 0; i < 5; i++) console.groupEnd()
+    console.group("PATH", nav?.to?.route.id)
   }
 })
 
@@ -39,15 +39,15 @@ window.fetch = (input: RequestInfo | URL, init?: RequestInit): Promise<Response>
   _id++
   const req = _fetch(input, init)
 
-  console.info(`${id} REQ ${init?.method} `, input, init?.body?.valueOf() || {})
+  console.info(`[${id}] ${init?.method} `, input, init?.body?.valueOf() || {})
   req.then((res) => {
     res.clone().json().then(body => {
-      console.info(`${id} RES ${init?.method} `, input, body)
+      console.info(`(${id})`, body)
     }).catch((err) => {
-      console.error(`${id} RES ${init?.method} `, input, err)
+      console.error(`(${id})`, err)
     })
   }).catch((err) => {
-    console.error(`${id} RES ${init?.method} `, input, err)
+    console.error(`(${id})`, err)
   })
 
   return req

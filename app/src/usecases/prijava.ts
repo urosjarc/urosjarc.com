@@ -1,6 +1,4 @@
 import {API} from "../stores/apiStore";
-import {goto} from "$app/navigation";
-import {route} from "../stores/routeStore";
 import {token} from "../stores/tokenStore";
 import {profil} from "../stores/profilStore";
 import {usecase} from "./usecase";
@@ -12,6 +10,10 @@ interface PrijavaParams {
   uspeh(): void;
 
   fatal(err: any): void
+
+  error(err: any): void
+
+  warn(err: any): void
 }
 
 export async function prijava(CB: PrijavaParams) {
@@ -21,6 +23,5 @@ export async function prijava(CB: PrijavaParams) {
     let osebaData = await API().getProfil()
     profil.set(osebaData)
     CB.uspeh()
-    await goto(route.profil)
   })
 }

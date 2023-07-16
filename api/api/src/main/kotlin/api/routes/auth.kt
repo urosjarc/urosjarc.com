@@ -1,5 +1,6 @@
 package api.routes
 
+import api.extend.client_unauthorized
 import api.extend.profil
 import api.plugins.Profil
 import api.plugins.profil
@@ -49,6 +50,7 @@ fun Route.auth(jwkProvider: JwkProvider) {
         log.info("Body: $body")
 
         //TODO: Naredi pravilno logiko
+        if(body.username == "a") this.call.client_unauthorized()
         val oseba = db.dobi<Oseba>(0).random()
         log.info("Oseba: $oseba")
         //TODO: Naredi pravilno logiko

@@ -1,14 +1,15 @@
 import * as Sentry from "@sentry/sveltekit";
 
+
 export const usecase = {
-  async log(usecase: Function, CB: { fatal: Function }, body: (() => void)) {
+  async log(usecase: Function, CB: { fatal: Function, error: Function, warn: Function }, body: (() => void)) {
 
     console.group("START: ", usecase.name)
 
     for (let cbKey in CB) {
       // @ts-ignore
       let fun = CB[cbKey]
-      if(fun instanceof Function){
+      if (fun instanceof Function) {
         // @ts-ignore
         CB[cbKey] = (...args) => {
           fun(...args)
@@ -20,9 +21,12 @@ export const usecase = {
 
     try {
       await body()
-    } catch (e) {
+    } catch (e: any) {
       Sentry.captureException(e);
-      CB.fatal(e)
+      if (e.status < 500) {
+        if (e.status == 401) CB.warn("Uporabnik ni avtoriziran!")
+        return CB.error(e)
+      } else CB.fatal(e)
     }
   }
 }

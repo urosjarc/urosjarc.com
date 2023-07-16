@@ -5,7 +5,9 @@
   import LinearProgress from '@smui/linear-progress';
   import {prijavljen_v_profil} from "../../../usecases/prijavljen_v_profil";
   import {prijava} from "../../../usecases/prijava";
-  import Napaka from "../../../components/Napaka.svelte";
+  import Alert from "../../../components/Alert.svelte";
+  import {goto} from "$app/navigation";
+  import {route} from "../../../stores/routeStore";
 
 
   function prijava_submit() {
@@ -13,31 +15,45 @@
     prijava({
       username: username,
       uspeh() {
+        goto(route.profil)
       },
       fatal(err) {
-        napaka = err
-        loading = false
+        fatal = err
+      },
+      error(err) {
+        error = err
+      },
+      warn(err) {
+        warn = err
       }
-    })
+    }).finally(() => (loading = false))
   }
 
-  let napaka = ""
+  let fatal = ""
+  let error = ""
+  let warn = ""
+
   let loading = false
   let username = ""
   let geslo = ""
 
   prijavljen_v_profil({
     uspeh() {
+      goto(route.profil)
     },
     fatal(err) {
-      napaka = err
-    }
+    },
+    error(err) {
+    },
+    warn(err) {
+    },
   })
 
 </script>
 
 <div>
-  <Napaka open={napaka} napaka={napaka}/>
+  <Alert fatal={fatal} error={error} warn={warn}/>
+
   <form class="row" on:submit|preventDefault={prijava_submit}>
     <LinearProgress indeterminate={loading}/>
 
