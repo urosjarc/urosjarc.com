@@ -1,8 +1,8 @@
 package api
 
 import api.extend.client_unauthorized
-import api.response.Profil
 import api.plugins.PreveriProfil
+import api.plugins.Profil
 import api.plugins.SentryPlugin
 import api.routes.admin
 import api.routes.auth

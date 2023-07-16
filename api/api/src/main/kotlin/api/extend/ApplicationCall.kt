@@ -1,6 +1,6 @@
 package api.extend
 
-import api.response.Profil
+import api.plugins.Profil
 import api.response.ErrorRes
 import io.ktor.http.*
 import io.ktor.server.application.*

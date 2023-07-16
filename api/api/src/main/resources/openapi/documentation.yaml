@@ -48,7 +48,7 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/PrijavaRes"
-  /auth/whois:
+  /auth/profil:
     get:
       description: ""
       responses:

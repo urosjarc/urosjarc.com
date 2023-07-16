@@ -6,18 +6,19 @@ import {profil} from "../stores/profilStore";
 import {usecase} from "./usecase";
 
 
-export interface Prijavljen_v_profilParams {
+interface PrijavaParams {
+  username: string;
+
   uspeh(): void;
 
-  fatal(err: any): void;
+  fatal(err: any): void
 }
 
-
-export async function prijavljen_v_profil(CB: Prijavljen_v_profilParams) {
-  await usecase.log(prijavljen_v_profil, CB, async () => {
-    if (!token.exists()) return CB.uspeh()
-    await API().getAuthProfil()
-    const osebaData = await API().getProfil()
+export async function prijava(CB: PrijavaParams) {
+  await usecase.log(prijava, CB, async () => {
+    let prijavaRes = await API().postAuthPrijava({username: CB.username})
+    token.set(prijavaRes.token || "")
+    let osebaData = await API().getProfil()
     profil.set(osebaData)
     CB.uspeh()
     await goto(route.profil)

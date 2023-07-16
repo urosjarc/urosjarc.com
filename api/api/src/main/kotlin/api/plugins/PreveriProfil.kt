@@ -1,15 +1,28 @@
 package api.plugins
 
-import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import org.apache.logging.log4j.kotlin.logger
 import api.extend.client_unauthorized
 import api.extend.profil
 import domain.Oseba
+import extends.ime
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import kotlinx.serialization.Serializable
+import org.apache.logging.log4j.kotlin.logger
+
+fun Oseba.profil(): Profil = Profil(id = this._id.toString(), tip = this.tip)
+
+@Serializable
+data class Profil(
+    val id: String,
+    val tip: Oseba.Tip,
+) {
+    companion object {
+        val claim: String = ime<Profil>()
+    }
+}
 
 val PreveriProfil = createRouteScopedPlugin(
-    name = "PreveriProfil",
-    createConfiguration = ::PluginConfiguration
+    name = "PreveriProfil", createConfiguration = ::PluginConfiguration
 ) {
     val tipi: List<Oseba.Tip> = this.pluginConfig.tip_profila
     val log = this.logger()

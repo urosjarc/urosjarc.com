@@ -5,9 +5,7 @@ import type {OsebaData} from "../api";
 export const profil = {
   store: persisted('profilStore', {}),
   get(): OsebaData {
-    const value = get(this.store)
-    console.log("Profil get: ", value)
-    return value
+    return get(this.store)
   },
   set(osebaData: OsebaData) {
     console.log("Profil set: ", osebaData)

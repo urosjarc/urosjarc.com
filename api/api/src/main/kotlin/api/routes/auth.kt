@@ -1,8 +1,8 @@
 package api.routes
 
 import api.extend.profil
-import api.response.Profil
-import api.response.profil
+import api.plugins.Profil
+import api.plugins.profil
 import app.base.Env
 import app.services.DbService
 import com.auth0.jwk.JwkProvider
@@ -34,8 +34,8 @@ class auth {
     @Resource("prijava")
     class prijava(val parent: auth)
 
-    @Resource("whois")
-    class whois(val parent: auth)
+    @Resource("profil")
+    class profil(val parent: auth)
 }
 
 fun Route.auth(jwkProvider: JwkProvider) {
@@ -67,9 +67,9 @@ fun Route.auth(jwkProvider: JwkProvider) {
     }
 
     this.authenticate {
-        this.get<auth.whois> {
-            val profil = this.call.profil()
-            this.call.respond(profil)
+        this.get<auth.profil> {
+            val profilRes = this.call.profil()
+            this.call.respond(profilRes)
         }
     }
 }

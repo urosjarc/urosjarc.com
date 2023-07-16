@@ -5,9 +5,7 @@ export const token = {
   store: persisted('tokenStore', ""),
 
   get() {
-    const value = get(token.store)
-    console.log("Token get: ", value)
-    return value
+    return get(token.store)
   },
   set(data: string) {
     console.log("Token set: ", data)

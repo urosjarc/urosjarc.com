@@ -1,5 +1,5 @@
+import * as Sentry from "@sentry/sveltekit";
 import {handleErrorWithSentry, Replay} from "@sentry/sveltekit";
-import * as Sentry from '@sentry/sveltekit';
 import {navigating} from "$app/stores";
 
 Sentry.init({
@@ -30,25 +30,25 @@ navigating.subscribe(nav => {
   }
 })
 
+var _id = 0
 var _fetch = window.fetch;
 // @ts-ignore
 window.fetch = (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
 
-  console.group(`REQ ${init?.method} `, input, init?.body?.valueOf() || {})
-
+  const id = _id
+  _id++
   const req = _fetch(input, init)
 
-  req.then(
-    (res) => {
-      res.clone().json().then(body => {
-        console.groupEnd()
-        console.info(`RES ${init?.method} `, input, body)
-      })
-    },
-    (err) => {
-      console.groupEnd()
-      console.error(`RES ${init?.method} `, input, err)
+  console.info(`${id} REQ ${init?.method} `, input, init?.body?.valueOf() || {})
+  req.then((res) => {
+    res.clone().json().then(body => {
+      console.info(`${id} RES ${init?.method} `, input, body)
+    }).catch((err) => {
+      console.error(`${id} RES ${init?.method} `, input, err)
     })
+  }).catch((err) => {
+    console.error(`${id} RES ${init?.method} `, input, err)
+  })
 
   return req
 }

@@ -6,11 +6,6 @@ import {goto} from "$app/navigation";
 import type {Profil} from "../api";
 
 
-export const usecase = {
-
-
-
-}
 
 
 // api.auth.prijava({username})

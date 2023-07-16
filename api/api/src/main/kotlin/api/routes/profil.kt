@@ -56,8 +56,8 @@ fun Route.profil() {
     val log = this.logger()
 
     this.get<profil> {
-        val profil = this.call.profil()
-        val oseba_profil = db.profil(id = profil.id)
+        val profilRes = this.call.profil()
+        val oseba_profil = db.profil(id = profilRes.id)
         this.call.respond(oseba_profil)
     }
 
