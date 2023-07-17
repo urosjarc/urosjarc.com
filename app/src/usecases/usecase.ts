@@ -25,8 +25,8 @@ export const usecase = {
       Sentry.captureException(e);
       if (e.status < 500) {
         if (e.status == 401) return CB.warn("Uporabnik ni avtoriziran!")
-        else return CB.error(e)
-      } else CB.fatal(e)
+        else return CB.error(e.body)
+      } else CB.fatal(e.body)
     }
   }
 }

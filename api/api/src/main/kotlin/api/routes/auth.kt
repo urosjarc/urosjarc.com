@@ -1,7 +1,9 @@
 package api.routes
 
+import api.extend.client_error
 import api.extend.client_unauthorized
 import api.extend.profil
+import api.extend.system_error
 import api.plugins.Profil
 import api.plugins.profil
 import app.base.Env
@@ -51,6 +53,8 @@ fun Route.auth(jwkProvider: JwkProvider) {
 
         //TODO: Naredi pravilno logiko
         if(body.username == "a") this.call.client_unauthorized()
+        if(body.username == "b") this.call.client_error(db, info="To je uporabniska napaka!")
+        if(body.username == "c") this.call.system_error(log, info="To je sistemska napaka!")
         val oseba = db.dobi<Oseba>(0).random()
         log.info("Oseba: $oseba")
         //TODO: Naredi pravilno logiko

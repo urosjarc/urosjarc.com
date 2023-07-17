@@ -23,10 +23,8 @@
   <Separator/>
 
   <Content style="text-align: center; padding: 12px !important;">
-    <p>
-      <slot name="vsebina"/>
-    </p>
-    <Button class="razsiri mt-3 {cls}" variant="raised" on:click={zapri}>
+    <slot name="vsebina"/>
+    <Button class="razsiri {cls}" variant="raised" on:click={zapri}>
       <b>Zapri</b>
     </Button>
   </Content>

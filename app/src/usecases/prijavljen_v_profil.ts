@@ -19,7 +19,7 @@ export interface Prijavljen_v_profilParams {
 
 export async function prijavljen_v_profil(CB: Prijavljen_v_profilParams) {
   await usecase.log(prijavljen_v_profil, CB, async () => {
-    if (!token.exists()) return CB.uspeh()
+    if (!token.exists()) return
     await API().getAuthProfil()
     const osebaData = await API().getProfil()
     profil.set(osebaData)
