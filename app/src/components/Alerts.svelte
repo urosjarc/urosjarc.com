@@ -10,7 +10,7 @@
 
 <div>
 
-  <Alert open={fatal} cls="col-red">
+  <Alert bind:open={fatal} cls="col-red">
     <svelte:fragment slot="naslov">
       SISTEMSKA NAPAKA<br>{fatal}
     </svelte:fragment>
@@ -22,7 +22,7 @@
     </svelte:fragment>
   </Alert>
 
-  <Alert open={error} cls="col-red">
+  <Alert bind:open={error} cls="col-red">
     <svelte:fragment slot="naslov">
       UPORABNIŠKA NAPAKA<br>{error}
     </svelte:fragment>
@@ -33,9 +33,9 @@
     </svelte:fragment>
   </Alert>
 
-  <Alert open={error} cls="col-orange">
+  <Alert bind:open={warn} cls="col-orange">
     <svelte:fragment slot="naslov">
-      OPOZORILO<br>{error}
+      OPOZORILO
     </svelte:fragment>
     <svelte:fragment slot="vsebina">
       {warn}

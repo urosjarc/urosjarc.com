@@ -6,6 +6,6 @@ venv
 src/api
 
 static/sitemap.xml
-static/css
+static/gz
 
 .env

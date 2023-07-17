@@ -5,9 +5,9 @@
   import LinearProgress from '@smui/linear-progress';
   import {prijavljen_v_profil} from "../../../usecases/prijavljen_v_profil";
   import {prijava} from "../../../usecases/prijava";
-  import Alert from "../../../components/Alert.svelte";
   import {goto} from "$app/navigation";
   import {route} from "../../../stores/routeStore";
+  import Alerts from "../../../components/Alerts.svelte";
 
 
   function prijava_submit() {
@@ -52,7 +52,7 @@
 </script>
 
 <div>
-  <Alert fatal={fatal} error={error} warn={warn}/>
+  <Alerts bind:fatal={fatal} bind:error={error} bind:warn={warn}/>
 
   <form class="row" on:submit|preventDefault={prijava_submit}>
     <LinearProgress indeterminate={loading}/>
