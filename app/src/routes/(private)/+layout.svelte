@@ -1,7 +1,7 @@
 <script lang="ts">
-  import {route} from "../../stores/routeStore";
-  import Navigation from "../../components/Navigation.svelte";
-  import Layout from "../../components/Layout.svelte";
+  import {route} from "$lib/stores/routeStore";
+  import Navigation from "$lib/components/Navigation.svelte";
+  import Layout from "$lib/components/Layout.svelte";
 
   function odjava(){
     console.log("odjava")

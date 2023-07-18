@@ -1,11 +1,11 @@
 <script lang="ts">
   import {goto} from "$app/navigation";
-  import {route} from "../../../stores/routeStore";
+  import {route} from "$lib/stores/routeStore";
   import DataTable, {Body, Cell, Head, Row} from "@smui/data-table"
   import {onMount} from "svelte";
-  import Alerts from "../../../components/Alerts.svelte";
-  import {data} from "./data";
+  import Alerts from "$lib/components/Alerts.svelte";
   import type {Data} from "./data";
+  import {data} from "./data";
 
   function goto_test(id) {
     goto(route.profil_test_id(id))
@@ -13,17 +13,17 @@
 
   onMount(() => {
     data({
-      error(p0) {
-        error = p0
+      error(err: any): void {
+        error = err
       },
-      fatal(p0) {
-        fatal = p0
+      fatal(err: any): void {
+        fatal = err
       },
-      warn(p0) {
-        warn = p0
+      warn(err: any): void {
+        warn = err
       },
-      uspeh(datas: Array<Data>): void {
-        _datas = datas
+      uspeh(data: Array<Data>): void {
+        _datas = data
       }
     })
   })

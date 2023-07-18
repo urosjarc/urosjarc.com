@@ -1,8 +1,8 @@
 import {API} from "../stores/apiStore";
 import {token} from "../stores/tokenStore";
 import {profil} from "../stores/profilStore";
-import type {ExeCallback} from "../libs/execute";
-import {execute} from "../libs/execute";
+import type {ExeCallback} from "../execute";
+import {execute} from "../execute";
 
 
 interface PrijavaCallback extends ExeCallback {
@@ -15,6 +15,6 @@ export async function prijava(callback: PrijavaCallback) {
     token.set(prijavaRes.token || "")
     let osebaData = await API().getProfil()
     profil.set(osebaData)
-    callback.uspeh()
+    callback.uspeh(null)
   })
 }

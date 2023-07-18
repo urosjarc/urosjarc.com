@@ -2,48 +2,50 @@
   import Accordion, {Content, Header, Panel} from '@smui-extra/accordion';
   import {page} from "$app/stores";
   import Button, {Group} from "@smui/button";
-  import {time, timeFormat} from "../../../../../../../libs/utils";
-  import type {data, domain} from "../../../../../../../types/server-core.d.ts";
+  import {time, timeFormat} from "$lib/utils";
   import DataTable, {Body, Cell, Head, Row} from "@smui/data-table";
-  import {dateFormat} from "../../../../../../../libs/utils.js";
-  import {barva_statusa} from "../../../../../../../libs/stili";
+  import {Status} from "$lib/api";
+  import {onMount} from "svelte";
+  import {Data, data} from "./data";
 
-  const test_id = $page.params.test_id
-  const status_id = $page.params.status_id
-  let loaded = false
-  let audits_loaded = false
-  let seconds = 0
-  let testRef = {}
-  let statusRef = {}
-  let naloga = {}
-  let audits: Array<domain.Audit> = []
+  function load_audits(){
+    audits({
 
-  // function koncaj(status_tip) {
-  //   usecase.posodobi_status(test_id, status_id, status_tip, seconds)
-  // }
-
-  function load_audits() {
-    if (!audits_loaded) {
-      api.profil_status_audits(test_id, status_id).then(data => {
-        audits = data
-      }).catch(err => {
-        console.error(err)
-      })
-    }
-    audits_loaded = true
+    })
   }
 
-  // onMount(() => {
-  //   testRef = profil.get().test_refs.find((test_ref) => test_ref.test._id == test_id)
-  //   statusRef = testRef.status_refs.find((status_ref) => status_ref.status._id == status_id)
-  //   naloga = statusRef.naloga_refs[0].naloga
-  //   loaded = true
-  //
-  // })
+  onMount(() => {
+    data({
+      test_id: test_id,
+      status_id: status_id,
+      error(err: any): void {
+        error = err
+      },
+      fatal(err: any): void {
+        fatal = err
+      },
+      warn(err: any): void {
+        warn = err
+      },
+      uspeh(data: Data): void {
+        _data = data
+      },
+    })
+
+  })
 
   setInterval(() => {
     seconds += 1
   }, 1000)
+
+  let seconds = 0
+  let loaded = false
+  const test_id = $page.params.test_id
+  const status_id = $page.params.status_id
+  let _data: Data = {}
+  let error = ""
+  let fatal = ""
+  let warn = ""
 </script>
 
 <div class="row">
@@ -51,11 +53,11 @@
   {#if loaded}
     <Accordion>
       <Panel open>
-        <Header class="{barva_statusa(statusRef.status.tip)}">
+        <Header class="{_data.cls}">
           <h1 style="text-align: center">{time(seconds)}</h1>
         </Header>
         <Content style="padding: 0">
-          <img width="100%" src="{naloga.vsebina}">
+          <img width="100%" src="{_data.vsebina_src}">
         </Content>
       </Panel>
       <Panel>
@@ -63,17 +65,17 @@
           <h3 style="text-align: center; margin: 0">Resitev</h3>
         </Header>
         <Content style="padding: 0">
-          <img width="100%" src="{naloga.resitev}">
+          <img width="100%" src="{_data.resitev_src}">
 
           <Group style="display: flex; justify-content: stretch; width: 100%">
-            <Button on:click={() => koncaj(core.domain.Status.Tip.NERESENO.name)} class="col-red" style="flex-grow: 1; border-radius: 0">
-              <b>{core.domain.Status.Tip.NERESENO.name}</b>
+            <Button on:click={() => koncaj(Status.tip.NERESENO)} class="col-red" style="flex-grow: 1; border-radius: 0">
+              <b>{Status.tip.NERESENO}</b>
             </Button>
-            <Button on:click={() => koncaj(core.domain.Status.Tip.NAPACNO.name)} class="col-orange" style="flex-grow: 1">
-              <b>{core.domain.Status.Tip.NAPACNO.name}</b>
+            <Button on:click={() => koncaj(Status.tip.NAPACNO)} class="col-orange" style="flex-grow: 1">
+              <b>{Status.tip.NAPACNO}</b>
             </Button>
-            <Button on:click={() => koncaj(core.domain.Status.Tip.PRAVILNO.name)} class="col-forestgreen" style="flex-grow: 1; border-radius: 0">
-              <b>{core.domain.Status.Tip.PRAVILNO.name}</b>
+            <Button on:click={() => koncaj(Status.tip.PRAVILNO)} class="col-forestgreen" style="flex-grow: 1; border-radius: 0">
+              <b>{Status.tip.PRAVILNO}</b>
             </Button>
           </Group>
         </Content>

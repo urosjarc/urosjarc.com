@@ -1,14 +1,11 @@
-import type {TestData} from "../../../api";
-import {Status} from "../../../api";
-import type {ExeCallback} from "../../../libs/execute";
-import {execute} from "../../../libs/execute";
-import {profil} from "../../../stores/profilStore";
-import {String_vDate} from "../../../extends/String";
-import {Date_ime_dneva, Date_oddaljenost_v_dneh} from "../../../extends/Date";
-import {
-  TestData_css_class,
-  TestData_razmerje_statusov,
-} from "../../../extends/TestData";
+import type {TestData} from "$lib/api";
+import {Status} from "$lib/api";
+import type {ExeCallback} from "$lib/execute";
+import {execute} from "$lib/execute";
+import {profil} from "$lib/stores/profilStore";
+import {String_vDate} from "$lib/extends/String";
+import {Date_ime_dneva, Date_oddaljenost_v_dneh} from "$lib/extends/Date";
+import {TestData_css_class, TestData_razmerje_statusov,} from "$lib/extends/TestData";
 
 export interface Data {
   id: string,
@@ -21,13 +18,13 @@ export interface Data {
 
 interface Callback extends ExeCallback {
 
-  uspeh(datas: Array<Data>): void;
+  uspeh(data: Data[]): void;
 
 }
 
 export async function data(callback: Callback) {
   await execute(data, callback, () => {
-    const result: Array<Data> = [];
+    const result: Data[] = [];
     (profil.get().test_refs || []).forEach((testData: TestData) => {
 
       const test = testData.test || {}

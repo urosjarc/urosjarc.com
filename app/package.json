@@ -11,7 +11,7 @@
     "prepare": "npm run smui-theme && gzip -9 -f static/gz/smui.css",
     "smui-theme": "smui-theme compile static/gz/smui.css -i src/theme",
     "lint": "eslint .",
-    "generate": "openapi --client fetch --name Api --postfixServices '' --input src/api/documentation.yaml --output ./src/api",
+    "generate": "openapi --client fetch --name Api --postfixServices '' --input src/lib/api/documentation.yaml --output ./src/api",
     "generate-venv": "python3 -m venv venv && ./venv/bin/pip install -r requirements.txt",
     "scripts-api": "./venv/bin/python scripts/api.py",
     "scripts-sitemap": "./venv/bin/python scripts/sitemap.py",

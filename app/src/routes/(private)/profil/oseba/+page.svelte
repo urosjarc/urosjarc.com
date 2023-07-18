@@ -4,38 +4,38 @@
   import type {Data} from "./data";
   import {data} from "./data";
   import {onMount} from "svelte";
+  import type {AuditsData} from "./audits";
   import {audits} from "./audits";
-  import {Audit} from "../../../../api";
   import Alerts from "../../../../components/Alerts.svelte";
 
   function load_audits() {
     audits({
-      uspeh(audit_arr: Audit[]): void {
-        _audits = audit_arr
+      error(err: any): void {
+        error = err
+      },
+      fatal(err: any): void {
+        fatal = err
+      },
+      warn(err: any): void {
+        warn = err
+      },
+      uspeh(data: AuditsData[]): void {
+        _audits = data
         audits_show = true
-      },
-      error(p0) {
-        error = p0
-      },
-      fatal(p0) {
-        fatal = p0
-      },
-      warn(p0) {
-        warn = p0
       }
     })
   }
 
   onMount(() => {
     data({
-      error(p0) {
-        error = p0
+      error(err: any): void {
+        error = err
       },
-      fatal(p0) {
-        fatal = p0
+      fatal(err: any): void {
+        fatal = err
       },
-      warn(p0) {
-        warn = p0
+      warn(err: any): void {
+        warn = err
       },
       uspeh(data: Data) {
         oseba = data.oseba

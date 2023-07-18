@@ -1,11 +1,11 @@
 import * as Sentry from "@sentry/sveltekit";
-import {ApiError} from "../api";
+import {ApiError} from "./api";
 
 export interface ExeCallback {
-  uspeh: Function,
-  fatal: Function,
-  error: Function,
-  warn: Function
+  uspeh: (data: any) => void
+  fatal: (err: any) => void
+  error: (err: any) => void
+  warn: (err: any) => void
 }
 
 export async function execute(fun: Function, callback: ExeCallback, fun_body: (() => void)) {

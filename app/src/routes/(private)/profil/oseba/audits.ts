@@ -1,11 +1,11 @@
-import {API} from "../../../../stores/apiStore";
-import type {ExeCallback} from "../../../../libs/execute";
-import {execute} from "../../../../libs/execute";
-import {Date_oddaljenost_v_dneh} from "../../../../extends/Date";
-import {String_vDate, String_vDuration} from "../../../../extends/String";
-import {Duration_vSekunde} from "../../../../extends/Duration";
+import type {ExeCallback} from "$lib/execute";
+import {execute} from "$lib/execute";
+import {API} from "$lib/stores/apiStore";
+import {String_vDate, String_vDuration} from "$lib/extends/String";
+import {Date_oddaljenost_v_dneh} from "$lib/extends/Date";
+import {Duration_vSekunde} from "$lib/extends/Duration";
 
-interface Data {
+export interface AuditsData {
   datum: string,
   dni: number,
   akcije: number,
@@ -14,7 +14,7 @@ interface Data {
 
 interface AuditsCallback extends ExeCallback {
 
-  uspeh(audit_arr: Data[]): void;
+  uspeh(data: AuditsData[]): void;
 
 }
 
@@ -22,12 +22,12 @@ interface AuditsCallback extends ExeCallback {
 export async function audits(callback: AuditsCallback) {
   await execute(audits, callback, async () => {
     // @ts-ignore
-    const days_audits: { string: Data } = {}
+    const days_audits: { string: AuditsData } = {}
     const _audits = await API().getProfilAudits()
     _audits.forEach((audit) => {
       const ustvarjeno_date = String_vDate(audit?.ustvarjeno?.toString() || "")
       const oddaljenost = Date_oddaljenost_v_dneh(ustvarjeno_date)
-      const trajanje_minute = Duration_vSekunde(String_vDuration(audit?.trajanje || "")) / 60
+      const trajanje_minute = Duration_vSekunde(String_vDuration(audit?.trajanje?.toString() || "")) / 60
       if (oddaljenost in days_audits) {
         // @ts-ignore
         days_audits[oddaljenost].trajanje_min += trajanje_minute

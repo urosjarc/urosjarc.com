@@ -1,7 +1,8 @@
-import type {Kontakt, Naslov, Oseba, OsebaData} from "../../../../api";
-import type {ExeCallback} from "../../../../libs/execute";
-import {execute} from "../../../../libs/execute";
-import {profil} from "../../../../stores/profilStore";
+import type {Kontakt, Naslov, Oseba, OsebaData} from "$lib/api";
+import type {ExeCallback} from "$lib/execute";
+import {execute} from "$lib/execute";
+import {profil} from "$lib/stores/profilStore";
+
 
 export interface Data {
   oseba: Oseba,

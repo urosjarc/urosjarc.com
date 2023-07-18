@@ -13,7 +13,7 @@ plugins {
 
 
 val openapi_dist = file("$projectDir/../api/src/main/resources/openapi")
-val openapi_target = file("$projectDir/../../app/src/api")
+val openapi_target = file("$projectDir/../../app/src/lib/api")
 tasks.register("client") {
     doLast {
         logger.warn("")

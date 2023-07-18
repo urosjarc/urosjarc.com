@@ -6,11 +6,6 @@ export function TestData_razmerje_statusov(testData: TestData, status: Status.ti
   return izbraniStatusi.length / status_refs.length
 }
 
-export function TestData_stevilo_vseh_statusov(testData: TestData): number {
-  const status_refs = (testData.status_refs || [])
-  return status_refs.length
-}
-
 export function TestData_css_class(oddaljenost_v_dnevih: number) {
   if (oddaljenost_v_dnevih > 7) return "col-royalblue"
   else if (oddaljenost_v_dnevih > 3) return "col-orange anim-blink"

@@ -1,7 +1,3 @@
-<script>
-  // import * as acuity from '../../../libs/acuityscheduling.embed.js';
-</script>
-
 <iframe
   height="1400"
   src="https://app.acuityscheduling.com/schedule.php?owner=17096971&calendarID=2725528"

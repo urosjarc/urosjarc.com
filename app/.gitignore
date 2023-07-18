@@ -3,7 +3,7 @@ build
 node_modules
 venv
 
-src/api
+src/lib/api
 
 static/sitemap.xml
 static/gz

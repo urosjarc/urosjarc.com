@@ -21,8 +21,6 @@ import kotlinx.datetime.LocalDateTime
 import org.apache.logging.log4j.kotlin.logger
 import org.bson.types.ObjectId
 import kotlin.random.Random
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.minutes
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
@@ -198,9 +196,15 @@ class DbService(val db_url: String, val db_name: String) {
             .wasAcknowledged()
     }
 
-    fun audits(entity_id: String, stran: Int = 0): List<Audit> = audits.find(
-        filter = Filters.eq(Audit::entitete_id.name, entity_id)
-    ).stran(n = stran).toList()
+    fun audits(entity_id: String, stran: Int?): List<Audit> {
+        val audits = audits.find(
+            filter = Filters.eq(Audit::entitete_id.name, entity_id)
+        )
+        return when (stran) {
+            null -> audits
+            else -> audits.stran(n = stran)
+        }.toList()
+    }
 
 
     fun profil(id: String): OsebaData {

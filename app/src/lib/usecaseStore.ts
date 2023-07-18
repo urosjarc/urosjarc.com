@@ -1,13 +1,3 @@
-import {token} from "../stores/tokenStore";
-import {profil} from "../stores/profilStore";
-import {API} from "../stores/apiStore";
-import {route} from "../stores/routeStore";
-import {goto} from "$app/navigation";
-import type {Profil} from "../api";
-
-
-
-
 // api.auth.prijava({username})
 //   .then(prijavaRes => {
 //     if ("token" in prijavaRes) {

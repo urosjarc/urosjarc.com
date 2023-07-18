@@ -3,11 +3,11 @@
   import Textfield from '@smui/textfield';
   import Icon from '@smui/textfield/icon';
   import LinearProgress from '@smui/linear-progress';
-  import {auto_prijava} from "../../../usecases/auto_prijava";
-  import {prijava} from "../../../usecases/prijava";
+  import {auto_prijava} from "$lib/usecases/auto_prijava";
+  import {prijava} from "$lib/usecases/prijava";
   import {goto} from "$app/navigation";
-  import {route} from "../../../stores/routeStore";
-  import Alerts from "../../../components/Alerts.svelte";
+  import {route} from "$lib/stores/routeStore";
+  import Alerts from "$lib/components/Alerts.svelte";
 
 
   function prijava_submit() {

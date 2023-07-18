@@ -30,7 +30,7 @@ class profil {
         class test_id(val parent: test, val test_id: String) {
 
             @Resource("audits")
-            class audits(val parent: test_id, val stran: Int = 0)
+            class audits(val parent: test_id)
 
             @Resource("status")
             class status(val parent: test_id) {
@@ -39,7 +39,7 @@ class profil {
                 class status_id(val parent: status, val status_id: String) {
 
                     @Resource("audits")
-                    class audits(val parent: status_id, val stran: Int = 0)
+                    class audits(val parent: status_id)
 
                 }
 
