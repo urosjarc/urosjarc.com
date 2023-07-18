@@ -14,7 +14,7 @@ export function auth_guard() {
     }
 
     clearInterval(interval)
-    alerts.unauthorized("Uporabnikova seja je potekla!")
+    alerts.warn("Uporabnikova seja je potekla!")
     token.clear()
     profil.clear()
     goto(route.prijava)
