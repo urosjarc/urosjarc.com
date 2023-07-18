@@ -6,7 +6,7 @@
   import {onMount} from "svelte";
   import type {AuditsData} from "./audits";
   import {audits} from "./audits";
-  import Alerts from "../../../../components/Alerts.svelte";
+  import Alerts from "$lib/components/Alerts.svelte";
 
   function load_audits() {
     audits({

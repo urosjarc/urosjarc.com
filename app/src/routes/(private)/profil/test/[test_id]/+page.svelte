@@ -14,6 +14,7 @@
   import Alerts from "$lib/components/Alerts.svelte";
   import {route} from "$lib/stores/routeStore";
   import {Number_zavkrozi} from "$lib/extends/Number";
+  import {StatusTip_color} from "$lib/extends/StatusTip";
 
 
   function load_audits() {

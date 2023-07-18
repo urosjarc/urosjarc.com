@@ -17,7 +17,6 @@ interface AuditsCallback extends ExeCallback {
   status_id: string,
 
   uspeh(data: AuditsData[]): void;
-
 }
 
 export async function audits(callback: AuditsCallback) {

@@ -68,14 +68,13 @@ fun Route.profil() {
         val status_id = it.status_id
         when (db.status_obstaja(id = profil.id, test_id = test_id, status_id = status_id)) {
             true -> this.call.client_error(info = "${ime<Status>()} ne obstaja!")
-            false -> when (val r =
-                db.status_update(
-                    id = it.status_id,
-                    oseba_id = profil.id,
-                    test_id = it.parent.parent.test_id,
-                    sekund = body.sekund,
-                    tip = body.tip
-                )) {
+            false -> when (val r = db.status_update(
+                id = it.status_id,
+                oseba_id = profil.id,
+                test_id = it.parent.parent.test_id,
+                sekund = body.sekund,
+                tip = body.tip
+            )) {
                 null -> this.call.client_error(info = "${ime<Status>()} ni posodobljen!")
                 else -> this.call.respond(r)
             }
@@ -84,11 +83,11 @@ fun Route.profil() {
 
     this.get<profil.test.test_id.status.status_id.audits> {
         val status_id = it.parent.status_id
-        this.call.respond(db.audits(entity_id = status_id, stran = it.stran))
+        this.call.respond(db.audits(entity_id = status_id, stran = null))
     }
     this.get<profil.test.test_id.audits> {
         val test_id = it.parent.test_id
-        this.call.respond(db.audits(entity_id = test_id, stran = it.stran))
+        this.call.respond(db.audits(entity_id = test_id, stran = null))
     }
 
     this.get<profil.audits> {

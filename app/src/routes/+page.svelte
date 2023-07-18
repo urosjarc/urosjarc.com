@@ -3,7 +3,7 @@
   import Button from '@smui/button';
   import {Separator} from '@smui/list';
   import {onMount} from "svelte";
-  import {route} from "$lib/routeStore";
+  import {route} from "$lib/stores/routeStore";
   import {hacker} from "$lib/hacker";
 
   onMount(hacker);

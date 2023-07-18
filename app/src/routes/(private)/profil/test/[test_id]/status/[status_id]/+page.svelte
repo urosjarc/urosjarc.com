@@ -2,15 +2,57 @@
   import Accordion, {Content, Header, Panel} from '@smui-extra/accordion';
   import {page} from "$app/stores";
   import Button, {Group} from "@smui/button";
-  import {time, timeFormat} from "$lib/utils";
   import DataTable, {Body, Cell, Head, Row} from "@smui/data-table";
   import {Status} from "$lib/api";
   import {onMount} from "svelte";
-  import {Data, data} from "./data";
+  import {data} from "./data";
+  import type {Data} from "./data";
+  import type {AuditsData} from "./audits";
+  import {audits} from "./audits";
+  import {posodobi_status} from "$lib/usecases/posodobi_status";
+  import {route} from "$lib/stores/routeStore";
+  import {goto} from "$app/navigation";
+  import {StatusTip_class} from "$lib/extends/StatusTip";
+  import Alerts from "$lib/components/Alerts.svelte";
 
-  function load_audits(){
+  function load_audits() {
     audits({
+      test_id: test_id,
+      status_id: status_id,
+      error(err: any): void {
+        error = err
+      },
+      fatal(err: any): void {
+        fatal = err
+      },
+      warn(err: any): void {
+        warn = err
+      },
+      uspeh(data: AuditsData[]): void {
+        _audits = data
+      },
+    })
+  }
 
+  function koncaj_nalogo(tip: Status.tip) {
+    posodobi_status({
+      test_id: test_id,
+      status_id: status_id,
+      sekund: sekund,
+      tip: tip,
+
+      uspeh(): void {
+        goto(route.profil_test_id(test_id))
+      },
+      error(err: any): void {
+        error = err
+      },
+      fatal(err: any): void {
+        fatal = err
+      },
+      warn(err: any): void {
+        warn = err
+      },
     })
   }
 
@@ -29,32 +71,38 @@
       },
       uspeh(data: Data): void {
         _data = data
+        loaded = true
       },
     })
 
   })
 
   setInterval(() => {
-    seconds += 1
+    sekund += 1
   }, 1000)
 
-  let seconds = 0
-  let loaded = false
   const test_id = $page.params.test_id
   const status_id = $page.params.status_id
-  let _data: Data = {}
+
+  let _data: Data
+  let _audits: AuditsData[] = []
+  let statusi = [Status.tip.NERESENO, Status.tip.NAPACNO, Status.tip.PRAVILNO]
+
+  let sekund = 0
+  let loaded = false
+
   let error = ""
   let fatal = ""
   let warn = ""
 </script>
 
 <div class="row">
-
+  <Alerts bind:fatal={fatal} bind:error={error} bind:warn={warn}/>
   {#if loaded}
     <Accordion>
       <Panel open>
         <Header class="{_data.cls}">
-          <h1 style="text-align: center">{time(seconds)}</h1>
+          <h1 style="text-align: center">{time(sekund)}</h1>
         </Header>
         <Content style="padding: 0">
           <img width="100%" src="{_data.vsebina_src}">
@@ -68,15 +116,11 @@
           <img width="100%" src="{_data.resitev_src}">
 
           <Group style="display: flex; justify-content: stretch; width: 100%">
-            <Button on:click={() => koncaj(Status.tip.NERESENO)} class="col-red" style="flex-grow: 1; border-radius: 0">
-              <b>{Status.tip.NERESENO}</b>
-            </Button>
-            <Button on:click={() => koncaj(Status.tip.NAPACNO)} class="col-orange" style="flex-grow: 1">
-              <b>{Status.tip.NAPACNO}</b>
-            </Button>
-            <Button on:click={() => koncaj(Status.tip.PRAVILNO)} class="col-forestgreen" style="flex-grow: 1; border-radius: 0">
-              <b>{Status.tip.PRAVILNO}</b>
-            </Button>
+            {#each statusi as status}
+              <Button on:click={() => koncaj_nalogo(status)} class="{StatusTip_class(status)}" style="flex-grow: 1; border-radius: 0">
+                <b>{status}</b>
+              </Button>
+            {/each}
           </Group>
         </Content>
       </Panel>
@@ -95,11 +139,11 @@
               </Row>
             </Head>
             <Body>
-            {#each audits as audit, i}
+            {#each _audits as audit, i}
               <Row>
-                <Cell>{dateFormat(audit.ustvarjeno)}</Cell>
-                <Cell>{timeFormat(audit.ustvarjeno)}</Cell>
-                <Cell>{core.trajanje_minut(audit.trajanje)} min</Cell>
+                <Cell>{audit.ustvarjeno_date}</Cell>
+                <Cell>{audit.ustvarjeno_time}</Cell>
+                <Cell>{audit.trajanje_min} min</Cell>
                 <Cell>{audit.opis}</Cell>
               </Row>
             {/each}
