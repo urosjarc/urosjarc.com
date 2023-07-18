@@ -6,30 +6,19 @@
   import type {Data} from "./data";
   import {data} from "./data";
   import {Chart} from "chart.js/auto";
-  import {audits} from "./audits";
   import type {AuditsData} from "./audits";
+  import {audits} from "./audits";
   import Dialog, {Content} from "@smui/dialog";
   import {Separator} from "@smui/list";
   import Actions from "@smui/dialog/src/Actions";
-  import Alerts from "$lib/components/Alerts.svelte";
   import {route} from "$lib/stores/routeStore";
   import {Number_zavkrozi} from "$lib/extends/Number";
   import {StatusTip_color} from "$lib/extends/StatusTip";
 
-
   function load_audits() {
-    if(Object.keys(_audits).length == 0){
+    if (Object.keys(_audits).length == 0) {
       audits({
         test_id: test_id,
-        error(err: any): void {
-          error = err
-        },
-        fatal(err: any): void {
-          fatal = err
-        },
-        warn(err: any): void {
-          warn = err
-        },
         uspeh(data: AuditsData) {
           open = true
           _audits = data
@@ -43,15 +32,6 @@
   onMount(() => {
     data({
       test_id: test_id,
-      error(err: any): void {
-        error = err
-      },
-      fatal(err: any): void {
-        fatal = err
-      },
-      warn(err: any): void {
-        warn = err
-      },
       uspeh(data: Data) {
         _data = data
         tema_statusi = data.tema_statusi
@@ -91,16 +71,9 @@
   let open = false
   let tema_statusi = new Map()
   let status_stevilo = new Map()
-  let error = ""
-  let fatal = ""
-  let warn = ""
-
 </script>
 
 <div class="row justify-content-center pb-3" style="margin: 0">
-
-  <Alerts bind:fatal={fatal} bind:error={error} bind:warn={warn}/>
-
   <Button style="width: 100%; border-radius: 0" variant="raised" color="primary" on:click={load_audits}>
     <b>Pokaži časovno statistiko</b>
   </Button>

@@ -5,29 +5,20 @@
   import DataTable, {Body, Cell, Head, Row} from "@smui/data-table";
   import {Status} from "$lib/api";
   import {onMount} from "svelte";
-  import {data} from "./data";
   import type {Data} from "./data";
+  import {data} from "./data";
   import type {AuditsData} from "./audits";
   import {audits} from "./audits";
   import {posodobi_status} from "$lib/usecases/posodobi_status";
   import {route} from "$lib/stores/routeStore";
   import {goto} from "$app/navigation";
   import {StatusTip_class} from "$lib/extends/StatusTip";
-  import Alerts from "$lib/components/Alerts.svelte";
+  import {Number_vCas} from "$lib/extends/Number";
 
   function load_audits() {
     audits({
       test_id: test_id,
       status_id: status_id,
-      error(err: any): void {
-        error = err
-      },
-      fatal(err: any): void {
-        fatal = err
-      },
-      warn(err: any): void {
-        warn = err
-      },
       uspeh(data: AuditsData[]): void {
         _audits = data
       },
@@ -44,15 +35,6 @@
       uspeh(): void {
         goto(route.profil_test_id(test_id))
       },
-      error(err: any): void {
-        error = err
-      },
-      fatal(err: any): void {
-        fatal = err
-      },
-      warn(err: any): void {
-        warn = err
-      },
     })
   }
 
@@ -60,15 +42,6 @@
     data({
       test_id: test_id,
       status_id: status_id,
-      error(err: any): void {
-        error = err
-      },
-      fatal(err: any): void {
-        fatal = err
-      },
-      warn(err: any): void {
-        warn = err
-      },
       uspeh(data: Data): void {
         _data = data
         loaded = true
@@ -90,19 +63,14 @@
 
   let sekund = 0
   let loaded = false
-
-  let error = ""
-  let fatal = ""
-  let warn = ""
 </script>
 
 <div class="row">
-  <Alerts bind:fatal={fatal} bind:error={error} bind:warn={warn}/>
   {#if loaded}
     <Accordion>
       <Panel open>
         <Header class="{_data.cls}">
-          <h1 style="text-align: center">{time(sekund)}</h1>
+          <h1 style="text-align: center">{Number_vCas(sekund)}</h1>
         </Header>
         <Content style="padding: 0">
           <img width="100%" src="{_data.vsebina_src}">

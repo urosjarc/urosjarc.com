@@ -2,6 +2,28 @@
   import Navigation from "$lib/components/Navigation.svelte";
   import Layout from "$lib/components/Layout.svelte";
   import {route} from "$lib/stores/routeStore";
+  import {alerts} from "$lib/stores/alertsStore";
+  import Alerts from "$lib/components/Alerts.svelte";
+  import {onMount} from "svelte";
+
+  let fatal = ""
+  let error = ""
+  let warn = ""
+
+  onMount(() => {
+    alerts.store_fatal.subscribe(text => {
+      if (text) fatal = text
+    })
+    alerts.store_error.subscribe(text => {
+      if (text) error = text
+    })
+    alerts.store_warn.subscribe(text => {
+      if (text) warn = text
+    })
+    alerts.store_unathorized.subscribe(text => {
+      if (text) warn = text
+    })
+  })
 </script>
 
 <Layout vsebina_classes="senca-velika">
@@ -12,6 +34,7 @@
     <Navigation classes="col-3" text="Prijava" icon="person" link="{route.prijava}"/>
   </svelte:fragment>
   <svelte:fragment slot="body">
+    <Alerts bind:fatal={fatal} bind:error={error} bind:warn={warn}/>
     <slot/>
   </svelte:fragment>
 </Layout>

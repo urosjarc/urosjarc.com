@@ -2,10 +2,15 @@
   import {route} from "$lib/stores/routeStore";
   import Navigation from "$lib/components/Navigation.svelte";
   import Layout from "$lib/components/Layout.svelte";
+  import {auth_guard} from "$lib/usecases/auth_guard";
+  import {onMount} from "svelte";
 
-  function odjava(){
-    console.log("odjava")
+  function odjava() {
+
   }
+
+  onMount(auth_guard)
+
 </script>
 
 <div style="padding-top: 8px">

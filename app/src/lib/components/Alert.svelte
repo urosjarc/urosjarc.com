@@ -9,12 +9,9 @@
 
   export let open = false
   export let cls = ""
-
 </script>
 
-<Dialog
-  bind:open>
-
+<Dialog bind:open>
   <Title style="text-align: center">
     <b>
       <slot name="naslov"/>
@@ -29,5 +26,4 @@
       <b>Zapri</b>
     </Button>
   </Content>
-
 </Dialog>
