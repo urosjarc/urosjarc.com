@@ -3,7 +3,7 @@
   import Textfield from '@smui/textfield';
   import Icon from '@smui/textfield/icon';
   import LinearProgress from '@smui/linear-progress';
-  import {prijavljen_v_profil} from "../../../usecases/prijavljen_v_profil";
+  import {auto_prijava} from "../../../usecases/auto_prijava";
   import {prijava} from "../../../usecases/prijava";
   import {goto} from "$app/navigation";
   import {route} from "../../../stores/routeStore";
@@ -37,7 +37,7 @@
   let username = ""
   let geslo = ""
 
-  prijavljen_v_profil({
+  auto_prijava({
     uspeh() {
       goto(route.profil)
     },

@@ -128,7 +128,7 @@ class DbService(val db_url: String, val db_name: String) {
                                 tip = Audit.Tip.STATUS_POSODOBITEV,
                                 opis = Status.Tip.values().random().name,
                                 entiteta = "entiteta",
-                                ustvarjeno = LocalDateTime.zdaj(dDni = Random.nextInt(0, 20)),
+                                ustvarjeno = LocalDateTime.zdaj(dDni = -Random.nextInt(0, 20)),
                                 trajanje = Random.nextInt(2, 20).toDuration(unit = DurationUnit.MINUTES)
                             )
                             all_audit.add(audit)

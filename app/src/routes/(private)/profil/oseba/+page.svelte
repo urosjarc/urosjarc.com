@@ -1,26 +1,63 @@
 <script lang="ts">
-
   import DataTable, {Body, Cell, Head, Row} from '@smui/data-table';
   import Accordion, {Content, Header, Panel} from "@smui-extra/accordion";
-  import {API} from "../../../../stores/apiStore";
-
-  let audits = []
-  let audits_loaded = false
-
+  import type {Data} from "./data";
+  import {data} from "./data";
+  import {onMount} from "svelte";
+  import {audits} from "./audits";
+  import {Audit} from "../../../../api";
+  import Alerts from "../../../../components/Alerts.svelte";
 
   function load_audits() {
-    if (!audits_loaded) {
-      api.profil_audits().then(data => {
-        console.log(core.pogledi.ProfilOsebaAudits.Companion.decode(data))
-      })
-    }
-    audits_loaded = true
+    audits({
+      uspeh(audit_arr: Audit[]): void {
+        _audits = audit_arr
+        audits_show = true
+      },
+      error(p0) {
+        error = p0
+      },
+      fatal(p0) {
+        fatal = p0
+      },
+      warn(p0) {
+        warn = p0
+      }
+    })
   }
 
-  const api = API()
+  onMount(() => {
+    data({
+      error(p0) {
+        error = p0
+      },
+      fatal(p0) {
+        fatal = p0
+      },
+      warn(p0) {
+        warn = p0
+      },
+      uspeh(data: Data) {
+        oseba = data.oseba
+        kontakti = data.kontakti
+        naslovi = data.naslovi
+      }
+    })
+  })
+
+  let audits_show = false
+  let _audits = []
+  let oseba = {}
+  let kontakti = []
+  let naslovi = []
+  let fatal = ""
+  let error = ""
+  let warn = ""
 </script>
 
 <div>
+  <Alerts bind:fatal={fatal} bind:error={error} bind:warn={warn}/>
+
   <Accordion>
     <Panel open>
       <Header on:click={load_audits} class="col-royalblue">
@@ -44,8 +81,7 @@
               <Cell>{naslov.ulica}, {naslov.zip} {naslov.mesto}<br>{naslov.dodatno}</Cell>
             </Row>
           {/each}
-          {#each kontakt_refs as kontakt_ref, i}
-            {@const kontakt = kontakt_ref.kontakt}
+          {#each kontakti as kontakt, i}
             <Row>
               <Cell numeric><b>{i + 1}. {kontakt.tip}</b></Cell>
               <Cell>{kontakt.data}</Cell>
@@ -63,6 +99,7 @@
       <Content style="padding: 0">
 
         <DataTable style="width: 100%">
+
           <Head>
             <Row>
               <Cell><b>Datum</b></Cell>
@@ -71,21 +108,24 @@
               <Cell><b>Trajanje</b></Cell>
             </Row>
           </Head>
+
           <Body>
-          {#if audits_loaded}
-            {#if audits.length > 0}
-              {#each audits as audit}
+
+          {#if audits_show}
+            {#if _audits.length > 0}
+              {#each _audits as audit}
                 <Row>
                   <Cell>{audit.datum}</Cell>
                   <Cell>{audit.dni} dni</Cell>
-                  <Cell>{audit.value} akcij</Cell>
-                  <Cell>{Math.round(audit.trajanje)} min.</Cell>
+                  <Cell>{audit.akcije} akcij</Cell>
+                  <Cell>{Math.round(audit.trajanje_min)} min.</Cell>
                 </Row>
               {/each}
             {:else}
               <h3 style="text-align: center">Uporabnik še brez dejavnosti!</h3>
             {/if}
           {/if}
+
           </Body>
         </DataTable>
 

@@ -42,6 +42,24 @@ paths:
               $ref: "#/components/schemas/PrijavaReq"
         required: true
       responses:
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorRes"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorRes"
+        "500":
+          description: "Internal Server Error"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorRes"
         "200":
           description: "OK"
           content:
@@ -176,6 +194,18 @@ components:
       type: "object"
       properties:
         username:
+          type: "string"
+    ErrorRes:
+      type: "object"
+      properties:
+        napaka:
+          type: "string"
+          enum:
+          - "UPORABNISKA"
+          - "SISTEMSKA"
+        razred:
+          type: "string"
+        info:
           type: "string"
     PrijavaRes:
       type: "object"
@@ -357,7 +387,7 @@ components:
           type: "string"
         naslov:
           type: "string"
-    ZvezekData:
+    NalogaData:
       type: "object"
       properties:
         naloga:
@@ -374,7 +404,7 @@ components:
         naloga_refs:
           type: "array"
           items:
-            $ref: "#/components/schemas/ZvezekData"
+            $ref: "#/components/schemas/NalogaData"
     TestData:
       type: "object"
       properties:
@@ -443,15 +473,3 @@ components:
         sekund:
           type: "integer"
           format: "int32"
-    ErrorRes:
-      type: "object"
-      properties:
-        napaka:
-          type: "string"
-          enum:
-          - "UPORABNISKA"
-          - "SISTEMSKA"
-        razred:
-          type: "string"
-        info:
-          type: "string"

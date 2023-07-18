@@ -22,7 +22,7 @@ import type {Profil} from "../api";
 //   usecase.obvestilo_napake("API ni mogel prijaviti uporabnika!")
 // })
 // },
-// prijavljen_v_profil() {
+// auto_prijava() {
 //   if (token.exists()) api.auth.whois().then(() => goto(route.profil)).catch(() => usecase.odjava())
 // },
 // neprijavljen_v_prijavo() {

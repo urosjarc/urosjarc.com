@@ -5,7 +5,7 @@ import domain.Tematika
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ZvezekData(
+data class NalogaData(
     val naloga: Naloga,
     val tematika_refs: List<Tematika> = listOf(),
 )

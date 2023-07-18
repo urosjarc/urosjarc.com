@@ -12,7 +12,8 @@
 
 </script>
 
-<Dialog bind:open>
+<Dialog
+  bind:open>
 
   <Title style="text-align: center">
     <b>

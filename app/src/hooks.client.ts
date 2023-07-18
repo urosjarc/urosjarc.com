@@ -45,9 +45,11 @@ window.fetch = (input: RequestInfo | URL, init?: RequestInit): Promise<Response>
       console.info(`(${id})`, body)
     }).catch((err) => {
       console.error(`(${id})`, err)
+      throw err
     })
   }).catch((err) => {
     console.error(`(${id})`, err)
+    throw err
   })
 
   return req

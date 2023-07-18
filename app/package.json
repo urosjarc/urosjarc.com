@@ -49,6 +49,8 @@
     "@smui/list": "^7.0.0-beta.8",
     "@smui/textfield": "^7.0.0-beta.8",
     "chart.js": "^4.3.0",
+    "iso8601-duration": "^2.1.1",
+    "serialize-error": "^11.0.0",
     "svelte-local-storage-store": "^0.5.0"
   }
 }

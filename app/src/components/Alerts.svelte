@@ -2,6 +2,7 @@
 
   import Alert from "./Alert.svelte";
   import {Separator} from "@smui/list";
+  import {Error_serializiraj} from "../extends/Error";
 
   export let fatal: string = ""
   export let error: string = ""
@@ -23,7 +24,7 @@
         obvestil.
       </p>
       <Separator/>
-      <p><b>{JSON.stringify(fatal, null, 4)}</b></p>
+      <pre><b>{Error_serializiraj(fatal)}</b></pre>
     </svelte:fragment>
   </Alert>
 
@@ -38,7 +39,7 @@
         Če je napaka sistemska, Vas bom obvestil takoj, ko bom napako odpravil.
       </p>
       <Separator/>
-      <p><b>{JSON.stringify(error, null, 4)}</b></p>
+      <pre><b>{Error_serializiraj(error)}</b></pre>
     </svelte:fragment>
   </Alert>
 
@@ -52,8 +53,14 @@
         Sistem je zabeležil incident.
       </p>
       <Separator/>
-      <p><b>{JSON.stringify(warn, null, 4)}</b></p>
+      <pre style="text-align: center"><b>{Error_serializiraj(warn)}</b></pre>
     </svelte:fragment>
   </Alert>
 
 </div>
+
+<style>
+  pre {
+    text-align: center;
+  }
+</style>

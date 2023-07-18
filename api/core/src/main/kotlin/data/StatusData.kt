@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class StatusData(
     val status: Status,
-    val naloga_refs: List<ZvezekData> = listOf(),
+    val naloga_refs: List<NalogaData> = listOf(),
 )
