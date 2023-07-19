@@ -12,7 +12,6 @@ dependencies {
     this.implementation(this.project(":app"))
 
     this.implementation("io.insert-koin:koin-ktor:3.3.0")
-    this.implementation("io.sentry:sentry:6.25.0")
 
     val ktor_version = "2.2.3"
     this.implementation("io.ktor:ktor-server-cors:$ktor_version")

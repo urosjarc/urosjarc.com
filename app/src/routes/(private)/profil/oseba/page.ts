@@ -5,7 +5,7 @@ import {String_vDate, String_vDuration} from "$lib/extends/String";
 import {Date_oddaljenost_v_dneh} from "$lib/extends/Date";
 import {Duration_vSekunde} from "$lib/extends/Duration";
 
-export interface Data {
+export type Data = {
   oseba: Oseba,
   naslovi: Naslov[],
   kontakti: Kontakt[],
@@ -20,7 +20,7 @@ export function page_data(): Data {
   }
 }
 
-export interface Audits {
+export type Audits = {
   datum: string,
   dni: number,
   akcije: number,

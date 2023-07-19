@@ -3,7 +3,6 @@ package api
 import api.extend.client_unauthorized
 import api.plugins.PreveriProfil
 import api.plugins.Profil
-import api.plugins.SentryPlugin
 import api.routes.admin
 import api.routes.auth
 import api.routes.index
@@ -38,7 +37,6 @@ import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalSerializationApi::class)
 fun Application.configureRouting() {
-    this.install(SentryPlugin)
     this.install(CallLogging) {
         this.level = org.slf4j.event.Level.INFO
     }

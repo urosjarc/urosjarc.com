@@ -2,11 +2,7 @@
   import {route} from "$lib/stores/routeStore";
   import Navigation from "$lib/components/Navigation.svelte";
   import Layout from "$lib/components/Layout.svelte";
-
-  function odjava() {
-
-  }
-
+  import {odjava} from "$lib/usecases/odjava";
 </script>
 
 <div style="padding-top: 8px">

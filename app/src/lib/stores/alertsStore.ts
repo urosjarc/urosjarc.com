@@ -6,20 +6,20 @@ export const alerts = {
   store_warn: persisted('alertsWarnStore', ""),
   store_unauthorized: persisted('alertsUnauthorizedStore', ""),
 
-  fatal(text: string) {
-    this.store_fatal.set(text)
+  fatal(err: any) {
+    this.store_fatal.set(err)
     this.store_fatal.set("")
   },
-  error(text: string) {
-    this.store_error.set(text)
+  error(err: any) {
+    this.store_error.set(err)
     this.store_error.set("")
   },
-  warn(text: string) {
-    this.store_warn.set(text)
+  warn(err: any) {
+    this.store_warn.set(err)
     this.store_warn.set("")
   },
-  unauthorized(text: string) {
-    this.store_unauthorized.set(text)
+  unauthorized(err: any) {
+    this.store_unauthorized.set(err)
     this.store_unauthorized.set("")
   }
 }

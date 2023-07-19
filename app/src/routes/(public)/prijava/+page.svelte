@@ -7,18 +7,19 @@
   import {prijava} from "$lib/usecases/prijava";
   import {onMount} from "svelte";
 
+  onMount(auto_prijava)
 
   function prijava_submit() {
     loading = true
-    prijava({username: username})
-      .then(() => loading = false)
+    prijava({username: username}).finally(() => {
+      loading = false
+    })
   }
 
   let loading = false
   let username = ""
   let geslo = ""
 
-  onMount(auto_prijava)
 </script>
 
 <form class="row" on:submit|preventDefault={prijava_submit}>

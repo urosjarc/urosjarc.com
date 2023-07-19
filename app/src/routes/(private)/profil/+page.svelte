@@ -3,7 +3,7 @@
   import {route} from "$lib/stores/routeStore";
   import DataTable, {Body, Cell, Head, Row} from "@smui/data-table"
   import {onMount} from "svelte";
-  import {Data, page_data} from "./page";
+  import {type Data, page_data} from "./page";
 
   function goto_test(id) {
     goto(route.profil_test_id(id))

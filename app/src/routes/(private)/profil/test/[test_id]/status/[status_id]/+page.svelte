@@ -5,7 +5,7 @@
   import DataTable, {Body, Cell, Head, Row} from "@smui/data-table";
   import {Status} from "$lib/api";
   import {onMount} from "svelte";
-  import {page_audits, page_data} from "./data";
+  import {page_audits, page_data} from "./page";
   import {posodobi_status} from "$lib/usecases/posodobi_status";
   import {StatusTip_class} from "$lib/extends/StatusTip";
   import {Number_vCas} from "$lib/extends/Number";

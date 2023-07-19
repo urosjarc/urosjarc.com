@@ -8,12 +8,12 @@ import {API} from "$lib/stores/apiStore";
 import {Duration_vMinute} from "$lib/extends/Duration";
 import {NumberArr_napaka, NumberArr_povprecje, NumberArr_vsota} from "$lib/extends/NumberArr";
 
-export interface StatusInfo {
+export type StatusInfo = {
   cls: string,
   id: string
 }
 
-export interface Data {
+export type Data = {
   tema_statusi: Map<string, StatusInfo[]>,
   status_stevilo: Map<string, number>,
   data: {
@@ -90,7 +90,7 @@ export async function page_data(args: { test_id: string }): Promise<Data> {
   }
 }
 
-export interface Audits {
+export type Audits = {
   stevilo_vseh: number,
   trajanje_vseh_min: number,
   trajanje_vseh_povprecje_min: number,

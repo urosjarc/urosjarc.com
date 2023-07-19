@@ -10,5 +10,5 @@ export async function prijava(args: { username: string }) {
   token.set(prijavaRes.token || "")
   let osebaData = await API().getProfil()
   profil.set(osebaData)
-  goto(route.profil)
+  return goto(route.profil)
 }

@@ -5,7 +5,7 @@ import {String_vDate} from "$lib/extends/String";
 import {Date_ime_dneva, Date_oddaljenost_v_dneh} from "$lib/extends/Date";
 import {TestData_css_class, TestData_razmerje_statusov,} from "$lib/extends/TestData";
 
-export interface Data {
+export type Data = {
   id: string,
   naslov: string,
   opravljeno: number,

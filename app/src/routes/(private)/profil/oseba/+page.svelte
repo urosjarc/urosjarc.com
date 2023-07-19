@@ -2,7 +2,7 @@
   import DataTable, {Body, Cell, Head, Row} from '@smui/data-table';
   import Accordion, {Content, Header, Panel} from "@smui-extra/accordion";
   import {onMount} from "svelte";
-  import {Audits, page_audits, page_data} from "./page";
+  import {type Audits, page_audits, page_data} from "./page";
   import type {Oseba} from "$lib/api";
 
   async function load_audits() {
@@ -15,7 +15,7 @@
   })
 
   let show_audits = false
-  let audits: Audits = []
+  let audits: Audits[] = []
   let oseba: Oseba = {}
   let kontakti = []
   let naslovi = []
