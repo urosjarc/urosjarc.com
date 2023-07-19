@@ -20,6 +20,9 @@
     alerts.store_warn.subscribe(text => {
       if (text) warn = text
     })
+    alerts.store_unauthorized.subscribe(text => {
+      if (text) warn = text
+    })
   })
 </script>
 

@@ -1,34 +1,22 @@
 <script lang="ts">
   import DataTable, {Body, Cell, Head, Row} from '@smui/data-table';
   import Accordion, {Content, Header, Panel} from "@smui-extra/accordion";
-  import type {Data} from "./data";
-  import {data} from "./data";
   import {onMount} from "svelte";
-  import type {AuditsData} from "./audits";
-  import {audits} from "./audits";
+  import {Audits, page_audits, page_data} from "./page";
+  import type {Oseba} from "$lib/api";
 
-  function load_audits() {
-    audits({
-      uspeh(data: AuditsData[]): void {
-        _audits = data
-        audits_show = true
-      }
-    })
+  async function load_audits() {
+    audits = await page_audits()
+    show_audits = true
   }
 
   onMount(() => {
-    data({
-      uspeh(data: Data) {
-        oseba = data.oseba
-        kontakti = data.kontakti
-        naslovi = data.naslovi
-      }
-    })
+    ({oseba, kontakti, naslovi} = page_data())
   })
 
-  let audits_show = false
-  let _audits = []
-  let oseba = {}
+  let show_audits = false
+  let audits: Audits = []
+  let oseba: Oseba = {}
   let kontakti = []
   let naslovi = []
 </script>
@@ -86,9 +74,9 @@
 
         <Body>
 
-        {#if audits_show}
-          {#if _audits.length > 0}
-            {#each _audits as audit}
+        {#if show_audits}
+          {#if audits.length > 0}
+            {#each audits as audit}
               <Row>
                 <Cell>{audit.datum}</Cell>
                 <Cell>{audit.dni} dni</Cell>

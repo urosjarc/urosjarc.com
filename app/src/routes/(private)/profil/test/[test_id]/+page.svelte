@@ -3,11 +3,8 @@
   import Button, {Label} from '@smui/button';
   import {onMount} from "svelte";
   import DataTable, {Body, Cell, Row} from "@smui/data-table";
-  import type {Data} from "./data";
-  import {data} from "./data";
+  import {page_audits, page_data} from "./page";
   import {Chart} from "chart.js/auto";
-  import type {AuditsData} from "./audits";
-  import {audits} from "./audits";
   import Dialog, {Content} from "@smui/dialog";
   import {Separator} from "@smui/list";
   import Actions from "@smui/dialog/src/Actions";
@@ -15,31 +12,18 @@
   import {Number_zavkrozi} from "$lib/extends/Number";
   import {StatusTip_color} from "$lib/extends/StatusTip";
 
-  function load_audits() {
-    if (Object.keys(_audits).length == 0) {
-      audits({
-        test_id: test_id,
-        uspeh(data: AuditsData) {
-          open = true
-          _audits = data
-        }
-      })
-    } else {
+  async function load_audits() {
+    if (Object.keys(audits).length == 0) {
+      audits = await page_audits({test_id: test_id})
       open = true
     }
   }
 
-  onMount(() => {
-    data({
-      test_id: test_id,
-      uspeh(data: Data) {
-        _data = data
-        tema_statusi = data.tema_statusi
-        status_stevilo = data.status_stevilo
-      }
-    })
+  onMount(async () => {
+    ({tema_statusi, status_stevilo, data} = await page_data({test_id: test_id}))
 
-    const options = {
+    //@ts-ignore
+    new Chart("chart", {
       type: "pie",
       data: {
         labels: [...status_stevilo.keys()],
@@ -56,18 +40,12 @@
           }
         }
       }
-    }
-    console.debug(options)
-
-    //@ts-ignore
-    new Chart("chart", options);
+    });
   })
 
   const test_id = $page.params.test_id
-  //@ts-ignore
-  let _data: Data = {}
-  //@ts-ignore
-  let _audits: AuditsData = {}
+  let data = {}
+  let audits = {}
   let open = false
   let tema_statusi = new Map()
   let status_stevilo = new Map()
@@ -86,29 +64,29 @@
         <Body>
         <Row>
           <Cell numeric><b>Datum:</b></Cell>
-          <Cell>{_data.datum}</Cell>
+          <Cell>{data.datum}</Cell>
         </Row>
         <Row>
           <Cell numeric><b>Rok:</b></Cell>
-          <Cell>{_data.rok} dni ({_data.dan})</Cell>
+          <Cell>{data.rok} dni ({data.dan})</Cell>
         </Row>
         <Row>
           <Cell numeric><b>Reseno:</b></Cell>
           <Cell>
-            {_data.opravljeni_statusi}/{_data.vsi_statusi}
-            ({Math.round(_data.opravljeni_statusi / _data.vsi_statusi * 100)} %)
+            {data.opravljeni_statusi}/{data.vsi_statusi}
+            ({Math.round(data.opravljeni_statusi / data.vsi_statusi * 100)} %)
           </Cell>
         </Row>
         <Row>
           <Cell numeric><b>Manjka:</b></Cell>
-          <Cell>{_data.manjkajoci_statusi}/{_data.vsi_statusi}
-            ({Math.round(_data.manjkajoci_statusi / _data.vsi_statusi * 100)}
+          <Cell>{data.manjkajoci_statusi}/{data.vsi_statusi}
+            ({Math.round(data.manjkajoci_statusi / data.vsi_statusi * 100)}
             %)
           </Cell>
         </Row>
         <Row>
           <Cell numeric><b>Delo:</b></Cell>
-          <Cell>{Math.ceil(_data.manjkajoci_statusi / (_data.rok - 1))} nal/dan</Cell>
+          <Cell>{Math.ceil(data.manjkajoci_statusi / (data.rok - 1))} nal/dan</Cell>
         </Row>
         </Body>
       </DataTable>
@@ -134,26 +112,26 @@
       <p style="text-align: center"><b>VSE NALOGE</b></p>
       <Separator/>
       <ul>
-        <li>Število reševanj: {_audits.stevilo_vseh} nalog</li>
-        <li>Skupno: {_audits.trajanje_vseh_min} min ({Number_zavkrozi(_audits.trajanje_vseh_min / 60, 2)} h)</li>
-        <li>Povprečje: ({_audits.trajanje_vseh_povprecje_min} +- {_audits.trajanje_vseh_napaka_min}) min/nal</li>
+        <li>Število reševanj: {audits.stevilo_vseh} nalog</li>
+        <li>Skupno: {audits.trajanje_vseh_min} min ({Number_zavkrozi(audits.trajanje_vseh_min / 60, 2)} h)</li>
+        <li>Povprečje: ({audits.trajanje_vseh_povprecje_min} +- {audits.trajanje_vseh_napaka_min}) min/nal</li>
       </ul>
 
       <p style="text-align: center"><b>PRAVILNE NALOGE</b></p>
       <Separator/>
       <ul>
-        <li>Stevilo reševanj: {_audits.stevilo_pravilnih} nalog</li>
-        <li>Skupno: {_audits.trajanje_pravilnih_min} min ({Number_zavkrozi(_audits.trajanje_pravilnih_min / 60, 2)} h)</li>
-        <li>Povprečje: ({_audits.trajanje_pravilnih_povprecje_min} +- {_audits.trajanje_pravilnih_napaka_min}) min/nal</li>
+        <li>Stevilo reševanj: {audits.stevilo_pravilnih} nalog</li>
+        <li>Skupno: {audits.trajanje_pravilnih_min} min ({Number_zavkrozi(audits.trajanje_pravilnih_min / 60, 2)} h)</li>
+        <li>Povprečje: ({audits.trajanje_pravilnih_povprecje_min} +- {audits.trajanje_pravilnih_napaka_min}) min/nal</li>
       </ul>
 
       <Separator/>
       <p style="text-align: center"><b>NAPOVED</b></p>
       <p style="text-align: center"><b>
         Na testu, ki traja 45 min,<br>boš rešil(a)
-        od {Number_zavkrozi(45 / (_audits.trajanje_pravilnih_povprecje_min + _audits.trajanje_pravilnih_napaka_min), 2)}
-        do <br>{Number_zavkrozi(45 / (_audits.trajanje_pravilnih_povprecje_min - _audits.trajanje_pravilnih_napaka_min), 2)} naloge!
-        V povprečju { Number_zavkrozi(45 / _audits.trajanje_pravilnih_povprecje_min, 2)} nalog.
+        od {Number_zavkrozi(45 / (audits.trajanje_pravilnih_povprecje_min + audits.trajanje_pravilnih_napaka_min), 2)}
+        do <br>{Number_zavkrozi(45 / (audits.trajanje_pravilnih_povprecje_min - audits.trajanje_pravilnih_napaka_min), 2)} naloge!
+        V povprečju { Number_zavkrozi(45 / audits.trajanje_pravilnih_povprecje_min, 2)} nalog.
       </b></p>
     </Content>
     <Actions>

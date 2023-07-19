@@ -1,20 +1,14 @@
 import {API} from "../stores/apiStore";
 import {token} from "../stores/tokenStore";
 import {profil} from "../stores/profilStore";
-import type {ExeCallback} from "../execute";
-import {execute} from "../execute";
+import {goto} from "$app/navigation";
+import {route} from "$lib/stores/routeStore";
 
 
-interface PrijavaCallback extends ExeCallback {
-  username: string;
-}
-
-export async function prijava(callback: PrijavaCallback) {
-  await execute(prijava, callback, async () => {
-    let prijavaRes = await API().postAuthPrijava({username: callback.username})
-    token.set(prijavaRes.token || "")
-    let osebaData = await API().getProfil()
-    profil.set(osebaData)
-    callback.uspeh(null)
-  })
+export async function prijava(args: { username: string }) {
+  let prijavaRes = await API().postAuthPrijava({username: args.username})
+  token.set(prijavaRes.token || "")
+  let osebaData = await API().getProfil()
+  profil.set(osebaData)
+  goto(route.profil)
 }

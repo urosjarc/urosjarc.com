@@ -3,22 +3,17 @@
   import {route} from "$lib/stores/routeStore";
   import DataTable, {Body, Cell, Head, Row} from "@smui/data-table"
   import {onMount} from "svelte";
-  import type {Data} from "./data";
-  import {data} from "./data";
+  import {Data, page_data} from "./page";
 
   function goto_test(id) {
     goto(route.profil_test_id(id))
   }
 
-  onMount(() => {
-    data({
-      uspeh(data: Array<Data>): void {
-        _datas = data
-      }
-    })
+  onMount(async () => {
+    data = await page_data()
   })
 
-  let _datas: Array<Data> = []
+  let data: Array<Data> = []
 </script>
 
 <DataTable class="razsiri">
@@ -31,7 +26,7 @@
     </Row>
   </Head>
   <Body>
-  {#each _datas as data}
+  {#each data as data}
     <Row style="cursor: pointer" on:click={() => goto_test(data.id)}>
       <Cell class="{data.cls}">{data.naslov}</Cell>
       <Cell class="{data.cls}" numeric>{data.opravljeno}%</Cell>

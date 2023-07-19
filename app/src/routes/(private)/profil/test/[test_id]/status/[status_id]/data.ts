@@ -1,9 +1,11 @@
-import type {ExeCallback} from "$lib/execute";
-import {execute} from "$lib/execute";
 import {profil} from "$lib/stores/profilStore";
 import type {StatusData, TestData} from "$lib/api";
 import {Status} from "$lib/api";
 import {StatusTip_class} from "$lib/extends/StatusTip";
+import {API} from "$lib/stores/apiStore";
+import {String_vDate, String_vDuration} from "$lib/extends/String";
+import {Duration_vMinute} from "$lib/extends/Duration";
+import {Date_casStr, Date_datumStr} from "$lib/extends/Date";
 
 
 export interface Data {
@@ -12,29 +14,45 @@ export interface Data {
   resitev_src: string,
 }
 
-interface Callback extends ExeCallback {
-  test_id: string,
-  status_id: string,
+export async function page_data(args: { test_id: string, status_id: string }): Promise<Data> {
+  const testRef = (profil.get().test_refs || [])
+    .find((testData: TestData) => testData?.test?._id == args.test_id) || {}
 
-  uspeh(data: Data): void;
+  const statusRef = (testRef.status_refs || [])
+    .find((statusData: StatusData) => statusData?.status?._id == args.status_id) || {}
 
+  const naloga = (statusRef?.naloga_refs || [{}])[0]?.naloga || {}
+
+  return {
+    cls: StatusTip_class(statusRef?.status?.tip || Status.tip.NEZACETO),
+    vsebina_src: naloga.vsebina || "",
+    resitev_src: naloga.resitev || "",
+  }
 }
 
-export async function data(callback: Callback) {
-  await execute(data, callback, async () => {
+export interface Audits {
+  ustvarjeno_time: string,
+  ustvarjeno_date: string,
+  trajanje_min: number,
+  opis: string
+}
 
-    const testRef = (profil.get().test_refs || [])
-      .find((testData: TestData) => testData?.test?._id == callback.test_id) || {}
+export async function page_audits(args: { test_id: string, status_id: string }): Promise<Audits[]> {
+  const api_audits = await API().getProfilTestStatusAudits(args.test_id, args.status_id)
+  const audits: Audits[] = []
 
-    const statusRef = (testRef.status_refs || [])
-      .find((statusData: StatusData) => statusData?.status?._id == callback.status_id) || {}
+  api_audits.forEach(audit => {
+    const audit_trajanje = String_vDuration(audit?.trajanje?.toString() || "")
+    const audit_trajanje_min = Duration_vMinute(audit_trajanje)
+    const audit_ustvarjeno = String_vDate(audit?.ustvarjeno?.toString() || "")
 
-    const naloga = (statusRef?.naloga_refs || [{}])[0]?.naloga || {}
-
-    callback.uspeh({
-      cls: StatusTip_class(statusRef?.status?.tip || Status.tip.NEZACETO),
-      vsebina_src: naloga.vsebina || "",
-      resitev_src: naloga.resitev || "",
+    audits.push({
+      ustvarjeno_time: Date_datumStr(audit_ustvarjeno),
+      ustvarjeno_date: Date_casStr(audit_ustvarjeno),
+      trajanje_min: audit_trajanje_min,
+      opis: audit?.opis || "",
     })
   })
+
+  return audits
 }

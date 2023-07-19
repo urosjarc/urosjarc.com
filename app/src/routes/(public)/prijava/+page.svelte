@@ -5,30 +5,20 @@
   import LinearProgress from '@smui/linear-progress';
   import {auto_prijava} from "$lib/usecases/auto_prijava";
   import {prijava} from "$lib/usecases/prijava";
-  import {goto} from "$app/navigation";
-  import {route} from "$lib/stores/routeStore";
+  import {onMount} from "svelte";
 
 
   function prijava_submit() {
     loading = true
-    prijava({
-      username: username,
-      uspeh() {
-        goto(route.profil)
-      }
-    }).finally(() => (loading = false))
+    prijava({username: username})
+      .then(() => loading = false)
   }
 
   let loading = false
   let username = ""
   let geslo = ""
 
-  auto_prijava({
-    uspeh() {
-      goto(route.profil)
-    },
-  })
-
+  onMount(auto_prijava)
 </script>
 
 <form class="row" on:submit|preventDefault={prijava_submit}>

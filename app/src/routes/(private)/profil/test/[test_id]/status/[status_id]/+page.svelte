@@ -5,24 +5,13 @@
   import DataTable, {Body, Cell, Head, Row} from "@smui/data-table";
   import {Status} from "$lib/api";
   import {onMount} from "svelte";
-  import type {Data} from "./data";
-  import {data} from "./data";
-  import type {AuditsData} from "./audits";
-  import {audits} from "./audits";
+  import {page_audits, page_data} from "./data";
   import {posodobi_status} from "$lib/usecases/posodobi_status";
-  import {route} from "$lib/stores/routeStore";
-  import {goto} from "$app/navigation";
   import {StatusTip_class} from "$lib/extends/StatusTip";
   import {Number_vCas} from "$lib/extends/Number";
 
-  function load_audits() {
-    audits({
-      test_id: test_id,
-      status_id: status_id,
-      uspeh(data: AuditsData[]): void {
-        _audits = data
-      },
-    })
+  async function load_audits() {
+    audits = await page_audits({test_id: test_id, status_id: status_id})
   }
 
   function koncaj_nalogo(tip: Status.tip) {
@@ -31,23 +20,12 @@
       status_id: status_id,
       sekund: sekund,
       tip: tip,
-
-      uspeh(): void {
-        goto(route.profil_test_id(test_id))
-      },
     })
   }
 
-  onMount(() => {
-    data({
-      test_id: test_id,
-      status_id: status_id,
-      uspeh(data: Data): void {
-        _data = data
-        loaded = true
-      },
-    })
-
+  onMount(async () => {
+    data = await page_data({test_id: test_id, status_id: status_id})
+    loaded = true
   })
 
   setInterval(() => {
@@ -57,8 +35,8 @@
   const test_id = $page.params.test_id
   const status_id = $page.params.status_id
 
-  let _data: Data
-  let _audits: AuditsData[] = []
+  let data = {}
+  let audits = []
   let statusi = [Status.tip.NERESENO, Status.tip.NAPACNO, Status.tip.PRAVILNO]
 
   let sekund = 0
@@ -69,11 +47,11 @@
   {#if loaded}
     <Accordion>
       <Panel open>
-        <Header class="{_data.cls}">
+        <Header class="{data.cls}">
           <h1 style="text-align: center">{Number_vCas(sekund)}</h1>
         </Header>
         <Content style="padding: 0">
-          <img width="100%" src="{_data.vsebina_src}">
+          <img width="100%" src="{data.vsebina_src}">
         </Content>
       </Panel>
       <Panel>
@@ -81,7 +59,7 @@
           <h3 style="text-align: center; margin: 0">Resitev</h3>
         </Header>
         <Content style="padding: 0">
-          <img width="100%" src="{_data.resitev_src}">
+          <img width="100%" src="{data.resitev_src}">
 
           <Group style="display: flex; justify-content: stretch; width: 100%">
             {#each statusi as status}
@@ -107,7 +85,7 @@
               </Row>
             </Head>
             <Body>
-            {#each _audits as audit, i}
+            {#each audits as audit, i}
               <Row>
                 <Cell>{audit.ustvarjeno_date}</Cell>
                 <Cell>{audit.ustvarjeno_time}</Cell>
