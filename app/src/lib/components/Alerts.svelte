@@ -63,7 +63,7 @@
       INFO
     </svelte:fragment>
     <svelte:fragment slot="vsebina">
-      <pre style="text-align: left"><b>{Error_pretty(info)}</b></pre>
+      <pre style="text-align: left"><b>{JSON.stringify(info, null, 2)}</b></pre>
     </svelte:fragment>
   </Alert>
 

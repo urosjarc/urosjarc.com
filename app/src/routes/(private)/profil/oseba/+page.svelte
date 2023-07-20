@@ -1,14 +1,12 @@
 <script lang="ts">
-  import Tooltip, {Wrapper} from '@smui/tooltip';
   import DataTable, {Body, Cell, Head, Row} from '@smui/data-table';
   import Accordion, {Content, Header, Panel} from "@smui-extra/accordion";
   import {onMount} from "svelte";
   import {type Audits, type Napake, page_audits, page_data, page_napake} from "./page";
   import type {Oseba} from "$lib/api";
   import Button from "@smui/button";
-  import {Textarea} from "@smui/textfield";
-  import Alerts from "$lib/components/Alerts.svelte";
   import {alerts} from "$lib/stores/alertsStore";
+
 
   async function load_audits() {
     if (!show_audits) {
