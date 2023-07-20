@@ -7,6 +7,7 @@ import {StatusTip_class} from "$lib/extends/StatusTip";
 import {API} from "$lib/stores/apiStore";
 import {Duration_vMinute} from "$lib/extends/Duration";
 import {NumberArr_napaka, NumberArr_povprecje, NumberArr_vsota} from "$lib/extends/NumberArr";
+import {Number_zavkrozi} from "$lib/extends/Number";
 
 export type StatusInfo = {
   cls: string,
@@ -93,13 +94,19 @@ export async function page_data(args: { test_id: string }): Promise<Data> {
 export type Audits = {
   stevilo_vseh: number,
   trajanje_vseh_min: number,
+  trajanje_vseh_ur: number,
   trajanje_vseh_povprecje_min: number,
   trajanje_vseh_napaka_min: number,
 
   stevilo_pravilnih: number,
   trajanje_pravilnih_min: number,
+  trajanje_pravilnih_ur: number,
   trajanje_pravilnih_povprecje_min: number,
-  trajanje_pravilnih_napaka_min: number
+  trajanje_pravilnih_napaka_min: number,
+
+  max_resevanje_testa: number,
+  min_resevanje_testa: number,
+  resevanje_testa: number
 }
 
 export async function page_audits(args: { test_id: string }): Promise<Audits> {
@@ -117,15 +124,30 @@ export async function page_audits(args: { test_id: string }): Promise<Audits> {
     }
   })
 
-  return {
+  const audit: Audits = {
     stevilo_vseh: trajanje_vseh_min_arr.length,
     trajanje_vseh_min: NumberArr_vsota(trajanje_vseh_min_arr),
+    trajanje_vseh_ur: -1,
     trajanje_vseh_povprecje_min: NumberArr_povprecje(trajanje_vseh_min_arr, 2),
     trajanje_vseh_napaka_min: NumberArr_napaka(trajanje_vseh_min_arr, 2),
 
     stevilo_pravilnih: trajanje_pravilnih_min_arr.length,
     trajanje_pravilnih_min: NumberArr_vsota(trajanje_pravilnih_min_arr),
+    trajanje_pravilnih_ur: -1,
     trajanje_pravilnih_povprecje_min: NumberArr_povprecje(trajanje_pravilnih_min_arr, 2),
     trajanje_pravilnih_napaka_min: NumberArr_napaka(trajanje_pravilnih_min_arr, 2),
+
+    max_resevanje_testa: -1,
+    min_resevanje_testa: -1,
+    resevanje_testa: -1,
   }
+
+  audit.trajanje_vseh_ur = Number_zavkrozi(audit.trajanje_vseh_min / 60, 2)
+  audit.trajanje_pravilnih_ur = Number_zavkrozi(audit.trajanje_pravilnih_min / 60, 2)
+
+  audit.max_resevanje_testa = Number_zavkrozi(45 / (audit.trajanje_pravilnih_povprecje_min + audit.trajanje_pravilnih_napaka_min), 2)
+  audit.min_resevanje_testa = Number_zavkrozi(45 / (audit.trajanje_pravilnih_povprecje_min - audit.trajanje_pravilnih_napaka_min), 2)
+  audit.resevanje_testa = Number_zavkrozi(45 / audit.trajanje_pravilnih_povprecje_min, 2)
+
+  return audit
 }

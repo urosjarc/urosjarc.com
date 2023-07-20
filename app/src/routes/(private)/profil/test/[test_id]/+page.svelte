@@ -9,7 +9,6 @@
   import {Separator} from "@smui/list";
   import Actions from "@smui/dialog/src/Actions";
   import {route} from "$lib/stores/routeStore";
-  import {Number_zavkrozi} from "$lib/extends/Number";
   import {StatusTip_color} from "$lib/extends/StatusTip";
   import Textfield from "@smui/textfield";
   import Icon from "@smui/textfield/icon";
@@ -155,7 +154,7 @@
       <Separator/>
       <ul>
         <li>Število reševanj: {audits.stevilo_vseh} nalog</li>
-        <li>Skupno: {audits.trajanje_vseh_min} min ({Number_zavkrozi(audits.trajanje_vseh_min / 60, 2)} h)</li>
+        <li>Skupno: {audits.trajanje_vseh_min} min ({audits.trajanje_vseh_ur} h)</li>
         <li>Povprečje: ({audits.trajanje_vseh_povprecje_min} +- {audits.trajanje_vseh_napaka_min}) min/nal</li>
       </ul>
 
@@ -163,7 +162,7 @@
       <Separator/>
       <ul>
         <li>Stevilo reševanj: {audits.stevilo_pravilnih} nalog</li>
-        <li>Skupno: {audits.trajanje_pravilnih_min} min ({Number_zavkrozi(audits.trajanje_pravilnih_min / 60, 2)} h)</li>
+        <li>Skupno: {audits.trajanje_pravilnih_min} min ({audits.trajanje_pravilnih_ur} h)</li>
         <li>Povprečje: ({audits.trajanje_pravilnih_povprecje_min} +- {audits.trajanje_pravilnih_napaka_min}) min/nal</li>
       </ul>
 
@@ -171,9 +170,8 @@
       <p style="text-align: center"><b>NAPOVED</b></p>
       <p style="text-align: center"><b>
         Na testu, ki traja 45 min,<br>boš rešil(a)
-        od {Number_zavkrozi(45 / (audits.trajanje_pravilnih_povprecje_min + audits.trajanje_pravilnih_napaka_min), 2)}
-        do <br>{Number_zavkrozi(45 / (audits.trajanje_pravilnih_povprecje_min - audits.trajanje_pravilnih_napaka_min), 2)} naloge!
-        V povprečju { Number_zavkrozi(45 / audits.trajanje_pravilnih_povprecje_min, 2)} nalog.
+        od {audits.min_resevanje_testa} do <br>{audits.max_resevanje_testa} naloge!
+        V povprečju {audits.resevanje_testa} nalog.
       </b></p>
     </Content>
     <Actions>
