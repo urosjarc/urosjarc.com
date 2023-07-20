@@ -60,10 +60,10 @@
 
   <Alert bind:open={info}>
     <svelte:fragment slot="naslov">
-      INFO
+      OBVESTILO
     </svelte:fragment>
     <svelte:fragment slot="vsebina">
-      <pre style="text-align: left"><b>{JSON.stringify(info, null, 2)}</b></pre>
+      <pre><b>{info}</b></pre>
     </svelte:fragment>
   </Alert>
 

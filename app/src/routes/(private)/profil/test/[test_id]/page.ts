@@ -105,7 +105,7 @@ export type Audits = {
 export async function page_audits(args: { test_id: string }): Promise<Audits> {
   const trajanje_vseh_min_arr: number[] = []
   const trajanje_pravilnih_min_arr: number[] = []
-  const audits = await API().getProfilTestAudits(args.test_id)
+  const audits = await API().getProfilTestAudit(args.test_id)
 
   audits.forEach(audit => {
     const audit_trajanje = String_vDuration(audit?.trajanje?.toString() || "")

@@ -4,9 +4,6 @@
   import {onMount} from "svelte";
   import {type Audits, type Napake, page_audits, page_data, page_napake} from "./page";
   import type {Oseba} from "$lib/api";
-  import Button from "@smui/button";
-  import {alerts} from "$lib/stores/alertsStore";
-
 
   async function load_audits() {
     if (!show_audits) {
@@ -120,9 +117,7 @@
           <Row>
             <Cell><b>Datum</b></Cell>
             <Cell><b>Pred...</b></Cell>
-            <Cell><b>Tip</b></Cell>
-            <Cell><b>Vsebina</b></Cell>
-            <Cell><b>Dodatno</b></Cell>
+            <Cell><b>Napake</b></Cell>
           </Row>
         </Head>
 
@@ -133,14 +128,8 @@
             {#each napake as napaka}
               <Row>
                 <Cell>{napaka.datum}</Cell>
-                <Cell>{napaka.dni}</Cell>
-                <Cell>{napaka.tip}</Cell>
-                <Cell>
-                  <Button on:click={() => alerts.info(napaka.vsebina)}>Vsebina</Button>
-                </Cell>
-                <Cell>
-                  <Button on:click={() => alerts.info(napaka.dodatno)}>Dodatno</Button>
-                </Cell>
+                <Cell>{napaka.dni} dni</Cell>
+                <Cell>{napaka.napake}</Cell>
               </Row>
             {/each}
           {:else}

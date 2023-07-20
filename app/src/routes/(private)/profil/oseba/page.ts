@@ -43,7 +43,7 @@ export async function page_audits() {
     } else {
       // @ts-ignore
       days_audits[oddaljenost] = {
-        datum: audit?.ustvarjeno?.toString()?.split("T")[0],
+        datum: Date_datumStr(ustvarjeno_date),
         dni: oddaljenost,
         akcije: 1,
         trajanje_min: trajanje_minute
@@ -56,32 +56,27 @@ export async function page_audits() {
 export type Napake = {
   datum: string,
   dni: number,
-  tip: string,
-  vsebina: string,
-  dodatno: string
+  napake: number
 }
 
 export async function page_napake(): Promise<Napake[]> {
   // @ts-ignore
-  let napake = await API().getProfilNapaka()
-  return napake.map(napaka => {
-    const datum = String_vDate(napaka.ustvarjeno?.toString() || "")
-    let vsebina = napaka.vsebina || ""
-    let dodatno = napaka.dodatno || ""
-    try {
-      vsebina = JSON.parse(vsebina)
-    } catch (e) {
-    }
-    try {
-      dodatno = JSON.parse(dodatno)
-    } catch (e) {
-    }
-    return {
-      datum: Date_datumStr(datum),
-      dni: Date_oddaljenost_v_dneh(datum),
-      tip: napaka.tip || "",
-      vsebina: vsebina,
-      dodatno: dodatno,
+  const days_napake: { string: Napake } = {}
+  const napake = await API().getProfilNapaka()
+  napake.forEach(napaka => {
+    const ustvarjeno_date = String_vDate(napaka?.ustvarjeno?.toString() || "")
+    const oddaljenost = Date_oddaljenost_v_dneh(ustvarjeno_date)
+    if (oddaljenost in days_napake) {
+      // @ts-ignore
+      days_napake[oddaljenost].napake += 1
+    } else {
+      // @ts-ignore
+      days_napake[oddaljenost] = {
+        datum: Date_datumStr(ustvarjeno_date),
+        dni: oddaljenost,
+        napake: 1,
+      }
     }
   })
+  return Object.values(days_napake).sort((ele, ele2) => ele2.dni - ele.dni)
 }

@@ -1,11 +1,10 @@
-import {serializeError} from "serialize-error";
+import {type ErrorObject, serializeError} from "serialize-error";
 
 export function Error_serializiraj(err: any): string {
-  try {
-    err.stack = undefined
-  } catch (e) {
-  }
-  return JSON.stringify(serializeError(err, {maxDepth: 6}))
+  let errObj: ErrorObject = serializeError(err, {maxDepth: 6})
+  // @ts-ignore
+  errObj.stack = errObj.stack?.split("\n")
+  return JSON.stringify(errObj)
 }
 
 export function Error_pretty(err: any): string {
@@ -13,7 +12,7 @@ export function Error_pretty(err: any): string {
     err.stack = undefined
   } catch (e) {
   }
-  let data = JSON.stringify(serializeError(err, {maxDepth: 6}), null, 4)
+  let data = JSON.stringify(serializeError(err, {maxDepth: 6}), null, "\r")
   for (let ele of ["{", "}"]) data = data.replaceAll(ele, "")
   return data.trim()
 }
