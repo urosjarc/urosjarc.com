@@ -7,7 +7,9 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
+import io.ktor.util.*
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 fun ApplicationCall.profil(): Profil {
@@ -26,6 +28,9 @@ suspend fun ApplicationCall.client_error(cls: Any? = null, info: String? = null)
         )
     )
 }
+
+fun ApplicationCall.request_info(): String = Json.encodeToString(this.request.headers.toMap())
+
 
 suspend fun ApplicationCall.client_unauthorized() {
     val status = HttpStatusCode.Unauthorized

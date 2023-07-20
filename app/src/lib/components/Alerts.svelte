@@ -2,11 +2,12 @@
 
   import Alert from "./Alert.svelte";
   import {Separator} from "@smui/list";
-  import {Error_serializiraj} from "../extends/Error";
+  import {Error_pretty} from "../extends/Error";
 
   export let fatal: string = ""
   export let error: string = ""
   export let warn: string = ""
+  export let info: string = ""
 
 </script>
 
@@ -24,7 +25,7 @@
         obvestil.
       </p>
       <Separator/>
-      <pre><b>{Error_serializiraj(fatal)}</b></pre>
+      <pre><b>{Error_pretty(fatal)}</b></pre>
     </svelte:fragment>
   </Alert>
 
@@ -39,7 +40,7 @@
         Če je napaka sistemska, Vas bom obvestil takoj, ko bom napako odpravil.
       </p>
       <Separator/>
-      <pre><b>{Error_serializiraj(error)}</b></pre>
+      <pre><b>{Error_pretty(error)}</b></pre>
     </svelte:fragment>
   </Alert>
 
@@ -53,7 +54,16 @@
         Sistem je zabeležil incident.
       </p>
       <Separator/>
-      <pre style="text-align: center"><b>{Error_serializiraj(warn)}</b></pre>
+      <pre><b>{Error_pretty(warn)}</b></pre>
+    </svelte:fragment>
+  </Alert>
+
+  <Alert bind:open={info}>
+    <svelte:fragment slot="naslov">
+      INFO
+    </svelte:fragment>
+    <svelte:fragment slot="vsebina">
+      <pre style="text-align: left"><b>{Error_pretty(info)}</b></pre>
     </svelte:fragment>
   </Alert>
 

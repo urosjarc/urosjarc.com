@@ -1,13 +1,27 @@
 <script lang="ts">
+  import Tooltip, {Wrapper} from '@smui/tooltip';
   import DataTable, {Body, Cell, Head, Row} from '@smui/data-table';
   import Accordion, {Content, Header, Panel} from "@smui-extra/accordion";
   import {onMount} from "svelte";
-  import {type Audits, page_audits, page_data} from "./page";
+  import {type Audits, type Napake, page_audits, page_data, page_napake} from "./page";
   import type {Oseba} from "$lib/api";
+  import Button from "@smui/button";
+  import {Textarea} from "@smui/textfield";
+  import Alerts from "$lib/components/Alerts.svelte";
+  import {alerts} from "$lib/stores/alertsStore";
 
   async function load_audits() {
-    audits = await page_audits()
-    show_audits = true
+    if (!show_audits) {
+      audits = await page_audits()
+      show_audits = true
+    }
+  }
+
+  async function load_napake() {
+    if (!show_napake) {
+      napake = await page_napake()
+      show_napake = true
+    }
   }
 
   onMount(() => {
@@ -15,7 +29,9 @@
   })
 
   let show_audits = false
+  let show_napake = false
   let audits: Audits[] = []
+  let napake: Napake[] = []
   let oseba: Oseba = {}
   let kontakti = []
   let naslovi = []
@@ -23,7 +39,7 @@
 
 <Accordion>
   <Panel open>
-    <Header on:click={load_audits} class="col-royalblue">
+    <Header class="col-royalblue">
       <h3 style="text-align: center; margin: 0">Profil</h3>
     </Header>
     <Content style="padding: 0">
@@ -86,6 +102,51 @@
             {/each}
           {:else}
             <h3 style="text-align: center">Uporabnik še brez dejavnosti!</h3>
+          {/if}
+        {/if}
+
+        </Body>
+      </DataTable>
+
+    </Content>
+  </Panel>
+  <Panel close>
+    <Header on:click={load_napake} class="col-royalblue">
+      <h3 style="text-align: center; margin: 0">Napake</h3>
+    </Header>
+    <Content style="padding: 0">
+
+      <DataTable style="width: 100%">
+
+        <Head>
+          <Row>
+            <Cell><b>Datum</b></Cell>
+            <Cell><b>Pred...</b></Cell>
+            <Cell><b>Tip</b></Cell>
+            <Cell><b>Vsebina</b></Cell>
+            <Cell><b>Dodatno</b></Cell>
+          </Row>
+        </Head>
+
+        <Body>
+
+        {#if show_napake}
+          {#if napake.length > 0}
+            {#each napake as napaka}
+              <Row>
+                <Cell>{napaka.datum}</Cell>
+                <Cell>{napaka.dni}</Cell>
+                <Cell>{napaka.tip}</Cell>
+                <Cell>
+                  <Button on:click={() => alerts.info(napaka.vsebina)}>Vsebina</Button>
+                </Cell>
+                <Cell>
+                  <Button on:click={() => alerts.info(napaka.dodatno)}>Dodatno</Button>
+                </Cell>
+              </Row>
+            {/each}
+          {:else}
+            <h3 style="text-align: center">Uporabnik še brez napak!</h3>
           {/if}
         {/if}
 

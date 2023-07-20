@@ -38,6 +38,7 @@ class DbService(val db_url: String, val db_name: String) {
     val audits = db.getCollection<Audit>(collectionName = ime<Audit>())
     val osebe = db.getCollection<Oseba>(collectionName = ime<Oseba>())
     val statusi = db.getCollection<Status>(collectionName = ime<Status>())
+    val napake = db.getCollection<Napaka>(collectionName = ime<Napaka>())
 
     inline fun <reified T : Any> nakljucni(): T {
         val obj = faker.randomProvider.randomClassInstance<T> {
@@ -54,6 +55,7 @@ class DbService(val db_url: String, val db_name: String) {
     }
 
     fun nafilaj() {
+        val all_napaka = mutableListOf<Napaka>()
         val all_oseba = mutableListOf<Oseba>()
         val all_kontakt = mutableListOf<Kontakt>()
         val all_sporocilo = mutableListOf<Sporocilo>()
@@ -77,6 +79,9 @@ class DbService(val db_url: String, val db_name: String) {
             (1..3).forEach {
                 val test = nakljucni<Test>().apply { this.oseba_id = oseba._id }
                 all_test.add(test)
+
+                val napaka = nakljucni<Napaka>().apply { this.entitete_id = listOf(oseba._id.toString()) }
+                all_napaka.add(napaka)
             }
 
             (1..2).forEach {
@@ -140,6 +145,7 @@ class DbService(val db_url: String, val db_name: String) {
             }
         }
         this.ustvari(all_oseba)
+        this.ustvari(all_napaka)
         this.ustvari(all_kontakt)
         this.ustvari(all_sporocilo)
         this.ustvari(all_naslov)
@@ -203,6 +209,16 @@ class DbService(val db_url: String, val db_name: String) {
         return when (stran) {
             null -> audits
             else -> audits.stran(n = stran)
+        }.toList()
+    }
+
+    fun napake(entity_id: String, stran: Int?): List<Napaka> {
+        val napake = napake.find(
+            filter = Filters.eq(Napaka::entitete_id.name, entity_id)
+        )
+        return when (stran) {
+            null -> napake
+            else -> napake.stran(n = stran)
         }.toList()
     }
 

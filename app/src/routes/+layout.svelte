@@ -9,6 +9,7 @@
   let fatal = ""
   let error = ""
   let warn = ""
+  let info = ""
 
   onMount(() => {
     alerts.store_fatal.subscribe(text => {
@@ -23,6 +24,9 @@
     alerts.store_unauthorized.subscribe(text => {
       if (text) warn = text
     })
+    alerts.store_info.subscribe(text => {
+      if (text) info = text
+    })
   })
 </script>
 
@@ -34,7 +38,7 @@
     <Navigation classes="col-3" text="Prijava" icon="person" link="{route.prijava}"/>
   </svelte:fragment>
   <svelte:fragment slot="body">
-    <Alerts bind:fatal={fatal} bind:error={error} bind:warn={warn}/>
+    <Alerts bind:info={info} bind:fatal={fatal} bind:error={error} bind:warn={warn}/>
     <slot/>
   </svelte:fragment>
 </Layout>

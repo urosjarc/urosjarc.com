@@ -12,9 +12,9 @@ export function Date_ime_dneva(date: Date) {
 }
 
 export function Date_casStr(date: Date): string {
-  return date.toLocaleDateString(locale).replaceAll(" ", "")
+  return date.toLocaleTimeString(locale).replaceAll(" ", "")
 }
 
 export function Date_datumStr(date: Date): string {
-  return date.toLocaleTimeString(locale)
+  return date.toLocaleDateString(locale).replaceAll(" ", "")
 }

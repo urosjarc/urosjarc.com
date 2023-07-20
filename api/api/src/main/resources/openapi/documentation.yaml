@@ -76,6 +76,22 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Profil"
+  /napaka:
+    post:
+      description: ""
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/NapakaReq"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Napaka"
   /profil:
     get:
       description: ""
@@ -86,7 +102,7 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/OsebaData"
-  /profil/audits:
+  /profil/audit:
     get:
       description: ""
       parameters:
@@ -104,7 +120,46 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Audit"
-  /profil/test/{test_id}/audits:
+  /profil/napaka:
+    get:
+      description: ""
+      parameters:
+      - name: "stran"
+        in: "query"
+        required: false
+        schema:
+          type: "integer"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Napaka"
+    post:
+      description: ""
+      parameters:
+      - name: "stran"
+        in: "query"
+        required: false
+        schema:
+          type: "integer"
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/NapakaReq"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Napaka"
+  /profil/test/{test_id}/audit:
     get:
       description: ""
       parameters:
@@ -155,7 +210,7 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Status"
-  /profil/test/{test_id}/status/{status_id}/audits:
+  /profil/test/{test_id}/status/{status_id}/audit:
     get:
       description: ""
       parameters:
@@ -214,6 +269,41 @@ components:
           - "UCITELJ"
           - "INSTRUKTOR"
           - "ADMIN"
+    NapakaReq:
+      type: "object"
+      properties:
+        vsebina:
+          type: "string"
+        tip:
+          type: "string"
+          enum:
+          - "ERROR"
+          - "WARN"
+          - "FATAL"
+    LocalDateTime:
+      type: "object"
+      properties: {}
+    Napaka:
+      type: "object"
+      properties:
+        _id:
+          type: "string"
+        entitete_id:
+          type: "array"
+          items:
+            type: "string"
+        tip:
+          type: "string"
+          enum:
+          - "ERROR"
+          - "WARN"
+          - "FATAL"
+        vsebina:
+          type: "string"
+        dodatno:
+          type: "string"
+        ustvarjeno:
+          $ref: "#/components/schemas/LocalDateTime"
     Oseba:
       type: "object"
       properties:
@@ -425,9 +515,6 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/TestData"
-    LocalDateTime:
-      type: "object"
-      properties: {}
     Audit:
       type: "object"
       properties:

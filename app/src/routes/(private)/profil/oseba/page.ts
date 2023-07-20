@@ -2,7 +2,7 @@ import type {Kontakt, Naslov, Oseba, OsebaData} from "$lib/api";
 import {profil} from "$lib/stores/profilStore";
 import {API} from "$lib/stores/apiStore";
 import {String_vDate, String_vDuration} from "$lib/extends/String";
-import {Date_oddaljenost_v_dneh} from "$lib/extends/Date";
+import {Date_datumStr, Date_oddaljenost_v_dneh} from "$lib/extends/Date";
 import {Duration_vSekunde} from "$lib/extends/Duration";
 
 export type Data = {
@@ -30,8 +30,8 @@ export type Audits = {
 export async function page_audits() {
   // @ts-ignore
   const days_audits: { string: Audits } = {}
-  const _audits = await API().getProfilAudits()
-  _audits.forEach(audit => {
+  const audits = await API().getProfilAudit()
+  audits.forEach(audit => {
     const ustvarjeno_date = String_vDate(audit?.ustvarjeno?.toString() || "")
     const oddaljenost = Date_oddaljenost_v_dneh(ustvarjeno_date)
     const trajanje_minute = Duration_vSekunde(String_vDuration(audit?.trajanje?.toString() || "")) / 60
@@ -51,4 +51,37 @@ export async function page_audits() {
     }
   })
   return Object.values(days_audits).sort((ele, ele2) => ele2.dni - ele.dni)
+}
+
+export type Napake = {
+  datum: string,
+  dni: number,
+  tip: string,
+  vsebina: string,
+  dodatno: string
+}
+
+export async function page_napake(): Promise<Napake[]> {
+  // @ts-ignore
+  let napake = await API().getProfilNapaka()
+  return napake.map(napaka => {
+    const datum = String_vDate(napaka.ustvarjeno?.toString() || "")
+    let vsebina = napaka.vsebina || ""
+    let dodatno = napaka.dodatno || ""
+    try {
+      vsebina = JSON.parse(vsebina)
+    } catch (e) {
+    }
+    try {
+      dodatno = JSON.parse(dodatno)
+    } catch (e) {
+    }
+    return {
+      datum: Date_datumStr(datum),
+      dni: Date_oddaljenost_v_dneh(datum),
+      tip: napaka.tip || "",
+      vsebina: vsebina,
+      dodatno: dodatno,
+    }
+  })
 }

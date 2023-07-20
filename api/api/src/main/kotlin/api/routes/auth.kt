@@ -55,7 +55,7 @@ fun Route.auth(jwkProvider: JwkProvider) {
         if(body.username == "a") this.call.client_unauthorized()
         if(body.username == "b") this.call.client_error(db, info="To je uporabniska napaka!")
         if(body.username == "c") this.call.system_error(log, info="To je sistemska napaka!")
-        val oseba = db.dobi<Oseba>(0).random()
+        val oseba = db.dobi<Oseba>(0).first()
         log.info("Oseba: $oseba")
         //TODO: Naredi pravilno logiko
 
