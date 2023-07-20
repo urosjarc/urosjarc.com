@@ -16,6 +16,7 @@ data class Audit(
     val ustvarjeno: LocalDateTime = LocalDateTime.zdaj()
 ) : Entiteta {
     enum class Tip {
-        STATUS_POSODOBITEV
+        STATUS_TIP_POSODOBITEV,
+        TEST_DATUM_POSODOBITEV
     }
 }

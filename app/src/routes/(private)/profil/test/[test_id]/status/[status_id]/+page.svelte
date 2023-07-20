@@ -61,9 +61,9 @@
         <Content style="padding: 0">
           <img width="100%" src="{data.resitev_src}">
 
-          <Group style="display: flex; justify-content: stretch; width: 100%">
+          <Group class="razsiri">
             {#each statusi as status}
-              <Button on:click={() => koncaj_nalogo(status)} class="{StatusTip_class(status)}" style="flex-grow: 1; border-radius: 0">
+              <Button on:click={() => koncaj_nalogo(status)} class="{StatusTip_class(status)} razsiri-gumb">
                 <b>{status}</b>
               </Button>
             {/each}

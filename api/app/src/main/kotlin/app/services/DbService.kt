@@ -21,6 +21,7 @@ import kotlinx.datetime.LocalDateTime
 import org.apache.logging.log4j.kotlin.logger
 import org.bson.types.ObjectId
 import kotlin.random.Random
+import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
@@ -38,6 +39,7 @@ class DbService(val db_url: String, val db_name: String) {
     val audits = db.getCollection<Audit>(collectionName = ime<Audit>())
     val osebe = db.getCollection<Oseba>(collectionName = ime<Oseba>())
     val statusi = db.getCollection<Status>(collectionName = ime<Status>())
+    val testi = db.getCollection<Test>(collectionName = ime<Test>())
     val napake = db.getCollection<Napaka>(collectionName = ime<Napaka>())
 
     inline fun <reified T : Any> nakljucni(): T {
@@ -77,7 +79,7 @@ class DbService(val db_url: String, val db_name: String) {
             all_zvezek.add(zvezek)
 
             (1..3).forEach {
-                val test = nakljucni<Test>().apply { this.oseba_id = oseba._id }
+                val test = nakljucni<Test>().apply { this.oseba_id = oseba._id.toString() }
                 all_test.add(test)
 
                 val napaka = nakljucni<Napaka>().apply { this.entitete_id = listOf(oseba._id.toString()) }
@@ -86,38 +88,40 @@ class DbService(val db_url: String, val db_name: String) {
 
             (1..2).forEach {
 
-                val tematika = nakljucni<Tematika>().apply { this.zvezek_id = zvezek._id }
+                val tematika = nakljucni<Tematika>().apply { this.zvezek_id = zvezek._id.toString() }
                 all_tematika.add(tematika)
 
-                val kontakt = nakljucni<Kontakt>().apply { this.oseba_id = oseba._id }
+                val kontakt = nakljucni<Kontakt>().apply { this.oseba_id = oseba._id.toString() }
                 all_kontakt.add(kontakt)
 
-                val naslov = nakljucni<Naslov>().apply { this.oseba_id = oseba._id }
+                val naslov = nakljucni<Naslov>().apply { this.oseba_id = oseba._id.toString() }
                 all_naslov.add(naslov)
 
                 val ucenje0 = nakljucni<Ucenje>().apply {
-                    this.oseba_ucenec_id = oseba._id; this.oseba_ucitelj_id = all_oseba.random()._id
+                    this.oseba_ucenec_id = oseba._id.toString(); this.oseba_ucitelj_id =
+                    all_oseba.random()._id.toString()
                 }; all_ucenje.add(ucenje0)
 
                 val ucenje1 = nakljucni<Ucenje>().apply {
-                    this.oseba_ucitelj_id = oseba._id; this.oseba_ucenec_id = all_oseba.random()._id
+                    this.oseba_ucitelj_id = oseba._id.toString(); this.oseba_ucenec_id =
+                    all_oseba.random()._id.toString()
                 }; all_ucenje.add(ucenje1)
 
 
                 (1..5).forEach {
                     val sporocilo = nakljucni<Sporocilo>().apply {
-                        this.kontakt_posiljatelj_id = all_kontakt.random()._id
-                        this.kontakt_prejemnik_id = all_kontakt.random()._id
+                        this.kontakt_posiljatelj_id = all_kontakt.random()._id.toString()
+                        this.kontakt_prejemnik_id = all_kontakt.random()._id.toString()
                     }
                     all_sporocilo.add(sporocilo)
 
-                    val naloga = nakljucni<Naloga>().apply { this.tematika_id = tematika._id }
+                    val naloga = nakljucni<Naloga>().apply { this.tematika_id = tematika._id.toString() }
                     all_naloga.add(naloga)
 
                     (1..15).forEach {
                         val status = nakljucni<Status>().apply {
-                            this.naloga_id = all_naloga.random()._id
-                            this.test_id = all_test.random()._id
+                            this.naloga_id = all_naloga.random()._id.toString()
+                            this.test_id = all_test.random()._id.toString()
                         }
                         all_status.add(status)
 
@@ -125,10 +129,10 @@ class DbService(val db_url: String, val db_name: String) {
                             val audit = Audit(
                                 entitete_id = listOf(
                                     oseba._id.toString(),
-                                    status.test_id.toString(),
+                                    status.test_id,
                                     status._id.toString()
                                 ),
-                                tip = Audit.Tip.STATUS_POSODOBITEV,
+                                tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
                                 opis = Status.Tip.values().random().name,
                                 entiteta = "entiteta",
                                 ustvarjeno = LocalDateTime.zdaj(dDni = -Random.nextInt(0, 20)),
@@ -205,7 +209,8 @@ class DbService(val db_url: String, val db_name: String) {
     fun audits(entity_id: String, stran: Int?): List<Audit> {
         val audits = audits.find(
             filter = Filters.eq(Audit::entitete_id.name, entity_id)
-        )
+        ).sort(Sorts.descending(Audit::ustvarjeno.name))
+
         return when (stran) {
             null -> audits
             else -> audits.stran(n = stran)
@@ -215,7 +220,7 @@ class DbService(val db_url: String, val db_name: String) {
     fun napake(entity_id: String, stran: Int?): List<Napaka> {
         val napake = napake.find(
             filter = Filters.eq(Napaka::entitete_id.name, entity_id)
-        )
+        ).sort(Sorts.descending(Napaka::ustvarjeno.name))
         return when (stran) {
             null -> napake
             else -> napake.stran(n = stran)
@@ -318,10 +323,13 @@ class DbService(val db_url: String, val db_name: String) {
         return aggregation.first()
     }
 
-    fun status_obstaja(id: String, test_id: String, status_id: String): Boolean {
+    /**
+     * Zaradi tega ker se mora preveriti ali je uporabnik owner statusa!
+     */
+    fun status_obstaja(id: String, oseba_id: String, test_id: String): Boolean {
         val aggregation: AggregateIterable<OsebaData> = osebe.aggregate<OsebaData>(
             listOf(
-                Aggregates.match(Filters.eq(Test::oseba_id.name, id)),
+                Aggregates.match(Filters.eq(Oseba::_id.name, oseba_id)),
                 Aggregates_project_root(Oseba::class),
                 Aggregates_lookup(
                     from = Test::oseba_id,
@@ -332,7 +340,7 @@ class DbService(val db_url: String, val db_name: String) {
                             from = Status::test_id,
                             to = Test::_id,
                             pipeline = listOf(
-                                Aggregates.match(Filters.eq(Status::_id.name, status_id)),
+                                Aggregates.match(Filters.eq(Status::_id.name, id)),
                             )
                         ),
                     ),
@@ -340,11 +348,11 @@ class DbService(val db_url: String, val db_name: String) {
             )
         )
 
-        return aggregation.firstOrNull()?.test_refs?.get(0)?.status_refs?.get(0)?.status?._id == status_id
+        return aggregation.firstOrNull()?.test_refs?.get(0)?.status_refs?.get(0)?.status?._id == id
     }
 
     fun status_update(id: String, oseba_id: String, test_id: String, tip: Status.Tip, sekund: Int): Status? {
-        val r = statusi.findOneAndUpdate(
+        val r: Status = statusi.findOneAndUpdate(
             filter = Filters.and(
                 Filters.eq(Status::_id.name, id),
                 Filters.eq(Status::test_id.name, test_id)
@@ -356,10 +364,34 @@ class DbService(val db_url: String, val db_name: String) {
 
         val audit = Audit(
             entiteta = ime<Status>(),
-            tip = Audit.Tip.STATUS_POSODOBITEV,
+            tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
             trajanje = sekund.toDuration(DurationUnit.MINUTES),
             opis = r.tip.name,
             entitete_id = listOf(id, oseba_id, test_id)
+        )
+
+        this.ustvari(audit)
+
+        return r
+    }
+
+    fun test_update(id: String, oseba_id: String, datum: LocalDate): Test? {
+        val r: Test = testi.findOneAndUpdate(
+            filter = Filters.and(
+                Filters.eq(Test::_id.name, id),
+                Filters.eq(Test::oseba_id.name, oseba_id),
+            ),
+            update = Updates.set(Test::deadline.name, datum),
+            options = FindOneAndUpdateOptions()
+                .returnDocument(ReturnDocument.AFTER)
+        ) ?: return null
+
+        val audit = Audit(
+            entiteta = ime<Test>(),
+            tip = Audit.Tip.TEST_DATUM_POSODOBITEV,
+            trajanje = Duration.ZERO,
+            opis = r.deadline.toString(),
+            entitete_id = listOf(id, oseba_id)
         )
 
         this.ustvari(audit)

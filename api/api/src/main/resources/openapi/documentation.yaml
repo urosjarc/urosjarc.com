@@ -159,6 +159,34 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Napaka"
+  /profil/test/{test_id}:
+    put:
+      description: ""
+      parameters:
+      - name: "test_id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: "#/components/schemas/TestUpdateReq"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorRes"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Test"
   /profil/test/{test_id}/audit:
     get:
       description: ""
@@ -527,7 +555,8 @@ components:
         tip:
           type: "string"
           enum:
-          - "STATUS_POSODOBITEV"
+          - "STATUS_TIP_POSODOBITEV"
+          - "TEST_DATUM_POSODOBITEV"
         opis:
           type: "string"
         trajanje:
@@ -537,6 +566,11 @@ components:
           type: "string"
         ustvarjeno:
           $ref: "#/components/schemas/LocalDateTime"
+    TestUpdateReq:
+      type: "object"
+      properties:
+        datum:
+          $ref: "#/components/schemas/LocalDate"
     StatusUpdateReq:
       type: "object"
       properties:

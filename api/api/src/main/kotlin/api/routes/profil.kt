@@ -19,6 +19,7 @@ import io.ktor.server.routing.*
 import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
 import si.urosjarc.server.api.response.StatusUpdateReq
+import si.urosjarc.server.api.response.TestUpdateReq
 
 
 @Resource("profil")
@@ -72,10 +73,9 @@ fun Route.profil() {
         val profil = this.call.profil()
         val body = this.call.receive<StatusUpdateReq>()
         val test_id = it.parent.parent.test_id
-        val status_id = it.status_id
-        when (db.status_obstaja(id = profil.id, test_id = test_id, status_id = status_id)) {
-            true -> this.call.client_error(info = "${ime<Status>()} ne obstaja!")
-            false -> when (val r = db.status_update(
+        when (db.status_obstaja(id = it.status_id, oseba_id = profil.id, test_id = test_id)) {
+            false -> this.call.client_error(info = "${ime<Status>()} ne obstaja!")
+            true -> when (val r = db.status_update(
                 id = it.status_id,
                 oseba_id = profil.id,
                 test_id = it.parent.parent.test_id,
@@ -85,6 +85,18 @@ fun Route.profil() {
                 null -> this.call.client_error(info = "${ime<Status>()} ni posodobljen!")
                 else -> this.call.respond(r)
             }
+        }
+    }
+    this.put<profil.test.test_id> {
+        val profil = this.call.profil()
+        val body = this.call.receive<TestUpdateReq>()
+        when (val r = db.test_update(
+            id = it.test_id,
+            oseba_id = profil.id,
+            datum = body.datum
+        )) {
+            null -> this.call.client_error(info = "${ime<Status>()} ni posodobljen!")
+            else -> this.call.respond(r)
         }
     }
 
