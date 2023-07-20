@@ -3,13 +3,17 @@
   import Textfield from '@smui/textfield';
   import Icon from '@smui/textfield/icon';
 
+  function kontakt_submit(){
+
+  }
+
   let ime_priimek = "";
   let email = "";
   let telefon = "";
   let vsebina = "";
 </script>
 
-<form class="row" action="https://formspree.io/f/mayaagwp" method="POST">
+<form class="row" on:submit|preventDefault={kontakt_submit}>
 
   <div class="col-sm-12 col-xl-4">
     <Textfield required class="razsiri"

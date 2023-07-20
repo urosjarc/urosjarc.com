@@ -1,4 +1,4 @@
-package app.use_cases
+package app.use_cases_api
 
 import org.apache.logging.log4j.kotlin.logger
 

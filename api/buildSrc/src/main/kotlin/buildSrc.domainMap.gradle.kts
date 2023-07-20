@@ -17,8 +17,7 @@ data class Parameter(
             var type = info.last()
             var rel: String? = null
             if (type.contains("=")) type = type.split("=").first()
-//            if (type.contains("ObjectId") && !line.contains("override")) {
-            if (type.contains("String?") && !line.contains("override")) {
+            if (paramInfo.last().contains("_id") && paramInfo.last() != "_id") {
                 rel = paramInfo.last().split("_").first().capitalize()
             }
             return Parameter(def = paramInfo.first(), ime = paramInfo.last(), tip = type.trim(), rel = rel)
@@ -57,6 +56,7 @@ data class Package(
         fun parse(file: File): Package {
             val dataClasses = mutableListOf<DataClass>()
             for (line in file.readLines()) {
+                if (line.contains("Entiteta")) break
 
                 val cleanLine = line.trim()
 

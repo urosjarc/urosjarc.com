@@ -1,5 +1,6 @@
 package api.routes
 
+import api.extend.client_error
 import api.extend.request_info
 import api.request.NapakaReq
 import app.services.DbService
@@ -14,12 +15,16 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
+import si.urosjarc.server.api.response.KontaktReq
 
 @Resource("")
 class index {
 
     @Resource("napaka")
     class napaka(val parent: index)
+
+    @Resource("kontakt")
+    class kontakt(val parent: index)
 
 }
 
@@ -51,5 +56,13 @@ fun Route.index() {
         napaka.logiraj()
         db.ustvari(napaka)
         this.call.respond(napaka)
+    }
+
+    this.post<index.kontakt> {
+        val body = this.call.receive<KontaktReq>()
+
+
+
+
     }
 }

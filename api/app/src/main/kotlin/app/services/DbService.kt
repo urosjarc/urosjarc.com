@@ -30,8 +30,8 @@ var counters = mutableMapOf<String, Int>()
 
 class DbService(val db_url: String, val db_name: String) {
     private val serverApi = ServerApi.builder().version(ServerApiVersion.V1).build()
-    private val settings = MongoClientSettings.builder()
-        .applyConnectionString(ConnectionString(db_url)).serverApi(serverApi).build()
+    private val settings =
+        MongoClientSettings.builder().applyConnectionString(ConnectionString(db_url)).serverApi(serverApi).build()
     private val mongoClient = MongoClient.create(settings)
 
     val log = this.logger()
@@ -41,6 +41,7 @@ class DbService(val db_url: String, val db_name: String) {
     val statusi = db.getCollection<Status>(collectionName = ime<Status>())
     val testi = db.getCollection<Test>(collectionName = ime<Test>())
     val napake = db.getCollection<Napaka>(collectionName = ime<Napaka>())
+    val kontakti = db.getCollection<Kontakt>(collectionName = ime<Kontakt>())
 
     inline fun <reified T : Any> nakljucni(): T {
         val obj = faker.randomProvider.randomClassInstance<T> {
@@ -128,9 +129,7 @@ class DbService(val db_url: String, val db_name: String) {
                         (1..Random.nextInt(0, 5)).forEach {
                             val audit = Audit(
                                 entitete_id = listOf(
-                                    oseba._id.toString(),
-                                    status.test_id,
-                                    status._id.toString()
+                                    oseba._id.toString(), status.test_id, status._id.toString()
                                 ),
                                 tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
                                 opis = Status.Tip.values().random().name,
@@ -163,47 +162,36 @@ class DbService(val db_url: String, val db_name: String) {
 
     }
 
-    fun sprazni() = db.listCollectionNames()
-        .forEach { db.getCollection<Any>(collectionName = it).drop() }
+    fun sprazni() = db.listCollectionNames().forEach { db.getCollection<Any>(collectionName = it).drop() }
 
     inline fun <reified T : Entiteta> ustvari(entiteta: T): Boolean {
         entiteta._id = ObjectId().toHexString()
-        return db.getCollection<T>(collectionName = ime<T>())
-            .insertOne(entiteta)
-            .wasAcknowledged()
+        return db.getCollection<T>(collectionName = ime<T>()).insertOne(entiteta).wasAcknowledged()
     }
 
     inline fun <reified T : Entiteta> ustvari(entitete: Collection<T>): Boolean {
         entitete.forEach { if (it._id == null) it._id = ObjectId().toHexString() }
-        return db.getCollection<T>(collectionName = ime<T>())
-            .insertMany(documents = entitete as List<T>)
+        return db.getCollection<T>(collectionName = ime<T>()).insertMany(documents = entitete as List<T>)
             .wasAcknowledged()
     }
 
     inline fun <reified T : Entiteta> dobi(stran: Int): List<T> {
-        return db.getCollection<T>(collectionName = ime<T>())
-            .find().stran(n = stran)
-            .toList()
+        return db.getCollection<T>(collectionName = ime<T>()).find().stran(n = stran).toList()
     }
 
     fun filter_one(_id: String?) = Filters.eq("_id", _id)
 
     inline fun <reified T : Entiteta> dobi(_id: String): T? {
-        return db.getCollection<T>(collectionName = ime<T>())
-            .find(filter_one(_id))
-            .firstOrNull()
+        return db.getCollection<T>(collectionName = ime<T>()).find(filter_one(_id)).firstOrNull()
     }
 
     inline fun <reified T : Entiteta> posodobi(entiteta: T): T? {
         if (entiteta._id == null) return null
-        return db.getCollection<T>(collectionName = ime<T>())
-            .findOneAndReplace(filter_one(entiteta._id), entiteta)
+        return db.getCollection<T>(collectionName = ime<T>()).findOneAndReplace(filter_one(entiteta._id), entiteta)
     }
 
     inline fun <reified T : Entiteta> odstrani(_id: String): Boolean {
-        return db.getCollection<T>(collectionName = ime<T>())
-            .deleteOne(filter_one(_id))
-            .wasAcknowledged()
+        return db.getCollection<T>(collectionName = ime<T>()).deleteOne(filter_one(_id)).wasAcknowledged()
     }
 
     fun audits(entity_id: String, stran: Int?): List<Audit> {
@@ -234,8 +222,7 @@ class DbService(val db_url: String, val db_name: String) {
                 Aggregates.match(Filters.eq(Oseba::_id.name, id)),
                 Aggregates_project_root(Oseba::class),
                 Aggregates_lookup(
-                    from = Naslov::oseba_id,
-                    to = Oseba::_id
+                    from = Naslov::oseba_id, to = Oseba::_id
                 ),
                 Aggregates_lookup(
                     from = Test::oseba_id,
@@ -260,36 +247,24 @@ class DbService(val db_url: String, val db_name: String) {
                     ),
                 ),
                 Aggregates_lookup(
-                    from = Kontakt::oseba_id,
-                    to = Oseba::_id,
-                    pipeline = listOf(
+                    from = Kontakt::oseba_id, to = Oseba::_id, pipeline = listOf(
                         Aggregates_lookup(
-                            from = Sporocilo::kontakt_prejemnik_id,
-                            to = Kontakt::_id,
-                            pipeline = listOf(
+                            from = Sporocilo::kontakt_prejemnik_id, to = Kontakt::_id, pipeline = listOf(
                                 Aggregates_lookup(
-                                    from = Kontakt::_id,
-                                    to = Sporocilo::kontakt_posiljatelj_id,
-                                    pipeline = listOf(
+                                    from = Kontakt::_id, to = Sporocilo::kontakt_posiljatelj_id, pipeline = listOf(
                                         Aggregates_lookup(
-                                            from = Oseba::_id,
-                                            to = Kontakt::oseba_id
+                                            from = Oseba::_id, to = Kontakt::oseba_id
                                         ),
                                     )
                                 ),
                             )
                         ),
                         Aggregates_lookup(
-                            from = Sporocilo::kontakt_posiljatelj_id,
-                            to = Kontakt::_id,
-                            pipeline = listOf(
+                            from = Sporocilo::kontakt_posiljatelj_id, to = Kontakt::_id, pipeline = listOf(
                                 Aggregates_lookup(
-                                    from = Kontakt::_id,
-                                    to = Sporocilo::kontakt_prejemnik_id,
-                                    pipeline = listOf(
+                                    from = Kontakt::_id, to = Sporocilo::kontakt_prejemnik_id, pipeline = listOf(
                                         Aggregates_lookup(
-                                            from = Oseba::_id,
-                                            to = Kontakt::oseba_id
+                                            from = Oseba::_id, to = Kontakt::oseba_id
                                         ),
                                     )
                                 ),
@@ -298,9 +273,7 @@ class DbService(val db_url: String, val db_name: String) {
                     )
                 ),
                 Aggregates_lookup(
-                    from = Ucenje::oseba_ucenec_id,
-                    to = Ucenje::_id,
-                    pipeline = listOf(
+                    from = Ucenje::oseba_ucenec_id, to = Ucenje::_id, pipeline = listOf(
                         Aggregates_lookup(
                             from = Oseba::_id,
                             to = Ucenje::oseba_ucitelj_id,
@@ -308,12 +281,9 @@ class DbService(val db_url: String, val db_name: String) {
                     )
                 ),
                 Aggregates_lookup(
-                    from = Ucenje::oseba_ucitelj_id,
-                    to = Oseba::_id,
-                    pipeline = listOf(
+                    from = Ucenje::oseba_ucitelj_id, to = Oseba::_id, pipeline = listOf(
                         Aggregates_lookup(
-                            from = Oseba::_id,
-                            to = Ucenje::oseba_ucenec_id
+                            from = Oseba::_id, to = Ucenje::oseba_ucenec_id
                         )
                     )
                 ),
@@ -322,6 +292,49 @@ class DbService(val db_url: String, val db_name: String) {
 
         return aggregation.first()
     }
+
+    fun oseba_najdi(ime: String, priimek: String, telefon: String, email: String): OsebaData? {
+        val aggregation: AggregateIterable<OsebaData> = osebe.aggregate<OsebaData>(
+            listOf(
+                Aggregates.match(
+                    Filters.and(
+                        Filters.eq(Oseba::ime.name, ime),
+                        Filters.eq(Oseba::priimek.name, priimek),
+                    )
+                ), Aggregates_project_root(Oseba::class), Aggregates_lookup(
+                    from = Kontakt::oseba_id,
+                    to = Oseba::_id,
+                    pipeline = listOf(
+                        Aggregates.match(
+                            Filters.or(
+                                Filters.eq(Kontakt::data.name, telefon),
+                                Filters.eq(Kontakt::data.name, email),
+                            )
+                        ),
+                    ),
+                )
+            )
+        )
+        return aggregation.firstOrNull()
+    }
+
+    fun oseba_najdi(tip: Oseba.Tip): List<OsebaData> {
+        val aggregation: AggregateIterable<OsebaData> = osebe.aggregate<OsebaData>(
+            listOf(
+                Aggregates.match(
+                    Filters.and(
+                        Filters.eq(Oseba::tip.name, tip),
+                    )
+                ), Aggregates_project_root(Oseba::class), Aggregates_lookup(
+                    from = Kontakt::oseba_id,
+                    to = Oseba::_id
+                )
+            )
+        )
+        return aggregation.toList()
+    }
+
+    fun kontakt_najdi(data: String): Kontakt? = kontakti.find(Filters.eq(Kontakt::data.name, data)).firstOrNull()
 
     /**
      * Zaradi tega ker se mora preveriti ali je uporabnik owner statusa!
@@ -337,9 +350,7 @@ class DbService(val db_url: String, val db_name: String) {
                     pipeline = listOf(
                         Aggregates.match(Filters.eq(Test::_id.name, test_id)),
                         Aggregates_lookup(
-                            from = Status::test_id,
-                            to = Test::_id,
-                            pipeline = listOf(
+                            from = Status::test_id, to = Test::_id, pipeline = listOf(
                                 Aggregates.match(Filters.eq(Status::_id.name, id)),
                             )
                         ),
@@ -354,12 +365,10 @@ class DbService(val db_url: String, val db_name: String) {
     fun status_update(id: String, oseba_id: String, test_id: String, tip: Status.Tip, sekund: Int): Status? {
         val r: Status = statusi.findOneAndUpdate(
             filter = Filters.and(
-                Filters.eq(Status::_id.name, id),
-                Filters.eq(Status::test_id.name, test_id)
+                Filters.eq(Status::_id.name, id), Filters.eq(Status::test_id.name, test_id)
             ),
             update = Updates.set(Status::tip.name, tip),
-            options = FindOneAndUpdateOptions()
-                .returnDocument(ReturnDocument.AFTER)
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         ) ?: return null
 
         val audit = Audit(
@@ -382,8 +391,7 @@ class DbService(val db_url: String, val db_name: String) {
                 Filters.eq(Test::oseba_id.name, oseba_id),
             ),
             update = Updates.set(Test::deadline.name, datum),
-            options = FindOneAndUpdateOptions()
-                .returnDocument(ReturnDocument.AFTER)
+            options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
         ) ?: return null
 
         val audit = Audit(
@@ -398,4 +406,5 @@ class DbService(val db_url: String, val db_name: String) {
 
         return r
     }
+
 }

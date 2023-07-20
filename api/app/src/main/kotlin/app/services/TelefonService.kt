@@ -12,9 +12,7 @@ import com.twilio.rest.lookups.v1.PhoneNumber as PhoneNumberLookup
 import com.twilio.type.PhoneNumber as TwilioPhoneNumber
 
 
-class TelefonService(
-    val account_sid: String, val auth_token: String, val default_region: String, val phone: String
-) {
+class TelefonService(val account_sid: String, val auth_token: String, val default_region: String) {
 
     @JvmInline
     value class FormatiranTelefon(val value: String)
@@ -69,9 +67,10 @@ class TelefonService(
     }
 
     fun poslji_sms(
-        telefon: FormatiranTelefon, text: String
+        from: String,
+        to: String, text: String
     ): RezultatSmsPosiljanja {
-        val message: Message = Message.creator(PhoneNumber(telefon.value), PhoneNumber(this.phone), text).create()
+        val message: Message = Message.creator(PhoneNumber(to), PhoneNumber(from), text).create()
         val poslan = !listOf(
             Message.Status.CANCELED, Message.Status.FAILED, Message.Status.UNDELIVERED
         ).contains(message.status) && message.errorCode == null && message.errorMessage == null

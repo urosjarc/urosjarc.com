@@ -5,11 +5,12 @@ plugins {
     this.id("buildSrc.logging")
     this.id("buildSrc.serialization")
     this.id("buildSrc.datetime")
+    this.id("buildSrc.domainMap")
 }
 
-//configure<BuildSrc_domainMap_gradle.DomainMapExtension> {
-//    this.inputDir.set("src/commonMain/kotlin/domain")
-//}
+configure<BuildSrc_domainMap_gradle.DomainMapExtension> {
+    this.inputDir.set("src/main/kotlin/domain")
+}
 
 
 val openapi_dist = file("$projectDir/../api/src/main/resources/openapi")

@@ -45,7 +45,7 @@ class EmailService(
     }
 
     @JvmInline
-    value class FormatiranEmail(private val value: String)
+    value class FormatiranEmail(internal val value: String)
 
     fun obstaja(email: FormatiranEmail): Boolean {
         return try {
@@ -59,7 +59,7 @@ class EmailService(
     }
 
     fun formatiraj(email: String): RezultatEmailFormatiranja {
-        val formatiran_email = email.trim()
+        val formatiran_email = email.trim().lowercase()
         try {
             InternetAddress(formatiran_email).validate()
         } catch (ex: AddressException) {
