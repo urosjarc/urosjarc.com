@@ -49,7 +49,7 @@ export async function page_audits(args: { test_id: string, status_id: string }):
     audits.push({
       ustvarjeno_time: Date_datumStr(audit_ustvarjeno),
       ustvarjeno_date: Date_casStr(audit_ustvarjeno),
-      trajanje_min: audit_trajanje_min,
+      trajanje_min: Math.round(audit_trajanje_min),
       opis: audit?.opis || "",
     })
   })

@@ -92,7 +92,7 @@
                 <Cell>{audit.datum}</Cell>
                 <Cell>{audit.dni} dni</Cell>
                 <Cell>{audit.akcije} akcij</Cell>
-                <Cell>{Math.round(audit.trajanje_min)} min.</Cell>
+                <Cell>{audit.trajanje_min} min.</Cell>
               </Row>
             {/each}
           {:else}

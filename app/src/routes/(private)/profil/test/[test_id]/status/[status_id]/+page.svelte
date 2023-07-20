@@ -37,7 +37,6 @@
 
   let data = {}
   let audits = []
-  let statusi = [Status.tip.NERESENO, Status.tip.NAPACNO, Status.tip.PRAVILNO]
 
   let sekund = 0
   let loaded = false
@@ -62,7 +61,7 @@
           <img width="100%" src="{data.resitev_src}">
 
           <Group class="razsiri">
-            {#each statusi as status}
+            {#each Object.values(Status.tip) as status}
               <Button on:click={() => koncaj_nalogo(status)} class="{StatusTip_class(status)} razsiri-gumb">
                 <b>{status}</b>
               </Button>
