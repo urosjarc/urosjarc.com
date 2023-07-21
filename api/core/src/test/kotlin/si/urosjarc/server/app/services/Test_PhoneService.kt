@@ -63,20 +63,17 @@ class Test_PhoneService : KoinTest {
 
     @Test
     fun `obstaja, true`() {
-        val formatiran_telefon = TelefonService.FormatiranTelefon(value = "+386051240885")
-        assertTrue(this.service.obstaja(telefon = formatiran_telefon))
+        assertTrue(this.service.obstaja(telefon = "+386051240885"))
     }
 
     @Test
     fun `obstaja, false`() {
-        val formatiran_telefon = TelefonService.FormatiranTelefon(value = "051240885")
-        assertFalse(this.service.obstaja(telefon = formatiran_telefon))
+        assertFalse(this.service.obstaja(telefon = "051240885"))
     }
 
     @Test
     fun poslji_sms() {
-        val formatiran_telefon = TelefonService.FormatiranTelefon(value = "+38651240885")
-        when (val r = this.service.poslji_sms(from = formatiran_telefon, to = formatiran_telefon, "Hello World!")) {
+        when (val r = this.service.poslji_sms(from = "+38651240885", to = "+38651240885", "Hello World!")) {
             is TelefonService.RezultatSmsPosiljanja.ERROR_SMS_NI_POSLAN -> fail(r.info)
             TelefonService.RezultatSmsPosiljanja.PASS -> {}
         }

@@ -72,8 +72,7 @@ class Test_EmailService : KoinTest {
             "live.fr", "verizon.net", "live.co.uk", "googlemail.com", "yahoo.es", "ig.com.br",
             "live.nl", "bigpond.com", "terra.com.br", "yahoo.it",
         ).forEach {
-            val formatiran_email = EmailService.FormatiranEmail(value = "info@$it")
-            assertTrue(this.service.obstaja(email = formatiran_email), it)
+            assertTrue(this.service.obstaja(email = "info@$it"), it)
         }
     }
 
@@ -83,8 +82,7 @@ class Test_EmailService : KoinTest {
             "info@programerskiklub.si",
             "jar.fmf@gmail.si",
         ).forEach {
-            val formatiran_email = EmailService.FormatiranEmail(value = it)
-            assertFalse(this.service.obstaja(email = formatiran_email), it)
+            assertFalse(this.service.obstaja(email = it), it)
         }
     }
 

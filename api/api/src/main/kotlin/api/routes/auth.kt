@@ -1,9 +1,6 @@
 package api.routes
 
-import api.extend.client_error
-import api.extend.client_unauthorized
-import api.extend.profil
-import api.extend.system_error
+import api.extend.*
 import api.plugins.Profil
 import api.plugins.profil
 import base.Env
@@ -19,8 +16,6 @@ import io.ktor.server.resources.*
 import io.ktor.server.resources.post
 import io.ktor.server.response.*
 import io.ktor.server.routing.Route
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
 import services.DbService
@@ -53,8 +48,8 @@ fun Route.auth(jwkProvider: JwkProvider) {
 
         //TODO: Naredi pravilno logiko
         if (body.username == "a") this.call.client_unauthorized()
-        if (body.username == "b") this.call.client_error(db, info = "To je uporabniska napaka!")
-        if (body.username == "c") this.call.system_error(log, info = "To je sistemska napaka!")
+        if (body.username == "b") this.call.client_error(info = "To je uporabniska napaka!")
+        if (body.username == "c") this.call.system_error(info = "To je sistemska napaka!")
         val oseba = db.dobi<Oseba>(0).first()
         log.info("Oseba: $oseba")
         //TODO: Naredi pravilno logiko
@@ -65,7 +60,7 @@ fun Route.auth(jwkProvider: JwkProvider) {
         val token = JWT.create()
             .withAudience(Env.JWT_AUDIENCE)
             .withIssuer(Env.JWT_ISSUER)
-            .withClaim(Profil.claim, Json.encodeToString(oseba.profil()))
+            .withClaim(Profil.claim, this.call.zakodiraj(oseba.profil()))
             .withExpiresAt(Date(System.currentTimeMillis() + 5 * 60 * 1000))
             .sign(Algorithm.RSA256(publicKey as RSAPublicKey, privateKey as RSAPrivateKey))
 

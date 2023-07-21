@@ -2,10 +2,15 @@ package base
 
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import services.DbService
 import services.EmailService
+import services.JsonService
 import services.TelefonService
+import use_cases.Pripravi_kontaktni_obrazec
+import use_cases.Ustvari_templejt
+import use_cases_api.Sprejmi_kontaktni_obrazec
 
 object App {
     enum class Tip { PRODUCTION, DEVELOPMENT, TEST }
@@ -32,6 +37,13 @@ object App {
                 db_name = Env.DB_NAME
             )
         }
+        this.single<JsonService> {
+            JsonService()
+        }
+
+        this.factoryOf(::Pripravi_kontaktni_obrazec)
+        this.factoryOf(::Ustvari_templejt)
+        this.factoryOf(::Sprejmi_kontaktni_obrazec)
     }
 
     fun pripravi_DI(tip: Tip = Tip.TEST) {

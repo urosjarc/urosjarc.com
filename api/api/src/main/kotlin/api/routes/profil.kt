@@ -62,7 +62,6 @@ class profil {
 
 fun Route.profil() {
     val db: DbService by this.inject()
-
     val log = this.logger()
 
     this.get<profil> {
