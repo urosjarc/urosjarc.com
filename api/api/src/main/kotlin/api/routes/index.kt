@@ -3,7 +3,7 @@ package api.routes
 import api.extend.client_error
 import api.extend.request_info
 import api.request.NapakaReq
-import app.services.DbService
+import services.DbService
 import domain.Napaka
 import io.ktor.resources.*
 import io.ktor.server.application.*

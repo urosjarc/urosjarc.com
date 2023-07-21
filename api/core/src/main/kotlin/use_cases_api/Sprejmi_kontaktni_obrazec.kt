@@ -1,4 +1,4 @@
-package app.use_cases_api
+package use_cases_api
 
 import app.services.DbService
 import app.services.EmailService
@@ -13,7 +13,7 @@ class Sprejmi_kontaktni_obrazec(
     private val db: DbService,
     private val telefon: TelefonService,
     private val email: EmailService,
-    private val pripravi_osebo: Pripravi_kontaktni_obrazec
+    private val pripravi_kontaktni_obrazec: Pripravi_kontaktni_obrazec
 ) {
     val log = this.logger()
 
@@ -27,41 +27,36 @@ class Sprejmi_kontaktni_obrazec(
         /**
          * Pripravi obrazec
          */
-        val obrazec = when (val r = this.pripravi_osebo.zdaj(
+        val obrazec = when (val r = this.pripravi_kontaktni_obrazec.zdaj(
             ime_priimek = ime_priimek,
             email = email,
             telefon = telefon,
             vsebina = vsebina
         )) {
+            is Pripravi_kontaktni_obrazec.Rezultat.PASS -> r
             is Pripravi_kontaktni_obrazec.Rezultat.FAIL -> {
                 return Rezultat.FAIL(info = r.info)
             }
-
-            is Pripravi_kontaktni_obrazec.Rezultat.PASS -> r
         }
 
         /**
-         * Najdi id osebe
+         * Zamenjaj osebo iz obrazca ce ze obstaja!
          */
-        val oseba_id: String = when (val r = db.oseba_najdi(
+        when (val r = db.oseba_najdi(
             ime = obrazec.oseba.ime,
             priimek = obrazec.oseba.priimek,
             telefon = obrazec.telefon.data,
             email = obrazec.email.data
         )) {
-            null -> {
-                db.ustvari(obrazec.oseba)
-                obrazec.oseba._id ?: ""
-            }
-
-            else -> r.oseba._id ?: ""
+            null -> db.ustvari(obrazec.oseba)
+            else -> obrazec.oseba = r.oseba
         }
 
         /**
          * Povezi kontakte z id osebe
          */
-        obrazec.email.oseba_id = oseba_id
-        obrazec.telefon.oseba_id = oseba_id
+        obrazec.email.oseba_id = obrazec.oseba._id
+        obrazec.telefon.oseba_id = obrazec.oseba._id
 
         /**
          * Najdi kontakte

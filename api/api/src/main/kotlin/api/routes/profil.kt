@@ -4,7 +4,7 @@ import api.extend.client_error
 import api.extend.profil
 import api.extend.request_info
 import api.request.NapakaReq
-import app.services.DbService
+import services.DbService
 import domain.Napaka
 import domain.Status
 import extends.ime

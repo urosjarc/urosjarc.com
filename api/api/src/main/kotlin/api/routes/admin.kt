@@ -6,7 +6,7 @@ import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
-import app.services.DbService
+import services.DbService
 
 
 @Resource("admin")

@@ -3,7 +3,7 @@ package api
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import app.base.Env
+import base.Env
 
 fun main() {
     embeddedServer(

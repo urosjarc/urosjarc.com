@@ -1,5 +1,7 @@
 package domain
 
+import base.AnyId
+import base.Id
 import extends.zdaj
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
@@ -7,13 +9,13 @@ import org.apache.logging.log4j.kotlin.logger
 
 @Serializable
 data class Napaka(
-    override var _id: String? = null,
-    var entitete_id: List<String> = listOf(),
+    override var _id: Id<Napaka> = Id(),
+    var entitete_id: List<AnyId> = listOf(),
     val tip: Tip,
     val vsebina: String,
     val dodatno: String,
     val ustvarjeno: LocalDateTime = LocalDateTime.zdaj()
-) : Entiteta {
+) : Entiteta<Napaka> {
     enum class Tip { ERROR, WARN, FATAL }
 
     fun logiraj() {

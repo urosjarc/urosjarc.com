@@ -1,7 +1,7 @@
 package si.urosjarc.server.app.services
 
-import app.base.App
-import app.services.DbService
+import base.App
+import services.DbService
 import org.apache.logging.log4j.kotlin.logger
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach

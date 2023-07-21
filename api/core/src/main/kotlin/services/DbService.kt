@@ -1,8 +1,9 @@
-package app.services
+package services
 
 import app.extend.Aggregates_lookup
 import app.extend.Aggregates_project_root
 import app.extend.stran
+import domain.Entiteta
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
 import com.mongodb.ServerApi

@@ -1,8 +1,8 @@
-package app.base
+package base
 
-import app.services.DbService
-import app.services.EmailService
-import app.services.TelefonService
+import services.DbService
+import services.EmailService
+import services.TelefonService
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
@@ -23,8 +23,7 @@ object App {
             TelefonService(
                 account_sid = Env.TWILIO_ACCOUNT_SID,
                 auth_token = Env.TWILIO_AUTH_TOKEN,
-                default_region = Env.TWILIO_DEFAULT_REGION,
-                phone = Env.TWILIO_PHONE
+                default_region = Env.TWILIO_DEFAULT_REGION
             )
         }
         this.single<DbService> {

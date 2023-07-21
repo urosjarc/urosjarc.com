@@ -1,4 +1,4 @@
-package app.base
+package base
 
 object Env {
     val PORT: Int = System.getenv("PORT").toInt()

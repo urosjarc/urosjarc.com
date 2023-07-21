@@ -1,4 +1,4 @@
-package app.services
+package services
 
 import org.apache.logging.log4j.kotlin.logger
 import java.net.InetAddress

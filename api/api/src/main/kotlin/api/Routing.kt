@@ -7,9 +7,9 @@ import api.routes.admin
 import api.routes.auth
 import api.routes.index
 import api.routes.profil
-import app.base.App
-import app.base.Env
-import app.services.DbService
+import base.App
+import base.Env
+import services.DbService
 import com.auth0.jwk.JwkProviderBuilder
 import domain.Oseba
 import io.ktor.http.*

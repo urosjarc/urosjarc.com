@@ -1,4 +1,4 @@
-package app.use_cases
+package use_cases
 
 import app.services.EmailService
 import app.services.TelefonService
@@ -12,7 +12,7 @@ class Pripravi_kontaktni_obrazec(
 ) {
 
     sealed interface Rezultat {
-        data class PASS(val oseba: Oseba, val email: Kontakt, val telefon: Kontakt, val sporocilo: Sporocilo) : Rezultat
+        data class PASS(var oseba: Oseba, val email: Kontakt, val telefon: Kontakt, val sporocilo: Sporocilo) : Rezultat
         data class FAIL(val info: String) : Rezultat
     }
 

@@ -1,4 +1,4 @@
-package app.extend
+package extend
 
 import com.mongodb.kotlin.client.FindIterable
 

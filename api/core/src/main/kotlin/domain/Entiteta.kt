@@ -1,9 +1,7 @@
 package domain
 
-import kotlinx.serialization.Serializable
+import base.Id
 
-
-@Serializable
-sealed interface Entiteta {
-    var _id: String?
+sealed interface Entiteta<T> {
+    var _id: Id<T>
 }
