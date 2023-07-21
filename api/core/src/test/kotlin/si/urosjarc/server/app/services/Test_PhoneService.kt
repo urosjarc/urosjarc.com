@@ -1,12 +1,12 @@
 package si.urosjarc.server.app.services
 
+import base.App
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.koin.test.KoinTest
 import org.koin.test.inject
-import base.App
 import services.TelefonService
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -76,7 +76,7 @@ class Test_PhoneService : KoinTest {
     @Test
     fun poslji_sms() {
         val formatiran_telefon = TelefonService.FormatiranTelefon(value = "+38651240885")
-        when (val r = this.service.poslji_sms(telefon = formatiran_telefon, "Hello World!")) {
+        when (val r = this.service.poslji_sms(from = formatiran_telefon, to = formatiran_telefon, "Hello World!")) {
             is TelefonService.RezultatSmsPosiljanja.ERROR_SMS_NI_POSLAN -> fail(r.info)
             TelefonService.RezultatSmsPosiljanja.PASS -> {}
         }

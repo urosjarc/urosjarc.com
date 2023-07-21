@@ -4,9 +4,10 @@ import api.extend.client_error
 import api.extend.profil
 import api.extend.request_info
 import api.request.NapakaReq
-import services.DbService
+import base.Id
 import domain.Napaka
 import domain.Status
+import domain.Test
 import extends.ime
 import io.ktor.resources.*
 import io.ktor.server.application.*
@@ -18,6 +19,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
+import services.DbService
 import si.urosjarc.server.api.response.StatusUpdateReq
 import si.urosjarc.server.api.response.TestUpdateReq
 
@@ -35,7 +37,7 @@ class profil {
     class test(val parent: profil) {
 
         @Resource("{test_id}")
-        class test_id(val parent: test, val test_id: String) {
+        class test_id(val parent: test, val test_id: Id<Test>) {
 
             @Resource("audit")
             class audit(val parent: test_id)
@@ -44,7 +46,7 @@ class profil {
             class status(val parent: test_id) {
 
                 @Resource("{status_id}")
-                class status_id(val parent: status, val status_id: String) {
+                class status_id(val parent: status, val status_id: Id<Status>) {
 
                     @Resource("audit")
                     class audit(val parent: status_id)
@@ -102,16 +104,16 @@ fun Route.profil() {
 
     this.get<profil.test.test_id.status.status_id.audit> {
         val status_id = it.parent.status_id
-        this.call.respond(db.audits(entity_id = status_id, stran = null))
+        this.call.respond(db.audits(entity_id = status_id.value(), stran = null))
     }
     this.get<profil.test.test_id.audit> {
         val test_id = it.parent.test_id
-        this.call.respond(db.audits(entity_id = test_id, stran = null))
+        this.call.respond(db.audits(entity_id = test_id.value(), stran = null))
     }
 
     this.get<profil.audit> {
         val profil = this.call.profil()
-        this.call.respond(db.audits(entity_id = profil.id, stran = it.stran))
+        this.call.respond(db.audits(entity_id = profil.id.value(), stran = it.stran))
     }
 
     /**
@@ -122,7 +124,7 @@ fun Route.profil() {
         val body = this.call.receive<NapakaReq>()
 
         val napaka = Napaka(
-            entitete_id = listOf(profil.id),
+            entitete_id = listOf(profil.id).map { it.value() },
             tip = body.tip,
             vsebina = body.vsebina,
             dodatno = this.call.request_info()
@@ -135,7 +137,7 @@ fun Route.profil() {
 
     this.get<profil.napaka> {
         val profil = this.call.profil()
-        val napake = db.napake(profil.id, stran = it.stran)
+        val napake = db.napake(profil.id.value(), stran = it.stran)
         this.call.respond(napake)
     }
 

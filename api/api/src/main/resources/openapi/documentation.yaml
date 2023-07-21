@@ -4,7 +4,7 @@ info:
   description: "server API"
   version: "1.0.0"
 servers:
-- url: "https://server"
+  - url: "https://server"
 paths:
   /:
     get:
@@ -106,11 +106,11 @@ paths:
     get:
       description: ""
       parameters:
-      - name: "stran"
-        in: "query"
-        required: false
-        schema:
-          type: "integer"
+        - name: "stran"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
       responses:
         "200":
           description: "OK"
@@ -124,11 +124,11 @@ paths:
     get:
       description: ""
       parameters:
-      - name: "stran"
-        in: "query"
-        required: false
-        schema:
-          type: "integer"
+        - name: "stran"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
       responses:
         "200":
           description: "OK"
@@ -141,11 +141,11 @@ paths:
     post:
       description: ""
       parameters:
-      - name: "stran"
-        in: "query"
-        required: false
-        schema:
-          type: "integer"
+        - name: "stran"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
       requestBody:
         content:
           '*/*':
@@ -163,11 +163,11 @@ paths:
     put:
       description: ""
       parameters:
-      - name: "test_id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "test_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       requestBody:
         content:
           '*/*':
@@ -191,11 +191,11 @@ paths:
     get:
       description: ""
       parameters:
-      - name: "test_id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "test_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "OK"
@@ -209,16 +209,16 @@ paths:
     put:
       description: ""
       parameters:
-      - name: "test_id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
-      - name: "status_id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "test_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "status_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       requestBody:
         content:
           '*/*':
@@ -242,16 +242,16 @@ paths:
     get:
       description: ""
       parameters:
-      - name: "test_id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
-      - name: "status_id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
+        - name: "test_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "status_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "OK"
@@ -274,8 +274,8 @@ components:
         napaka:
           type: "string"
           enum:
-          - "UPORABNISKA"
-          - "SISTEMSKA"
+            - "UPORABNISKA"
+            - "SISTEMSKA"
         razred:
           type: "string"
         info:
@@ -293,10 +293,10 @@ components:
         tip:
           type: "string"
           enum:
-          - "UCENEC"
-          - "UCITELJ"
-          - "INSTRUKTOR"
-          - "ADMIN"
+            - "UCENEC"
+            - "UCITELJ"
+            - "INSTRUKTOR"
+            - "ADMIN"
     NapakaReq:
       type: "object"
       properties:
@@ -305,12 +305,12 @@ components:
         tip:
           type: "string"
           enum:
-          - "ERROR"
-          - "WARN"
-          - "FATAL"
+            - "ERROR"
+            - "WARN"
+            - "FATAL"
     LocalDateTime:
       type: "object"
-      properties: {}
+      properties: { }
     Napaka:
       type: "object"
       properties:
@@ -323,9 +323,9 @@ components:
         tip:
           type: "string"
           enum:
-          - "ERROR"
-          - "WARN"
-          - "FATAL"
+            - "ERROR"
+            - "WARN"
+            - "FATAL"
         vsebina:
           type: "string"
         dodatno:
@@ -346,10 +346,10 @@ components:
         tip:
           type: "string"
           enum:
-          - "UCENEC"
-          - "UCITELJ"
-          - "INSTRUKTOR"
-          - "ADMIN"
+            - "UCENEC"
+            - "UCITELJ"
+            - "INSTRUKTOR"
+            - "ADMIN"
     Naslov:
       type: "object"
       properties:
@@ -402,8 +402,8 @@ components:
         tip:
           type: "string"
           enum:
-          - "EMAIL"
-          - "TELEFON"
+            - "EMAIL"
+            - "TELEFON"
     Sporocilo:
       type: "object"
       properties:
@@ -443,7 +443,7 @@ components:
             $ref: "#/components/schemas/SporociloData"
     LocalDate:
       type: "object"
-      properties: {}
+      properties: { }
     Test:
       type: "object"
       properties:
@@ -469,10 +469,10 @@ components:
         tip:
           type: "string"
           enum:
-          - "NEZACETO"
-          - "NERESENO"
-          - "NAPACNO"
-          - "PRAVILNO"
+            - "NEZACETO"
+            - "NERESENO"
+            - "NAPACNO"
+            - "PRAVILNO"
         pojasnilo:
           type: "string"
     Naloga:
@@ -555,8 +555,8 @@ components:
         tip:
           type: "string"
           enum:
-          - "STATUS_TIP_POSODOBITEV"
-          - "TEST_DATUM_POSODOBITEV"
+            - "STATUS_TIP_POSODOBITEV"
+            - "TEST_DATUM_POSODOBITEV"
         opis:
           type: "string"
         trajanje:
@@ -577,10 +577,10 @@ components:
         tip:
           type: "string"
           enum:
-          - "NEZACETO"
-          - "NERESENO"
-          - "NAPACNO"
-          - "PRAVILNO"
+            - "NEZACETO"
+            - "NERESENO"
+            - "NAPACNO"
+            - "PRAVILNO"
         sekund:
           type: "integer"
           format: "int32"

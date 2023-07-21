@@ -2,6 +2,7 @@ package api.plugins
 
 import api.extend.client_unauthorized
 import api.extend.profil
+import base.Id
 import domain.Oseba
 import extends.ime
 import io.ktor.server.application.*
@@ -9,11 +10,11 @@ import io.ktor.server.auth.*
 import kotlinx.serialization.Serializable
 import org.apache.logging.log4j.kotlin.logger
 
-fun Oseba.profil(): Profil = Profil(id = this._id.toString(), tip = this.tip)
+fun Oseba.profil(): Profil = Profil(id = this._id, tip = this.tip)
 
 @Serializable
 data class Profil(
-    val id: String,
+    val id: Id<Oseba>,
     val tip: Oseba.Tip,
 ) {
     companion object {

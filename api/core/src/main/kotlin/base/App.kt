@@ -1,11 +1,11 @@
 package base
 
-import services.DbService
-import services.EmailService
-import services.TelefonService
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
+import services.DbService
+import services.EmailService
+import services.TelefonService
 
 object App {
     enum class Tip { PRODUCTION, DEVELOPMENT, TEST }

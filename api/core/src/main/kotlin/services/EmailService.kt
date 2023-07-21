@@ -41,21 +41,7 @@ class EmailService(
 
     sealed interface RezultatEmailFormatiranja {
         object WARN_EMAIL_NI_PRAVILNE_OBLIKE : RezultatEmailFormatiranja
-        data class DATA(val email: FormatiranEmail) : RezultatEmailFormatiranja
-    }
-
-    @JvmInline
-    value class FormatiranEmail(internal val value: String)
-
-    fun obstaja(email: FormatiranEmail): Boolean {
-        return try {
-            val domain = email.toString().split("@").last()
-            InetAddress.getByName(domain)
-            true
-        } catch (err: UnknownHostException) {
-            this.log.warn(err)
-            false
-        }
+        data class DATA(val email: String) : RezultatEmailFormatiranja
     }
 
     fun formatiraj(email: String): RezultatEmailFormatiranja {
@@ -65,9 +51,18 @@ class EmailService(
         } catch (ex: AddressException) {
             return RezultatEmailFormatiranja.WARN_EMAIL_NI_PRAVILNE_OBLIKE
         }
-        return RezultatEmailFormatiranja.DATA(
-            email = FormatiranEmail(value = formatiran_email)
-        )
+        return RezultatEmailFormatiranja.DATA(email = formatiran_email)
+    }
+
+    fun obstaja(email: String): Boolean {
+        return try {
+            val domain = email.split("@").last()
+            InetAddress.getByName(domain)
+            true
+        } catch (err: UnknownHostException) {
+            this.log.warn(err)
+            false
+        }
     }
 
     fun poslji_email(from: String, to: String, subject: String, html: String): Boolean {

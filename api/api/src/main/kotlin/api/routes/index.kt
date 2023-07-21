@@ -1,9 +1,7 @@
 package api.routes
 
-import api.extend.client_error
 import api.extend.request_info
 import api.request.NapakaReq
-import services.DbService
 import domain.Napaka
 import io.ktor.resources.*
 import io.ktor.server.application.*
@@ -15,6 +13,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
+import services.DbService
 import si.urosjarc.server.api.response.KontaktReq
 
 @Resource("")
@@ -50,7 +49,8 @@ fun Route.index() {
         val napaka = Napaka(
             tip = body.tip,
             vsebina = body.vsebina,
-            dodatno = this.call.request_info()
+            dodatno = this.call.request_info(),
+            entitete_id = listOf()
         )
 
         napaka.logiraj()
@@ -60,8 +60,6 @@ fun Route.index() {
 
     this.post<index.kontakt> {
         val body = this.call.receive<KontaktReq>()
-
-
 
 
     }

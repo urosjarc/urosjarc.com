@@ -9,7 +9,6 @@ import api.routes.index
 import api.routes.profil
 import base.App
 import base.Env
-import services.DbService
 import com.auth0.jwk.JwkProviderBuilder
 import domain.Oseba
 import io.ktor.http.*
@@ -32,6 +31,7 @@ import kotlinx.serialization.modules.contextual
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
+import services.DbService
 import java.util.concurrent.TimeUnit
 
 

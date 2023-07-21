@@ -1,5 +1,6 @@
 package si.urosjarc.server.app.services
 
+import base.App
 import org.apache.logging.log4j.kotlin.logger
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -7,7 +8,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.koin.test.KoinTest
 import org.koin.test.inject
-import base.App
 import services.EmailService
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

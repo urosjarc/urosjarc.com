@@ -7,7 +7,6 @@ import api.extend.system_error
 import api.plugins.Profil
 import api.plugins.profil
 import base.Env
-import services.DbService
 import com.auth0.jwk.JwkProvider
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
@@ -24,6 +23,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
+import services.DbService
 import si.urosjarc.server.api.response.PrijavaReq
 import si.urosjarc.server.api.response.PrijavaRes
 import java.security.KeyFactory
@@ -52,9 +52,9 @@ fun Route.auth(jwkProvider: JwkProvider) {
         log.info("Body: $body")
 
         //TODO: Naredi pravilno logiko
-        if(body.username == "a") this.call.client_unauthorized()
-        if(body.username == "b") this.call.client_error(db, info="To je uporabniska napaka!")
-        if(body.username == "c") this.call.system_error(log, info="To je sistemska napaka!")
+        if (body.username == "a") this.call.client_unauthorized()
+        if (body.username == "b") this.call.client_error(db, info = "To je uporabniska napaka!")
+        if (body.username == "c") this.call.system_error(log, info = "To je sistemska napaka!")
         val oseba = db.dobi<Oseba>(0).first()
         log.info("Oseba: $oseba")
         //TODO: Naredi pravilno logiko

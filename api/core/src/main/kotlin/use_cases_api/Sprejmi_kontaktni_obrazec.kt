@@ -1,13 +1,13 @@
 package use_cases_api
 
-import app.services.DbService
-import app.services.EmailService
-import app.services.TelefonService
-import app.use_cases.Pripravi_kontaktni_obrazec
 import domain.Kontakt
 import domain.Oseba
 import domain.Sporocilo
 import org.apache.logging.log4j.kotlin.logger
+import services.DbService
+import services.EmailService
+import services.TelefonService
+import use_cases.Pripravi_kontaktni_obrazec
 
 class Sprejmi_kontaktni_obrazec(
     private val db: DbService,
@@ -61,7 +61,7 @@ class Sprejmi_kontaktni_obrazec(
         /**
          * Najdi kontakte
          */
-        val email_kontakt = when (val r = db.kontakt_najdi(data = obrazec.email._id ?: "")) {
+        val email_kontakt = when (val r = db.kontakt_najdi(data = obrazec.email.data)) {
             null -> {
                 !db.ustvari(obrazec.email)
                 obrazec.email
@@ -69,7 +69,7 @@ class Sprejmi_kontaktni_obrazec(
 
             else -> r
         }
-        val telefon_kontakt = when (val r = db.kontakt_najdi(data = obrazec.telefon._id ?: "")) {
+        val telefon_kontakt = when (val r = db.kontakt_najdi(data = obrazec.telefon.data)) {
             null -> {
                 !db.ustvari(obrazec.telefon)
                 obrazec.telefon
@@ -95,8 +95,8 @@ class Sprejmi_kontaktni_obrazec(
                                 )
                             ) {
                                 val sporocilo = Sporocilo(
-                                    kontakt_posiljatelj_id = serverKontaktData.kontakt._id ?: "",
-                                    kontakt_prejemnik_id = kontakt._id ?: "",
+                                    kontakt_posiljatelj_id = serverKontaktData.kontakt._id,
+                                    kontakt_prejemnik_id = kontakt._id,
                                     vsebina = "vsebina"
                                 )
                                 db.ustvari(sporocilo)
@@ -114,8 +114,8 @@ class Sprejmi_kontaktni_obrazec(
                                 is TelefonService.RezultatSmsPosiljanja.ERROR_SMS_NI_POSLAN -> {}
                                 is TelefonService.RezultatSmsPosiljanja.PASS -> {
                                     val sporocilo = Sporocilo(
-                                        kontakt_posiljatelj_id = serverKontaktData.kontakt._id ?: "",
-                                        kontakt_prejemnik_id = kontakt._id ?: "",
+                                        kontakt_posiljatelj_id = serverKontaktData.kontakt._id,
+                                        kontakt_prejemnik_id = kontakt._id,
                                         vsebina = "vsebina"
                                     )
                                     db.ustvari(sporocilo)

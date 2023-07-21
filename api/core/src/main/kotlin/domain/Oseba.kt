@@ -11,5 +11,5 @@ data class Oseba(
     val username: String,
     val tip: Tip,
 ) : Entiteta<Oseba> {
-    enum class Tip { UCENEC, UCITELJ, INSTRUKTOR, ADMIN, KONTAKT, SERVER}
+    enum class Tip { UCENEC, UCITELJ, INSTRUKTOR, ADMIN, KONTAKT, SERVER }
 }

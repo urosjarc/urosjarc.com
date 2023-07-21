@@ -1,12 +1,12 @@
 package si.urosjarc.server.api.extend
 
+import api.configureRouting
 import io.ktor.client.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.resources.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.testing.*
 import kotlinx.serialization.json.Json
-import api.configureRouting
 
 fun ApplicationTestBuilder.test_client(): HttpClient {
     this.application {

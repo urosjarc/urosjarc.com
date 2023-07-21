@@ -1,10 +1,9 @@
 package use_cases
 
-import app.services.EmailService
-import app.services.TelefonService
 import domain.Kontakt
 import domain.Oseba
-import domain.Sporocilo
+import services.EmailService
+import services.TelefonService
 
 class Pripravi_kontaktni_obrazec(
     private val telefon: TelefonService,
@@ -12,7 +11,7 @@ class Pripravi_kontaktni_obrazec(
 ) {
 
     sealed interface Rezultat {
-        data class PASS(var oseba: Oseba, val email: Kontakt, val telefon: Kontakt, val sporocilo: Sporocilo) : Rezultat
+        data class PASS(var oseba: Oseba, val email: Kontakt, val telefon: Kontakt, val vsebina: String) : Rezultat
         data class FAIL(val info: String) : Rezultat
     }
 
@@ -40,7 +39,7 @@ class Pripravi_kontaktni_obrazec(
         /**
          * Email formatiranje
          */
-        val formatiranEmail: EmailService.FormatiranEmail = when (val r = this.email.formatiraj(email)) {
+        val formatiranEmail = when (val r = this.email.formatiraj(email)) {
             is EmailService.RezultatEmailFormatiranja.WARN_EMAIL_NI_PRAVILNE_OBLIKE -> {
                 return Rezultat.FAIL("Email nima pravilne oblike!")
             }
@@ -67,16 +66,19 @@ class Pripravi_kontaktni_obrazec(
         if (!this.telefon.obstaja(formatiranTelefon))
             return Rezultat.FAIL("Telefon ne obstaja!")
 
+        val oseba = Oseba(
+            ime = imePriimekList.first(),
+            priimek = imePriimekList.last(),
+            username = imePriimekList.joinToString("").lowercase(),
+            tip = Oseba.Tip.KONTAKT
+        )
+        val kontakt_email = Kontakt(oseba_id = oseba._id, data = formatiranEmail, tip = Kontakt.Tip.EMAIL)
+        val kontakt_telefon = Kontakt(oseba_id = oseba._id, data = formatiranEmail, tip = Kontakt.Tip.EMAIL)
         return Rezultat.PASS(
-            oseba = Oseba(
-                ime = imePriimekList.first(),
-                priimek = imePriimekList.last(),
-                username = imePriimekList.joinToString("").lowercase(),
-                tip = Oseba.Tip.KONTAKT
-            ),
-            email = Kontakt(oseba_id = "", data = formatiranEmail.value, tip = Kontakt.Tip.EMAIL),
-            telefon = Kontakt(oseba_id = "", data = formatiranEmail.value, tip = Kontakt.Tip.EMAIL),
-            sporocilo = Sporocilo(kontakt_prejemnik_id = "", kontakt_posiljatelj_id = "", vsebina = vsebina)
+            oseba = oseba,
+            email = kontakt_email,
+            telefon = kontakt_telefon,
+            vsebina = vsebina
         )
     }
 }

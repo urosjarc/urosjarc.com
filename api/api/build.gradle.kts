@@ -9,7 +9,6 @@ plugins {
 
 dependencies {
     this.implementation(this.project(":core"))
-    this.implementation(this.project(":app"))
 
     this.implementation("io.insert-koin:koin-ktor:3.3.0")
 
