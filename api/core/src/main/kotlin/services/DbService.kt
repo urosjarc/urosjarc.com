@@ -14,9 +14,9 @@ import domain.*
 import extend.Aggregates_lookup
 import extend.Aggregates_project_root
 import extend.stran
-import extends.danes
-import extends.ime
-import extends.zdaj
+import extend.danes
+import extend.ime
+import extend.zdaj
 import io.github.serpro69.kfaker.Faker
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime

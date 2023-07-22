@@ -2,7 +2,7 @@ package domain
 
 import base.AnyId
 import base.Id
-import extends.zdaj
+import extend.zdaj
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 import org.apache.logging.log4j.kotlin.logger

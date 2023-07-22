@@ -8,7 +8,7 @@ import base.Id
 import domain.Napaka
 import domain.Status
 import domain.Test
-import extends.ime
+import extend.ime
 import io.ktor.resources.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
