@@ -11,32 +11,39 @@ import com.mongodb.kotlin.client.AggregateIterable
 import com.mongodb.kotlin.client.MongoClient
 import data.OsebaData
 import domain.*
-import extend.Aggregates_lookup
-import extend.Aggregates_project_root
-import extend.stran
-import extend.danes
-import extend.ime
-import extend.zdaj
+import extend.*
 import io.github.serpro69.kfaker.Faker
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.apache.logging.log4j.kotlin.logger
+import org.bson.codecs.configuration.CodecRegistries
+import serialization.IdCodec
 import kotlin.random.Random
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
+
 val faker = Faker()
 var counters = mutableMapOf<String, Int>()
 
+
 class DbService(val db_url: String, val db_name: String) {
+
+    val idCodecRegistry = CodecRegistries.fromCodecs(IdCodec())
+    var codecRegistry = CodecRegistries.fromRegistries(
+        MongoClientSettings.getDefaultCodecRegistry(),
+        idCodecRegistry
+    )
+
+
     private val serverApi = ServerApi.builder().version(ServerApiVersion.V1).build()
     private val settings =
         MongoClientSettings.builder().applyConnectionString(ConnectionString(db_url)).serverApi(serverApi).build()
     private val mongoClient = MongoClient.create(settings)
 
     val log = this.logger()
-    val db = mongoClient.getDatabase(db_name)
+    val db = mongoClient.getDatabase(db_name).withCodecRegistry(codecRegistry)
     val audits = db.getCollection<Audit>(collectionName = ime<Audit>())
     val osebe = db.getCollection<Oseba>(collectionName = ime<Oseba>())
     val statusi = db.getCollection<Status>(collectionName = ime<Status>())

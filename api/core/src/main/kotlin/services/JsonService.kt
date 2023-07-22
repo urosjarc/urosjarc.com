@@ -1,67 +1,19 @@
 package services
 
-import base.AnyId
-import base.Id
 import kotlinx.datetime.serializers.LocalDateIso8601Serializer
 import kotlinx.datetime.serializers.LocalDateTimeIso8601Serializer
 import kotlinx.datetime.serializers.LocalTimeIso8601Serializer
-import kotlinx.serialization.KSerializer
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.contextual
-import org.bson.types.ObjectId
-
-object ObjectIdSerializer : KSerializer<ObjectId> {
-
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("ObjectIdSerializer", PrimitiveKind.STRING)
-
-    override fun deserialize(decoder: Decoder): ObjectId =
-        ObjectId(decoder.decodeString())
-
-    override fun serialize(encoder: Encoder, value: ObjectId) {
-        encoder.encodeString(value.toHexString())
-    }
-
-}
-
-//object IdSerializer : KSerializer<Id<Any>> {
-//
-//    override val descriptor: SerialDescriptor =
-//        PrimitiveSerialDescriptor("IdSerializer", PrimitiveKind.STRING)
-//
-//    override fun deserialize(decoder: Decoder): Id<Any> =
-//        Id(value = ObjectId(decoder.decodeString()))
-//
-//    override fun serialize(encoder: Encoder, value: Id<Any>) {
-//        encoder.encodeString(value.value.toHexString())
-//    }
-//
-//}
-//
-//object AnyIdSerializer : KSerializer<AnyId> {
-//
-//    override val descriptor: SerialDescriptor =
-//        PrimitiveSerialDescriptor("AnyIdSerializer", PrimitiveKind.STRING)
-//
-//    override fun deserialize(decoder: Decoder): AnyId =
-//        AnyId(value = ObjectId(decoder.decodeString()))
-//
-//    override fun serialize(encoder: Encoder, value: AnyId) {
-//        encoder.encodeString(value.value.toHexString())
-//    }
-//
-//}
+import org.bson.codecs.kotlinx.ObjectIdSerializer
 
 
 class JsonService() {
+    @OptIn(ExperimentalSerializationApi::class)
     val module = Json {
         serializersModule = SerializersModule {
             contextual(ObjectIdSerializer)
@@ -69,7 +21,7 @@ class JsonService() {
             contextual(LocalTimeIso8601Serializer)
             contextual(LocalDateIso8601Serializer)
         }
-        this.prettyPrint = true
+        this.prettyPrint = false
         this.isLenient = true
         this.allowSpecialFloatingPointValues = true
     }

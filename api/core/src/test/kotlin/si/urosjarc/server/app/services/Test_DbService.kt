@@ -30,7 +30,16 @@ class Test_DbService : KoinTest {
     fun `nafilaj bazo`() {
         this.`sprazni bazo`()
         this.service.nafilaj()
+        println(this.service.osebe.find().firstOrNull())
+        println(this.service.napake.find().firstOrNull())
     }
+
+    @Test
+    fun `preveri bazo`() {
+        println(this.service.osebe.find().firstOrNull())
+        println(this.service.napake.find().firstOrNull())
+    }
+
 
     @Test
     fun `sprazni bazo`() {
