@@ -19,10 +19,15 @@ window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Res
   _id++
 
   console.info(`[${id}] ${init?.method} `, input, init?.body?.valueOf() || {})
-  const response = await _fetch(input, init);
-  const data = await response.json();
-  console.error(`(${id})`, data)
-  return response.clone()
+  try {
+    const response = await _fetch(input, init);
+    const data = await response.json();
+    console.info(`(${id})`, data)
+    return response.clone()
+  } catch (err) {
+    console.error(`(${id})`, err)
+    throw err
+  }
 }
 
 window.onerror = (

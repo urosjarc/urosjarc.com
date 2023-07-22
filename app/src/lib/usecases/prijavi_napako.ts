@@ -49,9 +49,14 @@ export async function prijavi_napako(error: any) {
 
     alertCall()
 
-  } catch (e) {
-    const err1 = JSON.stringify(error, Object.getOwnPropertyNames(error))
-    const err2 = JSON.stringify(e, Object.getOwnPropertyNames(e))
-    alert(`Napaka se ni mogla prijaviti na serverju, prosim obvestite incident manualno! ${err1} ${err2} `)
+  } catch (error2) {
+    prompt(
+      `___________________________________________________________
+               Napaka se ni mogla prijaviti na serverju,
+      prosim kopirajte vsebino v spodnjem oknu in mi jo
+                                jo pošljite na email.
+___________________________________________________________`,
+      JSON.stringify([error, error2], Object.getOwnPropertyNames(error))
+    )
   }
 }
