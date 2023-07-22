@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Kontakt(
     override var _id: Id<Kontakt> = Id(),
-    var oseba_id: Id<Oseba>,
+    var oseba_id: List<Id<Oseba>>, // Mama in sin si lahko delita kontakt!
     val data: String,
     val tip: Tip
 ) : Entiteta<Kontakt> {

@@ -49,21 +49,20 @@ class Sprejmi_kontaktni_obrazec(
             email = obrazec.email.data
         )) {
             null -> db.ustvari(obrazec.oseba)
-            else -> obrazec.oseba = r.oseba
+            else -> {
+                //Ce oseba ze obstaja potem povezi kontakte z osebo!
+                obrazec.oseba = r.oseba
+                obrazec.email.oseba_id = obrazec.oseba._id
+                obrazec.telefon.oseba_id = obrazec.oseba._id
+            }
         }
 
         /**
-         * Povezi kontakte z id osebe
-         */
-        obrazec.email.oseba_id = obrazec.oseba._id
-        obrazec.telefon.oseba_id = obrazec.oseba._id
-
-        /**
-         * Najdi kontakte
+         * Najdi kontakte, ce kontakt ne obstaja ze potem ga ustvari.
          */
         val email_kontakt = when (val r = db.kontakt_najdi(data = obrazec.email.data)) {
             null -> {
-                !db.ustvari(obrazec.email)
+                db.ustvari(obrazec.email)
                 obrazec.email
             }
 
@@ -71,7 +70,7 @@ class Sprejmi_kontaktni_obrazec(
         }
         val telefon_kontakt = when (val r = db.kontakt_najdi(data = obrazec.telefon.data)) {
             null -> {
-                !db.ustvari(obrazec.telefon)
+                db.ustvari(obrazec.telefon)
                 obrazec.telefon
             }
 

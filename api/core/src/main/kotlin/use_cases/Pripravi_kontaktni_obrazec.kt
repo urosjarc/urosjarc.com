@@ -72,13 +72,12 @@ class Pripravi_kontaktni_obrazec(
             username = imePriimekList.joinToString("").lowercase(),
             tip = Oseba.Tip.KONTAKT
         )
-        val kontakt_email = Kontakt(oseba_id = oseba._id, data = formatiranEmail, tip = Kontakt.Tip.EMAIL)
-        val kontakt_telefon = Kontakt(oseba_id = oseba._id, data = formatiranEmail, tip = Kontakt.Tip.EMAIL)
+
         return Rezultat.PASS(
             oseba = oseba,
-            email = kontakt_email,
-            telefon = kontakt_telefon,
-            vsebina = vsebina
+            vsebina = vsebina,
+            email = Kontakt(oseba_id = oseba._id, data = formatiranEmail, tip = Kontakt.Tip.EMAIL),
+            telefon = Kontakt(oseba_id = oseba._id, data = formatiranTelefon, tip = Kontakt.Tip.TELEFON)
         )
     }
 }
