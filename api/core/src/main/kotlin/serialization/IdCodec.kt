@@ -9,10 +9,10 @@ import org.bson.codecs.EncoderContext
 
 class IdCodec : Codec<Id<*>> {
     override fun encode(writer: BsonWriter, value: Id<*>, encoderContext: EncoderContext) =
-        writer.writeObjectId(value.value)
+        writer.writeString(value.value)
 
     override fun decode(reader: BsonReader, decoderContext: DecoderContext): Id<*> =
-        Id<Any>(value = reader.readObjectId())
+        Id<Any>(value = reader.readString())
 
     override fun getEncoderClass(): Class<Id<*>> = Id::class.java
 }
