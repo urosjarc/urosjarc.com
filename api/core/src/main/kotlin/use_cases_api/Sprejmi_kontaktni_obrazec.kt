@@ -18,7 +18,11 @@ class Sprejmi_kontaktni_obrazec(
     val log = this.logger()
 
     sealed interface Rezultat {
-        object PASS : Rezultat
+        data class PASS(
+            val obrazec: Pripravi_kontaktni_obrazec.Rezultat.PASS,
+            val sporocila: List<Sporocilo>
+        ) : Rezultat
+
         data class FAIL(val info: String) : Rezultat
     }
 
@@ -40,7 +44,7 @@ class Sprejmi_kontaktni_obrazec(
         }
 
         /**
-         * Zamenjaj osebo iz obrazca ce ze obstaja!
+         * Pripravi osebo
          */
         when (val r = db.oseba_najdi(
             ime = obrazec.oseba.ime,
@@ -49,39 +53,35 @@ class Sprejmi_kontaktni_obrazec(
             email = obrazec.email.data
         )) {
             null -> db.ustvari(obrazec.oseba)
-            else -> {
-                //Ce oseba ze obstaja potem povezi kontakte z osebo!
-                obrazec.oseba = r.oseba
-                obrazec.email.oseba_id = listOf(obrazec.oseba._id)
-                obrazec.telefon.oseba_id = listOf(obrazec.oseba._id)
-            }
+            else -> obrazec.oseba = r.oseba
         }
 
         /**
-         * Najdi kontakte, ce kontakt ne obstaja ze potem ga ustvari.
+         * Pripravi email kontakt
          */
-        val email_kontakt = when (val r = db.kontakt_najdi(data = obrazec.email.data)) {
-            null -> {
-                db.ustvari(obrazec.email)
-                obrazec.email
-            }
-
-            else -> r
-        }
-        val telefon_kontakt = when (val r = db.kontakt_najdi(data = obrazec.telefon.data)) {
-            null -> {
-                db.ustvari(obrazec.telefon)
-                obrazec.telefon
-            }
-
-            else -> r
+        when (val r = db.kontakt_najdi(data = obrazec.email.data)) {
+            null -> obrazec.email.oseba_id.add(obrazec.oseba._id)
+            else -> obrazec.email = r
         }
 
         /**
-         * Poslji prvim dostopnim server kontaktom
+         * Pripravi telefon kontakt
+         */
+        when (val r = db.kontakt_najdi(data = obrazec.telefon.data)) {
+            null -> obrazec.telefon.oseba_id.add(obrazec.oseba._id)
+            else -> obrazec.telefon = r
+        }
+
+        /**
+         * Najdi server osebe za sporocila
          */
         val serverji = db.oseba_najdi(tip = Oseba.Tip.SERVER)
-        next_kontakt@ for (kontakt in listOf(email_kontakt, telefon_kontakt)) {
+        val sporocila = mutableListOf<Sporocilo>()
+
+        /**
+         * Razposlji sporocila
+         */
+        next_kontakt@ for (kontakt in listOf(obrazec.email, obrazec.telefon)) {
             for (serverData in serverji) {
                 for (serverKontaktData in serverData.kontakt_refs.filter { it.kontakt.tip == kontakt.tip }) {
                     when (kontakt.tip) {
@@ -95,10 +95,11 @@ class Sprejmi_kontaktni_obrazec(
                             ) {
                                 val sporocilo = Sporocilo(
                                     kontakt_posiljatelj_id = serverKontaktData.kontakt._id,
-                                    kontakt_prejemnik_id = kontakt._id,
+                                    kontakt_prejemnik_id = mutableSetOf(kontakt._id),
                                     vsebina = "vsebina"
                                 )
                                 db.ustvari(sporocilo)
+                                sporocila.add(sporocilo)
                                 continue@next_kontakt
                             }
                         }
@@ -114,10 +115,11 @@ class Sprejmi_kontaktni_obrazec(
                                 is TelefonService.RezultatSmsPosiljanja.PASS -> {
                                     val sporocilo = Sporocilo(
                                         kontakt_posiljatelj_id = serverKontaktData.kontakt._id,
-                                        kontakt_prejemnik_id = kontakt._id,
+                                        kontakt_prejemnik_id = mutableSetOf(kontakt._id),
                                         vsebina = "vsebina"
                                     )
                                     db.ustvari(sporocilo)
+                                    sporocila.add(sporocilo)
                                     continue@next_kontakt
                                 }
                             }
@@ -125,9 +127,11 @@ class Sprejmi_kontaktni_obrazec(
                     }
                 }
             }
-            log.error("Obvestila o sprejetju kontakta ni bilo mogoce poslati: $kontakt")
         }
 
-        return Rezultat.PASS
+        /**
+         * Shrani vse skupaj v podatkovno bazo!
+         */
+        return Rezultat.PASS(obrazec = obrazec, sporocila = sporocila)
     }
 }

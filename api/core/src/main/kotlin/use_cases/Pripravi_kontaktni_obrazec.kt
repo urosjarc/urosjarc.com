@@ -11,7 +11,7 @@ class Pripravi_kontaktni_obrazec(
 ) {
 
     sealed interface Rezultat {
-        data class PASS(var oseba: Oseba, val email: Kontakt, val telefon: Kontakt, val vsebina: String) : Rezultat
+        data class PASS(var oseba: Oseba, var email: Kontakt, var telefon: Kontakt, val vsebina: String) : Rezultat
         data class FAIL(val info: String) : Rezultat
     }
 
@@ -76,8 +76,8 @@ class Pripravi_kontaktni_obrazec(
         return Rezultat.PASS(
             oseba = oseba,
             vsebina = vsebina,
-            email = Kontakt(oseba_id = listOf(oseba._id), data = formatiranEmail, tip = Kontakt.Tip.EMAIL),
-            telefon = Kontakt(oseba_id = listOf(oseba._id), data = formatiranTelefon, tip = Kontakt.Tip.TELEFON)
+            email = Kontakt(oseba_id = mutableSetOf(oseba._id), data = formatiranEmail, tip = Kontakt.Tip.EMAIL),
+            telefon = Kontakt(oseba_id = mutableSetOf(oseba._id), data = formatiranTelefon, tip = Kontakt.Tip.TELEFON)
         )
     }
 }
