@@ -8,8 +8,7 @@ import {Napaka, type NapakaReq} from "$lib/api";
 
 export async function prijavi_napako(error: any) {
   try {
-    let alertCall = () => {
-    }
+    let alertCall: (() => void) = () => {}
 
     if (error.status == 401) {
       return goto(route.prijava).then(() => alerts.unauthorized("Uporabnik ni avtoriziran!"))
@@ -51,11 +50,13 @@ export async function prijavi_napako(error: any) {
 
   } catch (error2) {
     prompt(
-      `___________________________________________________________
+      `
+___________________________________________________________
                Napaka se ni mogla prijaviti na serverju,
-      prosim kopirajte vsebino v spodnjem oknu in mi jo
-                                jo pošljite na email.
-___________________________________________________________`,
+        prosim NUJNO kopirajte vsebino v spodnjem oknu
+                          in mi jo jo pošljite na email.
+___________________________________________________________
+`,
       JSON.stringify([error, error2], Object.getOwnPropertyNames(error))
     )
   }

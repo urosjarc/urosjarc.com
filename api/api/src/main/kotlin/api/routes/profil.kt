@@ -103,16 +103,16 @@ fun Route.profil() {
 
     this.get<profil.test.test_id.status.status_id.audit> {
         val status_id = it.parent.status_id
-        this.call.respond(db.audits(entity_id = status_id.value(), stran = null))
+        this.call.respond(db.audits(entity_id = status_id.vAnyId(), stran = null))
     }
     this.get<profil.test.test_id.audit> {
         val test_id = it.parent.test_id
-        this.call.respond(db.audits(entity_id = test_id.value(), stran = null))
+        this.call.respond(db.audits(entity_id = test_id.vAnyId(), stran = null))
     }
 
     this.get<profil.audit> {
         val profil = this.call.profil()
-        this.call.respond(db.audits(entity_id = profil.id.value(), stran = it.stran))
+        this.call.respond(db.audits(entity_id = profil.id.vAnyId(), stran = it.stran))
     }
 
     /**
@@ -123,7 +123,7 @@ fun Route.profil() {
         val body = this.call.receive<NapakaReq>()
 
         val napaka = Napaka(
-            entitete_id = listOf(profil.id).map { it.value() },
+            entitete_id = listOf(profil.id).map { it.vAnyId() },
             tip = body.tip,
             vsebina = body.vsebina,
             dodatno = this.call.request_info()
@@ -136,7 +136,7 @@ fun Route.profil() {
 
     this.get<profil.napaka> {
         val profil = this.call.profil()
-        val napake = db.napake(profil.id.value(), stran = it.stran)
+        val napake = db.napake(profil.id.vAnyId(), stran = it.stran)
         this.call.respond(napake)
     }
 

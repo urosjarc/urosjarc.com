@@ -1,14 +1,11 @@
 package base
 
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.bson.types.ObjectId
 
 @JvmInline
 @Serializable
-value class Id<T>(
-    @Contextual val value: ObjectId = ObjectId()
-) {
+value class Id<T>(val value: String = ObjectId().toHexString()) {
     fun vAnyId(): AnyId {
         return AnyId(this.value)
     }
@@ -16,6 +13,4 @@ value class Id<T>(
 
 @JvmInline
 @Serializable
-value class AnyId(
-    @Contextual val value: ObjectId = ObjectId()
-)
+value class AnyId(val value: String = ObjectId().toHexString())

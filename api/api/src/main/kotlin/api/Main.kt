@@ -11,8 +11,7 @@ fun main() {
     embeddedServer(
         Netty,
         port = Env.PORT,
-        module = Application::module,
-        watchPaths = listOf("classes")
+        module = Application::module
     ).start(wait = true)
 }
 
