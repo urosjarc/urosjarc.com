@@ -3,17 +3,15 @@ package services
 import kotlinx.datetime.serializers.LocalDateIso8601Serializer
 import kotlinx.datetime.serializers.LocalDateTimeIso8601Serializer
 import kotlinx.datetime.serializers.LocalTimeIso8601Serializer
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.contextual
-import org.bson.codecs.kotlinx.ObjectIdSerializer
+import serialization.ObjectIdSerializer
 
 
 class JsonService() {
-    @OptIn(ExperimentalSerializationApi::class)
     val module = Json {
         serializersModule = SerializersModule {
             contextual(ObjectIdSerializer)

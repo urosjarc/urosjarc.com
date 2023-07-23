@@ -21,9 +21,10 @@ window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Res
   console.info(`[${id}] ${init?.method} `, input, init?.body?.valueOf() || {})
   try {
     const response = await _fetch(input, init);
+    const clone = response.clone()
     const data = await response.json();
     console.info(`(${id})`, data)
-    return response.clone()
+    return clone
   } catch (err) {
     console.error(`(${id})`, err)
     throw err

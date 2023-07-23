@@ -6,12 +6,16 @@ import org.bson.types.ObjectId
 
 @JvmInline
 @Serializable
-value class Id<T>(@Contextual val value: ObjectId = ObjectId()) {
-    fun value(): AnyId {
+value class Id<T>(
+    @Contextual val value: ObjectId = ObjectId()
+) {
+    fun vAnyId(): AnyId {
         return AnyId(this.value)
     }
 }
 
 @JvmInline
 @Serializable
-value class AnyId(@Contextual val value: ObjectId = ObjectId())
+value class AnyId(
+    @Contextual val value: ObjectId = ObjectId()
+)

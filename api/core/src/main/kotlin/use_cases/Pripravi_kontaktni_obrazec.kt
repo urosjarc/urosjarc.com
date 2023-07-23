@@ -76,8 +76,8 @@ class Pripravi_kontaktni_obrazec(
         return Rezultat.PASS(
             oseba = oseba,
             vsebina = vsebina,
-            email = Kontakt(oseba_id = oseba._id, data = formatiranEmail, tip = Kontakt.Tip.EMAIL),
-            telefon = Kontakt(oseba_id = oseba._id, data = formatiranTelefon, tip = Kontakt.Tip.TELEFON)
+            email = Kontakt(oseba_id = listOf(oseba._id), data = formatiranEmail, tip = Kontakt.Tip.EMAIL),
+            telefon = Kontakt(oseba_id = listOf(oseba._id), data = formatiranTelefon, tip = Kontakt.Tip.TELEFON)
         )
     }
 }

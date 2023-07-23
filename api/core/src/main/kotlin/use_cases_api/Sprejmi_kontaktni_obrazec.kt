@@ -52,8 +52,8 @@ class Sprejmi_kontaktni_obrazec(
             else -> {
                 //Ce oseba ze obstaja potem povezi kontakte z osebo!
                 obrazec.oseba = r.oseba
-                obrazec.email.oseba_id = obrazec.oseba._id
-                obrazec.telefon.oseba_id = obrazec.oseba._id
+                obrazec.email.oseba_id = listOf(obrazec.oseba._id)
+                obrazec.telefon.oseba_id = listOf(obrazec.oseba._id)
             }
         }
 

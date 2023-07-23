@@ -17,8 +17,11 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.apache.logging.log4j.kotlin.logger
 import org.bson.codecs.configuration.CodecRegistries
+import org.bson.conversions.Bson
 import serialization.IdCodec
 import kotlin.random.Random
+import kotlin.reflect.KMutableProperty1
+import kotlin.reflect.KProperty1
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -26,6 +29,53 @@ import kotlin.time.toDuration
 
 val faker = Faker()
 var counters = mutableMapOf<String, Int>()
+
+class Filters {
+    companion object {
+        /**
+         * LOGIC
+         */
+        fun AND(vararg filters: Bson): Bson {
+            return com.mongodb.client.model.Filters.and(listOf(*filters))
+        }
+
+        fun OR(vararg filters: Bson): Bson {
+            return com.mongodb.client.model.Filters.or(listOf(*filters))
+        }
+
+        /**
+         * ID EQUALITY
+         */
+        fun <T> EQ(id: Id<T>): Bson {
+            return com.mongodb.client.model.Filters.eq(id.value)
+        }
+
+        fun <T> EQ(prop: KMutableProperty1<*, Id<T>>, id: Id<T>): Bson {
+            return com.mongodb.client.model.Filters.eq(prop.name, id.value)
+        }
+
+        fun CONTAINS(prop: KMutableProperty1<*, List<AnyId>>, anyId: AnyId): Bson {
+            return com.mongodb.client.model.Filters.eq(prop.name, anyId.value)
+        }
+
+        /**
+         * STRING EQUALITY
+         */
+        fun EQ(prop: KProperty1<*, String>, value: String): Bson {
+            return com.mongodb.client.model.Filters.eq(prop.name, value)
+        }
+
+        /**
+         * ENUM EQUALITY
+         */
+        fun EQ(prop: KProperty1<*, Enum<*>>, value: Enum<*>): Bson {
+            return com.mongodb.client.model.Filters.eq(prop.name, value.name)
+        }
+
+
+    }
+
+}
 
 
 class DbService(val db_url: String, val db_name: String) {
@@ -100,7 +150,7 @@ class DbService(val db_url: String, val db_name: String) {
                 val tematika = nakljucni<Tematika>().apply { this.zvezek_id = zvezek._id }
                 all_tematika.add(tematika)
 
-                val kontakt = nakljucni<Kontakt>().apply { this.oseba_id = oseba._id }
+                val kontakt = nakljucni<Kontakt>().apply { this.oseba_id = listOf(oseba._id) }
                 all_kontakt.add(kontakt)
 
                 val naslov = nakljucni<Naslov>().apply { this.oseba_id = oseba._id }
@@ -184,23 +234,21 @@ class DbService(val db_url: String, val db_name: String) {
         return db.getCollection<T>(collectionName = ime<T>()).find().stran(n = stran).toList()
     }
 
-    inline fun <reified T : Entiteta<T>> filter_one(_id: Id<T>) = Filters.eq("_id", _id)
-
     inline fun <reified T : Entiteta<T>> dobi(_id: Id<T>): T? {
-        return db.getCollection<T>(collectionName = ime<T>()).find(filter_one(_id)).firstOrNull()
+        return db.getCollection<T>(collectionName = ime<T>()).find(Filters.EQ(_id)).firstOrNull()
     }
 
     inline fun <reified T : Entiteta<T>> posodobi(entiteta: T): T? {
-        return db.getCollection<T>(collectionName = ime<T>()).findOneAndReplace(filter_one(entiteta._id), entiteta)
+        return db.getCollection<T>(collectionName = ime<T>()).findOneAndReplace(Filters.EQ(entiteta._id), entiteta)
     }
 
     inline fun <reified T : Entiteta<T>> odstrani(_id: Id<T>): Boolean {
-        return db.getCollection<T>(collectionName = ime<T>()).deleteOne(filter_one(_id)).wasAcknowledged()
+        return db.getCollection<T>(collectionName = ime<T>()).deleteOne(Filters.EQ(_id)).wasAcknowledged()
     }
 
     fun audits(entity_id: AnyId, stran: Int?): List<Audit> {
         val audits = audits.find(
-            filter = Filters.eq(Audit::entitete_id.name, entity_id)
+            filter = Filters.CONTAINS(Audit::entitete_id, entity_id)
         ).sort(Sorts.descending(Audit::ustvarjeno.name))
 
         return when (stran) {
@@ -211,7 +259,7 @@ class DbService(val db_url: String, val db_name: String) {
 
     fun napake(entity_id: AnyId, stran: Int?): List<Napaka> {
         val napake = napake.find(
-            filter = Filters.eq(Napaka::entitete_id.name, entity_id)
+            filter = Filters.CONTAINS(Napaka::entitete_id, entity_id)
         ).sort(Sorts.descending(Napaka::ustvarjeno.name))
         return when (stran) {
             null -> napake
@@ -223,7 +271,7 @@ class DbService(val db_url: String, val db_name: String) {
     fun profil(id: Id<Oseba>): OsebaData {
         val aggregation: AggregateIterable<OsebaData> = osebe.aggregate<OsebaData>(
             listOf(
-                Aggregates.match(Filters.eq(Oseba::_id.name, id)),
+                Aggregates.match(Filters.EQ(id)),
                 Aggregates_project_root(Oseba::class),
                 Aggregates_lookup(
                     from = Naslov::oseba_id, to = Oseba::_id
@@ -301,18 +349,18 @@ class DbService(val db_url: String, val db_name: String) {
         val aggregation: AggregateIterable<OsebaData> = osebe.aggregate<OsebaData>(
             listOf(
                 Aggregates.match(
-                    Filters.and(
-                        Filters.eq(Oseba::ime.name, ime),
-                        Filters.eq(Oseba::priimek.name, priimek),
+                    Filters.AND(
+                        Filters.EQ(Oseba::ime, ime),
+                        Filters.EQ(Oseba::priimek, priimek),
                     )
                 ), Aggregates_project_root(Oseba::class), Aggregates_lookup(
                     from = Kontakt::oseba_id,
                     to = Oseba::_id,
                     pipeline = listOf(
                         Aggregates.match(
-                            Filters.or(
-                                Filters.eq(Kontakt::data.name, telefon),
-                                Filters.eq(Kontakt::data.name, email),
+                            Filters.OR(
+                                Filters.EQ(Kontakt::data, telefon),
+                                Filters.EQ(Kontakt::data, email),
                             )
                         ),
                     ),
@@ -326,8 +374,8 @@ class DbService(val db_url: String, val db_name: String) {
         val aggregation: AggregateIterable<OsebaData> = osebe.aggregate<OsebaData>(
             listOf(
                 Aggregates.match(
-                    Filters.and(
-                        Filters.eq(Oseba::tip.name, tip),
+                    Filters.AND(
+                        Filters.EQ(Oseba::tip, tip),
                     )
                 ), Aggregates_project_root(Oseba::class), Aggregates_lookup(
                     from = Kontakt::oseba_id,
@@ -338,7 +386,7 @@ class DbService(val db_url: String, val db_name: String) {
         return aggregation.toList()
     }
 
-    fun kontakt_najdi(data: String): Kontakt? = kontakti.find(Filters.eq(Kontakt::data.name, data)).firstOrNull()
+    fun kontakt_najdi(data: String): Kontakt? = kontakti.find(Filters.EQ(Kontakt::data, data)).firstOrNull()
 
     /**
      * Zaradi tega ker se mora preveriti ali je uporabnik owner statusa!
@@ -346,16 +394,16 @@ class DbService(val db_url: String, val db_name: String) {
     fun status_obstaja(id: Id<Status>, oseba_id: Id<Oseba>, test_id: Id<Test>): Boolean {
         val aggregation: AggregateIterable<OsebaData> = osebe.aggregate<OsebaData>(
             listOf(
-                Aggregates.match(Filters.eq(Oseba::_id.name, oseba_id)),
+                Aggregates.match(Filters.EQ(Oseba::_id, oseba_id)),
                 Aggregates_project_root(Oseba::class),
                 Aggregates_lookup(
                     from = Test::oseba_id,
                     to = Oseba::_id,
                     pipeline = listOf(
-                        Aggregates.match(Filters.eq(Test::_id.name, test_id)),
+                        Aggregates.match(Filters.EQ(Test::_id, test_id)),
                         Aggregates_lookup(
                             from = Status::test_id, to = Test::_id, pipeline = listOf(
-                                Aggregates.match(Filters.eq(Status::_id.name, id)),
+                                Aggregates.match(Filters.EQ(Status::_id, id)),
                             )
                         ),
                     ),
@@ -368,8 +416,9 @@ class DbService(val db_url: String, val db_name: String) {
 
     fun status_update(id: Id<Status>, oseba_id: Id<Oseba>, test_id: Id<Test>, tip: Status.Tip, sekund: Int): Status? {
         val r: Status = statusi.findOneAndUpdate(
-            filter = Filters.and(
-                Filters.eq(Status::_id.name, id), Filters.eq(Status::test_id.name, test_id)
+            filter = Filters.AND(
+                Filters.EQ(id),
+                Filters.EQ(Status::test_id, test_id)
             ),
             update = Updates.set(Status::tip.name, tip),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
@@ -391,9 +440,9 @@ class DbService(val db_url: String, val db_name: String) {
 
     fun test_update(id: Id<Test>, oseba_id: Id<Oseba>, datum: LocalDate): Test? {
         val r: Test = testi.findOneAndUpdate(
-            filter = Filters.and(
-                Filters.eq(Test::_id.name, id),
-                Filters.eq(Test::oseba_id.name, oseba_id),
+            filter = Filters.AND(
+                Filters.EQ(Test::_id, id),
+                Filters.EQ(Test::oseba_id, oseba_id),
             ),
             update = Updates.set(Test::deadline.name, datum),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)

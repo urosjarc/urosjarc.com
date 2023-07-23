@@ -425,13 +425,20 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/UcenjeData"
+    Id:
+      type: "object"
+      properties:
+        value:
+          $ref: "#/components/schemas/ObjectId"
     Kontakt:
       type: "object"
       properties:
         _id:
           $ref: "#/components/schemas/ObjectId"
         oseba_id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Id"
         data:
           type: "string"
         tip:
