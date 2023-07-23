@@ -1,5 +1,6 @@
 package api.routes
 
+import api.extend.client_error
 import api.extend.request_info
 import api.request.NapakaReq
 import domain.Napaka
@@ -15,6 +16,7 @@ import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
 import services.DbService
 import si.urosjarc.server.api.response.KontaktReq
+import use_cases_api.Sprejmi_kontaktni_obrazec
 
 @Resource("")
 class index {
@@ -30,6 +32,7 @@ class index {
 fun Route.index() {
     val db: DbService by this.inject()
     val log = this.logger()
+    val sprejmi_kontaktni_obrazec: Sprejmi_kontaktni_obrazec by this.inject()
 
     this.static {
         this.staticBasePackage = "static"
@@ -50,7 +53,7 @@ fun Route.index() {
             tip = body.tip,
             vsebina = body.vsebina,
             dodatno = this.call.request_info(),
-            entitete_id = listOf()
+            entitete_id = setOf()
         )
 
         napaka.logiraj()
@@ -60,7 +63,14 @@ fun Route.index() {
 
     this.post<index.kontakt> {
         val body = this.call.receive<KontaktReq>()
-
-
+        when (val r = sprejmi_kontaktni_obrazec.exe(
+            ime_priimek = body.ime_priimek,
+            email = body.email,
+            telefon = body.telefon,
+            vsebina = body.vsebina
+        )) {
+            is Sprejmi_kontaktni_obrazec.Rezultat.WARN -> this.call.client_error(r.info)
+            is Sprejmi_kontaktni_obrazec.Rezultat.PASS -> this.call.respond(r)
+        }
     }
 }

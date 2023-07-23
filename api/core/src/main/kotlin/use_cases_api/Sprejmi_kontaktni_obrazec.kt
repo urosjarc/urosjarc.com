@@ -22,8 +22,7 @@ class Sprejmi_kontaktni_obrazec(
             val obrazec: Pripravi_kontaktni_obrazec.Rezultat.PASS,
             val sporocila: List<Sporocilo>
         ) : Rezultat
-
-        data class FAIL(val info: String) : Rezultat
+        data class WARN(val info: String) : Rezultat
     }
 
     fun exe(ime_priimek: String, email: String, telefon: String, vsebina: String): Rezultat {
@@ -38,8 +37,8 @@ class Sprejmi_kontaktni_obrazec(
             vsebina = vsebina
         )) {
             is Pripravi_kontaktni_obrazec.Rezultat.PASS -> r
-            is Pripravi_kontaktni_obrazec.Rezultat.FAIL -> {
-                return Rezultat.FAIL(info = r.info)
+            is Pripravi_kontaktni_obrazec.Rezultat.WARN -> {
+                return Rezultat.WARN(info = r.info)
             }
         }
 

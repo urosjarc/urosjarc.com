@@ -12,7 +12,7 @@ class Pripravi_kontaktni_obrazec(
 
     sealed interface Rezultat {
         data class PASS(var oseba: Oseba, var email: Kontakt, var telefon: Kontakt, val vsebina: String) : Rezultat
-        data class FAIL(val info: String) : Rezultat
+        data class WARN(val info: String) : Rezultat
     }
 
     fun zdaj(ime_priimek: String, email: String, telefon: String, vsebina: String): Rezultat {
@@ -21,27 +21,27 @@ class Pripravi_kontaktni_obrazec(
          */
         val imePriimek: String = ime_priimek.trim()
         if (!imePriimek.contains(' '))
-            return Rezultat.FAIL(info = "Ime ime priimek morata biti ločena z presledkom!")
+            return Rezultat.WARN(info = "Ime ime priimek morata biti ločena z presledkom!")
 
         val imePriimekList = imePriimek
             .split(" ")
             .map { it.trim().lowercase().replaceFirstChar { it.titlecaseChar() } }
         if (imePriimekList.size != 2)
-            return Rezultat.FAIL(info = "Ime in priimek morata biti točno dve besedi ločeni z presledkom!")
+            return Rezultat.WARN(info = "Ime in priimek morata biti točno dve besedi ločeni z presledkom!")
 
         /**
          * Vsebina validacija
          */
         val cistaVsebina = vsebina.trim().replace("""\s+""".toRegex(), " ")
         if (cistaVsebina.count { it.equals(' ') } < 2)
-            return Rezultat.FAIL(info = "Vsebina mora vsebovati vsaj 3 besede!")
+            return Rezultat.WARN(info = "Vsebina mora vsebovati vsaj 3 besede!")
 
         /**
          * Email formatiranje
          */
         val formatiranEmail = when (val r = this.email.formatiraj(email)) {
             is EmailService.RezultatEmailFormatiranja.WARN_EMAIL_NI_PRAVILNE_OBLIKE -> {
-                return Rezultat.FAIL("Email nima pravilne oblike!")
+                return Rezultat.WARN("Email nima pravilne oblike!")
             }
 
             is EmailService.RezultatEmailFormatiranja.DATA -> r.email
@@ -52,7 +52,7 @@ class Pripravi_kontaktni_obrazec(
          */
         val formatiranTelefon = when (val r = this.telefon.formatiraj(telefon)) {
             is TelefonService.FormatirajRezultat.WARN_TELEFON_NI_PRAVILNE_OBLIKE -> {
-                return Rezultat.FAIL("Telefon nima pravilne oblike!")
+                return Rezultat.WARN("Telefon nima pravilne oblike!")
             }
 
             is TelefonService.FormatirajRezultat.DATA -> r.telefon
@@ -62,15 +62,15 @@ class Pripravi_kontaktni_obrazec(
          * Ali email in telefon obstaja
          */
         if (!this.email.obstaja(formatiranEmail))
-            return Rezultat.FAIL("Email ne obstaja!")
+            return Rezultat.WARN("Email ne obstaja!")
         if (!this.telefon.obstaja(formatiranTelefon))
-            return Rezultat.FAIL("Telefon ne obstaja!")
+            return Rezultat.WARN("Telefon ne obstaja!")
 
         val oseba = Oseba(
             ime = imePriimekList.first(),
             priimek = imePriimekList.last(),
             username = imePriimekList.joinToString("").lowercase(),
-            tip = Oseba.Tip.KONTAKT
+            tip = mutableSetOf(Oseba.Tip.KONTAKT)
         )
 
         return Rezultat.PASS(

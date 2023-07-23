@@ -10,7 +10,7 @@ import org.apache.logging.log4j.kotlin.logger
 @Serializable
 data class Napaka(
     override var _id: Id<Napaka> = Id(),
-    var entitete_id: List<AnyId>,
+    var entitete_id: Set<AnyId>,
     val tip: Tip,
     val vsebina: String,
     val dodatno: String,

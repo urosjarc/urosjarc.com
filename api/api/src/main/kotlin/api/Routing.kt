@@ -95,7 +95,7 @@ fun Application.configureRouting() {
 
         this.authenticate {
             this.install(PreveriProfil) {
-                this.tip_profila = listOf(Oseba.Tip.ADMIN)
+                this.tip_profila = setOf(Oseba.Tip.ADMIN)
             }
             this.admin()
         }

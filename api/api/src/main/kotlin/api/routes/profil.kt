@@ -123,7 +123,7 @@ fun Route.profil() {
         val body = this.call.receive<NapakaReq>()
 
         val napaka = Napaka(
-            entitete_id = listOf(profil.id).map { it.vAnyId() },
+            entitete_id = setOf(profil.id.vAnyId()),
             tip = body.tip,
             vsebina = body.vsebina,
             dodatno = this.call.request_info()

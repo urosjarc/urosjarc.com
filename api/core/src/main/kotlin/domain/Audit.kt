@@ -10,7 +10,7 @@ import kotlin.time.Duration
 @Serializable
 data class Audit(
     override var _id: Id<Audit> = Id(),
-    var entitete_id: List<AnyId>,
+    var entitete_id: Set<AnyId>,
     val tip: Tip,
     val opis: String,
     val trajanje: Duration,

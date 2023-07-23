@@ -20,7 +20,6 @@ import org.bson.codecs.configuration.CodecRegistries
 import org.bson.conversions.Bson
 import serialization.IdCodec
 import kotlin.random.Random
-import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
@@ -43,35 +42,17 @@ class Filters {
             return com.mongodb.client.model.Filters.or(listOf(*filters))
         }
 
-        /**
-         * ID EQUALITY
-         */
         fun <T> EQ(id: Id<T>): Bson {
             return com.mongodb.client.model.Filters.eq(id.value)
         }
 
-        fun <T> EQ(prop: KMutableProperty1<*, Id<T>>, id: Id<T>): Bson {
-            return com.mongodb.client.model.Filters.eq(prop.name, id.value)
-        }
-
-        fun CONTAINS(prop: KMutableProperty1<*, List<AnyId>>, anyId: AnyId): Bson {
-            return com.mongodb.client.model.Filters.eq(prop.name, anyId.value)
-        }
-
-        /**
-         * STRING EQUALITY
-         */
-        fun EQ(prop: KProperty1<*, String>, value: String): Bson {
+        fun <T> EQ(prop: KProperty1<*, T>, value: T): Bson {
             return com.mongodb.client.model.Filters.eq(prop.name, value)
         }
 
-        /**
-         * ENUM EQUALITY
-         */
-        fun EQ(prop: KProperty1<*, Enum<*>>, value: Enum<*>): Bson {
-            return com.mongodb.client.model.Filters.eq(prop.name, value.name)
+        fun <T> CONTAINS(prop: KProperty1<*, Set<T>>, value: T): Bson {
+            return com.mongodb.client.model.Filters.eq(prop.name, value)
         }
-
 
     }
 
@@ -115,6 +96,21 @@ class DbService(val db_url: String, val db_name: String) {
         return obj
     }
 
+    fun nafilaj_NUJNO() {
+        val oseba = Oseba(
+            ime = "Uroš",
+            priimek = "Jarc",
+            username = "urosjarc",
+            tip = mutableSetOf(Oseba.Tip.SERVER, Oseba.Tip.ADMIN)
+        )
+        val telefon = Kontakt(oseba_id = mutableSetOf(oseba._id), data = "+38651240885", tip = Kontakt.Tip.TELEFON)
+        val email = Kontakt(oseba_id = mutableSetOf(oseba._id), data = "jar.fmf@gmail.com", tip = Kontakt.Tip.EMAIL)
+
+        this.ustvari(telefon)
+        this.ustvari(oseba)
+        this.ustvari(email)
+    }
+
     fun nafilaj() {
         val all_napaka = mutableListOf<Napaka>()
         val all_oseba = mutableListOf<Oseba>()
@@ -129,6 +125,8 @@ class DbService(val db_url: String, val db_name: String) {
         val all_zvezek = mutableListOf<Zvezek>()
         val all_audit = mutableListOf<Audit>()
 
+        this.nafilaj_NUJNO()
+
         (1..5).forEach {
 
             val oseba = nakljucni<Oseba>()
@@ -141,7 +139,7 @@ class DbService(val db_url: String, val db_name: String) {
                 val test = nakljucni<Test>().apply { this.oseba_id = oseba._id }
                 all_test.add(test)
 
-                val napaka = nakljucni<Napaka>().apply { this.entitete_id = listOf(AnyId(oseba._id.value)) }
+                val napaka = nakljucni<Napaka>().apply { this.entitete_id = setOf(oseba._id.vAnyId()) }
                 all_napaka.add(napaka)
             }
 
@@ -150,7 +148,7 @@ class DbService(val db_url: String, val db_name: String) {
                 val tematika = nakljucni<Tematika>().apply { this.zvezek_id = zvezek._id }
                 all_tematika.add(tematika)
 
-                val kontakt = nakljucni<Kontakt>().apply { this.oseba_id = listOf(oseba._id) }
+                val kontakt = nakljucni<Kontakt>().apply { this.oseba_id = mutableSetOf(oseba._id) }
                 all_kontakt.add(kontakt)
 
                 val naslov = nakljucni<Naslov>().apply { this.oseba_id = oseba._id }
@@ -170,7 +168,7 @@ class DbService(val db_url: String, val db_name: String) {
                 (1..5).forEach {
                     val sporocilo = nakljucni<Sporocilo>().apply {
                         this.kontakt_posiljatelj_id = all_kontakt.random()._id
-                        this.kontakt_prejemnik_id = all_kontakt.random()._id
+                        this.kontakt_prejemnik_id = mutableSetOf(all_kontakt.random()._id)
                     }
                     all_sporocilo.add(sporocilo)
 
@@ -186,8 +184,7 @@ class DbService(val db_url: String, val db_name: String) {
 
                         (1..Random.nextInt(0, 5)).forEach {
                             val audit = Audit(
-                                entitete_id = listOf(oseba._id, status.test_id, status._id)
-                                    .map { AnyId(value = it.value) },
+                                entitete_id = setOf(oseba._id.vAnyId(), status.test_id.vAnyId(), status._id.vAnyId()),
                                 tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
                                 opis = Status.Tip.values().random().name,
                                 entiteta = "entiteta",
@@ -375,7 +372,7 @@ class DbService(val db_url: String, val db_name: String) {
             listOf(
                 Aggregates.match(
                     Filters.AND(
-                        Filters.EQ(Oseba::tip, tip),
+                        Filters.CONTAINS(Oseba::tip, tip),
                     )
                 ), Aggregates_project_root(Oseba::class), Aggregates_lookup(
                     from = Kontakt::oseba_id,
@@ -429,8 +426,7 @@ class DbService(val db_url: String, val db_name: String) {
             tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
             trajanje = sekund.toDuration(DurationUnit.MINUTES),
             opis = r.tip.name,
-            entitete_id = listOf(id, oseba_id, test_id)
-                .map { AnyId(it.value) }
+            entitete_id = setOf(id.vAnyId(), oseba_id.vAnyId(), test_id.vAnyId())
         )
 
         this.ustvari(audit)
@@ -453,8 +449,7 @@ class DbService(val db_url: String, val db_name: String) {
             tip = Audit.Tip.TEST_DATUM_POSODOBITEV,
             trajanje = Duration.ZERO,
             opis = r.deadline.toString(),
-            entitete_id = listOf(id, oseba_id)
-                .map { AnyId(it.value) }
+            entitete_id = setOf(id.vAnyId(), oseba_id.vAnyId())
         )
 
         this.ustvari(audit)

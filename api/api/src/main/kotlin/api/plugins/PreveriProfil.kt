@@ -15,7 +15,7 @@ fun Oseba.profil(): Profil = Profil(id = this._id, tip = this.tip)
 @Serializable
 data class Profil(
     val id: Id<Oseba>,
-    val tip: Oseba.Tip,
+    val tip: Set<Oseba.Tip>,
 ) {
     companion object {
         val claim: String = ime<Profil>()
@@ -25,13 +25,13 @@ data class Profil(
 val PreveriProfil = createRouteScopedPlugin(
     name = "PreveriProfil", createConfiguration = ::PluginConfiguration
 ) {
-    val tipi: List<Oseba.Tip> = this.pluginConfig.tip_profila
+    val tipi: Set<Oseba.Tip> = this.pluginConfig.tip_profila
     val log = this.logger()
     this.pluginConfig.apply {
         this@createRouteScopedPlugin.on(AuthenticationChecked) {
             val profil = it.profil()
             log.info("$tipi -> $profil")
-            if (!this.tip_profila.contains(profil.tip)) {
+            if (this.tip_profila.intersect(profil.tip).isNotEmpty()) {
                 it.client_unauthorized()
             }
         }
@@ -39,5 +39,5 @@ val PreveriProfil = createRouteScopedPlugin(
 }
 
 class PluginConfiguration {
-    var tip_profila: List<Oseba.Tip> = listOf()
+    var tip_profila: Set<Oseba.Tip> = setOf()
 }
