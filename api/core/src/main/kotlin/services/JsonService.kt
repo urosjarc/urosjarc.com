@@ -11,7 +11,7 @@ import kotlinx.serialization.modules.contextual
 import serialization.ObjectIdSerializer
 
 
-class JsonService() {
+class JsonService {
     val module = Json {
         serializersModule = SerializersModule {
             contextual(ObjectIdSerializer)

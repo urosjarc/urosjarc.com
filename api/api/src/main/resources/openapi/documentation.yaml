@@ -184,18 +184,12 @@ paths:
               $ref: "#/components/schemas/TestUpdateReq"
         required: true
       responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ErrorRes"
         "200":
           description: "OK"
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/Test"
+                $ref: "#/components/schemas/TestUpdateReq"
   /profil/test/{test_id}/audit:
     get:
       description: ""

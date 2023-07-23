@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit
 
 
 fun Application.configureRouting() {
-    val json by this.inject<JsonService>()
+    val jsonService by this.inject<JsonService>()
 
     this.install(CallLogging) {
         this.level = org.slf4j.event.Level.INFO
@@ -53,11 +53,13 @@ fun Application.configureRouting() {
     this.install(Resources)
 
     this.install(ContentNegotiation) {
-        this.json(json.module)
+        this.json(jsonService.module)
     }
 
-
-    val jwkProvider = JwkProviderBuilder(Env.JWT_ISSUER).cached(10, 24, TimeUnit.HOURS).rateLimited(10, 1, TimeUnit.MINUTES).build()
+    val jwkProvider = JwkProviderBuilder(Env.JWT_ISSUER)
+        .cached(10, 24, TimeUnit.HOURS)
+        .rateLimited(10, 1, TimeUnit.MINUTES)
+        .build()
 
     this.install(Authentication) {
 
