@@ -2,9 +2,10 @@
   import Button from '@smui/button';
   import Textfield from '@smui/textfield';
   import Icon from '@smui/textfield/icon';
+  import {poslji_kontakt} from "$lib/usecases/poslji_kontakt";
 
-  function kontakt_submit(){
-
+  function kontakt_submit() {
+    console.log(poslji_kontakt({ime_priimek, email, telefon, vsebina}))
   }
 
   let ime_priimek = "";
@@ -52,9 +53,9 @@
   </div>
 
   <div class="col-12">
-      <Button class="razsiri" variant="raised" type="submit">
-        <b>Pošlji sporočilo</b>
-      </Button>
+    <Button class="razsiri" variant="raised" type="submit">
+      <b>Pošlji sporočilo</b>
+    </Button>
   </div>
 
 </form>

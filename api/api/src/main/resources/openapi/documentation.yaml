@@ -85,6 +85,19 @@ paths:
             schema:
               $ref: "#/components/schemas/KontaktReq"
         required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorRes"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Rezultat"
   /napaka:
     post:
       description: ""
@@ -176,7 +189,7 @@ paths:
         in: "path"
         required: true
         schema:
-          type: "object"
+          type: "string"
       requestBody:
         content:
           '*/*':
@@ -184,12 +197,18 @@ paths:
               $ref: "#/components/schemas/TestUpdateReq"
         required: true
       responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ErrorRes"
         "200":
           description: "OK"
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/TestUpdateReq"
+                $ref: "#/components/schemas/Test"
   /profil/test/{test_id}/audit:
     get:
       description: ""
@@ -198,7 +217,7 @@ paths:
         in: "path"
         required: true
         schema:
-          type: "object"
+          type: "string"
       responses:
         "200":
           description: "OK"
@@ -216,12 +235,12 @@ paths:
         in: "path"
         required: true
         schema:
-          type: "object"
+          type: "string"
       - name: "status_id"
         in: "path"
         required: true
         schema:
-          type: "object"
+          type: "string"
       requestBody:
         content:
           '*/*':
@@ -249,12 +268,12 @@ paths:
         in: "path"
         required: true
         schema:
-          type: "object"
+          type: "string"
       - name: "status_id"
         in: "path"
         required: true
         schema:
-          type: "object"
+          type: "string"
       responses:
         "200":
           description: "OK"
@@ -288,26 +307,22 @@ components:
       properties:
         token:
           type: "string"
-    ObjectId:
-      type: "object"
-      properties:
-        timestamp:
-          type: "integer"
-          format: "int32"
     Profil:
       type: "object"
       properties:
         id:
-          $ref: "#/components/schemas/ObjectId"
-        tip:
           type: "string"
-          enum:
-          - "UCENEC"
-          - "UCITELJ"
-          - "INSTRUKTOR"
-          - "ADMIN"
-          - "KONTAKT"
-          - "SERVER"
+        tip:
+          type: "array"
+          items:
+            type: "string"
+            enum:
+            - "UCENEC"
+            - "UCITELJ"
+            - "INSTRUKTOR"
+            - "ADMIN"
+            - "KONTAKT"
+            - "SERVER"
     KontaktReq:
       type: "object"
       properties:
@@ -319,6 +334,9 @@ components:
           type: "string"
         vsebina:
           type: "string"
+    Rezultat:
+      type: "object"
+      properties: {}
     NapakaReq:
       type: "object"
       properties:
@@ -334,7 +352,7 @@ components:
       type: "object"
       properties:
         value:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
     LocalDateTime:
       type: "object"
       properties: {}
@@ -342,7 +360,7 @@ components:
       type: "object"
       properties:
         _id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         entitete_id:
           type: "array"
           items:
@@ -363,7 +381,7 @@ components:
       type: "object"
       properties:
         _id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         ime:
           type: "string"
         priimek:
@@ -371,21 +389,23 @@ components:
         username:
           type: "string"
         tip:
-          type: "string"
-          enum:
-          - "UCENEC"
-          - "UCITELJ"
-          - "INSTRUKTOR"
-          - "ADMIN"
-          - "KONTAKT"
-          - "SERVER"
+          type: "array"
+          items:
+            type: "string"
+            enum:
+            - "UCENEC"
+            - "UCITELJ"
+            - "INSTRUKTOR"
+            - "ADMIN"
+            - "KONTAKT"
+            - "SERVER"
     Naslov:
       type: "object"
       properties:
         _id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         oseba_id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         drzava:
           type: "string"
         mesto:
@@ -401,11 +421,11 @@ components:
       type: "object"
       properties:
         _id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         oseba_ucenec_id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         oseba_ucitelj_id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
     UcenjeData:
       type: "object"
       properties:
@@ -423,12 +443,12 @@ components:
       type: "object"
       properties:
         value:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
     Kontakt:
       type: "object"
       properties:
         _id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         oseba_id:
           type: "array"
           items:
@@ -444,11 +464,13 @@ components:
       type: "object"
       properties:
         _id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         kontakt_posiljatelj_id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         kontakt_prejemnik_id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Id"
         vsebina:
           type: "string"
     SporociloData:
@@ -484,9 +506,9 @@ components:
       type: "object"
       properties:
         _id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         oseba_id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         naslov:
           type: "string"
         podnaslov:
@@ -497,11 +519,11 @@ components:
       type: "object"
       properties:
         _id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         naloga_id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         test_id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         tip:
           type: "string"
           enum:
@@ -515,9 +537,9 @@ components:
       type: "object"
       properties:
         _id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         tematika_id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         resitev:
           type: "string"
         vsebina:
@@ -526,9 +548,9 @@ components:
       type: "object"
       properties:
         _id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         zvezek_id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         naslov:
           type: "string"
     NalogaData:
@@ -583,7 +605,7 @@ components:
       type: "object"
       properties:
         _id:
-          $ref: "#/components/schemas/ObjectId"
+          type: "string"
         entitete_id:
           type: "array"
           items:
