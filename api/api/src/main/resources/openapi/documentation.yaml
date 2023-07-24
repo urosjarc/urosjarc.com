@@ -307,6 +307,17 @@ components:
       properties:
         token:
           type: "string"
+        tip:
+          type: "array"
+          items:
+            type: "string"
+            enum:
+            - "UCENEC"
+            - "UCITELJ"
+            - "INSTRUKTOR"
+            - "ADMIN"
+            - "KONTAKT"
+            - "SERVER"
     Profil:
       type: "object"
       properties:

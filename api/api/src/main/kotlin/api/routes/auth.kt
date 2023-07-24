@@ -64,7 +64,7 @@ fun Route.auth(jwkProvider: JwkProvider) {
             .withExpiresAt(Date(System.currentTimeMillis() + 5 * 60 * 1000))
             .sign(Algorithm.RSA256(publicKey as RSAPublicKey, privateKey as RSAPrivateKey))
 
-        this.call.respond(PrijavaRes(token = token))
+        this.call.respond(PrijavaRes(token = token, tip=oseba.tip))
     }
 
     this.authenticate {
