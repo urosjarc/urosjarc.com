@@ -5,6 +5,7 @@
   import {poslji_kontakt} from "$lib/usecases/poslji_kontakt";
   import Alert from "$lib/components/Alert.svelte";
   import type {Kontakt, Oseba, Sporocilo} from "$lib/api";
+  import DataTable, {Body, Cell, Head, Row} from "@smui/data-table";
 
   async function kontakt_submit() {
     const odgovor = await poslji_kontakt({ime_priimek, email, telefon, vsebina})
@@ -72,19 +73,30 @@
     </div>
   </form>
 
-  <Alert bind:open={dialog} cls="col-red">
+  <Alert bind:open={dialog} cls="col-royalblue">
     <svelte:fragment slot="naslov">
-      Sprejem kontakta
+      Sprejem kontakta je bil uspešen!
     </svelte:fragment>
     <svelte:fragment slot="vsebina">
-      <p>Email se je uspesno poslal.</p>
-      <p>Ime: {oseba.ime}</p>
-      <p>Priimek: {oseba.priimek}</p>
-      <p>Telefon: {telefon.data}</p>
-      <p>Email: {email.data}</p>
-      {#each sporocila as sporocilo}
-        <p>SMS: {sporocilo.vsebina}</p>
-      {/each}
+      <DataTable class="razsiri">
+        <Head>
+          <Row>
+            <Cell><b>Oseba</b></Cell>
+            <Cell><b>Telefon</b></Cell>
+            <Cell><b>Email</b></Cell>
+          </Row>
+        </Head>
+        <Body>
+          <Row>
+            <Cell>{oseba.ime} {oseba.priimek}</Cell>
+            <Cell>{telefonKontakt.data}</Cell>
+            <Cell>{emailKontakt.data}</Cell>
+          </Row>
+          <Row>
+            <Cell>{vsebina}</Cell>
+          </Row>
+        </Body>
+      </DataTable>
     </svelte:fragment>
   </Alert>
 </div>
