@@ -4,9 +4,14 @@
   import Icon from '@smui/textfield/icon';
   import {poslji_kontakt} from "$lib/usecases/poslji_kontakt";
   import Alert from "$lib/components/Alert.svelte";
+  import type {Kontakt, Oseba, Sporocilo} from "$lib/api";
 
   async function kontakt_submit() {
-    odgovor = await poslji_kontakt({ime_priimek, email, telefon, vsebina})
+    const odgovor = await poslji_kontakt({ime_priimek, email, telefon, vsebina})
+    oseba = odgovor.oseba
+    telefonKontakt = odgovor.telefon
+    emailKontakt = odgovor.email
+    sporocila = odgovor.sporocila || []
     dialog = true
   }
 
@@ -15,8 +20,11 @@
   let telefon = "";
   let vsebina = "";
 
-  let odgovor = {}
   let dialog = false
+  let oseba: Oseba = {}
+  let telefonKontakt: Kontakt = {}
+  let emailKontakt: Kontakt = {}
+  let sporocila: Array<Sporocilo> = []
 </script>
 
 <div>
@@ -69,16 +77,14 @@
       Sprejem kontakta
     </svelte:fragment>
     <svelte:fragment slot="vsebina">
-      <!--{#if Object.keys(odgovor).length > 0}-->
-        <p>Email se je uspesno poslal.</p>
-<!--        <p>Ime: {odgovor.oseba.ime}</p>-->
-<!--        <p>Priimek: {odgovor.oseba.priimek}</p>-->
-<!--        <p>Telefon: {odgovor.telefon.data}</p>-->
-<!--        <p>Email: {odgovor.email.data}</p>-->
-<!--        {#each odgovor.sporocila as sporocilo}-->
-<!--          <p>SMS: {sporocilo.vsebina}</p>-->
-<!--        {/each}-->
-<!--      {/if}-->
+      <p>Email se je uspesno poslal.</p>
+      <p>Ime: {oseba.ime}</p>
+      <p>Priimek: {oseba.priimek}</p>
+      <p>Telefon: {telefon.data}</p>
+      <p>Email: {email.data}</p>
+      {#each sporocila as sporocilo}
+        <p>SMS: {sporocilo.vsebina}</p>
+      {/each}
     </svelte:fragment>
   </Alert>
 </div>

@@ -67,16 +67,20 @@ class EmailService(
 
     fun poslji_email(from: String, to: String, subject: String, html: String): Boolean {
         return try {
+            val fromAddresses = InternetAddress(from)
+            val toAddress = InternetAddress(to)
+
             val mimeMessage = MimeMessage(session)
-            mimeMessage.setFrom(InternetAddress(from))
-            mimeMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to, true))
-            mimeMessage.setText(html)
+            mimeMessage.setFrom(fromAddresses)
+            mimeMessage.addRecipient(Message.RecipientType.TO, toAddress)
+
+            mimeMessage.setContent(html, "text/html; charset=utf-8");
             mimeMessage.subject = subject
             mimeMessage.sentDate = Date()
 
             val smtpTransport = session.getTransport("smtp")
             smtpTransport.connect()
-            smtpTransport.sendMessage(mimeMessage, mimeMessage.allRecipients)
+            smtpTransport.sendMessage(mimeMessage, arrayOf(fromAddresses, toAddress))
             smtpTransport.close()
             true
         } catch (messagingException: MessagingException) {

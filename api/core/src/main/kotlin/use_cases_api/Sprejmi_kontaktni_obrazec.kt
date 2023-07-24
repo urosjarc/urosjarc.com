@@ -3,18 +3,19 @@ package use_cases_api
 import domain.Kontakt
 import domain.Oseba
 import domain.Sporocilo
-import kotlinx.serialization.Serializable
 import org.apache.logging.log4j.kotlin.logger
 import services.DbService
 import services.EmailService
 import services.TelefonService
 import use_cases.Pripravi_kontaktni_obrazec
+import use_cases.Ustvari_templejt
 
 class Sprejmi_kontaktni_obrazec(
     private val db: DbService,
     private val telefon: TelefonService,
     private val email: EmailService,
-    private val pripravi_kontaktni_obrazec: Pripravi_kontaktni_obrazec
+    private val pripravi_kontaktni_obrazec: Pripravi_kontaktni_obrazec,
+    private val ustvari_template: Ustvari_templejt
 ) {
     val log = this.logger()
 
@@ -23,6 +24,7 @@ class Sprejmi_kontaktni_obrazec(
             val obrazec: Pripravi_kontaktni_obrazec.Rezultat.PASS,
             val sporocila: List<Sporocilo>
         ) : Rezultat
+
         data class WARN(val info: String) : Rezultat
     }
 
@@ -86,17 +88,24 @@ class Sprejmi_kontaktni_obrazec(
                 for (serverKontaktData in serverData.kontakt_refs.filter { it.kontakt.tip == kontakt.tip }) {
                     when (kontakt.tip) {
                         Kontakt.Tip.EMAIL -> {
+                            val template = ustvari_template.email_potrditev_prejema_kontaktnega_obrazca(
+                                ime = obrazec.oseba.ime,
+                                priimek = obrazec.oseba.priimek,
+                                telefon = obrazec.telefon.data,
+                                email = obrazec.email.data,
+                                vsebina = obrazec.vsebina
+                            )
                             if (this.email.poslji_email(
                                     from = serverKontaktData.kontakt.data,
                                     to = kontakt.data,
-                                    subject = "Kontakt",
-                                    html = "html"
+                                    subject = template.subjekt,
+                                    html = template.html
                                 )
                             ) {
                                 val sporocilo = Sporocilo(
                                     kontakt_posiljatelj_id = serverKontaktData.kontakt._id,
                                     kontakt_prejemnik_id = mutableSetOf(kontakt._id),
-                                    vsebina = "vsebina"
+                                    vsebina = template.html
                                 )
                                 db.ustvari(sporocilo)
                                 sporocila.add(sporocilo)
@@ -105,10 +114,11 @@ class Sprejmi_kontaktni_obrazec(
                         }
 
                         Kontakt.Tip.TELEFON -> {
+                            val template = ustvari_template.sms_potrditev_prejema_kontaktnega_obrazca()
                             when (this.telefon.poslji_sms(
                                 from = serverKontaktData.kontakt.data,
                                 to = kontakt.data,
-                                text = "html"
+                                text = template
                             )
                             ) {
                                 is TelefonService.RezultatSmsPosiljanja.ERROR_SMS_NI_POSLAN -> {}
@@ -116,7 +126,7 @@ class Sprejmi_kontaktni_obrazec(
                                     val sporocilo = Sporocilo(
                                         kontakt_posiljatelj_id = serverKontaktData.kontakt._id,
                                         kontakt_prejemnik_id = mutableSetOf(kontakt._id),
-                                        vsebina = "vsebina"
+                                        vsebina = template
                                     )
                                     db.ustvari(sporocilo)
                                     sporocila.add(sporocilo)

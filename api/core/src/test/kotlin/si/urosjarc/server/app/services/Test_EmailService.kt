@@ -9,6 +9,7 @@ import org.junit.jupiter.api.TestInstance
 import org.koin.test.KoinTest
 import org.koin.test.inject
 import services.EmailService
+import use_cases.Ustvari_templejt
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -19,6 +20,7 @@ class Test_EmailService : KoinTest {
 
     val log = logger()
     val service: EmailService by this.inject()
+    val ustvari_template: Ustvari_templejt by this.inject()
 
     @BeforeEach
     fun before_each() {
@@ -39,7 +41,7 @@ class Test_EmailService : KoinTest {
             when (val r = this.service.formatiraj(email = it)) {
                 is EmailService.RezultatEmailFormatiranja.DATA -> assertEquals(
                     expected = it.trim(),
-                    actual = r.email.toString()
+                    actual = r.email
                 )
 
                 else -> fail(it)
@@ -88,12 +90,18 @@ class Test_EmailService : KoinTest {
 
     @Test
     fun poslji_email() {
-        log.error("Testing")
+        val template = ustvari_template.email_potrditev_prejema_kontaktnega_obrazca(
+            "Uroš",
+            priimek = "Jarc",
+            telefon = "051240885",
+            email = "jar.fmf@gmail.com",
+            vsebina="Pozdravljeni! Potreboval bi pomoč pri programiranju mi lahko lepo prosim pomagate!"
+        )
         this.service.poslji_email(
             from = "info@urosjarc.com",
-            to = "info@urosjarc.com",
-            subject = "subjekt",
-            html = "html"
+            to = "jar.fmf@gmail.com",
+            subject = "Uroš Jarc | Vaš kontakt je bil sprejet!",
+            html = template.html
         )
     }
 }
