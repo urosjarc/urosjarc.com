@@ -1,19 +1,19 @@
 <script lang="ts">
-  import Button from '@smui/button';
   import Textfield from '@smui/textfield';
   import Icon from '@smui/textfield/icon';
   import {poslji_kontakt} from "$lib/usecases/poslji_kontakt";
   import Alert from "$lib/components/Alert.svelte";
-  import type {Kontakt, Oseba, Sporocilo} from "$lib/api";
-  import DataTable, {Body, Cell, Head, Row} from "@smui/data-table";
+  import type {Kontakt, Oseba} from "$lib/api";
+  import SubmitButton from "$lib/components/SubmitButton.svelte";
 
   async function kontakt_submit() {
+    loading = true
     const odgovor = await poslji_kontakt({ime_priimek, email, telefon, vsebina})
     oseba = odgovor.oseba
     telefonKontakt = odgovor.telefon
     emailKontakt = odgovor.email
-    sporocila = odgovor.sporocila || []
     dialog = true
+    loading = false
   }
 
   let ime_priimek = "";
@@ -21,11 +21,11 @@
   let telefon = "";
   let vsebina = "";
 
+  let loading = false
   let dialog = false
   let oseba: Oseba = {}
   let telefonKontakt: Kontakt = {}
   let emailKontakt: Kontakt = {}
-  let sporocila: Array<Sporocilo> = []
 </script>
 
 <div>
@@ -67,36 +67,19 @@
     </div>
 
     <div class="col-12">
-      <Button class="razsiri" variant="raised" type="submit">
-        <b>Pošlji sporočilo</b>
-      </Button>
+      <SubmitButton loading={loading}>Poslji sporočilo</SubmitButton>
     </div>
   </form>
 
   <Alert bind:open={dialog} cls="col-royalblue">
     <svelte:fragment slot="naslov">
-      Sprejem kontakta je bil uspešen!
+      Vaše sporočilo je bilo sprejeto!
     </svelte:fragment>
     <svelte:fragment slot="vsebina">
-      <DataTable class="razsiri">
-        <Head>
-          <Row>
-            <Cell><b>Oseba</b></Cell>
-            <Cell><b>Telefon</b></Cell>
-            <Cell><b>Email</b></Cell>
-          </Row>
-        </Head>
-        <Body>
-          <Row>
-            <Cell>{oseba.ime} {oseba.priimek}</Cell>
-            <Cell>{telefonKontakt.data}</Cell>
-            <Cell>{emailKontakt.data}</Cell>
-          </Row>
-          <Row>
-            <Cell>{vsebina}</Cell>
-          </Row>
-        </Body>
-      </DataTable>
+      Povratni sporočili sta se poslali osebi <b>"{oseba.ime} {oseba.priimek}"</b>,
+      na email naslov <b>"{emailKontakt.data}"</b>, ter
+      telefonsko številko <b>"{telefonKontakt.data}"</b>.
+      Prosim preverite prejem povratnic.<br><br>
     </svelte:fragment>
   </Alert>
 </div>

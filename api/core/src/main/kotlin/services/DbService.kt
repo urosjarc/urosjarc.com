@@ -50,8 +50,24 @@ class Filters {
             return com.mongodb.client.model.Filters.eq(prop.name, value)
         }
 
-        fun <T> CONTAINS(prop: KProperty1<*, Set<T>>, value: T): Bson {
+        fun <T> EQ(prop: KProperty1<*, Id<T>>, value: Id<T>): Bson {
+            return com.mongodb.client.model.Filters.eq(prop.name, value.value)
+        }
+
+        fun EQ(prop: KProperty1<*, AnyId>, value: AnyId): Bson {
+            return com.mongodb.client.model.Filters.eq(prop.name, value.value)
+        }
+
+        fun <T> CONTAINS(prop: KProperty1<*, Set<Id<T>>>, value: Id<T>): Bson {
             return com.mongodb.client.model.Filters.eq(prop.name, value)
+        }
+
+        fun CONTAINS(prop: KProperty1<*, Set<AnyId>>, value: AnyId): Bson {
+            return com.mongodb.client.model.Filters.eq(prop.name, value.value)
+        }
+
+        fun CONTAINS(prop: KProperty1<*, Set<Enum<*>>>, value: Enum<*>): Bson {
+            return com.mongodb.client.model.Filters.eq(prop.name, value.name)
         }
 
     }

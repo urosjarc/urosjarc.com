@@ -98,6 +98,7 @@ class Test_EmailService : KoinTest {
             vsebina="Pozdravljeni! Potreboval bi pomoč pri programiranju mi lahko lepo prosim pomagate!"
         )
         this.service.poslji_email(
+            fromName="Uros Jarc",
             from = "info@urosjarc.com",
             to = "jar.fmf@gmail.com",
             subject = "Uroš Jarc | Vaš kontakt je bil sprejet!",

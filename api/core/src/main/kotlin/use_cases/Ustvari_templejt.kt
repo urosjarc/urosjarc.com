@@ -15,7 +15,7 @@ class Ustvari_templejt {
         vsebina: String
     ) = Email(
         posiljatelj="Uroš Jarc",
-        subjekt = "Uroš Jarc | Vaš kotakt je bil sprejet!",
+        subjekt = "Uroš Jarc | Vaše sporočilo je bilo sprejeto!",
         html = """
             <br><br><br>
             <div style="font-size:15px;text-align:center;font-family:monospace;">
