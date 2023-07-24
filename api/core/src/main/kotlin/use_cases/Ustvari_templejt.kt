@@ -18,21 +18,24 @@ class Ustvari_templejt {
         html = """
             <br><br><br>
             <div style="font-size:15px;text-align:center;font-family:monospace;">
+            
                 <h1>📨 Vaše sporočilo je bilo sprejeto! 📨</h1>
+                
                 <hr width=700>
-                <p><i>
-                    "$ime $priimek", $telefon, $email
-                    <br>
-                    "$vsebina"
-                </i></p>
+                
+                <p><i>"$ime $priimek", $telefon, $email<br>"$vsebina"</i></p>
+                
                 <hr width=800>
+                
                 <p style="font-size: 20px">
                     Odgovor lahko pričakujete v kratkem, najkasneje proti večeru.<br>
                     Preverite če so vse informacije pravilno izpolnjene.<br>
-                    Dodatne informacije posredujte v odgovoru.
+                    Dodatne informacije posredujte v odgovoru.<br>
+                    
+                    <pre style="margin-top: 8px; font-size:25px">⭐   ⭐   ⭐   ⭐   ⭐</pre>
                 </p>
-                <hr width=350>
-                <p style="font-size:25px">Lp, Uroš Jarc<br>⭐</p>
+                
+                <p style="font-size:25px">Uroš Jarc</p>
             </div>
             <br><br><br>
         """.trimIndent().trim()
@@ -43,7 +46,7 @@ class Ustvari_templejt {
         
         Odgovor lahko pričakujete v kratkem, najkasneje proti večeru.
         Preverite na email sporocilu, če so vse informacije pravilno izpolnjene.
-            
-        Lp, Uroš Jarc ⭐
+        
+        Lp, Uroš Jarc
         """.trimIndent().trim()
 }
