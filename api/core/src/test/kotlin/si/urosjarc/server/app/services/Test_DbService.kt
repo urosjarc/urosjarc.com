@@ -9,12 +9,14 @@ import org.junit.jupiter.api.TestInstance
 import org.koin.test.KoinTest
 import org.koin.test.inject
 import services.DbService
+import services.TelefonService
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class Test_DbService : KoinTest {
 
     val log = logger()
     val service: DbService by this.inject()
+    val telefon: TelefonService by this.inject()
 
     @BeforeEach
     fun before_each() {
@@ -39,7 +41,6 @@ class Test_DbService : KoinTest {
         println(this.service.osebe.find().firstOrNull())
         println(this.service.napake.find().firstOrNull())
     }
-
 
     @Test
     fun `sprazni bazo`() {

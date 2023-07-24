@@ -103,8 +103,8 @@ class DbService(val db_url: String, val db_name: String) {
             username = "urosjarc",
             tip = mutableSetOf(Oseba.Tip.SERVER, Oseba.Tip.ADMIN)
         )
-        val telefon = Kontakt(oseba_id = mutableSetOf(oseba._id), data = "+38651240885", tip = Kontakt.Tip.TELEFON)
-        val email = Kontakt(oseba_id = mutableSetOf(oseba._id), data = "jar.fmf@gmail.com", tip = Kontakt.Tip.EMAIL)
+        val telefon = Kontakt(oseba_id = mutableSetOf(oseba._id), data = "Uros Jarc", tip = Kontakt.Tip.TELEFON)
+        val email = Kontakt(oseba_id = mutableSetOf(oseba._id), data = "info@urosjarc.com", tip = Kontakt.Tip.EMAIL)
 
         this.ustvari(telefon)
         this.ustvari(oseba)
@@ -371,15 +371,17 @@ class DbService(val db_url: String, val db_name: String) {
         val aggregation: AggregateIterable<OsebaData> = osebe.aggregate<OsebaData>(
             listOf(
                 Aggregates.match(
-                    Filters.AND(
-                        Filters.CONTAINS(Oseba::tip, tip),
-                    )
-                ), Aggregates_project_root(Oseba::class), Aggregates_lookup(
+                    Filters.CONTAINS(Oseba::tip, tip),
+                ),
+                Aggregates_project_root(Oseba::class),
+                Aggregates_lookup(
                     from = Kontakt::oseba_id,
-                    to = Oseba::_id
+                    to = Oseba::_id,
+                    pipeline = listOf()
                 )
             )
         )
+        aggregation.explain_aggregation()
         return aggregation.toList()
     }
 

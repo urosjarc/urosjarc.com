@@ -3,6 +3,7 @@ package use_cases_api
 import domain.Kontakt
 import domain.Oseba
 import domain.Sporocilo
+import kotlinx.serialization.Serializable
 import org.apache.logging.log4j.kotlin.logger
 import services.DbService
 import services.EmailService

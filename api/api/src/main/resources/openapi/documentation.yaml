@@ -83,7 +83,7 @@ paths:
         content:
           '*/*':
             schema:
-              $ref: "#/components/schemas/KontaktReq"
+              $ref: "#/components/schemas/KontaktObrazecReq"
         required: true
       responses:
         "400":
@@ -97,7 +97,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/Rezultat"
+                $ref: "#/components/schemas/KontaktObrazecRes"
   /napaka:
     post:
       description: ""
@@ -323,7 +323,7 @@ components:
             - "ADMIN"
             - "KONTAKT"
             - "SERVER"
-    KontaktReq:
+    KontaktObrazecReq:
       type: "object"
       properties:
         ime_priimek:
@@ -334,9 +334,75 @@ components:
           type: "string"
         vsebina:
           type: "string"
-    Rezultat:
+    Oseba:
       type: "object"
-      properties: {}
+      properties:
+        _id:
+          type: "string"
+        ime:
+          type: "string"
+        priimek:
+          type: "string"
+        username:
+          type: "string"
+        tip:
+          type: "array"
+          items:
+            type: "string"
+            enum:
+            - "UCENEC"
+            - "UCITELJ"
+            - "INSTRUKTOR"
+            - "ADMIN"
+            - "KONTAKT"
+            - "SERVER"
+    Id:
+      type: "object"
+      properties:
+        value:
+          type: "string"
+    Kontakt:
+      type: "object"
+      properties:
+        _id:
+          type: "string"
+        oseba_id:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Id"
+        data:
+          type: "string"
+        tip:
+          type: "string"
+          enum:
+          - "EMAIL"
+          - "TELEFON"
+    Sporocilo:
+      type: "object"
+      properties:
+        _id:
+          type: "string"
+        kontakt_posiljatelj_id:
+          type: "string"
+        kontakt_prejemnik_id:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Id"
+        vsebina:
+          type: "string"
+    KontaktObrazecRes:
+      type: "object"
+      properties:
+        oseba:
+          $ref: "#/components/schemas/Oseba"
+        telefon:
+          $ref: "#/components/schemas/Kontakt"
+        email:
+          $ref: "#/components/schemas/Kontakt"
+        sporocila:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Sporocilo"
     NapakaReq:
       type: "object"
       properties:
@@ -377,28 +443,6 @@ components:
           type: "string"
         ustvarjeno:
           $ref: "#/components/schemas/LocalDateTime"
-    Oseba:
-      type: "object"
-      properties:
-        _id:
-          type: "string"
-        ime:
-          type: "string"
-        priimek:
-          type: "string"
-        username:
-          type: "string"
-        tip:
-          type: "array"
-          items:
-            type: "string"
-            enum:
-            - "UCENEC"
-            - "UCITELJ"
-            - "INSTRUKTOR"
-            - "ADMIN"
-            - "KONTAKT"
-            - "SERVER"
     Naslov:
       type: "object"
       properties:
@@ -439,40 +483,6 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/UcenjeData"
-    Id:
-      type: "object"
-      properties:
-        value:
-          type: "string"
-    Kontakt:
-      type: "object"
-      properties:
-        _id:
-          type: "string"
-        oseba_id:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/Id"
-        data:
-          type: "string"
-        tip:
-          type: "string"
-          enum:
-          - "EMAIL"
-          - "TELEFON"
-    Sporocilo:
-      type: "object"
-      properties:
-        _id:
-          type: "string"
-        kontakt_posiljatelj_id:
-          type: "string"
-        kontakt_prejemnik_id:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/Id"
-        vsebina:
-          type: "string"
     SporociloData:
       type: "object"
       properties:

@@ -37,7 +37,7 @@ fun Aggregates_lookup(
         println("@Serializable")
         println("data class ${local_class_name_capitalize}Db (")
         println("\tval $local_class_name : ${local_class_name_capitalize},")
-        if (pipeline != null) println("\tval ${newField} : List<${foreign_class_name_capitalize}Db> = listOf()")
+        if (pipeline != null) println("\tval ${newField} : List<${foreign_class_name_capitalize}Data> = listOf()")
         else println("\tval ${newField} : List<${foreign_class_name_capitalize}> = listOf()")
         println(")\n")
     }

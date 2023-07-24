@@ -1,6 +1,6 @@
 import {API} from "../stores/apiStore";
-import type {KontaktReq} from "$lib/api";
+import type {KontaktObrazecReq} from "$lib/api";
 
-export async function poslji_kontakt(args: KontaktReq) {
-  return await API().postKontakt(args)
+export async function poslji_kontakt(args: KontaktObrazecReq) {
+  return API().postKontakt(args);
 }
