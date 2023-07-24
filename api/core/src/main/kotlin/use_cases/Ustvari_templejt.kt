@@ -5,7 +5,7 @@ import org.apache.logging.log4j.kotlin.logger
 class Ustvari_templejt {
     val log = this.logger()
 
-    data class Email(val subjekt: String, val html: String)
+    data class Email(val posiljatelj: String, val subjekt: String, val html: String)
 
     fun email_potrditev_prejema_kontaktnega_obrazca(
         ime: String,
@@ -14,6 +14,7 @@ class Ustvari_templejt {
         email: String,
         vsebina: String
     ) = Email(
+        posiljatelj="Uroš Jarc",
         subjekt = "Uroš Jarc | Vaš kotakt je bil sprejet!",
         html = """
             <br><br><br>
@@ -47,6 +48,6 @@ class Ustvari_templejt {
         Odgovor lahko pričakujete v kratkem, najkasneje proti večeru.
         Preverite na email sporocilu, če so vse informacije pravilno izpolnjene.
         
-        Lp, Uroš Jarc
+        Lp, Uroš Jarc ⭐
         """.trimIndent().trim()
 }

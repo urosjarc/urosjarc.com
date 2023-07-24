@@ -96,6 +96,7 @@ class Sprejmi_kontaktni_obrazec(
                                 vsebina = obrazec.vsebina
                             )
                             if (this.email.poslji_email(
+                                    fromName = template.posiljatelj,
                                     from = serverKontaktData.kontakt.data,
                                     to = kontakt.data,
                                     subject = template.subjekt,

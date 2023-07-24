@@ -65,9 +65,9 @@ class EmailService(
         }
     }
 
-    fun poslji_email(from: String, to: String, subject: String, html: String): Boolean {
+    fun poslji_email(fromName: String, from: String, to: String, subject: String, html: String): Boolean {
         return try {
-            val fromAddresses = InternetAddress(from)
+            val fromAddresses = InternetAddress(from, fromName)
             val toAddress = InternetAddress(to)
 
             val mimeMessage = MimeMessage(session)
