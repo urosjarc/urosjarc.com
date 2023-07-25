@@ -45,9 +45,11 @@ class Ustvari_templejt {
     fun sms_potrditev_prejema_kontaktnega_obrazca() = """
         📨 Vaše sporočilo je bilo sprejeto! 📨
         
-        Odgovor lahko pričakujete v kratkem, najkasneje proti večeru.
-        Preverite na email sporocilu, če so vse informacije pravilno izpolnjene.
-        
-        Lp, Uroš Jarc ⭐
+        Lp, Uroš Jarc ✨
         """.trimIndent().trim()
+}
+
+fun main() {
+    val t = Ustvari_templejt()
+    println(t.sms_potrditev_prejema_kontaktnega_obrazca().length)
 }
