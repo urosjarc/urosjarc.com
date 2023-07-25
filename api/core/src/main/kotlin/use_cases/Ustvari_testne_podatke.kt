@@ -1,20 +1,21 @@
 package use_cases
 
-import base.AnyId
 import base.Id
 import domain.*
 import extend.danes
 import extend.dodaj
 import extend.nakljucni
 import extend.zdaj
+import io.github.serpro69.kfaker.Faker
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import services.DbService
-import services.counters
-import services.faker
 import kotlin.random.Random
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
+
+val faker = Faker()
+var counters = mutableMapOf<String, Int>()
 
 class Ustvari_testne_podatke(
     private val db: DbService,
@@ -22,8 +23,6 @@ class Ustvari_testne_podatke(
 
     private inline fun <reified T : Any> nakljucni(): T {
         val obj = faker.randomProvider.randomClassInstance<T> {
-            this.typeGenerator<Id<T>> { Id() }
-            this.typeGenerator<AnyId> { AnyId() }
             this.typeGenerator<MutableSet<T>> { mutableSetOf() }
             this.typeGenerator<Duration> { Random.nextInt(2, 10).minutes }
             this.typeGenerator<LocalDate> { LocalDate.danes(dDni = Random.nextInt(3, 20)) }
@@ -127,7 +126,7 @@ class Ustvari_testne_podatke(
         tematike.forEach { naloge += this.ustvari_naloge(n = 20, tematika = it) }
 
         /**
-         * Ustvari teste in statuse
+         * Ustvari teste
          */
         val testi = this.ustvari_teste(n = 3, ucenci = ucenci, admini = ucitelji, naloge = naloge.nakljucni(n = 30))
 

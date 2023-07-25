@@ -1,6 +1,7 @@
 package extend
 
 import com.mongodb.ExplainVerbosity
+import com.mongodb.client.model.Aggregates
 import com.mongodb.kotlin.client.AggregateIterable
 import org.bson.BsonArray
 import org.bson.BsonDocument
@@ -15,6 +16,7 @@ import kotlin.reflect.KMutableProperty1
 fun Aggregates_lookup(
     from: KMutableProperty1<*, *>,
     to: KMutableProperty1<*, *>,
+    filter: Bson? = null,
     pipeline: List<Bson>? = null,
     dataclasses: Boolean = true
 ): Bson {
@@ -47,12 +49,15 @@ fun Aggregates_lookup(
         .append("localField", BsonString("${local_class_name}.${to.name}"))
         .append("as", BsonString(newField))
 
-    if (pipeline != null) {
-        val arr = BsonArray()
-        arr.add(Aggregates_project_root(key = foreign_class).toBsonDocument())
-        pipeline.forEach { arr.add(it.toBsonDocument()) }
-        inside.append("pipeline", arr)
+    val arr = BsonArray()
+    if (filter != null) {
+        arr.add(Aggregates.match(filter).toBsonDocument()) //Filtracija mora biti pred projections
     }
+    if (pipeline != null) {
+        arr.add(Aggregates_project_root(key = foreign_class).toBsonDocument()) //Potem mora biti projekcija
+        pipeline.forEach { arr.add(it.toBsonDocument()) } //Sele potem pa dodatna agregacija.
+    }
+    if (arr.isNotEmpty()) inside.append("pipeline", arr)
 
     return BsonDocument("\$lookup", inside)
 }

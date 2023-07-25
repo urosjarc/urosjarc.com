@@ -528,8 +528,18 @@ components:
       properties:
         _id:
           type: "string"
-        oseba_id:
-          type: "string"
+        oseba_admin_id:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Id"
+        oseba_ucenec_id:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Id"
+        naloga_id:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Id"
         naslov:
           type: "string"
         podnaslov:
@@ -545,10 +555,11 @@ components:
           type: "string"
         test_id:
           type: "string"
+        oseba_id:
+          type: "string"
         tip:
           type: "string"
           enum:
-          - "NEZACETO"
           - "NERESENO"
           - "NAPACNO"
           - "PRAVILNO"
@@ -583,15 +594,6 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/Tematika"
-    StatusData:
-      type: "object"
-      properties:
-        status:
-          $ref: "#/components/schemas/Status"
-        naloga_refs:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/NalogaData"
     TestData:
       type: "object"
       properties:
@@ -600,7 +602,11 @@ components:
         status_refs:
           type: "array"
           items:
-            $ref: "#/components/schemas/StatusData"
+            $ref: "#/components/schemas/Status"
+        naloga_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/NalogaData"
     OsebaData:
       type: "object"
       properties:
@@ -610,7 +616,7 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/Naslov"
-        ucenje_ucitelj_refs:
+        ucenje_ucenec_refs:
           type: "array"
           items:
             $ref: "#/components/schemas/UcenjeData"
@@ -618,7 +624,7 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/KontaktData"
-        test_refs:
+        test_ucenec_refs:
           type: "array"
           items:
             $ref: "#/components/schemas/TestData"
@@ -656,7 +662,6 @@ components:
         tip:
           type: "string"
           enum:
-          - "NEZACETO"
           - "NERESENO"
           - "NAPACNO"
           - "PRAVILNO"

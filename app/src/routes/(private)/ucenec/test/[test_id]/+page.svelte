@@ -140,7 +140,7 @@
       <Button
         class="col-1 {statusData.cls}"
         style="margin: 2px" variant="raised"
-        href={route.profil_status_id(test_id, statusData.id)}>
+        href={route.ucenec_status_id(test_id, statusData.id)}>
         <Label><b>{i + 1}</b></Label>
       </Button>
     {/each}

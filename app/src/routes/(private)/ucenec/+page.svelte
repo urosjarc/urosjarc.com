@@ -6,7 +6,7 @@
   import {type Data, page_data} from "./page";
 
   function goto_test(id) {
-    goto(route.profil_test_id(id))
+    goto(route.ucenec_test_id(id))
   }
 
   onMount(async () => {

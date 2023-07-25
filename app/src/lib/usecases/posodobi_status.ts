@@ -25,7 +25,7 @@ export async function posodobi_status(args: { test_id: string, status_id: string
         // @ts-ignore
         osebaData.test_refs[i].status_refs[j].status = new_status
         profil.set(osebaData)
-        return goto(route.profil_test_id(args.test_id))
+        return goto(route.ucenec_test_id(args.test_id))
       }
     }
   }

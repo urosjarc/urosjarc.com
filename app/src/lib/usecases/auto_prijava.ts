@@ -9,7 +9,7 @@ export function auto_prijava() {
   API().getAuthProfil().then(() => {
     API().getProfil().then(osebaData => {
       profil.set(osebaData)
-      goto(route.profil)
+      goto(route.ucenec)
     }).catch(() => {
     })
   }).catch(() => {

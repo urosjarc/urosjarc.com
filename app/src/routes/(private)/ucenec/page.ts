@@ -16,7 +16,7 @@ export type Data = {
 
 export async function page_data(): Promise<Data[]> {
   const data: Data[] = [];
-  (profil.get().test_refs || []).forEach((testData: TestData) => {
+  (profil.get().test_ucenec_refs || []).forEach((testData: TestData) => {
 
     const test = testData.test || {}
     const test_date_str = test?.deadline?.toString() || ""

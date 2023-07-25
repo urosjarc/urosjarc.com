@@ -17,7 +17,7 @@ export async function prijava(args: { username: string }) {
   } else {
     let osebaData = await API().getProfil()
     profil.set(osebaData)
-    goto(route.profil)
+    goto(route.ucenec)
   }
 
 

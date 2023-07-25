@@ -12,7 +12,6 @@ import com.mongodb.kotlin.client.MongoClient
 import data.OsebaData
 import domain.*
 import extend.*
-import io.github.serpro69.kfaker.Faker
 import kotlinx.datetime.LocalDate
 import org.apache.logging.log4j.kotlin.logger
 import org.bson.codecs.configuration.CodecRegistries
@@ -23,9 +22,6 @@ import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
-
-val faker = Faker()
-var counters = mutableMapOf<String, Int>()
 
 class Filters {
     companion object {
@@ -166,9 +162,7 @@ class DbService(val db_url: String, val db_name: String) {
                         Aggregates_lookup(
                             from = Status::test_id,
                             to = Test::_id,
-                            pipeline = listOf(
-                                Aggregates.match(Filters.EQ(Status::oseba_id, id))
-                            )
+                            filter = Filters.EQ(Status::oseba_id, id)
                         ),
                         Aggregates_lookup(
                             from = Naloga::_id,
@@ -176,7 +170,7 @@ class DbService(val db_url: String, val db_name: String) {
                             pipeline = listOf(
                                 Aggregates_lookup(
                                     from = Tematika::_id,
-                                    to = Naloga::_id
+                                    to = Naloga::tematika_id
                                 )
                             )
                         ),
@@ -223,17 +217,7 @@ class DbService(val db_url: String, val db_name: String) {
                             to = Ucenje::oseba_ucitelj_id,
                         )
                     )
-                ),
-                Aggregates_lookup(
-                    from = Ucenje::oseba_ucitelj_id,
-                    to = Oseba::_id,
-                    pipeline = listOf(
-                        Aggregates_lookup(
-                            from = Oseba::_id,
-                            to = Ucenje::oseba_ucenec_id
-                        )
-                    )
-                ),
+                )
             )
         )
 
@@ -309,7 +293,7 @@ class DbService(val db_url: String, val db_name: String) {
             )
         )
 
-        return aggregation.firstOrNull()?.test_ucenec_refs?.get(0)?.status_refs?.get(0)?.status?._id == id
+        return aggregation.firstOrNull()?.test_ucenec_refs?.get(0)?.status_refs?.get(0)?.oseba_id == id
     }
 
     fun status_update(id: Id<Status>, oseba_id: Id<Oseba>, test_id: Id<Test>, tip: Status.Tip, sekund: Int): Status? {
