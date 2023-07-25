@@ -8,8 +8,9 @@ data class Status(
     override var _id: Id<Status> = Id(),
     var naloga_id: Id<Naloga>,
     var test_id: Id<Test>,
-    val tip: Tip = Tip.NEZACETO,
+    var oseba_id: Id<Oseba>,
+    val tip: Tip,
     val pojasnilo: String
 ) : Entiteta<Status> {
-    enum class Tip { NEZACETO, NERESENO, NAPACNO, PRAVILNO }
+    enum class Tip { NERESENO, NAPACNO, PRAVILNO }
 }

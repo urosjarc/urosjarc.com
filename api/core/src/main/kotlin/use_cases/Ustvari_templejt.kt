@@ -44,7 +44,6 @@ class Ustvari_templejt {
 
     fun sms_potrditev_prejema_kontaktnega_obrazca() = """
         📨 Vaše sporočilo je bilo sprejeto! 📨
-        
         Lp, Uroš Jarc ✨
         """.trimIndent().trim()
 }

@@ -9,7 +9,7 @@ data class Oseba(
     val ime: String,
     val priimek: String,
     val username: String,
-    val tip: MutableSet<Tip>,
+    var tip: MutableSet<Tip>,
 ) : Entiteta<Oseba> {
     enum class Tip { UCENEC, UCITELJ, INSTRUKTOR, ADMIN, KONTAKT, SERVER }
 }

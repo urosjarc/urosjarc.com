@@ -2,7 +2,6 @@ package use_cases
 
 import domain.Kontakt
 import domain.Oseba
-import kotlinx.serialization.Serializable
 import services.EmailService
 import services.TelefonService
 

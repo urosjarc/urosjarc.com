@@ -10,6 +10,7 @@ import services.JsonService
 import services.TelefonService
 import use_cases.Pripravi_kontaktni_obrazec
 import use_cases.Ustvari_templejt
+import use_cases.Ustvari_testne_podatke
 import use_cases_api.Sprejmi_kontaktni_obrazec
 
 object App {
@@ -44,6 +45,7 @@ object App {
         this.factoryOf(::Pripravi_kontaktni_obrazec)
         this.factoryOf(::Ustvari_templejt)
         this.factoryOf(::Sprejmi_kontaktni_obrazec)
+        this.factoryOf(::Ustvari_testne_podatke)
     }
 
     fun pripravi_DI(tip: Tip = Tip.TEST) {

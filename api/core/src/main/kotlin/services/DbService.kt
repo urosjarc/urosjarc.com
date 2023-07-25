@@ -98,140 +98,6 @@ class DbService(val db_url: String, val db_name: String) {
     val napake = db.getCollection<Napaka>(collectionName = ime<Napaka>())
     val kontakti = db.getCollection<Kontakt>(collectionName = ime<Kontakt>())
 
-    inline fun <reified T : Any> nakljucni(): T {
-        val obj = faker.randomProvider.randomClassInstance<T> {
-            this.typeGenerator<MutableSet<T>> { mutableSetOf() }
-            this.typeGenerator<LocalDate> { LocalDate.danes(dDni = Random.nextInt(3, 20)) }
-            this.typeGenerator<LocalDateTime> { LocalDateTime.zdaj() }
-            this.typeGenerator<String> { pInfo ->
-                val value = counters.getOrDefault(pInfo.name, -1) + 1
-                counters[pInfo.name] = value
-                "${pInfo.name}_${value}"
-            }
-        }
-        return obj
-    }
-
-    fun nafilaj_NUJNO() {
-        val oseba = Oseba(
-            ime = "Uroš",
-            priimek = "Jarc",
-            username = "urosjarc",
-            tip = mutableSetOf(Oseba.Tip.SERVER, Oseba.Tip.ADMIN)
-        )
-        val telefon = Kontakt(oseba_id = mutableSetOf(oseba._id), data = "Uros Jarc", tip = Kontakt.Tip.TELEFON)
-        val email = Kontakt(oseba_id = mutableSetOf(oseba._id), data = "info@urosjarc.com", tip = Kontakt.Tip.EMAIL)
-
-        this.ustvari(telefon)
-        this.ustvari(oseba)
-        this.ustvari(email)
-    }
-
-    fun nafilaj() {
-        val all_napaka = mutableListOf<Napaka>()
-        val all_oseba = mutableListOf<Oseba>()
-        val all_kontakt = mutableListOf<Kontakt>()
-        val all_sporocilo = mutableListOf<Sporocilo>()
-        val all_naslov = mutableListOf<Naslov>()
-        val all_ucenje = mutableListOf<Ucenje>()
-        val all_test = mutableListOf<Test>()
-        val all_status = mutableListOf<Status>()
-        val all_naloga = mutableListOf<Naloga>()
-        val all_tematika = mutableListOf<Tematika>()
-        val all_zvezek = mutableListOf<Zvezek>()
-        val all_audit = mutableListOf<Audit>()
-
-        this.nafilaj_NUJNO()
-
-        (1..5).forEach {
-
-            val oseba = nakljucni<Oseba>()
-            all_oseba.add(oseba)
-
-            val zvezek = nakljucni<Zvezek>()
-            all_zvezek.add(zvezek)
-
-            (1..3).forEach {
-                val test = nakljucni<Test>().apply { this.oseba_id = oseba._id }
-                all_test.add(test)
-
-                val napaka = nakljucni<Napaka>().apply { this.entitete_id = setOf(oseba._id.vAnyId()) }
-                all_napaka.add(napaka)
-            }
-
-            (1..2).forEach {
-
-                val tematika = nakljucni<Tematika>().apply { this.zvezek_id = zvezek._id }
-                all_tematika.add(tematika)
-
-                val kontakt = nakljucni<Kontakt>().apply { this.oseba_id = mutableSetOf(oseba._id) }
-                all_kontakt.add(kontakt)
-
-                val naslov = nakljucni<Naslov>().apply { this.oseba_id = oseba._id }
-                all_naslov.add(naslov)
-
-                val ucenje0 = nakljucni<Ucenje>().apply {
-                    this.oseba_ucenec_id = oseba._id;
-                    this.oseba_ucitelj_id = all_oseba.random()._id
-                }; all_ucenje.add(ucenje0)
-
-                val ucenje1 = nakljucni<Ucenje>().apply {
-                    this.oseba_ucitelj_id = oseba._id
-                    this.oseba_ucenec_id = all_oseba.random()._id
-                }; all_ucenje.add(ucenje1)
-
-
-                (1..5).forEach {
-                    val sporocilo = nakljucni<Sporocilo>().apply {
-                        this.kontakt_posiljatelj_id = all_kontakt.random()._id
-                        this.kontakt_prejemnik_id = mutableSetOf(all_kontakt.random()._id)
-                    }
-                    all_sporocilo.add(sporocilo)
-
-                    val naloga = nakljucni<Naloga>().apply { this.tematika_id = tematika._id }
-                    all_naloga.add(naloga)
-
-                    (1..15).forEach {
-                        val status = nakljucni<Status>().apply {
-                            this.naloga_id = all_naloga.random()._id
-                            this.test_id = all_test.random()._id
-                        }
-                        all_status.add(status)
-
-                        (1..Random.nextInt(0, 5)).forEach {
-                            val audit = Audit(
-                                entitete_id = setOf(oseba._id.vAnyId(), status.test_id.vAnyId(), status._id.vAnyId()),
-                                tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
-                                opis = Status.Tip.values().random().name,
-                                entiteta = "entiteta",
-                                ustvarjeno = LocalDateTime.zdaj(dDni = -Random.nextInt(0, 20)),
-                                trajanje = Random.nextInt(2, 20).toDuration(unit = DurationUnit.MINUTES)
-                            )
-                            all_audit.add(audit)
-
-                        }
-
-                    }
-
-                }
-
-            }
-        }
-        this.ustvari(all_oseba)
-        this.ustvari(all_napaka)
-        this.ustvari(all_kontakt)
-        this.ustvari(all_sporocilo)
-        this.ustvari(all_naslov)
-        this.ustvari(all_ucenje)
-        this.ustvari(all_test)
-        this.ustvari(all_status)
-        this.ustvari(all_naloga)
-        this.ustvari(all_tematika)
-        this.ustvari(all_zvezek)
-        this.ustvari(all_audit)
-
-    }
-
     fun sprazni() = db.listCollectionNames().forEach { db.getCollection<Any>(collectionName = it).drop() }
 
     inline fun <reified T : Entiteta<T>> ustvari(entiteta: T): Boolean {
@@ -239,7 +105,7 @@ class DbService(val db_url: String, val db_name: String) {
     }
 
     inline fun <reified T : Entiteta<T>> ustvari(entitete: Collection<T>): Boolean {
-        return db.getCollection<T>(collectionName = ime<T>()).insertMany(documents = entitete as List<T>)
+        return db.getCollection<T>(collectionName = ime<T>()).insertMany(documents = entitete.toList())
             .wasAcknowledged()
     }
 
@@ -290,7 +156,7 @@ class DbService(val db_url: String, val db_name: String) {
                     from = Naslov::oseba_id, to = Oseba::_id
                 ),
                 Aggregates_lookup(
-                    from = Test::oseba_id,
+                    from = Test::oseba_ucenec_id,
                     to = Oseba::_id,
                     pipeline = listOf(
                         Aggregates_lookup(
@@ -412,7 +278,7 @@ class DbService(val db_url: String, val db_name: String) {
                 Aggregates.match(Filters.EQ(Oseba::_id, oseba_id)),
                 Aggregates_project_root(Oseba::class),
                 Aggregates_lookup(
-                    from = Test::oseba_id,
+                    from = Test::oseba_ucenec_id,
                     to = Oseba::_id,
                     pipeline = listOf(
                         Aggregates.match(Filters.EQ(Test::_id, test_id)),
@@ -456,7 +322,7 @@ class DbService(val db_url: String, val db_name: String) {
         val r: Test = testi.findOneAndUpdate(
             filter = Filters.AND(
                 Filters.EQ(Test::_id, id),
-                Filters.EQ(Test::oseba_id, oseba_id),
+                Filters.EQ(Test::oseba_ucenec_id, oseba_id),
             ),
             update = Updates.set(Test::deadline.name, datum),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
