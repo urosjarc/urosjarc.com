@@ -14,12 +14,10 @@ import domain.*
 import extend.*
 import io.github.serpro69.kfaker.Faker
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
 import org.apache.logging.log4j.kotlin.logger
 import org.bson.codecs.configuration.CodecRegistries
 import org.bson.conversions.Bson
 import serialization.IdCodec
-import kotlin.random.Random
 import kotlin.reflect.KProperty1
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
@@ -152,9 +150,15 @@ class DbService(val db_url: String, val db_name: String) {
             listOf(
                 Aggregates.match(Filters.EQ(id)),
                 Aggregates_project_root(Oseba::class),
+                /**
+                 * Naslovi
+                 */
                 Aggregates_lookup(
                     from = Naslov::oseba_id, to = Oseba::_id
                 ),
+                /**
+                 * Testi
+                 */
                 Aggregates_lookup(
                     from = Test::oseba_ucenec_id,
                     to = Oseba::_id,
@@ -163,20 +167,24 @@ class DbService(val db_url: String, val db_name: String) {
                             from = Status::test_id,
                             to = Test::_id,
                             pipeline = listOf(
+                                Aggregates.match(Filters.EQ(Status::oseba_id, id))
+                            )
+                        ),
+                        Aggregates_lookup(
+                            from = Naloga::_id,
+                            to = Test::naloga_id,
+                            pipeline = listOf(
                                 Aggregates_lookup(
-                                    from = Naloga::_id,
-                                    to = Status::naloga_id,
-                                    pipeline = listOf(
-                                        Aggregates_lookup(
-                                            from = Tematika::_id,
-                                            to = Naloga::tematika_id,
-                                        ),
-                                    ),
-                                ),
-                            ),
+                                    from = Tematika::_id,
+                                    to = Naloga::_id
+                                )
+                            )
                         ),
                     ),
                 ),
+                /**
+                 * Kontakti
+                 */
                 Aggregates_lookup(
                     from = Kontakt::oseba_id, to = Oseba::_id, pipeline = listOf(
                         Aggregates_lookup(
@@ -203,8 +211,13 @@ class DbService(val db_url: String, val db_name: String) {
                         ),
                     )
                 ),
+                /**
+                 * Ucenje
+                 */
                 Aggregates_lookup(
-                    from = Ucenje::oseba_ucenec_id, to = Ucenje::_id, pipeline = listOf(
+                    from = Ucenje::oseba_ucenec_id,
+                    to = Oseba::_id,
+                    pipeline = listOf(
                         Aggregates_lookup(
                             from = Oseba::_id,
                             to = Ucenje::oseba_ucitelj_id,
@@ -212,15 +225,19 @@ class DbService(val db_url: String, val db_name: String) {
                     )
                 ),
                 Aggregates_lookup(
-                    from = Ucenje::oseba_ucitelj_id, to = Oseba::_id, pipeline = listOf(
+                    from = Ucenje::oseba_ucitelj_id,
+                    to = Oseba::_id,
+                    pipeline = listOf(
                         Aggregates_lookup(
-                            from = Oseba::_id, to = Ucenje::oseba_ucenec_id
+                            from = Oseba::_id,
+                            to = Ucenje::oseba_ucenec_id
                         )
                     )
                 ),
             )
         )
 
+        aggregation.explain_aggregation()
         return aggregation.first()
     }
 
@@ -292,7 +309,7 @@ class DbService(val db_url: String, val db_name: String) {
             )
         )
 
-        return aggregation.firstOrNull()?.test_refs?.get(0)?.status_refs?.get(0)?.status?._id == id
+        return aggregation.firstOrNull()?.test_ucenec_refs?.get(0)?.status_refs?.get(0)?.status?._id == id
     }
 
     fun status_update(id: Id<Status>, oseba_id: Id<Oseba>, test_id: Id<Test>, tip: Status.Tip, sekund: Int): Status? {

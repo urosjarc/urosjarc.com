@@ -96,8 +96,8 @@ class Ustvari_testne_podatke(
          */
         val kontakti = mutableSetOf<Kontakt>()
         osebe.forEach {
-            kontakti += this.ustvari_kontakte(n = 2, tip = Kontakt.Tip.EMAIL, osebe = osebe.nakljucni(2).dodaj(it))
-            kontakti += this.ustvari_kontakte(n = 2, tip = Kontakt.Tip.TELEFON, osebe = osebe.nakljucni(2).dodaj(it))
+            kontakti += this.ustvari_kontakte(n = 1, tip = Kontakt.Tip.EMAIL, osebe = osebe.nakljucni(1).dodaj(it))
+            kontakti += this.ustvari_kontakte(n = 1, tip = Kontakt.Tip.TELEFON, osebe = osebe.nakljucni(1).dodaj(it))
         }
 
         /**

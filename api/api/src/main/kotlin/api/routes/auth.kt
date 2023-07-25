@@ -7,6 +7,7 @@ import base.Env
 import com.auth0.jwk.JwkProvider
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.mongodb.client.model.Filters
 import domain.Oseba
 import io.ktor.resources.*
 import io.ktor.server.application.*
@@ -50,7 +51,7 @@ fun Route.auth(jwkProvider: JwkProvider) {
         if (body.username == "a") this.call.client_unauthorized()
         if (body.username == "b") this.call.client_error(info = "To je uporabniska napaka!")
         if (body.username == "c") this.call.system_error(info = "To je sistemska napaka!")
-        val oseba = db.dobi<Oseba>(0).last()
+        val oseba = db.osebe.find(Filters.eq(Oseba::tip.name, Oseba.Tip.UCENEC.name)).first()
         log.info("Oseba: $oseba")
         //TODO: Naredi pravilno logiko
 
