@@ -29,7 +29,7 @@ export type Data = {
 
 export async function page_data(args: { test_id: string }): Promise<Data> {
 
-  const testData = (profil.get().test_refs || []).find((testData) => (testData?.test?._id || "") == args.test_id) || {}
+  const testData = (profil.get().test_ucenec_refs || []).find((testData) => (testData?.test?._id || "") == args.test_id) || {}
 
   /**
    * Fill status stevilo
