@@ -21,7 +21,7 @@ class Ustvari_testne_podatke(
     private val db: DbService,
 ) {
 
-    private inline fun <reified T : Any> nakljucni(): T {
+    inline fun <reified T : Any> nakljucni(): T {
         val obj = faker.randomProvider.randomClassInstance<T> {
             this.typeGenerator<MutableSet<T>> { mutableSetOf() }
             this.typeGenerator<Duration> { Random.nextInt(2, 10).minutes }
@@ -128,7 +128,8 @@ class Ustvari_testne_podatke(
         /**
          * Ustvari teste
          */
-        val testi = this.ustvari_teste(n = 4, ucenci = ucenci, admini = (ucitelji + ucenci).toMutableSet(), naloge = naloge)
+        val testi =
+            this.ustvari_teste(n = 4, ucenci = ucenci, admini = (ucitelji + ucenci).toMutableSet(), naloge = naloge)
 
         /**
          * Ustvari statuse
@@ -165,8 +166,6 @@ class Ustvari_testne_podatke(
         db.ustvari(zvezki)
         db.ustvari(audits)
     }
-
-    private
 
     fun ustvari_osebe(n: Int, tip: Oseba.Tip): MutableSet<Oseba> {
         return (0..n).map {

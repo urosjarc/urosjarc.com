@@ -5,8 +5,8 @@ import domain.Oseba
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class OsebaData(
+data class AdminData(
     val oseba: Oseba,
     val naslov_refs: List<Naslov> = listOf(),
-    val kontakt_refs: List<KontaktData> = listOf(),
+    val kontakt_refs: List<KontaktData> = listOf()
 )

@@ -3,6 +3,7 @@ package api.routes
 import api.extend.client_error
 import api.extend.request_info
 import api.request.NapakaReq
+import api.response.IndexRes
 import api.response.KontaktObrazecRes
 import domain.Napaka
 import io.ktor.resources.*
@@ -17,6 +18,7 @@ import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
 import services.DbService
 import si.urosjarc.server.api.response.KontaktObrazecReq
+import use_cases.Ustvari_testne_podatke
 import use_cases_api.Sprejmi_kontaktni_obrazec
 
 @Resource("")
@@ -34,6 +36,7 @@ fun Route.index() {
     val db: DbService by this.inject()
     val log = this.logger()
     val sprejmi_kontaktni_obrazec: Sprejmi_kontaktni_obrazec by this.inject()
+    val ustvariTestnePodatke: Ustvari_testne_podatke by this.inject()
 
     this.static {
         this.staticBasePackage = "static"
@@ -41,7 +44,8 @@ fun Route.index() {
     }
 
     this.get<index> {
-        this.call.respondText("Hello World!")
+        val indexRes = ustvariTestnePodatke.nakljucni<IndexRes>()
+        this.call.respond(indexRes)
     }
 
     /**
