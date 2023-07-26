@@ -1,6 +1,6 @@
 import type {TestData} from "$lib/api";
 import {Status} from "$lib/api";
-import {profil} from "$lib/stores/profilStore";
+import {ucenec} from "$lib/stores/ucenecStore";
 import {String_vDate} from "$lib/extends/String";
 import {Date_ime_dneva, Date_oddaljenost_v_dneh} from "$lib/extends/Date";
 import {TestData_css_class, TestData_razmerje_statusov,} from "$lib/extends/TestData";
@@ -16,7 +16,7 @@ export type Data = {
 
 export async function page_data(): Promise<Data[]> {
   const data: Data[] = [];
-  (profil.get().test_ucenec_refs || []).forEach((testData: TestData) => {
+  (ucenec.get().test_ucenec_refs || []).forEach((testData: TestData) => {
 
     const test = testData.test || {}
     const test_date_str = test?.deadline?.toString() || ""

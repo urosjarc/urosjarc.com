@@ -111,24 +111,24 @@ class Ustvari_testne_podatke(
         /**
          * Ustvari zvezek
          */
-        val zvezki = this.ustvari_zvezek(n = 10)
+        val zvezki = this.ustvari_zvezek(n = 2)
 
         /**
          * Ustvari tematike
          */
         val tematike = mutableSetOf<Tematika>()
-        zvezki.forEach { tematike += this.ustvari_tematika(n = 10, zvezek = it) }
+        zvezki.forEach { tematike += this.ustvari_tematika(n = 3, zvezek = it) }
 
         /**
          * Ustvari naloge
          */
         val naloge = mutableSetOf<Naloga>()
-        tematike.forEach { naloge += this.ustvari_naloge(n = 20, tematika = it) }
+        tematike.forEach { naloge += this.ustvari_naloge(n = Random.nextInt(10, 20), tematika = it) }
 
         /**
          * Ustvari teste
          */
-        val testi = this.ustvari_teste(n = 3, ucenci = ucenci, admini = ucitelji, naloge = naloge.nakljucni(n = 30))
+        val testi = this.ustvari_teste(n = 4, ucenci = ucenci, admini = ucitelji, naloge = naloge)
 
         /**
          * Ustvari statuse
@@ -136,7 +136,7 @@ class Ustvari_testne_podatke(
         val statusi = mutableSetOf<Status>()
         ucenci.forEach { ucenec ->
             testi.forEach { test ->
-                naloge.nakljucni(10).forEach { naloga ->
+                naloge.nakljucni(3 * naloge.size / 4).forEach { naloga ->
                     val status = this.ustvari_status(naloga = naloga, test = test, oseba = ucenec)
                     statusi += status
                 }
@@ -146,8 +146,11 @@ class Ustvari_testne_podatke(
         /**
          * Ustvari audite
          */
+        val audits = mutableSetOf<Audit>()
         statusi.forEach {
-            this.ustvari_audit(n = 3, entitete_id = mutableSetOf(it.oseba_id, it.naloga_id, it.test_id))
+            audits += this.ustvari_audit(
+                n = 3, entitete_id = mutableSetOf(it._id, it.oseba_id, it.naloga_id, it.test_id)
+            )
         }
 
         db.ustvari(osebe)
@@ -160,6 +163,7 @@ class Ustvari_testne_podatke(
         db.ustvari(naloge)
         db.ustvari(tematike)
         db.ustvari(zvezki)
+        db.ustvari(audits)
     }
 
     private
@@ -263,6 +267,7 @@ class Ustvari_testne_podatke(
         return (0..n).map {
             val audit = this.nakljucni<Audit>().apply {
                 this.entitete_id = entitete_id.map { it.vAnyId() }.toMutableSet()
+                this.opis = Status.Tip.entries.toTypedArray().random().toString()
             }
             audit
         }.toMutableSet()

@@ -10,6 +10,7 @@ import com.mongodb.client.model.*
 import com.mongodb.kotlin.client.AggregateIterable
 import com.mongodb.kotlin.client.MongoClient
 import data.OsebaData
+import data.UcenecData
 import domain.*
 import extend.*
 import kotlinx.datetime.LocalDate
@@ -17,6 +18,7 @@ import org.apache.logging.log4j.kotlin.logger
 import org.bson.codecs.configuration.CodecRegistries
 import org.bson.conversions.Bson
 import serialization.IdCodec
+import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
@@ -62,6 +64,10 @@ class Filters {
 
         fun CONTAINS(prop: KProperty1<*, Set<Enum<*>>>, value: Enum<*>): Bson {
             return com.mongodb.client.model.Filters.eq(prop.name, value.name)
+        }
+
+        fun CONTAINS_ALL(prop: KMutableProperty1<Audit, Set<AnyId>>, values: Set<AnyId>): Bson {
+            return com.mongodb.client.model.Filters.all(prop.name, values.map { it.value })
         }
 
     }
@@ -119,9 +125,9 @@ class DbService(val db_url: String, val db_name: String) {
         return db.getCollection<T>(collectionName = ime<T>()).deleteOne(Filters.EQ(_id)).wasAcknowledged()
     }
 
-    fun audits(entity_id: AnyId, stran: Int?): List<Audit> {
+    fun audits(entity_id: Set<AnyId>, stran: Int?): List<Audit> {
         val audits = audits.find(
-            filter = Filters.CONTAINS(Audit::entitete_id, entity_id)
+            filter = Filters.CONTAINS_ALL(Audit::entitete_id, entity_id)
         ).sort(Sorts.descending(Audit::ustvarjeno.name))
 
         return when (stran) {
@@ -140,9 +146,8 @@ class DbService(val db_url: String, val db_name: String) {
         }.toList()
     }
 
-
-    fun profil(id: Id<Oseba>): OsebaData {
-        val aggregation: AggregateIterable<OsebaData> = osebe.aggregate<OsebaData>(
+    fun ucenec(id: Id<Oseba>): UcenecData {
+        val aggregation: AggregateIterable<UcenecData> = osebe.aggregate<UcenecData>(
             listOf(
                 Aggregates.match(Filters.EQ(id)),
                 Aggregates_project_root(Oseba::class),
@@ -273,34 +278,31 @@ class DbService(val db_url: String, val db_name: String) {
     /**
      * Zaradi tega ker se mora preveriti ali je uporabnik owner statusa!
      */
-    fun status_obstaja(id: Id<Status>, oseba_id: Id<Oseba>, test_id: Id<Test>): Boolean {
-        val aggregation: AggregateIterable<OsebaData> = osebe.aggregate<OsebaData>(
-            listOf(
-                Aggregates.match(Filters.EQ(Oseba::_id, oseba_id)),
-                Aggregates_project_root(Oseba::class),
-                Aggregates_lookup(
-                    from = Test::oseba_ucenec_id,
-                    to = Oseba::_id,
-                    pipeline = listOf(
-                        Aggregates.match(Filters.EQ(Test::_id, test_id)),
-                        Aggregates_lookup(
-                            from = Status::test_id, to = Test::_id, pipeline = listOf(
-                                Aggregates.match(Filters.EQ(Status::_id, id)),
-                            )
-                        ),
-                    ),
-                ),
+    fun status_obstaja(id: Id<Status>, oseba_id: Id<Oseba>, test_id: Id<Test>, naloga_id: Id<Naloga>): Boolean {
+        return statusi.find(
+            filter = Filters.AND(
+                Filters.EQ(id),
+                Filters.EQ(Status::oseba_id, oseba_id),
+                Filters.EQ(Status::test_id, test_id),
+                Filters.EQ(Status::naloga_id, naloga_id),
             )
-        )
-
-        return aggregation.firstOrNull()?.test_ucenec_refs?.get(0)?.status_refs?.get(0)?.oseba_id == id
+        ).firstOrNull() != null
     }
 
-    fun status_update(id: Id<Status>, oseba_id: Id<Oseba>, test_id: Id<Test>, tip: Status.Tip, sekund: Int): Status? {
+    fun status_update(
+        id: Id<Status>,
+        oseba_id: Id<Oseba>,
+        test_id: Id<Test>,
+        naloga_id: Id<Naloga>,
+        tip: Status.Tip,
+        sekund: Int
+    ): Status? {
         val r: Status = statusi.findOneAndUpdate(
             filter = Filters.AND(
                 Filters.EQ(id),
-                Filters.EQ(Status::test_id, test_id)
+                Filters.EQ(Status::test_id, test_id),
+                Filters.EQ(Status::oseba_id, oseba_id),
+                Filters.EQ(Status::naloga_id, naloga_id)
             ),
             update = Updates.set(Status::tip.name, tip),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
@@ -311,7 +313,7 @@ class DbService(val db_url: String, val db_name: String) {
             tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
             trajanje = sekund.toDuration(DurationUnit.MINUTES),
             opis = r.tip.name,
-            entitete_id = setOf(id.vAnyId(), oseba_id.vAnyId(), test_id.vAnyId())
+            entitete_id = setOf(id.vAnyId(), oseba_id.vAnyId(), test_id.vAnyId(), naloga_id.vAnyId())
         )
 
         this.ustvari(audit)
@@ -323,7 +325,7 @@ class DbService(val db_url: String, val db_name: String) {
         val r: Test = testi.findOneAndUpdate(
             filter = Filters.AND(
                 Filters.EQ(Test::_id, id),
-                Filters.EQ(Test::oseba_ucenec_id, oseba_id),
+                Filters.CONTAINS(Test::oseba_admin_id, oseba_id),
             ),
             update = Updates.set(Test::deadline.name, datum),
             options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)

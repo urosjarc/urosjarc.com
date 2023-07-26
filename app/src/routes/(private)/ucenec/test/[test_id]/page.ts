@@ -1,92 +1,86 @@
-import {profil} from "$lib/stores/profilStore";
+import {ucenec} from "$lib/stores/ucenecStore";
 import {Date_ime_dneva, Date_oddaljenost_v_dneh} from "$lib/extends/Date";
-import type {StatusData} from "$lib/api";
-import {Status} from "$lib/api";
+import {type NalogaData, Status} from "$lib/api";
 import {String_vDate, String_vDuration} from "$lib/extends/String";
-import {StatusTip_class} from "$lib/extends/StatusTip";
 import {API} from "$lib/stores/apiStore";
 import {Duration_vMinute} from "$lib/extends/Duration";
 import {NumberArr_napaka, NumberArr_povprecje, NumberArr_vsota} from "$lib/extends/NumberArr";
 import {Number_zavkrozi} from "$lib/extends/Number";
+import {StatusTip_class} from "$lib/extends/StatusTip";
 
-export type StatusInfo = {
+export type NalogaInfo = {
   cls: string,
   id: string
 }
 
 export type Data = {
-  tema_statusi: Map<string, StatusInfo[]>,
+  tema_naloge: Map<string, NalogaInfo[]>,
   status_stevilo: Map<string, number>,
   data: {
     datum: string,
     dan: string,
     rok: number,
-    vsi_statusi: number,
-    opravljeni_statusi: number,
-    manjkajoci_statusi: number,
+    vse_naloge: number,
+    opravljene_naloge: number,
+    manjkajoce_naloge: number,
   }
 }
 
 export async function page_data(args: { test_id: string }): Promise<Data> {
 
-  const testData = (profil.get().test_ucenec_refs || []).find((testData) => (testData?.test?._id || "") == args.test_id) || {}
+  const testData = (ucenec.get().test_ucenec_refs || []).find((testData) => (testData?.test?._id || "") == args.test_id) || {}
 
   /**
-   * Fill status stevilo
+   * Init stevilo statusov
    */
-  const status_stevilo = new Map<string, number>()
-  for (let status of Object.keys(Status.tip)) {
-    status_stevilo.set(status, 0)
-  }
 
   /**
-   * Define datas structures
+   * Map id naloge z statusom in prestej statuse
    */
-  const tema_statusi = new Map<string, StatusInfo[]>()
-  const status_refs = testData?.status_refs || []
-
-  status_refs.forEach((statusData: StatusData) => {
-    /**
-     * Add status stevilo
-     */
-    const status = statusData?.status?.tip?.toString() || ""
-    let st_statusov = status_stevilo.get(status) || 0
-    status_stevilo.set(status, st_statusov + 1)
-
-    /**
-     * Get intermidiate datastructures
-     */
-    const nalogaData = (statusData?.naloga_refs || [{}])[0] || {}
-    const naslov = (nalogaData.tematika_refs || [{}])[0]?.naslov || ""
-
-    /**
-     * Add tema statusi
-     */
-    const statusi: StatusInfo[] = tema_statusi.get(naslov) || []
-    statusi.push({
-      cls: StatusTip_class(statusData?.status?.tip || Status.tip.NEZACETO),
-      id: statusData.status?._id || "",
-    })
-    tema_statusi.set(naslov, statusi)
+  const idNaloge_status = new Map<string, Status>();
+  (testData.status_refs || []).forEach((status: Status) => {
+    idNaloge_status.set(status.naloga_id || "", status)
   })
 
-  const deadline = String_vDate(testData?.test?.deadline?.toString() || "")
+  /**
+   * Nafilaj tema statusov
+   */
+  let tema_naloge = new Map<string, NalogaInfo[]>();
+  const status_stevilo = new Map<Status.tip, number>();
+  (testData.naloga_refs || []).forEach((nalogaData: NalogaData) => {
+    const naloga_id = nalogaData.naloga?._id || ""
+    const status_tip = idNaloge_status.get(naloga_id)?.tip || Status.tip.NEZACETO
+    const st_status_tip = status_stevilo.get(status_tip) || 0
+    const ime_teme = (nalogaData.tematika_refs || [])[0].naslov || ""
+    const naloge = tema_naloge.get(ime_teme) || []
+    const cls = StatusTip_class(status_tip)
+    naloge.push({
+      cls: cls,
+      id: naloga_id
+    })
+    tema_naloge.set(ime_teme, naloge)
+    status_stevilo.set(status_tip, st_status_tip + 1)
+  })
+
+
+  const datum = testData?.test?.deadline?.toString() || ""
+  const deadline = String_vDate(datum)
   const deadline_oddaljenost = Date_oddaljenost_v_dneh(deadline)
 
-  const vsi_statusi = testData?.status_refs?.length || 0
-  const opravljeni_statusi: number = status_stevilo.get(Status.tip.PRAVILNO.toString()) || 0
-  const manjkajoci_statusi = vsi_statusi - opravljeni_statusi
+  const vse_naloge = testData?.naloga_refs?.length || 0
+  const opravljene_naloge: number = status_stevilo.get(Status.tip.PRAVILNO) || 0
+  const manjkajoce_naloge = vse_naloge - opravljene_naloge
 
   return {
-    tema_statusi: tema_statusi,
+    tema_naloge: tema_naloge,
     status_stevilo: status_stevilo,
     data: {
-      datum: testData?.test?.deadline?.toString() || "",
+      datum: datum,
       dan: Date_ime_dneva(deadline),
       rok: deadline_oddaljenost,
-      vsi_statusi: vsi_statusi,
-      opravljeni_statusi: opravljeni_statusi,
-      manjkajoci_statusi: manjkajoci_statusi,
+      vse_naloge: vse_naloge,
+      opravljene_naloge: opravljene_naloge,
+      manjkajoce_naloge: manjkajoce_naloge,
     }
   }
 }
@@ -112,7 +106,7 @@ export type Audits = {
 export async function page_audits(args: { test_id: string }): Promise<Audits> {
   const trajanje_vseh_min_arr: number[] = []
   const trajanje_pravilnih_min_arr: number[] = []
-  const audits = await API().getProfilTestAudit(args.test_id)
+  const audits = await API().getUcenecTestAudit(args.test_id)
 
   audits.forEach(audit => {
     const audit_trajanje = String_vDuration(audit?.trajanje?.toString() || "")

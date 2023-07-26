@@ -12,7 +12,7 @@ data class Audit(
     override var _id: Id<Audit> = Id(),
     var entitete_id: Set<AnyId>,
     val tip: Tip,
-    val opis: String,
+    var opis: String,
     val trajanje: Duration,
     val entiteta: String,
     val ustvarjeno: LocalDateTime = LocalDateTime.zdaj()

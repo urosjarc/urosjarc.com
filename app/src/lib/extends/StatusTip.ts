@@ -1,6 +1,6 @@
 import {Status} from "../api";
 
-export function StatusTip_color(status_tip: Status.tip): string {
+export function StatusTip_color(status_tip: Status.tip | undefined): string {
   switch (status_tip) {
     case Status.tip.NERESENO:
       return "red"
@@ -15,6 +15,6 @@ export function StatusTip_color(status_tip: Status.tip): string {
   }
 }
 
-export function StatusTip_class(status_tip: Status.tip): string {
+export function StatusTip_class(status_tip: Status.tip | undefined): string {
   return `col-${StatusTip_color(status_tip)}`
 }

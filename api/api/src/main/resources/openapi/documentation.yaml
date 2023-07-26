@@ -114,7 +114,7 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Napaka"
-  /profil:
+  /ucenec:
     get:
       description: ""
       responses:
@@ -123,8 +123,8 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/OsebaData"
-  /profil/audit:
+                $ref: "#/components/schemas/UcenecData"
+  /ucenec/audit:
     get:
       description: ""
       parameters:
@@ -142,7 +142,7 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Audit"
-  /profil/napaka:
+  /ucenec/napaka:
     get:
       description: ""
       parameters:
@@ -181,7 +181,7 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Napaka"
-  /profil/test/{test_id}:
+  /ucenec/test/{test_id}:
     put:
       description: ""
       parameters:
@@ -209,7 +209,7 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Test"
-  /profil/test/{test_id}/audit:
+  /ucenec/test/{test_id}/audit:
     get:
       description: ""
       parameters:
@@ -227,7 +227,7 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Audit"
-  /profil/test/{test_id}/status/{status_id}:
+  /ucenec/test/{test_id}/naloga/{naloga_id}:
     put:
       description: ""
       parameters:
@@ -236,7 +236,7 @@ paths:
         required: true
         schema:
           type: "string"
-      - name: "status_id"
+      - name: "naloga_id"
         in: "path"
         required: true
         schema:
@@ -260,7 +260,7 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Status"
-  /profil/test/{test_id}/status/{status_id}/audit:
+  /ucenec/test/{test_id}/naloga/{naloga_id}/audit:
     get:
       description: ""
       parameters:
@@ -269,7 +269,7 @@ paths:
         required: true
         schema:
           type: "string"
-      - name: "status_id"
+      - name: "naloga_id"
         in: "path"
         required: true
         schema:
@@ -472,28 +472,6 @@ components:
           format: "int32"
         dodatno:
           type: "string"
-    Ucenje:
-      type: "object"
-      properties:
-        _id:
-          type: "string"
-        oseba_ucenec_id:
-          type: "string"
-        oseba_ucitelj_id:
-          type: "string"
-    UcenjeData:
-      type: "object"
-      properties:
-        ucenje:
-          $ref: "#/components/schemas/Ucenje"
-        oseba_refs:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/Oseba"
-        ucenje_ucenec_refs:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/UcenjeData"
     SporociloData:
       type: "object"
       properties:
@@ -520,6 +498,28 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/SporociloData"
+    Ucenje:
+      type: "object"
+      properties:
+        _id:
+          type: "string"
+        oseba_ucenec_id:
+          type: "string"
+        oseba_ucitelj_id:
+          type: "string"
+    UcenjeData:
+      type: "object"
+      properties:
+        ucenje:
+          $ref: "#/components/schemas/Ucenje"
+        oseba_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Oseba"
+        ucenje_ucenec_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/UcenjeData"
     LocalDate:
       type: "object"
       properties: {}
@@ -560,6 +560,7 @@ components:
         tip:
           type: "string"
           enum:
+          - "NEZACETO"
           - "NERESENO"
           - "NAPACNO"
           - "PRAVILNO"
@@ -607,7 +608,7 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/NalogaData"
-    OsebaData:
+    UcenecData:
       type: "object"
       properties:
         oseba:
@@ -616,14 +617,14 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/Naslov"
-        ucenje_ucenec_refs:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/UcenjeData"
         kontakt_refs:
           type: "array"
           items:
             $ref: "#/components/schemas/KontaktData"
+        ucenje_ucenec_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/UcenjeData"
         test_ucenec_refs:
           type: "array"
           items:
@@ -659,9 +660,12 @@ components:
     StatusUpdateReq:
       type: "object"
       properties:
+        id:
+          type: "string"
         tip:
           type: "string"
           enum:
+          - "NEZACETO"
           - "NERESENO"
           - "NAPACNO"
           - "PRAVILNO"

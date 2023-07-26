@@ -35,13 +35,15 @@
     if (Object.keys(audits).length == 0) {
       audits = await page_audits({test_id: test_id})
       dialog_statistike = true
+    } else {
+      dialog_statistike = true
     }
   }
 
   async function update() {
     const pageData = await page_data({test_id: test_id})
 
-    tema_statusi = pageData.tema_statusi
+    tema_naloge = pageData.tema_naloge
     status_stevilo = pageData.status_stevilo
     data = pageData.data
     datum = pageData.data.datum
@@ -75,7 +77,7 @@
   const test_id = $page.params.test_id
   let data = {}
   let audits = {}
-  let tema_statusi = new Map()
+  let tema_naloge = new Map()
   let status_stevilo = new Map()
   let datum = ""
   let datum_verbose = ""
@@ -114,33 +116,33 @@
         <Row>
           <Cell numeric><b>Reseno:</b></Cell>
           <Cell>
-            {data.opravljeni_statusi}/{data.vsi_statusi}
-            ({Math.round(data.opravljeni_statusi / data.vsi_statusi * 100)} %)
+            {data.opravljene_naloge}/{data.vse_naloge}
+            ({Math.round(data.opravljene_naloge / data.vse_naloge * 100)} %)
           </Cell>
         </Row>
         <Row>
           <Cell numeric><b>Manjka:</b></Cell>
-          <Cell>{data.manjkajoci_statusi}/{data.vsi_statusi}
-            ({Math.round(data.manjkajoci_statusi / data.vsi_statusi * 100)}
+          <Cell>{data.manjkajoce_naloge}/{data.vse_naloge}
+            ({Math.round(data.manjkajoce_naloge / data.vse_naloge * 100)}
             %)
           </Cell>
         </Row>
         <Row>
           <Cell numeric><b>Delo:</b></Cell>
-          <Cell>{Math.ceil(data.manjkajoci_statusi / (data.rok > 1 ? (data.rok - 1) : data.rok))} nal/dan</Cell>
+          <Cell>{Math.ceil(data.manjkajoce_naloge / (data.rok > 1 ? (data.rok - 1) : data.rok))} nal/dan</Cell>
         </Row>
         </Body>
       </DataTable>
     </div>
   </div>
 
-  {#each [...tema_statusi] as [tema, statusDatas], i}
+  {#each [...tema_naloge] as [tema, nalogaInfos], i}
     <h1 style="text-align: center; margin: 30px 0 0 0">{tema}</h1>
-    {#each statusDatas as statusData, i}
+    {#each nalogaInfos as nalogaInfo, i}
       <Button
-        class="col-1 {statusData.cls}"
+        class="col-1 {nalogaInfo.cls}"
         style="margin: 2px" variant="raised"
-        href={route.ucenec_status_id(test_id, statusData.id)}>
+        href={route.ucenec_status_id(test_id, nalogaInfo.id)}>
         <Label><b>{i + 1}</b></Label>
       </Button>
     {/each}
@@ -163,7 +165,8 @@
       <ul>
         <li>Stevilo reševanj: {audits.stevilo_pravilnih} nalog</li>
         <li>Skupno: {audits.trajanje_pravilnih_min} min ({audits.trajanje_pravilnih_ur} h)</li>
-        <li>Povprečje: ({audits.trajanje_pravilnih_povprecje_min} +- {audits.trajanje_pravilnih_napaka_min}) min/nal</li>
+        <li>Povprečje: ({audits.trajanje_pravilnih_povprecje_min} +- {audits.trajanje_pravilnih_napaka_min}) min/nal
+        </li>
       </ul>
 
       <Separator/>
@@ -176,7 +179,7 @@
     </Content>
     <Actions>
 
-      <Button variant="raised" class="razsiri" on:click={() => dialog_statistike= false}>
+      <Button variant="raised" class="razsiri" on:click={() => (dialog_statistike = false)}>
         <Label>Zapri</Label>
       </Button>
     </Actions>
@@ -187,7 +190,8 @@
       {@html datum_verbose}
     </Title>
     <Content>
-      <Textfield variant="outlined" required class="razsiri mt-3" bind:value={datum} on:input={sprememba_datuma} label="Datum YYYY-MM-DD">
+      <Textfield variant="outlined" required class="razsiri mt-3" bind:value={datum} on:input={sprememba_datuma}
+                 label="Datum YYYY-MM-DD">
         <Icon class="material-icons" slot="leadingIcon">event</Icon>
       </Textfield>
       <Group>

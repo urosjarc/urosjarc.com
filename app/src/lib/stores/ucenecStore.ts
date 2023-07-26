@@ -1,23 +1,23 @@
 import {persisted} from "svelte-local-storage-store";
 import {get} from "svelte/store";
-import type {OsebaData} from "../api";
+import type {UcenecData} from "../api";
 
-export const profil = {
-  store: persisted('profilStore', {}),
-  get(): OsebaData {
+export const ucenec = {
+  store: persisted('ucenecStore', {}),
+  get(): UcenecData {
     return get(this.store)
   },
-  set(osebaData: OsebaData) {
-    console.log("Profil set: ", osebaData)
+  set(osebaData: UcenecData) {
+    console.log("Ucenec set: ", osebaData)
     this.store.set(osebaData)
   },
   clear() {
-    console.log("Profil clear!")
+    console.log("Ucenec clear!")
     this.set({})
   },
   exists() {
     const value = Object.keys(this.get()).length > 0
-    console.log("Profil exists: ", value)
+    console.log("Ucenec exists: ", value)
     return value
   },
 }

@@ -9,8 +9,8 @@ data class Status(
     var naloga_id: Id<Naloga>,
     var test_id: Id<Test>,
     var oseba_id: Id<Oseba>,
-    val tip: Tip,
+    var tip: Tip,
     val pojasnilo: String
 ) : Entiteta<Status> {
-    enum class Tip { NERESENO, NAPACNO, PRAVILNO }
+    enum class Tip { NEZACETO, NERESENO, NAPACNO, PRAVILNO }
 }

@@ -1,5 +1,5 @@
-import type {Kontakt, Naslov, Oseba, OsebaData} from "$lib/api";
-import {profil} from "$lib/stores/profilStore";
+import type {Kontakt, KontaktData, Naslov, Oseba, UcenecData} from "$lib/api";
+import {ucenec} from "$lib/stores/ucenecStore";
 import {API} from "$lib/stores/apiStore";
 import {String_vDate, String_vDuration} from "$lib/extends/String";
 import {Date_datumStr, Date_oddaljenost_v_dneh} from "$lib/extends/Date";
@@ -12,11 +12,11 @@ export type Data = {
 }
 
 export function page_data(): Data {
-  const osebaData: OsebaData = profil.get()
+  const osebaData: UcenecData = ucenec.get()
   return {
     oseba: osebaData.oseba || {},
     naslovi: osebaData.naslov_refs || [],
-    kontakti: (osebaData.kontakt_refs || []).map(kontaktData => kontaktData?.kontakt || {})
+    kontakti: (osebaData.kontakt_refs || []).map((kontaktData: KontaktData) => kontaktData?.kontakt || {})
   }
 }
 
@@ -30,7 +30,7 @@ export type Audits = {
 export async function page_audits() {
   // @ts-ignore
   const days_audits: { string: Audits } = {}
-  const audits = await API().getProfilAudit()
+  const audits = await API().getUcenecAudit()
   audits.forEach(audit => {
     const ustvarjeno_date = String_vDate(audit?.ustvarjeno?.toString() || "")
     const oddaljenost = Date_oddaljenost_v_dneh(ustvarjeno_date)
@@ -62,7 +62,7 @@ export type Napake = {
 export async function page_napake(): Promise<Napake[]> {
   // @ts-ignore
   const days_napake: { string: Napake } = {}
-  const napake = await API().getProfilNapaka()
+  const napake = await API().getUcenecNapaka()
   napake.forEach(napaka => {
     const ustvarjeno_date = String_vDate(napaka?.ustvarjeno?.toString() || "")
     const oddaljenost = Date_oddaljenost_v_dneh(ustvarjeno_date)

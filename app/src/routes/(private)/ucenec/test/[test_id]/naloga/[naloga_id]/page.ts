@@ -1,5 +1,5 @@
-import {profil} from "$lib/stores/profilStore";
-import type {StatusData, TestData} from "$lib/api";
+import {ucenec} from "$lib/stores/ucenecStore";
+import type {NalogaData, TestData} from "$lib/api";
 import {Status} from "$lib/api";
 import {StatusTip_class} from "$lib/extends/StatusTip";
 import {API} from "$lib/stores/apiStore";
@@ -14,19 +14,21 @@ export type Data = {
   resitev_src: string,
 }
 
-export async function page_data(args: { test_id: string, status_id: string }): Promise<Data> {
-  const testRef = (profil.get().test_refs || [])
+export async function page_data(args: { test_id: string, naloga_id: string }): Promise<Data> {
+
+  const testRef = (ucenec.get().test_ucenec_refs || [])
     .find((testData: TestData) => testData?.test?._id == args.test_id) || {}
 
-  const statusRef = (testRef.status_refs || [])
-    .find((statusData: StatusData) => statusData?.status?._id == args.status_id) || {}
+  const nalogaData = (testRef.naloga_refs || [])
+    .find((nalogaData: NalogaData) => nalogaData.naloga?._id == args.naloga_id) || {}
 
-  const naloga = (statusRef?.naloga_refs || [{}])[0]?.naloga || {}
+  const status = (testRef.status_refs || [])
+    .find((status: Status) => status?.naloga_id == args.naloga_id) || {}
 
   return {
-    cls: StatusTip_class(statusRef?.status?.tip || Status.tip.NEZACETO),
-    vsebina_src: naloga.vsebina || "",
-    resitev_src: naloga.resitev || "",
+    cls: StatusTip_class(status?.tip || Status.tip.NEZACETO),
+    vsebina_src: nalogaData?.naloga?.vsebina || "",
+    resitev_src: nalogaData?.naloga?.resitev || "",
   }
 }
 
@@ -37,8 +39,8 @@ export type Audits = {
   opis: string
 }
 
-export async function page_audits(args: { test_id: string, status_id: string }): Promise<Audits[]> {
-  const api_audits = await API().getProfilTestStatusAudit(args.test_id, args.status_id)
+export async function page_audits(args: { test_id: string, naloga_id: string }): Promise<Audits[]> {
+  const api_audits = await API().getUcenecTestNalogaAudit(args.test_id, args.naloga_id)
   const audits: Audits[] = []
 
   api_audits.forEach(audit => {

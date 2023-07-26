@@ -1,10 +1,11 @@
 package api.routes
 
 import api.extend.client_error
-import api.extend.profil
 import api.extend.request_info
+import api.extend.profil
 import api.request.NapakaReq
 import base.Id
+import domain.Naloga
 import domain.Napaka
 import domain.Status
 import domain.Test
@@ -24,17 +25,17 @@ import si.urosjarc.server.api.response.StatusUpdateReq
 import si.urosjarc.server.api.response.TestUpdateReq
 
 
-@Resource("profil")
-class profil {
+@Resource("ucenec")
+class ucenec {
 
     @Resource("napaka")
-    class napaka(val parent: profil, val stran: Int = 0)
+    class napaka(val parent: ucenec, val stran: Int = 0)
 
     @Resource("audit")
-    class audit(val parent: profil, val stran: Int = 0)
+    class audit(val parent: ucenec, val stran: Int = 0)
 
     @Resource("test")
-    class test(val parent: profil) {
+    class test(val parent: ucenec) {
 
         @Resource("{test_id}")
         class test_id(val parent: test, val test_id: Id<Test>) {
@@ -42,14 +43,14 @@ class profil {
             @Resource("audit")
             class audit(val parent: test_id)
 
-            @Resource("status")
-            class status(val parent: test_id) {
+            @Resource("naloga")
+            class naloga(val parent: test_id) {
 
-                @Resource("{status_id}")
-                class status_id(val parent: status, val status_id: Id<Status>) {
+                @Resource("{naloga_id}")
+                class naloga_id(val parent: naloga, val naloga_id: Id<Naloga>) {
 
                     @Resource("audit")
-                    class audit(val parent: status_id)
+                    class audit(val parent: naloga_id)
 
                 }
 
@@ -60,26 +61,27 @@ class profil {
     }
 }
 
-fun Route.profil() {
+fun Route.ucenec() {
     val db: DbService by this.inject()
     val log = this.logger()
 
-    this.get<profil> {
+    this.get<ucenec> {
         val profilRes = this.call.profil()
-        val oseba_profil = db.profil(id = profilRes.id)
-        this.call.respond(oseba_profil)
+        val ucenec = db.ucenec(id = profilRes.id)
+        this.call.respond(ucenec)
     }
 
-    this.put<profil.test.test_id.status.status_id> {
+    this.put<ucenec.test.test_id.naloga.naloga_id> {
         val profil = this.call.profil()
         val body = this.call.receive<StatusUpdateReq>()
         val test_id = it.parent.parent.test_id
-        when (db.status_obstaja(id = it.status_id, oseba_id = profil.id, test_id = test_id)) {
+        when (db.status_obstaja(id = body.id, oseba_id = profil.id, test_id = test_id, naloga_id = it.naloga_id)) {
             false -> this.call.client_error(info = "${ime<Status>()} ne obstaja!")
             true -> when (val r = db.status_update(
-                id = it.status_id,
+                id = body.id,
                 oseba_id = profil.id,
                 test_id = it.parent.parent.test_id,
+                naloga_id = it.naloga_id,
                 sekund = body.sekund,
                 tip = body.tip
             )) {
@@ -88,7 +90,7 @@ fun Route.profil() {
             }
         }
     }
-    this.put<profil.test.test_id> {
+    this.put<ucenec.test.test_id> {
         val profil = this.call.profil()
         val body = this.call.receive<TestUpdateReq>()
         when (val r = db.test_update(
@@ -96,29 +98,34 @@ fun Route.profil() {
             oseba_id = profil.id,
             datum = body.datum
         )) {
-            null -> this.call.client_error(info = "${ime<Status>()} ni posodobljen!")
+            null -> this.call.client_error(info = "Uporabnik nima dovoljenj!")
             else -> this.call.respond(r)
         }
     }
 
-    this.get<profil.test.test_id.status.status_id.audit> {
-        val status_id = it.parent.status_id
-        this.call.respond(db.audits(entity_id = status_id.vAnyId(), stran = null))
+    this.get<ucenec.test.test_id.naloga.naloga_id.audit> {
+        val status_id = it.parent.naloga_id
+        val profil = this.call.profil()
+        val entity_id = setOf(status_id.vAnyId(), profil.id.vAnyId())
+        this.call.respond(db.audits(entity_id = entity_id, stran = null))
     }
-    this.get<profil.test.test_id.audit> {
+    this.get<ucenec.test.test_id.audit> {
         val test_id = it.parent.test_id
-        this.call.respond(db.audits(entity_id = test_id.vAnyId(), stran = null))
+        val profil = this.call.profil()
+        val entity_id = setOf(test_id.vAnyId(), profil.id.vAnyId())
+        this.call.respond(db.audits(entity_id = entity_id, stran = null))
     }
 
-    this.get<profil.audit> {
+    this.get<ucenec.audit> {
         val profil = this.call.profil()
-        this.call.respond(db.audits(entity_id = profil.id.vAnyId(), stran = it.stran))
+        val entity_id = setOf(profil.id.vAnyId())
+        this.call.respond(db.audits(entity_id = entity_id, stran = it.stran))
     }
 
     /**
      * Ta route mora zmeraj vrniti success drugace bos ustvaril rekurzijo z clientom.
      */
-    this.post<profil.napaka> {
+    this.post<ucenec.napaka> {
         val profil = this.call.profil()
         val body = this.call.receive<NapakaReq>()
 
@@ -134,7 +141,7 @@ fun Route.profil() {
         this.call.respond(napaka)
     }
 
-    this.get<profil.napaka> {
+    this.get<ucenec.napaka> {
         val profil = this.call.profil()
         val napake = db.napake(profil.id.vAnyId(), stran = it.stran)
         this.call.respond(napake)

@@ -31,7 +31,7 @@ val PreveriProfil = createRouteScopedPlugin(
         this@createRouteScopedPlugin.on(AuthenticationChecked) {
             val profil = it.profil()
             log.info("$tipi -> $profil")
-            if (this.tip_profila.intersect(profil.tip).isNotEmpty()) {
+            if (this.tip_profila.intersect(profil.tip).isEmpty()) {
                 it.client_unauthorized()
             }
         }

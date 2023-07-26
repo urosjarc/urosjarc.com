@@ -11,20 +11,20 @@
   import {Number_vCas} from "$lib/extends/Number";
 
   async function load_audits() {
-    audits = await page_audits({test_id: test_id, status_id: status_id})
+    audits = await page_audits({test_id: test_id, naloga_id: naloga_id})
   }
 
   function koncaj_nalogo(tip: Status.tip) {
     posodobi_status({
       test_id: test_id,
-      status_id: status_id,
+      naloga_id: naloga_id,
       sekund: sekund,
       tip: tip,
     })
   }
 
   onMount(async () => {
-    data = await page_data({test_id: test_id, status_id: status_id})
+    data = await page_data({test_id: test_id, naloga_id: naloga_id})
     loaded = true
   })
 
@@ -33,7 +33,7 @@
   }, 1000)
 
   const test_id = $page.params.test_id
-  const status_id = $page.params.status_id
+  const naloga_id = $page.params.naloga_id
 
   let data = {}
   let audits = []
