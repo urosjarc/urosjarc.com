@@ -1,0 +1,11 @@
+.svelte-kit
+build
+node_modules
+venv
+
+src/lib/api
+
+static/sitemap.xml
+static/gz
+
+.env

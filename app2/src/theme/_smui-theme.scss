@@ -1,0 +1,22 @@
+@use 'sass:color';
+
+@use '@material/theme/color-palette';
+
+// Svelte Colors!
+@use '@material/theme/index' as theme with (
+  $primary: royalblue,
+  $secondary: royalblue,
+  $surface: #fff,
+  $background: #fff,
+  $error: color-palette.$red-900
+);
+
+@import "libs/bootstrap-grid.min";
+@import "libs/material-icons";
+@import "libs/roboto-mono";
+
+@import "style/dom";
+@import "style/animacije";
+@import "style/barve";
+@import "style/oblike";
+@import "style/sence";
