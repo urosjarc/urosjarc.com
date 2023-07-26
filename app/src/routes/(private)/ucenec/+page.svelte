@@ -5,7 +5,7 @@
   import {onMount} from "svelte";
   import {type Data, page_data} from "./page";
 
-  function goto_test(id) {
+  function goto_test(id: string) {
     goto(route.ucenec_test_id(id))
   }
 

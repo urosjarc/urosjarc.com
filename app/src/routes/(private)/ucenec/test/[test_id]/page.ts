@@ -13,17 +13,19 @@ export type NalogaInfo = {
   id: string
 }
 
+export type TestStatistika = {
+  datum: string,
+  dan: string,
+  rok: number,
+  vse_naloge: number,
+  opravljene_naloge: number,
+  manjkajoce_naloge: number,
+}
+
 export type Data = {
   tema_naloge: Map<string, NalogaInfo[]>,
   status_stevilo: Map<string, number>,
-  data: {
-    datum: string,
-    dan: string,
-    rok: number,
-    vse_naloge: number,
-    opravljene_naloge: number,
-    manjkajoce_naloge: number,
-  }
+  data: TestStatistika
 }
 
 export async function page_data(args: { test_id: string }): Promise<Data> {

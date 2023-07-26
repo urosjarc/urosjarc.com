@@ -3,7 +3,7 @@
   import Button, {Group, Label} from '@smui/button';
   import {onMount} from "svelte";
   import DataTable, {Body, Cell, Row} from "@smui/data-table";
-  import {page_audits, page_data} from "./page";
+  import {type Audits, page_audits, page_data, type TestStatistika} from "./page";
   import {Chart} from "chart.js/auto";
   import Dialog, {Content, Title} from "@smui/dialog";
   import {Separator} from "@smui/list";
@@ -67,7 +67,8 @@
         responsive: false,
         plugins: {
           legend: {
-            position: '',
+            //@ts-ignore
+            position: null,
           }
         }
       }
@@ -75,8 +76,8 @@
   })
 
   const test_id = $page.params.test_id
-  let data = {}
-  let audits = {}
+  let data: TestStatistika = {dan: "", datum: "", manjkajoce_naloge: 0, opravljene_naloge: 0, rok: 0, vse_naloge: 0}
+  let audits: Audits = {max_resevanje_testa: 0, min_resevanje_testa: 0, resevanje_testa: 0, stevilo_pravilnih: 0, stevilo_vseh: 0, trajanje_pravilnih_min: 0, trajanje_pravilnih_napaka_min: 0, trajanje_pravilnih_povprecje_min: 0, trajanje_pravilnih_ur: 0, trajanje_vseh_min: 0, trajanje_vseh_napaka_min: 0, trajanje_vseh_povprecje_min: 0, trajanje_vseh_ur: 0}
   let tema_naloge = new Map()
   let status_stevilo = new Map()
   let datum = ""
@@ -142,7 +143,7 @@
       <Button
         class="col-1 {nalogaInfo.cls}"
         style="margin: 2px" variant="raised"
-        href={route.ucenec_status_id(test_id, nalogaInfo.id)}>
+        href={route.ucenec_naloga_id(test_id, nalogaInfo.id)}>
         <Label><b>{i + 1}</b></Label>
       </Button>
     {/each}

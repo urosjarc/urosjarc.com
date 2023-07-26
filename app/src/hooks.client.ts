@@ -1,5 +1,5 @@
 import {navigating} from "$app/stores";
-import {prijavi_napako} from "$lib/usecases/prijavi_napako";
+import {ucenec_prijavi_napako} from "$lib/usecases/ucenec_prijavi_napako";
 
 
 console.group("PATH", "/")
@@ -37,6 +37,6 @@ window.onerror = (
   line,
   col,
   error
-) => prijavi_napako(error);
+) => ucenec_prijavi_napako(error);
 
-window.onunhandledrejection = (event) => prijavi_napako(event.reason);
+window.onunhandledrejection = (event) => ucenec_prijavi_napako(event.reason);

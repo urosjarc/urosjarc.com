@@ -6,6 +6,7 @@ import {route} from "$lib/stores/routeStore";
 
 export async function posodobi_status(args: { test_id: string, naloga_id: string, sekund: number, tip: Status.tip }) {
   const new_status: Status = await API().putUcenecTestNaloga(args.test_id, args.naloga_id, {
+    id: args.naloga_id,
     tip: args.tip,
     sekund: args.sekund
   })

@@ -6,7 +6,7 @@ import {route} from "$lib/stores/routeStore";
 import {alerts} from "$lib/stores/alertsStore";
 import {Napaka, type NapakaReq} from "$lib/api";
 
-export async function prijavi_napako(error: any) {
+export async function ucenec_prijavi_napako(error: any) {
   try {
     let alertCall: (() => void) = () => {}
 
@@ -40,7 +40,7 @@ export async function prijavi_napako(error: any) {
 
     if (token.exists()) {
       try {
-        await API().postProfilNapaka(req)
+        await API().postUcenecNapaka(req)
       } catch (e) {
         await API().postNapaka(req)
       }

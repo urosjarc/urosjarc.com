@@ -23,9 +23,9 @@
 
   let loading = false
   let dialog = false
-  let oseba: Oseba = {}
-  let telefonKontakt: Kontakt = {}
-  let emailKontakt: Kontakt = {}
+  let oseba: Oseba | undefined = {}
+  let telefonKontakt: Kontakt | undefined = {}
+  let emailKontakt: Kontakt | undefined = {}
 </script>
 
 <div>
@@ -76,9 +76,9 @@
       Vaše sporočilo je bilo sprejeto!
     </svelte:fragment>
     <svelte:fragment slot="vsebina">
-      Povratni sporočili sta se poslali osebi <b>"{oseba.ime} {oseba.priimek}"</b>,
-      na email naslov <b>"{emailKontakt.data}"</b>, ter
-      telefonsko številko <b>"{telefonKontakt.data}"</b>.
+      Povratni sporočili sta se poslali osebi <b>"{oseba?.ime} {oseba?.priimek}"</b>,
+      na email naslov <b>"{emailKontakt?.data}"</b>, ter
+      telefonsko številko <b>"{telefonKontakt?.data}"</b>.
       Prosim preverite prejem povratnic.<br><br>
     </svelte:fragment>
   </Alert>

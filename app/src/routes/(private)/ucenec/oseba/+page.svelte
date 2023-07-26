@@ -3,7 +3,7 @@
   import Accordion, {Content, Header, Panel} from "@smui-extra/accordion";
   import {onMount} from "svelte";
   import {type Audits, type Napake, page_audits, page_data, page_napake} from "./page";
-  import type {Oseba} from "$lib/api";
+  import type {Kontakt, Naslov, Oseba} from "$lib/api";
 
   async function load_audits() {
     if (!show_audits) {
@@ -28,8 +28,8 @@
   let audits: Audits[] = []
   let napake: Napake[] = []
   let oseba: Oseba = {}
-  let kontakti = []
-  let naslovi = []
+  let kontakti: Kontakt[] = []
+  let naslovi: Naslov[] = []
 </script>
 
 <Accordion>
@@ -66,7 +66,7 @@
 
     </Content>
   </Panel>
-  <Panel close>
+  <Panel>
     <Header on:click={load_audits} class="col-royalblue">
       <h3 style="text-align: center; margin: 0">Dejavnost</h3>
     </Header>
@@ -105,7 +105,7 @@
 
     </Content>
   </Panel>
-  <Panel close>
+  <Panel>
     <Header on:click={load_napake} class="col-royalblue">
       <h3 style="text-align: center; margin: 0">Napake</h3>
     </Header>

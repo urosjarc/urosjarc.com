@@ -14,7 +14,7 @@ export async function posodobi_datum_testa(args: { test_id: string, datum: strin
     //Match test ids
     if (args.test_id == old_test._id && new_test._id == old_test._id) {
       // @ts-ignore
-      ucenecData.test_refs[i].test = new_test
+      ucenecData.test_ucenec_refs[i].test = new_test
       return ucenec.set(ucenecData)
     }
   }

@@ -3,10 +3,10 @@ import {get} from "svelte/store";
 
 export const admin = {
   store: persisted('adminStore', {}),
-  get(): AdminData {
+  get(): any {
     return get(this.store)
   },
-  set(adminData: AdminData) {
+  set(adminData: any) {
     console.log("Admin set: ", adminData)
     this.store.set(adminData)
   },

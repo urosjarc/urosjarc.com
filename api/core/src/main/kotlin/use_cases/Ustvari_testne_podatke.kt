@@ -128,7 +128,7 @@ class Ustvari_testne_podatke(
         /**
          * Ustvari teste
          */
-        val testi = this.ustvari_teste(n = 4, ucenci = ucenci, admini = ucitelji, naloge = naloge)
+        val testi = this.ustvari_teste(n = 4, ucenci = ucenci, admini = (ucitelji + ucenci).toMutableSet(), naloge = naloge)
 
         /**
          * Ustvari statuse

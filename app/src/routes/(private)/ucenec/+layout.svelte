@@ -6,7 +6,7 @@
 </script>
 
 <div style="padding-top: 8px">
-  <Layout lg_size="12" sm_size="12">
+  <Layout lg_size={12} sm_size={12}>
     <svelte:fragment slot="navigation">
       <Navigation radius="10px" classes="col-4" text="Profil" icon="person" link="{route.ucenec_oseba}"/>
       <Navigation radius="10px" classes="col-4" text="Testi" icon="article" link="{route.ucenec}"/>

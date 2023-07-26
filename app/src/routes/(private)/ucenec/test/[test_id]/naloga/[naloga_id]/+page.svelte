@@ -5,7 +5,7 @@
   import DataTable, {Body, Cell, Head, Row} from "@smui/data-table";
   import {Status} from "$lib/api";
   import {onMount} from "svelte";
-  import {page_audits, page_data} from "./page";
+  import {type Audits, type Data, page_audits, page_data} from "./page";
   import {posodobi_status} from "$lib/usecases/posodobi_status";
   import {StatusTip_class} from "$lib/extends/StatusTip";
   import {Number_vCas} from "$lib/extends/Number";
@@ -35,8 +35,8 @@
   const test_id = $page.params.test_id
   const naloga_id = $page.params.naloga_id
 
-  let data = {}
-  let audits = []
+  let data: Data = {cls: "", resitev_src: "", vsebina_src: ""}
+  let audits: Audits[] = []
 
   let sekund = 0
   let loaded = false
@@ -50,7 +50,7 @@
           <h1 style="text-align: center">{Number_vCas(sekund)}</h1>
         </Header>
         <Content style="padding: 0">
-          <img width="100%" src="{data.vsebina_src}">
+          <img alt="vsebina_src" width="100%" src="{data.vsebina_src}">
         </Content>
       </Panel>
       <Panel>
@@ -58,7 +58,7 @@
           <h3 style="text-align: center; margin: 0">Resitev</h3>
         </Header>
         <Content style="padding: 0">
-          <img width="100%" src="{data.resitev_src}">
+          <img alt="resitev_src" width="100%" src="{data.resitev_src}">
 
           <Group class="razsiri">
             {#each Object.values(Status.tip) as status}
@@ -101,7 +101,7 @@
 </div>
 
 <style>
-  h1, h2 {
+  h1, h3 {
     margin: 0;
   }
 
