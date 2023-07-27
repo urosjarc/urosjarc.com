@@ -7,18 +7,5 @@ import {NavGumb} from "../nav-gumb/nav-gumb";
   styleUrls: ['./nav-stran.component.scss']
 })
 export class NavStranComponent {
-  @Input() navGumbi: NavGumb[] = [
-    {
-      tekst: "tekst1",
-      ikona: "delete"
-    },
-    {
-      tekst: "tekst2",
-      ikona: "delete"
-    },
-    {
-      tekst: "tekst3",
-      ikona: "mail"
-    },
-  ]
+  @Input() navGumbi: NavGumb[] = []
 }

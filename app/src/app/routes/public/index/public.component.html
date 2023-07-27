@@ -1,0 +1,25 @@
+<div class="text-center">
+
+  <h1>Uroš Jarc</h1>
+  <h1>Inštruktor programiranja, fizike, matematike</h1>
+
+  <div class="row justify-content-center">
+    <div *ngFor="let kontakt of kontakti" class="col-3">
+      <button [routerLink]="kontakt.route" mat-button>
+        <mat-icon>{{kontakt.ikona}}</mat-icon>
+        {{kontakt.tekst}}
+      </button>
+    </div>
+  </div>
+
+  <button mat-raised-button routerLink="/koledar" color="primary" class="w-100 rounded-0">Naroči inštrukcije</button>
+
+  <mat-accordion>
+    <mat-expansion-panel hideToggle *ngFor="let info of infos">
+      <mat-expansion-panel-header>
+        <mat-panel-description><h2 class="w-100">{{info.naslov}}</h2></mat-panel-description>
+      </mat-expansion-panel-header>
+      {{info.vsebina}}
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

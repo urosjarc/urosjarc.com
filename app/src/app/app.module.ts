@@ -2,7 +2,6 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
-import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
@@ -12,11 +11,13 @@ import {NavStranComponent} from "./components/nav-stran/nav-stran.component";
 import {KoledarComponent} from "./routes/public/koledar/koledar.component";
 import {KontaktComponent} from "./routes/public/kontakt/kontakt.component";
 import {PrijavaComponent} from "./routes/public/prijava/prijava.component";
-import {PublicComponent} from "./routes/public/public.component";
+import {PublicComponent} from "./routes/public/index/public.component";
+import {RootComponent} from "./routes/root.component";
+import {MatExpansionModule} from "@angular/material/expansion";
 
 @NgModule({
   declarations: [
-    AppComponent,
+    RootComponent,
     NavGumbComponent,
     NavBarComponent,
     NavStranComponent,
@@ -30,10 +31,11 @@ import {PublicComponent} from "./routes/public/public.component";
     AppRoutingModule,
     BrowserAnimationsModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatExpansionModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [RootComponent]
 })
 export class AppModule {
 }

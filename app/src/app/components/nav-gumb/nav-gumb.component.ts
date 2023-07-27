@@ -6,6 +6,7 @@ import {Component, Input} from '@angular/core';
   styleUrls: ['./nav-gumb.component.scss']
 })
 export class NavGumbComponent {
-  @Input() tekst: string = "Tekst"
-  @Input() ikona: string = "delete"
+  @Input() tekst: string = ""
+  @Input() ikona: string = ""
+  @Input() route: string = ""
 }
