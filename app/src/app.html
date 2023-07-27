@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+
+  <title>Uroš Jarc | Inštruktor programiranja, fizike, matematike</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width"/>
+  <meta name="description"
+        content="Uroš Jarc Inštruktor programiranja, fizike, matematike. Ponujam kvalitetne inštrukcije univerzitetnega nivoja za programiranje, fizike, matematike. Pripravljam študente na izspite iz programiranja, pomagam pri izvedbi in programiranju diplomske naloge. Pomagam pri postopku prekvalifikacije za IT industrijo.">
+  <meta name="keywords"
+        content="inštrukcije programiranja, inštrukcije fizike, inštrukcije matematike, python, javascript, java, fakulteta za računalništvo, FRI, vegova, srednja računalniška šola, diplomska naloga">
+  <meta name="author" content="Uroš Jarc">
+
+  <link rel="icon" href="%sveltekit.assets%/favicon.ico"/>
+  <link rel="stylesheet" href="%sveltekit.assets%/gz/smui.css.gz"/>
+
+  %sveltekit.head%
+
+</head>
+
+<body data-sveltekit-preload-data="hover">
+
+<div style="display: contents">
+  %sveltekit.body%
+</div>
+
+<div id="anim-background">
+  <script>
+    if (screen && screen.width > 480) {
+      const script = document.createElement('script');
+      script.src = "/gz/external.js.gz"
+      document.body.appendChild(script)
+    }
+  </script>
+</div>
+</body>
+
+
+
+</html>

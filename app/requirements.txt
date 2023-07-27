@@ -1,0 +1,5 @@
+python-dotenv
+ftputil
+requests
+alive-progress
+tqdm
