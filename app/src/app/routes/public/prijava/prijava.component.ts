@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class PrijavaComponent {
 
+  prijava(msg: string) {
+    alert(msg)
+  }
+
 }

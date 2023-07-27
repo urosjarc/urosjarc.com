@@ -1,0 +1,6 @@
+<mat-form-field appearance="outline" class="w-100">
+  <mat-label>{{label}}</mat-label>
+  <input matInput [formControl]="oseba" required>
+  <mat-icon matPrefix>person</mat-icon>
+  <mat-error *ngIf="oseba.invalid">{{getErrorMessage()}}</mat-error>
+</mat-form-field>

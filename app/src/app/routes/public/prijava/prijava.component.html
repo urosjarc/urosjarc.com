@@ -1,1 +1,14 @@
-<p>prijava works!</p>
+<div class="row p-4">
+
+  <div class="col-sm-6 col-xl-12">
+    <app-input-oseba label="Vnesi uporabniško ime..."/>
+  </div>
+
+  <div class="col-sm-6 col-xl-12">
+    <app-input-geslo/>
+  </div>
+
+  <div class="col-12">
+    <button mat-raised-button (click)="prijava('Hello')" color="primary" class="w-100">Prijava</button>
+  </div>
+</div>

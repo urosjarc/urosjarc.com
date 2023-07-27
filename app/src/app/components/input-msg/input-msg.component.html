@@ -1,0 +1,5 @@
+<mat-form-field appearance="outline" class="w-100" style="min-height: 150px">
+  <mat-label>Sporocilo</mat-label>
+  <textarea matInput></textarea>
+  <mat-error *ngIf="sporocilo.invalid">{{getErrorMessage()}}</mat-error>
+</mat-form-field>

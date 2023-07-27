@@ -1,0 +1,6 @@
+<mat-form-field appearance="outline" class="w-100">
+  <mat-label>Enter your phone</mat-label>
+  <mat-icon matPrefix>phone</mat-icon>
+  <input matInput [formControl]="telefon" required>
+  <mat-error *ngIf="telefon.invalid">{{getErrorMessage()}}</mat-error>
+</mat-form-field>
