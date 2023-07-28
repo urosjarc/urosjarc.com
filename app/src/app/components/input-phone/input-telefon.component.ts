@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 
 @Component({
@@ -7,7 +7,7 @@ import {FormControl, Validators} from "@angular/forms";
   styleUrls: ['./input-telefon.component.scss']
 })
 export class InputTelefonComponent {
-  telefon = new FormControl('', [Validators.required, Validators.minLength(9)]);
+  @Input() telefon = new FormControl('', [Validators.required, Validators.minLength(9)]);
 
   getErrorMessage() {
     if (this.telefon.hasError('required')) {

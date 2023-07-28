@@ -1,16 +1,16 @@
 <div class="row p-4">
   <div class="col-sm-12 col-xl-4">
-    <app-input-oseba/>
+    <app-input-oseba [oseba]="oseba"/>
   </div>
   <div class="col-sm-6 col-xl-4">
-    <app-input-email/>
+    <app-input-email [email]="email"/>
   </div>
   <div class="col-sm-6 col-xl-4">
-    <app-input-telefon/>
+    <app-input-telefon [telefon]="telefon"/>
   </div>
 
   <div class="col-12">
-    <app-input-msg/>
+    <app-input-msg [sporocilo]="sporocilo"/>
     <button mat-raised-button routerLink="/koledar" color="primary" class="w-100">Pošlji</button>
   </div>
 </div>

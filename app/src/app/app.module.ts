@@ -19,11 +19,16 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {InputTelefonComponent} from "./components/input-phone/input-telefon.component";
 import {InputEmailComponent} from "./components/input-email/input-email.component";
 import {MatInputModule} from "@angular/material/input";
-import { InputOsebaComponent } from './components/input-oseba/input-oseba.component';
+import {InputOsebaComponent} from './components/input-oseba/input-oseba.component';
 import {MatTableModule} from "@angular/material/table";
 import {InputMsgComponent} from "./components/input-msg/input-msg.component";
 import {InputGesloComponent} from "./components/input-geslo/input-geslo.component";
 import {UcenecComponent} from "./routes/ucenec/index/ucenec.component";
+import {DefaultService} from "./api";
+import {HttpClientModule} from "@angular/common/http";
+import {AlertService} from "./components/alert/alert.service";
+import {AlertComponent} from "./components/alert/alert.component";
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -41,6 +46,8 @@ import {UcenecComponent} from "./routes/ucenec/index/ucenec.component";
     InputMsgComponent,
     InputGesloComponent,
     UcenecComponent,
+    AlertComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,
@@ -53,8 +60,13 @@ import {UcenecComponent} from "./routes/ucenec/index/ucenec.component";
     ReactiveFormsModule,
     MatInputModule,
     MatTableModule,
+    HttpClientModule,
+    MatDialogModule
   ],
-  providers: [],
+  providers: [
+    DefaultService,
+    AlertService
+  ],
   bootstrap: [RootComponent]
 })
 export class AppModule {

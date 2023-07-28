@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 
 @Component({
@@ -7,7 +7,7 @@ import {FormControl, Validators} from "@angular/forms";
   styleUrls: ['./input-geslo.component.scss']
 })
 export class InputGesloComponent {
-  geslo = new FormControl('', [Validators.required, Validators.minLength(4)]);
+  @Input() geslo = new FormControl('', [Validators.required, Validators.minLength(4)]);
 
   getErrorMessage() {
     if (this.geslo.hasError('required')) {

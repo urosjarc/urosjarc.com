@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 
 @Component({
@@ -7,7 +7,7 @@ import {FormControl, Validators} from "@angular/forms";
   styleUrls: ['./input-email.component.scss']
 })
 export class InputEmailComponent {
-  email = new FormControl('', [Validators.required, Validators.email]);
+  @Input() email = new FormControl('', [Validators.required, Validators.email]);
 
   getErrorMessage() {
     if (this.email.hasError('required')) {

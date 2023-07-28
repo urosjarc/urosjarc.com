@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {DefaultService} from "../../../api";
+import {FormControl, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-prijava',
@@ -6,9 +8,19 @@ import { Component } from '@angular/core';
   styleUrls: ['./prijava.component.scss']
 })
 export class PrijavaComponent {
+  uporabnik: FormControl<string | null> = new FormControl('', [Validators.required]);
 
-  prijava(msg: string) {
-    alert(msg)
+  constructor(private defaultService: DefaultService) {
+  }
+
+  prijava() {
+    this.defaultService.postAuthPrijava({
+      username: this.uporabnik.getRawValue() || ""
+    }).subscribe((res) => {
+      console.log(res)
+    }, (err) => {
+      alert(JSON.stringify(err, null, 4))
+    })
   }
 
 }

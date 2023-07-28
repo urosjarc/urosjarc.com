@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 
 @Component({
@@ -7,7 +7,7 @@ import {FormControl, Validators} from "@angular/forms";
   styleUrls: ['./input-msg.component.scss']
 })
 export class InputMsgComponent {
-  sporocilo = new FormControl('', [Validators.required, Validators.minLength(10)]);
+  @Input() sporocilo = new FormControl('', [Validators.required, Validators.minLength(10)]);
 
   getErrorMessage() {
     "Fail"
