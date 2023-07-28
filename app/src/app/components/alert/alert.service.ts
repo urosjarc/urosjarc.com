@@ -2,13 +2,8 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Subject} from "rxjs";
 import {Alert, AlertTip} from "./alert";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root'})
 export class AlertService {
-
-  constructor() {
-  }
 
   private alertsObserver: Subject<Alert> = new BehaviorSubject({tip: AlertTip.INFO, vsebina: "", trajanje: 0} as Alert);
 

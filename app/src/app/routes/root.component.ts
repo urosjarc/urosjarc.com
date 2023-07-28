@@ -1,12 +1,16 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {NavGumb} from "../components/nav-gumb/nav-gumb";
+import {Alert} from "../components/alert/alert";
+import {AlertService} from "../components/alert/alert.service";
+import {MatDialog} from "@angular/material/dialog";
+import {AlertComponent} from "../components/alert/alert.component";
 
 @Component({
   selector: 'app-root',
   templateUrl: './root.component.html',
   styleUrls: ['./root.component.scss']
 })
-export class RootComponent {
+export class RootComponent implements OnInit {
   @Input() navGumbi: NavGumb[] = [
     {
       tekst: "Domov",
@@ -29,4 +33,25 @@ export class RootComponent {
       route: "/prijava"
     },
   ]
+
+  constructor(
+    private dialog: MatDialog,
+    private alertService: AlertService) {
+  }
+
+  ngOnInit() {
+    this.alertService.alerts.subscribe(alert => {
+      if (alert) this.openAlert(alert)
+    })
+  }
+
+  private openAlert(data: Alert) {
+    this.dialog.open(AlertComponent, {
+      width: '250px',
+      enterAnimationDuration: 500,
+      exitAnimationDuration: 500,
+      data: data
+    });
+  }
+
 }
