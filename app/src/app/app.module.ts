@@ -23,6 +23,7 @@ import { InputOsebaComponent } from './components/input-oseba/input-oseba.compon
 import {MatTableModule} from "@angular/material/table";
 import {InputMsgComponent} from "./components/input-msg/input-msg.component";
 import {InputGesloComponent} from "./components/input-geslo/input-geslo.component";
+import {UcenecComponent} from "./routes/ucenec/index/ucenec.component";
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import {InputGesloComponent} from "./components/input-geslo/input-geslo.componen
     InputOsebaComponent,
     InputMsgComponent,
     InputGesloComponent,
+    UcenecComponent,
   ],
   imports: [
     BrowserModule,

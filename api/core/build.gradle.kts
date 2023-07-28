@@ -23,7 +23,7 @@ configure<BuildSrc_domainMap_gradle.DomainMapExtension> {
 
 
 val openapi_dist = file("$projectDir/../api/src/main/resources/openapi")
-val openapi_target = file("$projectDir/../../app/src/lib/api")
+val openapi_target = file("$projectDir/../../app")
 tasks.register("client") {
     doLast {
         logger.warn("")
