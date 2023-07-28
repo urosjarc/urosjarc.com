@@ -1,5 +1,10 @@
-<h1 mat-dialog-title>{{data.vsebina}}</h1>
-<div mat-dialog-content>{{data.vsebina}}</div>
-<div mat-dialog-actions>
-  <button mat-button mat-dialog-close>Close</button>
+<div class="text-center">
+  <h1 mat-dialog-title>
+    {{data.naslov}}
+    <mat-divider/>
+  </h1>
+  <div mat-dialog-content>{{data.vsebina}}</div>
+  <div mat-dialog-actions>
+    <button apperence="fill" [color]="data.color" class="w-100" mat-raised-button mat-dialog-close>Zapri</button>
+  </div>
 </div>

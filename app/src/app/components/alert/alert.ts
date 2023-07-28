@@ -1,11 +1,7 @@
+import {ThemePalette} from "@angular/material/core";
+
 export interface Alert {
   vsebina: string,
-  tip: AlertTip,
-  trajanje: number
-}
-
-export enum AlertTip {
-  INFO = 0,
-  WARN = 1,
-  ERROR = 2
+  naslov: string,
+  color: ThemePalette
 }

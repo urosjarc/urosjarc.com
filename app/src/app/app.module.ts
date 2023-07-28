@@ -23,11 +23,13 @@ import {InputOsebaComponent} from './components/input-oseba/input-oseba.componen
 import {MatTableModule} from "@angular/material/table";
 import {InputMsgComponent} from "./components/input-msg/input-msg.component";
 import {InputGesloComponent} from "./components/input-geslo/input-geslo.component";
-import {UcenecComponent} from "./routes/ucenec/index/ucenec.component";
 import {DefaultService} from "./api";
 import {HttpClientModule} from "@angular/common/http";
 import {AlertService} from "./components/alert/alert.service";
 import {MatDialogModule} from "@angular/material/dialog";
+import {UcenecComponent} from "./routes/ucenec/ucenec.component";
+import {TestiComponent} from "./routes/ucenec/testi/testi.component";
+import {ProfilComponent} from "./routes/ucenec/profil/profil.component";
 
 @NgModule({
   declarations: [
@@ -45,6 +47,8 @@ import {MatDialogModule} from "@angular/material/dialog";
     InputMsgComponent,
     InputGesloComponent,
     UcenecComponent,
+    ProfilComponent,
+    TestiComponent,
   ],
   imports: [
     BrowserModule,

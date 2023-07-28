@@ -41,14 +41,13 @@ export class RootComponent implements OnInit {
 
   ngOnInit() {
     this.alertService.alerts.subscribe(alert => {
-      if (alert) this.openAlert(alert)
+      if (alert) this.onAlert(alert)
     })
   }
 
-  private openAlert(data: Alert) {
+  private onAlert(data: Alert) {
     this.dialog.open(AlertComponent, {
-      width: '250px',
-      enterAnimationDuration: 500,
+      enterAnimationDuration: 250,
       exitAnimationDuration: 500,
       data: data
     });

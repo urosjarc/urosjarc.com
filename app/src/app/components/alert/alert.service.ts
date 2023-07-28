@@ -1,27 +1,27 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Subject} from "rxjs";
-import {Alert, AlertTip} from "./alert";
+import {Subject} from "rxjs";
+import {Alert} from "./alert";
+import {ThemePalette} from "@angular/material/core";
 
 @Injectable({providedIn: 'root'})
 export class AlertService {
 
-  private alertsObserver: Subject<Alert> = new BehaviorSubject({tip: AlertTip.INFO, vsebina: "", trajanje: 0} as Alert);
+  private alertsObserver: Subject<Alert> = new Subject();
 
-  info(message: string, trajanje: number = 1) {
-    this.alert(message, AlertTip.INFO, trajanje);
+  info(vsebina: string) {
+    this.alert("INFORMACIJA", vsebina, "primary");
   }
 
-  warn(message: string, trajanje: number = 1) {
-    this.alert(message, AlertTip.WARN, trajanje);
+  warn(vsebina: string) {
+    this.alert("OPOZORILO", vsebina, "accent");
   }
 
-  error(message: string, trajanje: number = 1) {
-    this.alert(message, AlertTip.ERROR, trajanje);
+  error(vsebina: string) {
+    this.alert("NAPAKA", vsebina, "warn");
   }
 
-  private alert(vsebina: string, tip: AlertTip, trajanje: number) {
-    trajanje = !trajanje ? 3000 : trajanje;
-    this.alertsObserver.next({tip, vsebina, trajanje} as Alert);
+  private alert(naslov: string, vsebina: string, color: ThemePalette) {
+    this.alertsObserver.next({naslov, vsebina, color} as Alert);
   }
 
   get alerts() {

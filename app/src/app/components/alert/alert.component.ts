@@ -1,15 +1,18 @@
 import {Component, Inject} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
 import {Alert} from "./alert";
+import {NgStyle} from "@angular/common";
+import {MatListModule} from "@angular/material/list";
 
 @Component({
   selector: 'app-alert',
   templateUrl: 'alert.component.html',
   styleUrls: ['alert.component.scss'],
   standalone: true,
-  imports: [MatDialogModule, MatButtonModule],
+  imports: [MatDialogModule, MatButtonModule, NgStyle, MatListModule],
 })
 export class AlertComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: Alert) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: Alert) {
+  }
 }
