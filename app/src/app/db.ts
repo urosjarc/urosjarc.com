@@ -93,6 +93,7 @@ export class AppDB extends Dexie {
             cakalnica_key.push(key)
           })
         else if (isObject(value)) {
+          cakalnica_key.push(key)
           cakalnica_value.push(value)
         }
       }
