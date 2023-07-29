@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {NavGumb} from "../../components/nav-gumb/nav-gumb";
 import {DefaultService} from "../../api";
 import {db} from "../../db";
@@ -10,7 +10,7 @@ import {HttpErrorResponse} from "@angular/common/http";
   templateUrl: './ucenec.component.html',
   styleUrls: ['./ucenec.component.scss']
 })
-export class UcenecComponent {
+export class UcenecComponent implements OnInit {
   navGumbi: NavGumb[] = [
     {
       tekst: "Profil",
@@ -23,14 +23,14 @@ export class UcenecComponent {
       route: "/ucenec/testi"
     },
     {
-      tekst: "Odjava",
-      ikona: "signout",
-      route: "/ucenec/testi"
-    },
-    {
       tekst: "Sporocila",
       ikona: "sms",
       route: "/ucenec/sporocila"
+    },
+    {
+      tekst: "Odjava",
+      ikona: "signout",
+      route: "/ucenec/testi"
     },
   ];
 
@@ -38,14 +38,18 @@ export class UcenecComponent {
     private alertService: AlertService,
     private defaultService: DefaultService
   ) {
+  }
+
+  ngOnInit() {
     const self = this;
-    defaultService.getUcenec().subscribe({
+    this.defaultService.getUcenec().subscribe({
       next(ucenecData) {
-        db.setUcenecData(ucenecData)
+        db.reset(ucenecData).then(r => {})
       },
       error(err: HttpErrorResponse) {
         self.alertService.error(err.message)
       }
     })
   }
+
 }
