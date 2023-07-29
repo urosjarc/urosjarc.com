@@ -40,8 +40,8 @@ export class UcenecComponent {
   ) {
     const self = this;
     defaultService.getUcenec().subscribe({
-      next(res) {
-        db.ucenecData.put(res, 0)
+      next(ucenecData) {
+        db.setUcenecData(ucenecData)
       },
       error(err: HttpErrorResponse) {
         self.alertService.error(err.message)
