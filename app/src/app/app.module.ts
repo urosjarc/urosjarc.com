@@ -30,6 +30,11 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {UcenecComponent} from "./routes/ucenec/ucenec.component";
 import {TestiComponent} from "./routes/ucenec/testi/testi.component";
 import {ProfilComponent} from "./routes/ucenec/profil/profil.component";
+import {DateOddaljenostPipe} from "./pipes/DateOddaljenost/date-oddaljenost.pipe";
+import {DATE_PIPE_DEFAULT_OPTIONS, registerLocaleData} from "@angular/common";
+import localeSl from '@angular/common/locales/sl';
+
+registerLocaleData(localeSl, 'sl');
 
 @NgModule({
   declarations: [
@@ -49,6 +54,8 @@ import {ProfilComponent} from "./routes/ucenec/profil/profil.component";
     UcenecComponent,
     ProfilComponent,
     TestiComponent,
+    DateOddaljenostPipe,
+    DateStrPipe,
   ],
   imports: [
     BrowserModule,
@@ -66,7 +73,9 @@ import {ProfilComponent} from "./routes/ucenec/profil/profil.component";
   ],
   providers: [
     DefaultService,
-    AlertService
+    AlertService,
+    {provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: {dateFormat: 'shortDate'}},
+    {provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: {timezone: '+2'}}
   ],
   bootstrap: [RootComponent]
 })
