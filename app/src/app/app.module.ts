@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -31,10 +31,11 @@ import {UcenecComponent} from "./routes/ucenec/ucenec.component";
 import {TestiComponent} from "./routes/ucenec/testi/testi.component";
 import {ProfilComponent} from "./routes/ucenec/profil/profil.component";
 import {DateOddaljenostPipe} from "./pipes/DateOddaljenost/date-oddaljenost.pipe";
-import {DATE_PIPE_DEFAULT_OPTIONS, registerLocaleData} from "@angular/common";
-import localeSl from '@angular/common/locales/sl';
+import {DATE_PIPE_DEFAULT_OPTIONS} from "@angular/common";
+import "@angular/common/locales/global/sl"
+import {MatListModule} from "@angular/material/list";
+import {MatCardModule} from "@angular/material/card";
 
-registerLocaleData(localeSl, 'sl');
 
 @NgModule({
   declarations: [
@@ -68,12 +69,15 @@ registerLocaleData(localeSl, 'sl');
     MatInputModule,
     MatTableModule,
     HttpClientModule,
-    MatDialogModule
+    MatDialogModule,
+    MatListModule,
+    MatCardModule
   ],
   providers: [
     DefaultService,
     AlertService,
-    {provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: {dateFormat: 'd(EEE).M(MMM).YYYY', timezone: '+2'}},
+    {provide: LOCALE_ID, useValue: 'sl'},
+    {provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: {dateFormat: 'EEE d.M.YYYY', timezone: '+2'}},
   ],
   bootstrap: [RootComponent]
 })

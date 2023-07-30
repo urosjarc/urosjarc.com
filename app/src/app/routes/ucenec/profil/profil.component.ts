@@ -1,16 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {db} from "../../../db";
-import {Status, Test} from "../../../api";
+import {Kontakt, Naslov, Oseba} from "../../../api";
 import {ime} from "../../../utils";
-import {String_vDate} from "../../../extends/String";
-import {MatTableDataSource} from "@angular/material/table";
 
-
-interface TestVrstica {
-  naslov: string | undefined,
-  opravljeno: number,
-  datum: Date | undefined
-}
 
 @Component({
   selector: 'app-profil',
@@ -19,39 +11,20 @@ interface TestVrstica {
 })
 export class ProfilComponent implements OnInit {
 
-  testi: MatTableDataSource<TestVrstica> = new MatTableDataSource()
-  displayedColumns: any[] = ['naslov', 'opravljeno', 'datum', 'oddaljenost'];
+  oseba: Oseba | undefined
+  naslovi: Naslov[] = []
+  kontakti: Kontakt[] = []
 
-  async ngOnInit() {
-    await this.initTestVrstice()
+  ngOnInit(): void {
+    this.initOsebaProfil()
   }
 
-  async initTestVrstice() {
+  async initOsebaProfil() {
     const root_id = await db.get_root_id()
-    const testi = await db.test
-      .where(ime<Test>("oseba_ucenec_id"))
-      .equals(root_id)
-      .toArray()
-
-    const newTesti = []
-    for (const test of testi) {
-      const st_nalog = test.naloga_id?.length || -1
-      const opravljeni_statusi = await db.status.where({
-        [ime<Status>("test_id")]: test._id,
-        [ime<Status>("oseba_id")]: root_id,
-        [ime<Status>("tip")]: Status.tip.PRAVILNO,
-      }).count()
-
-      newTesti.push({
-        naslov: test.naslov || "",
-        opravljeno: opravljeni_statusi / st_nalog,
-        datum: String_vDate(test.deadline as string)
-      })
-
-    }
-
-    this.testi.data = newTesti
-
+    this.oseba = await db.oseba.where(ime<Oseba>("_id")).equals(root_id).first()
+    this.naslovi = await db.naslov.where(ime<Naslov>("oseba_id")).equals(root_id).toArray()
+    this.kontakti = await db.kontakt.where(ime<Kontakt>("oseba_id")).equals(root_id).toArray()
   }
+
 
 }

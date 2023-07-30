@@ -41,15 +41,6 @@ export class UcenecComponent implements OnInit {
   }
 
   ngOnInit() {
-    const self = this;
-    this.defaultService.getUcenec().subscribe({
-      next(ucenecData) {
-        db.reset(ucenecData).then(r => {})
-      },
-      error(err: HttpErrorResponse) {
-        self.alertService.error(err.message)
-      }
-    })
   }
 
 }

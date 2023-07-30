@@ -1,28 +1,39 @@
-<table mat-table [dataSource]="testi" class="mat-elevation-z8">
-
-  <!-- Name Column -->
-  <ng-container matColumnDef="naslov">
-    <th mat-header-cell *matHeaderCellDef> Naslov</th>
-    <td mat-cell *matCellDef="let test"> {{test.naslov}} </td>
-  </ng-container>
-
-  <!-- Weight Column -->
-  <ng-container matColumnDef="opravljeno">
-    <th mat-header-cell *matHeaderCellDef> Opravljeno</th>
-    <td mat-cell *matCellDef="let test"> {{test.opravljeno | percent}} </td>
-  </ng-container>
-
-  <!-- Symbol Column -->
-  <ng-container matColumnDef="datum">
-    <th mat-header-cell *matHeaderCellDef> Deadline </th>
-    <td mat-cell *matCellDef="let test"> {{test.datum | date}} </td>
-  </ng-container>
-
-  <ng-container matColumnDef="oddaljenost">
-    <th mat-header-cell *matHeaderCellDef> Ostalo </th>
-    <td mat-cell *matCellDef="let test"> {{test.datum | DateOddaljenost}} </td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
+<div class="row">
+  <div class="col">
+    <mat-list>
+      <div mat-subheader>Oseba</div>
+      <mat-list-item>
+        <mat-icon matListItemIcon>person</mat-icon>
+        <div matListItemTitle>{{oseba?.ime}} {{oseba?.priimek}}</div>
+        <div matListItemLine>Uporabniski ime in priimek</div>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListItemIcon>person</mat-icon>
+        <div matListItemTitle>{{oseba?.username}}</div>
+        <div matListItemLine>Uporabnisko ime</div>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListItemIcon>key</mat-icon>
+        <div matListItemTitle>{{oseba?.tip}}</div>
+        <div matListItemLine>Tip uporabnika</div>
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <div class="col">
+    <mat-list>
+      <div mat-subheader>Naslovi</div>
+      <mat-list-item *ngFor="let naslov of naslovi">
+        <mat-icon matListItemIcon>map</mat-icon>
+        <div matListItemTitle>{{naslov.ulica}}</div>
+        <div matListItemLine>{{naslov.zip}} {{naslov.mesto}}</div>
+        <div matListItemLine>{{naslov.drzava}}</div>
+      </mat-list-item>
+      <div mat-subheader>Kontakti</div>
+      <mat-list-item *ngFor="let kontakt of kontakti">
+        <mat-icon matListItemIcon>phone</mat-icon>
+        <div matListItemTitle>{{kontakt.data}}</div>
+        <div matListItemLine>{{kontakt.tip}}</div>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>
