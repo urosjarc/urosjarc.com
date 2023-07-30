@@ -55,7 +55,6 @@ registerLocaleData(localeSl, 'sl');
     ProfilComponent,
     TestiComponent,
     DateOddaljenostPipe,
-    DateStrPipe,
   ],
   imports: [
     BrowserModule,
@@ -74,8 +73,7 @@ registerLocaleData(localeSl, 'sl');
   providers: [
     DefaultService,
     AlertService,
-    {provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: {dateFormat: 'shortDate'}},
-    {provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: {timezone: '+2'}}
+    {provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: {dateFormat: 'd(EEE).M(MMM).YYYY', timezone: '+2'}},
   ],
   bootstrap: [RootComponent]
 })
