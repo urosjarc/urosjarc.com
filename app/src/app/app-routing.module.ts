@@ -7,6 +7,8 @@ import {PublicComponent} from "./routes/public/index/public.component";
 import {TestiComponent} from "./routes/ucenec/testi/testi.component";
 import {ProfilComponent} from "./routes/ucenec/profil/profil.component";
 import {UcenecComponent} from "./routes/ucenec/ucenec.component";
+import {SporocilaComponent} from "./routes/ucenec/sporocila/sporocila.component";
+import {TestComponent} from "./routes/ucenec/test/test.component";
 
 const routes: Routes = [
   {path: '', component: PublicComponent},
@@ -16,7 +18,9 @@ const routes: Routes = [
   {
     path: 'ucenec', component: UcenecComponent, children: [
       {path: 'profil', component: ProfilComponent},
+      {path: 'sporocila', component: SporocilaComponent},
       {path: 'testi', component: TestiComponent},
+      {path: 'testi/:test_id', component: TestComponent}
     ]
   },
   {path: '**', component: PublicComponent},

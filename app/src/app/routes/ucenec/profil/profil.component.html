@@ -4,6 +4,11 @@
       <div mat-subheader>Oseba</div>
       <mat-list-item>
         <mat-icon matListItemIcon>person</mat-icon>
+        <div matListItemTitle>{{oseba?._id}}</div>
+        <div matListItemLine>Identifikacijska številka</div>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListItemIcon>person</mat-icon>
         <div matListItemTitle>{{oseba?.ime}} {{oseba?.priimek}}</div>
         <div matListItemLine>Uporabniski ime in priimek</div>
       </mat-list-item>

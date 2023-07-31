@@ -105,7 +105,8 @@ class Ustvari_testne_podatke(
         val sporocila = mutableSetOf<Sporocilo>()
         kontakti.forEach {
             val prejemniki = kontakti.nakljucni(n = 3)
-            sporocila += this.ustvari_sporocila(n = 10, posiljatelj = it, prejemniki = prejemniki)
+            sporocila += this.ustvari_sporocila(n = 5, posiljatelj = it, prejemniki = prejemniki)
+            sporocila += this.ustvari_sporocila(n = 5, posiljatelj = prejemniki.first(), prejemniki = mutableSetOf(it))
         }
 
         /**
@@ -207,6 +208,7 @@ class Ustvari_testne_podatke(
             val sporocilo = this.nakljucni<Sporocilo>().apply {
                 this.kontakt_posiljatelj_id = posiljatelj._id
                 this.kontakt_prejemnik_id = prejemniki.map { it._id }.toMutableSet()
+                this.poslano = LocalDateTime.zdaj(dDni = Random.nextInt(-20, 20))
             }
             sporocilo
         }.toMutableSet()

@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {NavGumb} from "../nav-gumb/nav-gumb";
+import {NavGumb} from "../nav-gumb/NavGumb";
 
 @Component({
   selector: 'app-nav-stran',

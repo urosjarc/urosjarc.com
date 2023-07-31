@@ -387,6 +387,9 @@ components:
           enum:
           - "EMAIL"
           - "TELEFON"
+    LocalDateTime:
+      type: "object"
+      properties: {}
     Sporocilo:
       type: "object"
       properties:
@@ -400,6 +403,8 @@ components:
             $ref: "#/components/schemas/Id"
         vsebina:
           type: "string"
+        poslano:
+          $ref: "#/components/schemas/LocalDateTime"
     KontaktObrazecRes:
       type: "object"
       properties:
@@ -641,9 +646,6 @@ components:
       properties:
         value:
           type: "string"
-    LocalDateTime:
-      type: "object"
-      properties: {}
     Audit:
       type: "object"
       properties:

@@ -35,6 +35,11 @@ import {DATE_PIPE_DEFAULT_OPTIONS} from "@angular/common";
 import "@angular/common/locales/global/sl"
 import {MatListModule} from "@angular/material/list";
 import {MatCardModule} from "@angular/material/card";
+import {SporocilaComponent} from "./routes/ucenec/sporocila/sporocila.component";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatSortModule} from "@angular/material/sort";
+import {TestComponent} from "./routes/ucenec/test/test.component";
+import {StatusClassPipe} from "./pipes/StatusClass/status-class.pipe";
 
 
 @NgModule({
@@ -56,6 +61,9 @@ import {MatCardModule} from "@angular/material/card";
     ProfilComponent,
     TestiComponent,
     DateOddaljenostPipe,
+    SporocilaComponent,
+    TestComponent,
+    StatusClassPipe
   ],
   imports: [
     BrowserModule,
@@ -71,7 +79,9 @@ import {MatCardModule} from "@angular/material/card";
     HttpClientModule,
     MatDialogModule,
     MatListModule,
-    MatCardModule
+    MatCardModule,
+    MatPaginatorModule,
+    MatSortModule
   ],
   providers: [
     DefaultService,

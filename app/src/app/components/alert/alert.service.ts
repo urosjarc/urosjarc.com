@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Subject} from "rxjs";
-import {Alert} from "./alert";
 import {ThemePalette} from "@angular/material/core";
+import {Alert} from "./Alert";
 
 @Injectable({providedIn: 'root'})
 export class AlertService {

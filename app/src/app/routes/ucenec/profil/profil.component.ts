@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {db} from "../../../db";
-import {Kontakt, Naslov, Oseba} from "../../../api";
+import {Id, Kontakt, Naslov, Oseba} from "../../../api";
 import {ime} from "../../../utils";
 
 
@@ -25,6 +25,4 @@ export class ProfilComponent implements OnInit {
     this.naslovi = await db.naslov.where(ime<Naslov>("oseba_id")).equals(root_id).toArray()
     this.kontakti = await db.kontakt.where(ime<Kontakt>("oseba_id")).equals(root_id).toArray()
   }
-
-
 }

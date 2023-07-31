@@ -1,9 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {NavGumb} from "../components/nav-gumb/nav-gumb";
-import {Alert} from "../components/alert/alert";
 import {AlertService} from "../components/alert/alert.service";
 import {MatDialog} from "@angular/material/dialog";
 import {AlertComponent} from "../components/alert/alert.component";
+import {NavGumb} from "../components/nav-gumb/NavGumb";
+import {Alert} from "../components/alert/Alert";
 
 @Component({
   selector: 'app-root',

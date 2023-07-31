@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavGumb} from "../../../components/nav-gumb/nav-gumb";
+import {NavGumb} from "../../../components/nav-gumb/NavGumb";
 
 @Component({
   selector: 'app-public',

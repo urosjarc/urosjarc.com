@@ -4,12 +4,7 @@ import {db} from "../../../db";
 import {ime} from "../../../utils";
 import {Status, Test} from "../../../api";
 import {String_vDate} from "../../../extends/String";
-
-interface TestVrstica {
-  naslov: string | undefined,
-  opravljeno: number,
-  datum: Date | undefined
-}
+import {TestInfo} from "./TestInfo";
 
 @Component({
   selector: 'app-testi',
@@ -18,7 +13,7 @@ interface TestVrstica {
 })
 export class TestiComponent implements OnInit {
 
-  testi: MatTableDataSource<TestVrstica> = new MatTableDataSource()
+  testi: MatTableDataSource<TestInfo> = new MatTableDataSource()
   displayedColumns: any[] = ['naslov', 'opravljeno', 'datum', 'oddaljenost'];
 
   async ngOnInit() {
@@ -42,6 +37,7 @@ export class TestiComponent implements OnInit {
       }).count()
 
       newTesti.push({
+        id: test._id || "",
         naslov: test.naslov || "",
         opravljeno: opravljeni_statusi / st_nalog,
         datum: String_vDate(test.deadline as string)

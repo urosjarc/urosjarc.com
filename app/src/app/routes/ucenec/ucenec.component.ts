@@ -1,9 +1,7 @@
 import {Component, OnInit} from "@angular/core";
-import {NavGumb} from "../../components/nav-gumb/nav-gumb";
 import {DefaultService} from "../../api";
-import {db} from "../../db";
 import {AlertService} from "../../components/alert/alert.service";
-import {HttpErrorResponse} from "@angular/common/http";
+import {NavGumb} from "../../components/nav-gumb/NavGumb";
 
 @Component({
   selector: 'app-ucenec',
@@ -26,12 +24,7 @@ export class UcenecComponent implements OnInit {
       tekst: "Sporocila",
       ikona: "sms",
       route: "/ucenec/sporocila"
-    },
-    {
-      tekst: "Odjava",
-      ikona: "signout",
-      route: "/ucenec/testi"
-    },
+    }
   ];
 
   constructor(
