@@ -4,6 +4,7 @@ import api.extend.client_error
 import api.extend.profil
 import api.extend.request_info
 import api.request.NapakaReq
+import api.response.AuditRes
 import base.Id
 import domain.*
 import extend.ime
@@ -110,7 +111,7 @@ fun Route.ucenec() {
         )
 
         db.ustvari(audit)
-        this.call.respond(status)
+        this.call.respond(AuditRes(status = status, audit = audit))
     }
     this.put<ucenec.test.test_id> {
         val profil = this.call.profil()
@@ -134,7 +135,8 @@ fun Route.ucenec() {
 
         db.ustvari(audit)
 
-        this.call.respond(test)
+        this.call.respond(AuditRes(test = test, audit = audit))
+
     }
 
     this.get<ucenec.test.test_id.naloga.naloga_id.audit> {

@@ -69,7 +69,7 @@ export class AppDB extends Dexie {
     const imena_tabel = this.tables.map((table) => table.name)
     const cakalnica_value: any[] = [osebaData]
     const cakalnica_key: string[] = ["object"]
-    const promisses = []
+    const seed_data = new Map<string, any[]>()
 
     while (cakalnica_value.length > 0) {
       let pacient_value = cakalnica_value.shift()
@@ -82,7 +82,9 @@ export class AppDB extends Dexie {
        */
       const tabela = pacient_key.split("_")[0]
       if (imena_tabel.includes(tabela) && "_id" in pacient_value) {
-        promisses.push(this.table(tabela).put(pacient_value))
+        let data = seed_data.get(tabela) || []
+        data.push(pacient_value)
+        seed_data.set(tabela, data)
       }
 
       /**
@@ -102,7 +104,12 @@ export class AppDB extends Dexie {
       }
     }
 
-    await Promise.allSettled(promisses)
+    const promisses = []
+    for(let [tabela, objekti] of seed_data.entries()){
+      promisses.push(this.table(tabela).bulkPut(objekti))
+    }
+
+    return await Promise.allSettled(promisses)
   }
 
 }

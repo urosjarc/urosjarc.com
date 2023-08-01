@@ -77,7 +77,8 @@ export class NalogaComponent implements OnDestroy {
       sekund: this.sekunde,
     }).subscribe({
       next(value) {
-        db.status.put(value)
+        if (value.status) db.status.put(value.status)
+        if (value.audit) db.audit.put(value.audit)
         self._location.back()
       },
       error(err: HttpErrorResponse) {

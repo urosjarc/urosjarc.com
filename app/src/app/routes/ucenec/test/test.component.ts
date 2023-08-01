@@ -159,7 +159,8 @@ export class TestComponent implements OnInit {
         }).subscribe(
           {
             next(value) {
-              db.test.put(value)
+              if(value.test) db.test.put(value.test)
+              if(value.audit) db.audit.put(value.audit)
               self.ngOnInit()
             },
             error(err) {
