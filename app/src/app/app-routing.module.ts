@@ -13,17 +13,32 @@ import {UcenecNalogaComponent} from "./routes/ucenec/naloga/ucenec-naloga.compon
 import {UcenecDeloComponent} from "./routes/ucenec/delo/ucenec-delo.component";
 import {PublicComponent} from "./routes/public/public.component";
 
+class Route {
+  constructor(
+    path: string,
+    component: any,
+    children: Route[]
+  ) {
+  }
+
+  ngRoutes(){
+
+  }
+
+
+}
+
 const routes: Routes = [
   {
-    path: '', component: PublicComponent, children: [
-      {path: '', component: PublicIndexComponent},
-      {path: 'koledar', component: PublicKoledarComponent},
-      {path: 'kontakt', component: PublicKontaktComponent},
-      {path: 'prijava', component: PublicPrijavaComponent},
+    path: route.index, component: PublicComponent, children: [
+      {path: route.index, component: PublicIndexComponent},
+      {path: route.koledar, component: PublicKoledarComponent},
+      {path: route.kontakt, component: PublicKontaktComponent},
+      {path: route.prijava, component: PublicPrijavaComponent},
     ]
   },
   {
-    path: 'ucenec', component: UcenecComponent, children: [
+    path: route.ucenec, component: UcenecComponent, children: [
       {path: '', component: UcenecTestiComponent},
       {path: 'profil', component: UcenecProfilComponent},
       {path: 'sporocila', component: UcenecSporocilaComponent},

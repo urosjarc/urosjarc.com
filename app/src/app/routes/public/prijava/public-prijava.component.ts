@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {DefaultService, OpenAPI, OsebaData} from "../../../api";
 import {FormControl, Validators} from "@angular/forms";
 import {AlertService} from "../../../components/alert/alert.service";
@@ -11,7 +11,7 @@ import {db} from "../../../db";
   templateUrl: './public-prijava.component.html',
   styleUrls: ['./public-prijava.component.scss']
 })
-export class PublicPrijavaComponent {
+export class PublicPrijavaComponent implements OnInit {
   uporabnik: FormControl<string | null> = new FormControl('', [Validators.required]);
 
   constructor(
@@ -21,20 +21,38 @@ export class PublicPrijavaComponent {
   ) {
   }
 
-  prijava() {
+  async ngOnInit() {
     const self = this
+    const token = await db.get_token()
+    if (token) this.defaultService.getAuthProfil().subscribe({
+      next(profil) {
+        self.prijava(profil.tip || [])
+      },
+      error(err) {
+
+      }
+    })
+  }
+
+  login() {
+    const self = this
+
     this.defaultService.postAuthPrijava({
       username: this.uporabnik.getRawValue() || ""
     }).subscribe({
       next(res) {
         OpenAPI.TOKEN = res.token
-        if (res.tip?.includes("UCENEC")) self.prijavaUcenca()
-        else if (res.tip?.includes("ADMIN")) self.prijavaAdmina()
+        self.prijava(res.tip || [])
       },
       error(err: HttpErrorResponse) {
         self.alertService.error(err.message)
       }
     })
+  }
+
+  prijava(tipi: string[]) {
+    if (tipi.includes("UCENEC")) this.prijavaUcenca()
+    else if (tipi.includes("ADMIN")) this.prijavaAdmina()
   }
 
   prijavaUcenca() {

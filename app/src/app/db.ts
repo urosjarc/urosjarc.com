@@ -21,7 +21,8 @@ import {ime, isObject} from "./utils";
 Dexie.debug = false as any;
 
 export class AppDB extends Dexie {
-  root_id!: Table<string, number>
+  private token!: Table<string, number>
+  private root_id!: Table<string, number>
   oseba!: Table<Oseba, number>
   naslov!: Table<Naslov, number>
   ucenje!: Table<Ucenje, number>
@@ -38,6 +39,7 @@ export class AppDB extends Dexie {
   constructor() {
     super('urosjarc.com')
     this.version(3).stores({
+      token: "",
       root_id: "",
       oseba: `&_id`,
       naslov: `&_id, ${ime<Naslov>('oseba_id')}`,
@@ -56,6 +58,14 @@ export class AppDB extends Dexie {
 
   async get_root_id() {
     return await this.root_id.get(0) || ""
+  }
+
+  async get_token() {
+    return await this.token.get(0)
+  }
+
+  set_token(token: string) {
+    this.token.put(token, 0)
   }
 
   async reset(osebaData: OsebaData) {
@@ -105,7 +115,7 @@ export class AppDB extends Dexie {
     }
 
     const promisses = []
-    for(let [tabela, objekti] of seed_data.entries()){
+    for (let [tabela, objekti] of seed_data.entries()) {
       promisses.push(this.table(tabela).bulkPut(objekti))
     }
 
