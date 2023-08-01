@@ -11,9 +11,9 @@ export class InputEmailComponent {
 
   getErrorMessage() {
     if (this.email.hasError('required')) {
-      return 'You must enter a value';
+      return 'Email je obvezen!';
     }
 
-    return this.email.hasError('email') ? 'Not a valid email' : '';
+    return 'Email ni veljaven!';
   }
 }

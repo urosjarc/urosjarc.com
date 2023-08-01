@@ -11,10 +11,8 @@ export class InputTelefonComponent {
 
   getErrorMessage() {
     if (this.telefon.hasError('required')) {
-      return 'You must enter a value';
-    } else if (this.telefon.hasError('minLength')) {
-      return 'Not a valid email';
+      return 'Telefon je obvezen!';
     }
-    return "Error"
+    return 'Telefon ni veljaven!'
   }
 }

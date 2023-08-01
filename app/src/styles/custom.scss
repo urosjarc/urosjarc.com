@@ -1,0 +1,30 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "JetBrains Mono Bold", monospace;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "JetBrains Mono ExtraBold", monospace !important;
+}
+
+a {
+  color: black;
+  text-decoration: none;
+}
+
+.mat-content {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+button {
+  font-size: 15px !important;
+}
+
+mat-label {
+  font-size: 14px !important;
+}

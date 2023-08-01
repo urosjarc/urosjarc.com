@@ -11,9 +11,9 @@ export class InputGesloComponent {
 
   getErrorMessage() {
     if (this.geslo.hasError('required')) {
-      return 'You must enter a value';
+      return 'Geslo je obvezno!';
     }
 
-    return this.geslo.hasError('geslo') ? 'Not a valid email' : '';
+    return 'Ni veljavno geslo!';
   }
 }
