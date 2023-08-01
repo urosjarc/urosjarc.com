@@ -53,6 +53,7 @@ import {MAT_DATE_LOCALE, MatNativeDateModule} from "@angular/material/core";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {AuditsTabelaComponent} from "./components/audits-tabela/audits-tabela.component";
 import {PublicComponent} from "./routes/public/public.component";
+import {DateOddaljenostClassPipe} from "./pipes/DateOddaljenostClass/date-oddaljenost-class.pipe";
 
 const locale = 'sl'
 moment.locale(locale);
@@ -83,7 +84,7 @@ moment.locale(locale);
     TrajanjePipe,
     UcenecDeloComponent,
     AuditsTabelaComponent,
-    PublicComponent
+    PublicComponent,
   ],
   imports: [
     BrowserModule,
@@ -107,6 +108,7 @@ moment.locale(locale);
     MatDatepickerModule,
     MatNativeDateModule,
     DateOddaljenostPipe,
+    DateOddaljenostClassPipe,
     MatButtonToggleModule,
   ],
   providers: [

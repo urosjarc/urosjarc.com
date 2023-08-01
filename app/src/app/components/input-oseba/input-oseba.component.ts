@@ -11,7 +11,7 @@ export class InputOsebaComponent {
   @Input() oseba = new FormControl('', [Validators.required, Validators.pattern("[a-zA-Z]+\\s[a-zA-Z]+")]);
   getErrorMessage() {
     if (this.oseba.hasError('required')) {
-      return 'Ime in priimek sta obvezna!';
+      return 'Vnos je obvezen!';
     }
     return 'Vnos ni veljaven!';
   }

@@ -1,0 +1,35 @@
+@keyframes danger-pulse {
+  0% {
+    background-color: #ff0000;
+    color: white !important;
+  }
+  100% {
+    background-color: #ffc8c8;
+    color: black !important;
+  }
+}
+
+@keyframes warn-pulse {
+  0% {
+    background-color: #ffa500;
+    color: white !important;
+  }
+  100% {
+    background-color: #ffe6c3;
+    color: black !important;
+  }
+}
+
+.danger-pulse {
+  background-color: red;
+  animation-name: danger-pulse;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
+.warn-pulse {
+  background-color: orange;
+  animation-name: warn-pulse;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}

@@ -29,3 +29,8 @@ button {
 mat-label {
   font-size: 14px !important;
 }
+
+.mdc-text-field {
+  @extend .mat-elevation-z1;
+  border-radius: 5px !important;
+}

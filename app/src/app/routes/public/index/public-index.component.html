@@ -4,8 +4,8 @@
   <h2>Inštruktor programiranja, fizike, matematike</h2>
 
   <div class="row justify-content-center g-3">
-    <div *ngFor="let kontakt of kontakti" class="col-sm-4">
-      <button mat-stroked-button [routerLink]="kontakt.route" mat-button>
+    <div *ngFor="let kontakt of kontakti" class="col-sm-4 ">
+      <button mat-stroked-button [routerLink]="kontakt.route" mat-button class="mat-elevation-z1">
         <mat-icon>{{kontakt.ikona}}</mat-icon>
         {{kontakt.tekst}}
       </button>
