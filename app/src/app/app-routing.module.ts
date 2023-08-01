@@ -11,18 +11,23 @@ import {UcenecSporocilaComponent} from "./routes/ucenec/sporocila/ucenec-sporoci
 import {UcenecTestComponent} from "./routes/ucenec/test/ucenec-test.component";
 import {UcenecNalogaComponent} from "./routes/ucenec/naloga/ucenec-naloga.component";
 import {UcenecZgodovinaComponent} from "./routes/ucenec/zgodovina/ucenec-zgodovina.component";
+import {PublicComponent} from "./routes/public/public.component";
 
 const routes: Routes = [
-  {path: '', component: PublicIndexComponent},
-  {path: 'koledar', component: PublicKoledarComponent},
-  {path: 'kontakt', component: PublicKontaktComponent},
-  {path: 'prijava', component: PublicPrijavaComponent},
+  {
+    path: '', component: PublicComponent, children: [
+      {path: '', component: PublicIndexComponent},
+      {path: 'koledar', component: PublicKoledarComponent},
+      {path: 'kontakt', component: PublicKontaktComponent},
+      {path: 'prijava', component: PublicPrijavaComponent},
+    ]
+  },
   {
     path: 'ucenec', component: UcenecComponent, children: [
+      {path: '', component: UcenecTestiComponent},
       {path: 'profil', component: UcenecProfilComponent},
       {path: 'sporocila', component: UcenecSporocilaComponent},
       {path: 'zgodovina', component: UcenecZgodovinaComponent},
-      {path: 'testi', component: UcenecTestiComponent},
       {path: 'testi/:test_id', component: UcenecTestComponent},
       {path: 'testi/:test_id/naloge/:naloga_id', component: UcenecNalogaComponent}
     ]

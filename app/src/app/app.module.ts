@@ -52,6 +52,7 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MAT_DATE_LOCALE, MatNativeDateModule} from "@angular/material/core";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {AuditsTabelaComponent} from "./components/audits-tabela/audits-tabela.component";
+import {PublicComponent} from "./routes/public/public.component";
 
 const locale = 'sl'
 moment.locale(locale);
@@ -81,7 +82,8 @@ moment.locale(locale);
     StoparicaPipe,
     TrajanjePipe,
     UcenecZgodovinaComponent,
-    AuditsTabelaComponent
+    AuditsTabelaComponent,
+    PublicComponent
   ],
   imports: [
     BrowserModule,

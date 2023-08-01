@@ -1,5 +1,9 @@
 <div class="row">
   <div *ngFor="let navGumb of navGumbi" class="col">
-    <app-nav-gumb [route]="navGumb.route" [ikona]="navGumb.ikona" [tekst]="navGumb.tekst"/>
+    <app-nav-gumb
+      [style]="navGumb.style"
+      [route]="navGumb.route"
+      [ikona]="navGumb.ikona"
+      [tekst]="navGumb.tekst"/>
   </div>
 </div>
