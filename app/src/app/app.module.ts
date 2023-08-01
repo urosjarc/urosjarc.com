@@ -15,7 +15,7 @@ import {PrijavaComponent} from "./routes/public/prijava/prijava.component";
 import {PublicComponent} from "./routes/public/index/public.component";
 import {RootComponent} from "./routes/root.component";
 import {MatExpansionModule} from "@angular/material/expansion";
-import {MatFormFieldModule} from "@angular/material/form-field";
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from "@angular/material/form-field";
 import {ReactiveFormsModule} from "@angular/forms";
 import {InputTelefonComponent} from "./components/input-phone/input-telefon.component";
 import {InputEmailComponent} from "./components/input-email/input-email.component";
@@ -113,6 +113,7 @@ moment.locale(locale);
     {provide: LOCALE_ID, useValue: locale},
     {provide: MAT_DATE_LOCALE, useValue: locale},
     {provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: {dateFormat: 'EEE d.M.YYYY', timezone: '+2'}},
+    {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}}
   ],
   exports: [],
   bootstrap: [RootComponent]
