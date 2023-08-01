@@ -9,11 +9,11 @@ import {MatButtonModule} from "@angular/material/button";
 import {NavGumbComponent} from "./components/nav-gumb/nav-gumb.component";
 import {NavBarComponent} from "./components/nav-bar/nav-bar.component";
 import {NavStranComponent} from "./components/nav-stran/nav-stran.component";
-import {KoledarComponent} from "./routes/public/koledar/koledar.component";
-import {KontaktComponent} from "./routes/public/kontakt/kontakt.component";
-import {PrijavaComponent} from "./routes/public/prijava/prijava.component";
-import {PublicComponent} from "./routes/public/index/public.component";
-import {RootComponent} from "./routes/root.component";
+import {PublicKoledarComponent} from "./routes/public/koledar/public-koledar.component";
+import {PublicKontaktComponent} from "./routes/public/kontakt/public-kontakt.component";
+import {PublicPrijavaComponent} from "./routes/public/prijava/public-prijava.component";
+import {PublicIndexComponent} from "./routes/public/index/public-index.component";
+import {AppComponent} from "./routes/app.component";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from "@angular/material/form-field";
 import {ReactiveFormsModule} from "@angular/forms";
@@ -29,24 +29,24 @@ import {HttpClientModule} from "@angular/common/http";
 import {AlertService} from "./components/alert/alert.service";
 import {MatDialogModule} from "@angular/material/dialog";
 import {UcenecComponent} from "./routes/ucenec/ucenec.component";
-import {TestiComponent} from "./routes/ucenec/testi/testi.component";
-import {ProfilComponent} from "./routes/ucenec/profil/profil.component";
+import {UcenecTestiComponent} from "./routes/ucenec/testi/ucenec-testi.component";
+import {UcenecProfilComponent} from "./routes/ucenec/profil/ucenec-profil.component";
 import {DateOddaljenostPipe} from "./pipes/DateOddaljenost/date-oddaljenost.pipe";
 import {DATE_PIPE_DEFAULT_OPTIONS} from "@angular/common";
 import "@angular/common/locales/global/sl"
 import 'moment/locale/sl';
 import {MatListModule} from "@angular/material/list";
 import {MatCardModule} from "@angular/material/card";
-import {SporocilaComponent} from "./routes/ucenec/sporocila/sporocila.component";
+import {UcenecSporocilaComponent} from "./routes/ucenec/sporocila/ucenec-sporocila.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
-import {TestComponent} from "./routes/ucenec/test/test.component";
-import {NalogaComponent} from "./routes/ucenec/naloga/naloga.component";
+import {UcenecTestComponent} from "./routes/ucenec/test/ucenec-test.component";
+import {UcenecNalogaComponent} from "./routes/ucenec/naloga/ucenec-naloga.component";
 import {MatTabsModule} from "@angular/material/tabs";
 import {StatusStylePipe} from "./pipes/StatusClass/status-style.pipe";
 import {StoparicaPipe} from "./pipes/Stoparica/stoparica.pipe";
 import {TrajanjePipe} from "./pipes/Trajanje/trajanje.pipe";
-import {ZgodovinaComponent} from "./routes/ucenec/zgodovina/zgodovina.component";
+import {UcenecZgodovinaComponent} from "./routes/ucenec/zgodovina/ucenec-zgodovina.component";
 import {PieChartModule} from "@swimlane/ngx-charts";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MAT_DATE_LOCALE, MatNativeDateModule} from "@angular/material/core";
@@ -58,29 +58,29 @@ moment.locale(locale);
 
 @NgModule({
   declarations: [
-    RootComponent,
+    AppComponent,
     NavGumbComponent,
     NavBarComponent,
     NavStranComponent,
-    KoledarComponent,
-    KontaktComponent,
-    PrijavaComponent,
-    PublicComponent,
+    PublicKoledarComponent,
+    PublicKontaktComponent,
+    PublicPrijavaComponent,
+    PublicIndexComponent,
     InputEmailComponent,
     InputTelefonComponent,
     InputOsebaComponent,
     InputMsgComponent,
     InputGesloComponent,
     UcenecComponent,
-    ProfilComponent,
-    TestiComponent,
-    SporocilaComponent,
-    TestComponent,
+    UcenecProfilComponent,
+    UcenecTestiComponent,
+    UcenecSporocilaComponent,
+    UcenecTestComponent,
     StatusStylePipe,
-    NalogaComponent,
+    UcenecNalogaComponent,
     StoparicaPipe,
     TrajanjePipe,
-    ZgodovinaComponent,
+    UcenecZgodovinaComponent,
     AuditsTabelaComponent
   ],
   imports: [
@@ -116,7 +116,7 @@ moment.locale(locale);
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}}
   ],
   exports: [],
-  bootstrap: [RootComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule {
 }

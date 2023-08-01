@@ -10,11 +10,11 @@ import {Location} from '@angular/common';
 import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
-  selector: 'app-naloga',
-  templateUrl: './naloga.component.html',
-  styleUrls: ['./naloga.component.scss']
+  selector: 'app-ucenec-naloga',
+  templateUrl: './ucenec-naloga.component.html',
+  styleUrls: ['./ucenec-naloga.component.scss']
 })
-export class NalogaComponent implements OnDestroy {
+export class UcenecNalogaComponent implements OnDestroy {
   protected readonly Status = Status;
   test_id: string
   naloga_id: string

@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProfilComponent } from './profil.component';
+import { UcenecProfilComponent } from './ucenec-profil.component';
 
 describe('ProfilComponent', () => {
-  let component: ProfilComponent;
-  let fixture: ComponentFixture<ProfilComponent>;
+  let component: UcenecProfilComponent;
+  let fixture: ComponentFixture<UcenecProfilComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ProfilComponent]
+      declarations: [UcenecProfilComponent]
     });
-    fixture = TestBed.createComponent(ProfilComponent);
+    fixture = TestBed.createComponent(UcenecProfilComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

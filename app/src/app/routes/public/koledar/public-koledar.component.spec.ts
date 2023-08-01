@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { KoledarComponent } from './koledar.component';
+import { PublicKoledarComponent } from './public-koledar.component';
 
 describe('KoledarComponent', () => {
-  let component: KoledarComponent;
-  let fixture: ComponentFixture<KoledarComponent>;
+  let component: PublicKoledarComponent;
+  let fixture: ComponentFixture<PublicKoledarComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [KoledarComponent]
+      declarations: [PublicKoledarComponent]
     });
-    fixture = TestBed.createComponent(KoledarComponent);
+    fixture = TestBed.createComponent(PublicKoledarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

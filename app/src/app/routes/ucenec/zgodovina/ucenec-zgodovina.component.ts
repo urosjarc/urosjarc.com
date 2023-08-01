@@ -5,11 +5,11 @@ import {ime} from "../../../utils";
 import {Audit} from "../../../api";
 
 @Component({
-  selector: 'app-zgodovina',
-  templateUrl: './zgodovina.component.html',
-  styleUrls: ['./zgodovina.component.scss']
+  selector: 'app-ucenec-zgodovina',
+  templateUrl: './ucenec-zgodovina.component.html',
+  styleUrls: ['./ucenec-zgodovina.component.scss']
 })
-export class ZgodovinaComponent {
+export class UcenecZgodovinaComponent {
   audits = new MatTableDataSource<Audit>()
 
   async ngOnInit() {

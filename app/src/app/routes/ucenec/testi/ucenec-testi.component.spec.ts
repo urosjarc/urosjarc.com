@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TestiComponent } from './testi.component';
+import { UcenecTestiComponent } from './ucenec-testi.component';
 
 describe('TestiComponent', () => {
-  let component: TestiComponent;
-  let fixture: ComponentFixture<TestiComponent>;
+  let component: UcenecTestiComponent;
+  let fixture: ComponentFixture<UcenecTestiComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TestiComponent]
+      declarations: [UcenecTestiComponent]
     });
-    fixture = TestBed.createComponent(TestiComponent);
+    fixture = TestBed.createComponent(UcenecTestiComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

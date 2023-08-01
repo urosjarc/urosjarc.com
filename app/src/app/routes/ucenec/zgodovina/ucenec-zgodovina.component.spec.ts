@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ZgodovinaComponent } from './zgodovina.component';
+import { UcenecZgodovinaComponent } from './ucenec-zgodovina.component';
 
 describe('ZgodovinaComponent', () => {
-  let component: ZgodovinaComponent;
-  let fixture: ComponentFixture<ZgodovinaComponent>;
+  let component: UcenecZgodovinaComponent;
+  let fixture: ComponentFixture<UcenecZgodovinaComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ZgodovinaComponent]
+      declarations: [UcenecZgodovinaComponent]
     });
-    fixture = TestBed.createComponent(ZgodovinaComponent);
+    fixture = TestBed.createComponent(UcenecZgodovinaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -5,11 +5,11 @@ import {ime} from "../../../utils";
 
 
 @Component({
-  selector: 'app-profil',
-  templateUrl: './profil.component.html',
-  styleUrls: ['./profil.component.scss']
+  selector: 'app-ucenec-profil',
+  templateUrl: './ucenec-profil.component.html',
+  styleUrls: ['./ucenec-profil.component.scss']
 })
-export class ProfilComponent implements OnInit {
+export class UcenecProfilComponent implements OnInit {
 
   oseba: Oseba | undefined
   naslovi: Naslov[] = []

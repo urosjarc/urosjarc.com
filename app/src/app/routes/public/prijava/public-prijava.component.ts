@@ -7,11 +7,11 @@ import {Router} from "@angular/router";
 import {db} from "../../../db";
 
 @Component({
-  selector: 'app-prijava',
-  templateUrl: './prijava.component.html',
-  styleUrls: ['./prijava.component.scss']
+  selector: 'app-public-prijava',
+  templateUrl: './public-prijava.component.html',
+  styleUrls: ['./public-prijava.component.scss']
 })
-export class PrijavaComponent {
+export class PublicPrijavaComponent {
   uporabnik: FormControl<string | null> = new FormControl('', [Validators.required]);
 
   constructor(

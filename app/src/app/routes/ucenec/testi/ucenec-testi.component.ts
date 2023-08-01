@@ -7,11 +7,11 @@ import {String_vDate} from "../../../extends/String";
 import {TestInfo} from "./TestInfo";
 
 @Component({
-  selector: 'app-testi',
-  templateUrl: './testi.component.html',
-  styleUrls: ['./testi.component.scss']
+  selector: 'app-ucenec-testi',
+  templateUrl: './ucenec-testi.component.html',
+  styleUrls: ['./ucenec-testi.component.scss']
 })
-export class TestiComponent implements OnInit {
+export class UcenecTestiComponent implements OnInit {
 
   testi: MatTableDataSource<TestInfo> = new MatTableDataSource()
   displayedColumns: any[] = ['naslov', 'opravljeno', 'datum', 'oddaljenost'];

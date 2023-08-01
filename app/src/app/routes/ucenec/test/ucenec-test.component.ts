@@ -10,11 +10,11 @@ import {MatDialog} from "@angular/material/dialog";
 import {DialogIzberiDatumComponent} from "../../../components/dialog-izberi-datum/dialog-izberi-datum.component";
 
 @Component({
-  selector: 'app-test',
-  templateUrl: './test.component.html',
-  styleUrls: ['./test.component.scss']
+  selector: 'app-ucenec-test',
+  templateUrl: './ucenec-test.component.html',
+  styleUrls: ['./ucenec-test.component.scss']
 })
-export class TestComponent implements OnInit {
+export class UcenecTestComponent implements OnInit {
   protected readonly Status = Status;
   test_id: string
 

@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PrijavaComponent } from './prijava.component';
+import { PublicPrijavaComponent } from './public-prijava.component';
 
 describe('PrijavaComponent', () => {
-  let component: PrijavaComponent;
-  let fixture: ComponentFixture<PrijavaComponent>;
+  let component: PublicPrijavaComponent;
+  let fixture: ComponentFixture<PublicPrijavaComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PrijavaComponent]
+      declarations: [PublicPrijavaComponent]
     });
-    fixture = TestBed.createComponent(PrijavaComponent);
+    fixture = TestBed.createComponent(PublicPrijavaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

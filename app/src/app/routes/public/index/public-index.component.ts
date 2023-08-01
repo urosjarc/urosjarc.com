@@ -2,11 +2,11 @@ import {Component} from '@angular/core';
 import {NavGumb} from "../../../components/nav-gumb/NavGumb";
 
 @Component({
-  selector: 'app-public',
-  templateUrl: './public.component.html',
-  styleUrls: ['./public.component.scss']
+  selector: 'app-public-index',
+  templateUrl: './public-index.component.html',
+  styleUrls: ['./public-index.component.scss']
 })
-export class PublicComponent {
+export class PublicIndexComponent {
   kontakti: NavGumb[] = [
     {
       tekst: "051-240-885",

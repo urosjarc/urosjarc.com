@@ -13,9 +13,9 @@ import {DialogSporociloComponent} from "../../../components/dialog-sporocilo/dia
 
 
 @Component({
-  selector: 'app-sporocila',
-  templateUrl: './sporocila.component.html',
-  styleUrls: ['./sporocila.component.scss'],
+  selector: 'app-ucenec-sporocila',
+  templateUrl: './ucenec-sporocila.component.html',
+  styleUrls: ['./ucenec-sporocila.component.scss'],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -24,7 +24,7 @@ import {DialogSporociloComponent} from "../../../components/dialog-sporocilo/dia
     ]),
   ],
 })
-export class SporocilaComponent implements OnInit, AfterViewInit {
+export class UcenecSporocilaComponent implements OnInit, AfterViewInit {
 
   // @ts-ignore
   @ViewChild(MatPaginator) paginator: MatPaginator;
