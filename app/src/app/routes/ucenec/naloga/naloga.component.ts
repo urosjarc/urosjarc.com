@@ -1,4 +1,4 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component, Input, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {Subscription, timer} from 'rxjs';
 import {db} from "../../../db";
@@ -7,6 +7,7 @@ import {ime} from "../../../utils";
 import {AlertService} from "../../../components/alert/alert.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Location} from '@angular/common';
+import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
   selector: 'app-naloga',
@@ -22,8 +23,7 @@ export class NalogaComponent implements OnDestroy {
   stoparica: Subscription;
   naloga: Naloga = {}
   status: Status | undefined
-  audits: Audit[] = [];
-  displayedColumns: string[] = ['opis', 'trajanje', 'ustvarjeno', 'pred'];
+  @Input() audits = new MatTableDataSource<Audit>()
   statusi: Status.tip[] = [
     Status.tip.NERESENO,
     Status.tip.PRAVILNO,
@@ -66,8 +66,7 @@ export class NalogaComponent implements OnDestroy {
 
   async initAudits() {
     console.log(this.status)
-    this.audits = await db.audit.where(ime<Audit>("entitete_id")).equals(this.status?._id || "").toArray()
-    console.log(this.audits)
+    this.audits.data = await db.audit.where(ime<Audit>("entitete_id")).equals(this.status?._id || "").toArray()
   }
 
   nastaviStatus(status_tip: Status.tip) {

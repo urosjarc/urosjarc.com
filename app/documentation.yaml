@@ -1,0 +1,794 @@
+openapi: "3.0.3"
+info:
+  title: "server API"
+  description: "server API"
+  version: "1.0.0"
+servers:
+- url: "http://0.0.0.0:8080"
+paths:
+  /:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/IndexRes"
+  /admin:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "OK YOU ARE ADMIN :)"
+  /auth/prijava:
+    post:
+      description: ""
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: "#/components/schemas/PrijavaReq"
+        required: true
+      responses:
+        "401":
+          description: "Unauthorized"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/ErrorRes"
+        "400":
+          description: "Bad Request"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/ErrorRes"
+        "500":
+          description: "Internal Server Error"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/ErrorRes"
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/PrijavaRes"
+  /auth/profil:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/Profil"
+  /kontakt:
+    post:
+      description: ""
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: "#/components/schemas/KontaktObrazecReq"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/ErrorRes"
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/KontaktObrazecRes"
+  /napaka:
+    post:
+      description: ""
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: "#/components/schemas/NapakaReq"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/Napaka"
+  /ucenec:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/UcenecData"
+  /ucenec/audit:
+    get:
+      description: ""
+      parameters:
+      - name: "stran"
+        in: "query"
+        required: false
+        schema:
+          type: "integer"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Audit"
+  /ucenec/napaka:
+    get:
+      description: ""
+      parameters:
+      - name: "stran"
+        in: "query"
+        required: false
+        schema:
+          type: "integer"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Napaka"
+    post:
+      description: ""
+      parameters:
+      - name: "stran"
+        in: "query"
+        required: false
+        schema:
+          type: "integer"
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: "#/components/schemas/NapakaReq"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/Napaka"
+  /ucenec/test/{test_id}:
+    put:
+      description: ""
+      parameters:
+      - name: "test_id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: "#/components/schemas/TestUpdateReq"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/ErrorRes"
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/AuditRes"
+  /ucenec/test/{test_id}/audit:
+    get:
+      description: ""
+      parameters:
+      - name: "test_id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Audit"
+  /ucenec/test/{test_id}/naloga/{naloga_id}:
+    post:
+      description: ""
+      parameters:
+      - name: "test_id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "naloga_id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: "#/components/schemas/StatusUpdateReq"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            'application/json':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/AuditRes"
+  /ucenec/test/{test_id}/naloga/{naloga_id}/audit:
+    get:
+      description: ""
+      parameters:
+      - name: "test_id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "naloga_id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Audit"
+components:
+  schemas:
+    KontaktObrazecReq:
+      type: "object"
+      properties:
+        ime_priimek:
+          type: "string"
+        email:
+          type: "string"
+        telefon:
+          type: "string"
+        vsebina:
+          type: "string"
+    NapakaReq:
+      type: "object"
+      properties:
+        vsebina:
+          type: "string"
+        tip:
+          type: "string"
+          enum:
+          - "ERROR"
+          - "WARN"
+          - "FATAL"
+    PrijavaReq:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+    StatusUpdateReq:
+      type: "object"
+      properties:
+        tip:
+          type: "string"
+          enum:
+          - "NEZACETO"
+          - "NERESENO"
+          - "NAPACNO"
+          - "PRAVILNO"
+        sekund:
+          type: "integer"
+          format: "int32"
+    LocalDate:
+      type: "object"
+      properties: {}
+    TestUpdateReq:
+      type: "object"
+      properties:
+        datum:
+          $ref: "#/components/schemas/LocalDate"
+    ErrorRes:
+      type: "object"
+      properties:
+        napaka:
+          type: "string"
+          enum:
+          - "UPORABNISKA"
+          - "SISTEMSKA"
+        status:
+          type: "string"
+        info:
+          type: "string"
+    Oseba:
+      type: "object"
+      properties:
+        _id:
+          type: "string"
+        ime:
+          type: "string"
+        priimek:
+          type: "string"
+        username:
+          type: "string"
+        tip:
+          type: "array"
+          items:
+            type: "string"
+            enum:
+            - "UCENEC"
+            - "UCITELJ"
+            - "INSTRUKTOR"
+            - "ADMIN"
+            - "KONTAKT"
+            - "SERVER"
+    Id:
+      type: "object"
+      properties:
+        value:
+          type: "string"
+    Kontakt:
+      type: "object"
+      properties:
+        _id:
+          type: "string"
+        oseba_id:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Id"
+        data:
+          type: "string"
+        tip:
+          type: "string"
+          enum:
+          - "EMAIL"
+          - "TELEFON"
+    LocalDateTime:
+      type: "object"
+      properties: {}
+    Sporocilo:
+      type: "object"
+      properties:
+        _id:
+          type: "string"
+        kontakt_posiljatelj_id:
+          type: "string"
+        kontakt_prejemnik_id:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Id"
+        vsebina:
+          type: "string"
+        poslano:
+          $ref: "#/components/schemas/LocalDateTime"
+    KontaktObrazecRes:
+      type: "object"
+      properties:
+        oseba:
+          $ref: "#/components/schemas/Oseba"
+        telefon:
+          $ref: "#/components/schemas/Kontakt"
+        email:
+          $ref: "#/components/schemas/Kontakt"
+        sporocila:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Sporocilo"
+    PrijavaRes:
+      type: "object"
+      properties:
+        token:
+          type: "string"
+        tip:
+          type: "array"
+          items:
+            type: "string"
+            enum:
+            - "UCENEC"
+            - "UCITELJ"
+            - "INSTRUKTOR"
+            - "ADMIN"
+            - "KONTAKT"
+            - "SERVER"
+    SporociloData:
+      type: "object"
+      properties:
+        sporocilo:
+          $ref: "#/components/schemas/Sporocilo"
+        kontakt_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/KontaktData"
+    KontaktData:
+      type: "object"
+      properties:
+        kontakt:
+          $ref: "#/components/schemas/Kontakt"
+        oseba_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Oseba"
+        sporocilo_prejemnik_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/SporociloData"
+        sporocilo_posiljatelj_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/SporociloData"
+    Naloga:
+      type: "object"
+      properties:
+        _id:
+          type: "string"
+        tematika_id:
+          type: "string"
+        resitev:
+          type: "string"
+        vsebina:
+          type: "string"
+    Tematika:
+      type: "object"
+      properties:
+        _id:
+          type: "string"
+        zvezek_id:
+          type: "string"
+        naslov:
+          type: "string"
+    NalogaData:
+      type: "object"
+      properties:
+        naloga:
+          $ref: "#/components/schemas/Naloga"
+        tematika_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Tematika"
+    Naslov:
+      type: "object"
+      properties:
+        _id:
+          type: "string"
+        oseba_id:
+          type: "string"
+        drzava:
+          type: "string"
+        mesto:
+          type: "string"
+        ulica:
+          type: "string"
+        zip:
+          type: "integer"
+          format: "int32"
+        dodatno:
+          type: "string"
+    OsebaData:
+      type: "object"
+      properties:
+        oseba:
+          $ref: "#/components/schemas/Oseba"
+        naslov_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Naslov"
+        kontakt_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/KontaktData"
+    Status:
+      type: "object"
+      properties:
+        _id:
+          type: "string"
+        naloga_id:
+          type: "string"
+        test_id:
+          type: "string"
+        oseba_id:
+          type: "string"
+        tip:
+          type: "string"
+          enum:
+          - "NEZACETO"
+          - "NERESENO"
+          - "NAPACNO"
+          - "PRAVILNO"
+        pojasnilo:
+          type: "string"
+    StatusData:
+      type: "object"
+      properties:
+        status:
+          $ref: "#/components/schemas/Status"
+        naloga_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/NalogaData"
+    Test:
+      type: "object"
+      properties:
+        _id:
+          type: "string"
+        oseba_admin_id:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Id"
+        oseba_ucenec_id:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Id"
+        naloga_id:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Id"
+        naslov:
+          type: "string"
+        podnaslov:
+          type: "string"
+        deadline:
+          $ref: "#/components/schemas/LocalDate"
+    TestData:
+      type: "object"
+      properties:
+        test:
+          $ref: "#/components/schemas/Test"
+        status_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Status"
+        naloga_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/NalogaData"
+    Ucenje:
+      type: "object"
+      properties:
+        _id:
+          type: "string"
+        oseba_ucenec_id:
+          type: "string"
+        oseba_ucitelj_id:
+          type: "string"
+    UcenjeData:
+      type: "object"
+      properties:
+        ucenje:
+          $ref: "#/components/schemas/Ucenje"
+        oseba_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Oseba"
+        ucenje_ucenec_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/UcenjeData"
+    AnyId:
+      type: "object"
+      properties:
+        value:
+          type: "string"
+    Audit:
+      type: "object"
+      properties:
+        _id:
+          type: "string"
+        entitete_id:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/AnyId"
+        tip:
+          type: "string"
+          enum:
+          - "STATUS_TIP_POSODOBITEV"
+          - "TEST_DATUM_POSODOBITEV"
+        opis:
+          type: "string"
+        trajanje:
+          type: "integer"
+          format: "int64"
+        entiteta:
+          type: "string"
+        ustvarjeno:
+          $ref: "#/components/schemas/LocalDateTime"
+    UcenecData:
+      type: "object"
+      properties:
+        oseba:
+          $ref: "#/components/schemas/Oseba"
+        naslov_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Naslov"
+        kontakt_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/KontaktData"
+        ucenje_ucenec_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/UcenjeData"
+        test_ucenec_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/TestData"
+        audit_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Audit"
+    AdminData:
+      type: "object"
+      properties:
+        oseba:
+          $ref: "#/components/schemas/Oseba"
+        naslov_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Naslov"
+        kontakt_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/KontaktData"
+    Napaka:
+      type: "object"
+      properties:
+        _id:
+          type: "string"
+        entitete_id:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/AnyId"
+        tip:
+          type: "string"
+          enum:
+          - "ERROR"
+          - "WARN"
+          - "FATAL"
+        vsebina:
+          type: "string"
+        dodatno:
+          type: "string"
+        ustvarjeno:
+          $ref: "#/components/schemas/LocalDateTime"
+    Zvezek:
+      type: "object"
+      properties:
+        _id:
+          type: "string"
+        tip:
+          type: "string"
+          enum:
+          - "DELOVNI"
+          - "TEORETSKI"
+        naslov:
+          type: "string"
+    IndexRes:
+      type: "object"
+      properties:
+        a1:
+          $ref: "#/components/schemas/KontaktObrazecReq"
+        a2:
+          $ref: "#/components/schemas/NapakaReq"
+        a3:
+          $ref: "#/components/schemas/PrijavaReq"
+        a4:
+          $ref: "#/components/schemas/StatusUpdateReq"
+        a5:
+          $ref: "#/components/schemas/TestUpdateReq"
+        a6:
+          $ref: "#/components/schemas/ErrorRes"
+        a7:
+          $ref: "#/components/schemas/KontaktObrazecRes"
+        a8:
+          $ref: "#/components/schemas/PrijavaRes"
+        a9:
+          $ref: "#/components/schemas/KontaktData"
+        b1:
+          $ref: "#/components/schemas/NalogaData"
+        b2:
+          $ref: "#/components/schemas/OsebaData"
+        b3:
+          $ref: "#/components/schemas/SporociloData"
+        b4:
+          $ref: "#/components/schemas/StatusData"
+        b5:
+          $ref: "#/components/schemas/TestData"
+        b6:
+          $ref: "#/components/schemas/UcenecData"
+        b7:
+          $ref: "#/components/schemas/AdminData"
+        b8:
+          $ref: "#/components/schemas/UcenjeData"
+        b9:
+          $ref: "#/components/schemas/Audit"
+        c1:
+          type: "string"
+        c2:
+          $ref: "#/components/schemas/Kontakt"
+        c3:
+          $ref: "#/components/schemas/Naloga"
+        c4:
+          $ref: "#/components/schemas/Napaka"
+        c5:
+          $ref: "#/components/schemas/Naslov"
+        c7:
+          $ref: "#/components/schemas/Oseba"
+        c8:
+          $ref: "#/components/schemas/Sporocilo"
+        c9:
+          $ref: "#/components/schemas/Status"
+        d1:
+          $ref: "#/components/schemas/Tematika"
+        d2:
+          $ref: "#/components/schemas/Test"
+        d3:
+          $ref: "#/components/schemas/Ucenje"
+        d4:
+          $ref: "#/components/schemas/Zvezek"
+    Profil:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        tip:
+          type: "array"
+          items:
+            type: "string"
+            enum:
+            - "UCENEC"
+            - "UCITELJ"
+            - "INSTRUKTOR"
+            - "ADMIN"
+            - "KONTAKT"
+            - "SERVER"
+    AuditRes:
+      type: "object"
+      properties:
+        status:
+          $ref: "#/components/schemas/Status"
+        test:
+          $ref: "#/components/schemas/Test"
+        audit:
+          $ref: "#/components/schemas/Audit"

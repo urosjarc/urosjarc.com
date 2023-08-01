@@ -51,6 +51,7 @@ import {PieChartModule} from "@swimlane/ngx-charts";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MAT_DATE_LOCALE, MatNativeDateModule} from "@angular/material/core";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {AuditsTabelaComponent} from "./components/audits-tabela/audits-tabela.component";
 
 const locale = 'sl'
 moment.locale(locale);
@@ -79,7 +80,8 @@ moment.locale(locale);
     NalogaComponent,
     StoparicaPipe,
     TrajanjePipe,
-    ZgodovinaComponent
+    ZgodovinaComponent,
+    AuditsTabelaComponent
   ],
   imports: [
     BrowserModule,
