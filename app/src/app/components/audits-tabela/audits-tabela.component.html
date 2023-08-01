@@ -1,9 +1,8 @@
-<div class="mat-elevation-z8">
+<div>
 
-  <!--  FILTER-->
   <mat-form-field class="w-100">
     <mat-label>Filter</mat-label>
-    <input matInput (keyup)="applyAuditsFilter($event)" placeholder="Ex. ium" #input>
+    <input matInput (keyup)="applyAuditsFilter($event)">
   </mat-form-field>
 
   <table [dataSource]="audits" mat-table matSort multiTemplateDataRows>
@@ -29,7 +28,7 @@
     </ng-container>
 
     <ng-container matColumnDef="ustvarjeno">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by posiljatelj"> Pred </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by posiljatelj"> Pred</th>
       <td mat-cell *matCellDef="let audit"> {{audit.ustvarjeno | date}}</td>
     </ng-container>
 
@@ -37,6 +36,8 @@
     <tr mat-row *matRowDef="let audit; columns: displayedColumns;"></tr>
 
   </table>
+
+  <mat-divider/>
 
   <mat-paginator [pageSizeOptions]="[10]" showFirstLastButtons/>
 

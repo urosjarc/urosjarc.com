@@ -10,7 +10,7 @@ import {UcenecComponent} from "./routes/ucenec/ucenec.component";
 import {UcenecSporocilaComponent} from "./routes/ucenec/sporocila/ucenec-sporocila.component";
 import {UcenecTestComponent} from "./routes/ucenec/test/ucenec-test.component";
 import {UcenecNalogaComponent} from "./routes/ucenec/naloga/ucenec-naloga.component";
-import {UcenecZgodovinaComponent} from "./routes/ucenec/zgodovina/ucenec-zgodovina.component";
+import {UcenecDeloComponent} from "./routes/ucenec/delo/ucenec-delo.component";
 import {PublicComponent} from "./routes/public/public.component";
 
 const routes: Routes = [
@@ -27,7 +27,7 @@ const routes: Routes = [
       {path: '', component: UcenecTestiComponent},
       {path: 'profil', component: UcenecProfilComponent},
       {path: 'sporocila', component: UcenecSporocilaComponent},
-      {path: 'zgodovina', component: UcenecZgodovinaComponent},
+      {path: 'delo', component: UcenecDeloComponent},
       {path: 'testi/:test_id', component: UcenecTestComponent},
       {path: 'testi/:test_id/naloge/:naloga_id', component: UcenecNalogaComponent}
     ]

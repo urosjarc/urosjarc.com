@@ -46,7 +46,7 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {StatusStylePipe} from "./pipes/StatusClass/status-style.pipe";
 import {StoparicaPipe} from "./pipes/Stoparica/stoparica.pipe";
 import {TrajanjePipe} from "./pipes/Trajanje/trajanje.pipe";
-import {UcenecZgodovinaComponent} from "./routes/ucenec/zgodovina/ucenec-zgodovina.component";
+import {UcenecDeloComponent} from "./routes/ucenec/delo/ucenec-delo.component";
 import {PieChartModule} from "@swimlane/ngx-charts";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MAT_DATE_LOCALE, MatNativeDateModule} from "@angular/material/core";
@@ -81,7 +81,7 @@ moment.locale(locale);
     UcenecNalogaComponent,
     StoparicaPipe,
     TrajanjePipe,
-    UcenecZgodovinaComponent,
+    UcenecDeloComponent,
     AuditsTabelaComponent,
     PublicComponent
   ],

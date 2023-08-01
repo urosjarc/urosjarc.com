@@ -12,14 +12,8 @@ export class UcenecComponent implements OnInit {
   private navStyle = "background-color: forestgreen; color: white"
   navGumbi: NavGumb[] = [
     {
-      tekst: "Profil",
-      ikona: "person",
-      route: "/ucenec/profil",
-      style: this.navStyle
-    },
-    {
       tekst: "Testi",
-      ikona: "paper",
+      ikona: "edit",
       route: "/ucenec",
       style: this.navStyle
     },
@@ -30,11 +24,22 @@ export class UcenecComponent implements OnInit {
       style: this.navStyle
     },
     {
-      tekst: "Zgodovina",
-      ikona: "history",
-      route: "/ucenec/zgodovina",
+      tekst: "Delo",
+      ikona: "work",
+      route: "/ucenec/delo",
       style: this.navStyle
-    }
+    },
+    {
+      tekst: "Profil",
+      ikona: "person",
+      route: "/ucenec/profil",
+      style: this.navStyle
+    },
+    {
+      tekst: "Odjava",
+      ikona: "close",
+      route: "/prijava"
+    },
   ];
 
   constructor(
