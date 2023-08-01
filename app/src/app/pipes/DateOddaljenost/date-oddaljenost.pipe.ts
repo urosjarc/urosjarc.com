@@ -1,13 +1,14 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {Date_oddaljenost_v_dneh} from "../../extends/Date";
+import * as moment from 'moment';
 
 @Pipe({
-  name: 'DateOddaljenost'
+  name: 'DateOddaljenost',
+  standalone: true
 })
 export class DateOddaljenostPipe implements PipeTransform {
 
   transform(value: Date): string {
-    return `${Date_oddaljenost_v_dneh(value)} dni`;
+    return moment(value).fromNow();
   }
 
 }

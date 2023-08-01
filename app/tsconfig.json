@@ -22,8 +22,11 @@
     "lib": [
       "ES2022",
       "dom"
-    ]
+    ],
   },
+  "exclude": [
+    "./node_modules/@swimlane/ngx-charts/*"
+  ],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,

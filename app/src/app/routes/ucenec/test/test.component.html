@@ -1,0 +1,41 @@
+<div class="pb-3 pt-1">
+
+  <h1 class="text-center pt-3">
+    Deadline je v <button (click)="nastaviDatum()" style="padding-top: 13px" mat-flat-button><h1><b>{{deadline | date}}, čez {{deadline | DateOddaljenost }}</b></h1></button>
+    <br>Idealno delo je <b>{{delo}}</b>.
+
+    <br>Tvoja hitrost je <b>{{hitrost}}</b>.
+    <br>Na testu boš naredil <b>{{test}}</b>.
+  </h1>
+
+  <mat-divider/>
+
+  <div class="row">
+    <div class="col-6">
+      <ngx-charts-pie-chart
+        [scheme]="opravljeno_barve"
+        [labels]="true"
+        [results]="opravljeno"/>
+    </div>
+    <div class="col-6">
+      <ngx-charts-pie-chart
+        [scheme]="statistika_barve"
+        [labels]="true"
+        [results]="statistika"/>
+    </div>
+  </div>
+
+  <mat-divider/>
+
+  <div *ngFor="let item of tema_nalogeInfo | keyvalue">
+    <h1 class="text-center mt-3">{{item.key}}</h1>
+    <div class="row row-cols-auto g-1 justify-content-center">
+      <div class="col" *ngFor="let naloga of item.value">
+        <button mat-raised-button
+                style="{{(naloga.status?.tip || Status.tip.NEZACETO) | StatusStyle}}"
+                routerLink="/ucenec/testi/{{test_id}}/naloge/{{naloga.id}}">{{naloga.stevilka}}</button>
+      </div>
+    </div>
+    <br>
+  </div>
+</div>

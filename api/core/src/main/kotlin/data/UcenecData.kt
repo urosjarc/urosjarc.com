@@ -1,5 +1,6 @@
 package data
 
+import domain.Audit
 import domain.Naslov
 import domain.Oseba
 import kotlinx.serialization.Serializable
@@ -11,4 +12,5 @@ data class UcenecData(
     val kontakt_refs: List<KontaktData> = listOf(),
     val ucenje_ucenec_refs: List<UcenjeData> = listOf(),
     val test_ucenec_refs: List<TestData> = listOf(),
+    val audit_refs: List<Audit> = listOf()
 )

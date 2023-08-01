@@ -18,7 +18,8 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [
-              "iso8601-duration"
+              "iso8601-duration",
+              "moment"
             ],
             "outputPath": "dist/app",
             "index": "src/index.html",

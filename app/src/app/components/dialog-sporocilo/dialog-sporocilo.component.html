@@ -1,0 +1,51 @@
+<div class="text-center">
+  <div mat-dialog-content class="text-start">
+    <div class="row">
+      <div class="col">
+        <mat-list>
+          <div mat-subheader>Prejemnik</div>
+          <mat-list-item>
+            <mat-icon matListItemIcon>person</mat-icon>
+            <div matListItemTitle>{{sporociloInfo.prejemnik.tip}}</div>
+            <div matListItemLine>Tip osebe</div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon matListItemIcon>person</mat-icon>
+            <div matListItemTitle>{{sporociloInfo.prejemnik.ime}} {{sporociloInfo.prejemnik.priimek}}</div>
+            <div matListItemLine>Ime in priimek</div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon matListItemIcon>person</mat-icon>
+            <div matListItemTitle>{{sporociloInfo.prejemnik_kontakt.tip}} {{sporociloInfo.prejemnik_kontakt.data}}</div>
+            <div matListItemLine>Ime in priimek</div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+      <div class="col">
+        <mat-list>
+          <div mat-subheader>Posiljatelj</div>
+          <mat-list-item>
+            <mat-icon matListItemIcon>person</mat-icon>
+            <div matListItemTitle>{{sporociloInfo.posiljatelj.tip}}</div>
+            <div matListItemLine>Tip osebe</div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon matListItemIcon>person</mat-icon>
+            <div matListItemTitle>{{sporociloInfo.posiljatelj.ime}} {{sporociloInfo.posiljatelj.priimek}}</div>
+            <div matListItemLine>Ime in priimek</div>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon matListItemIcon>person</mat-icon>
+            <div matListItemTitle>{{sporociloInfo.posiljatelj_kontakt.tip}} {{sporociloInfo.posiljatelj_kontakt.data}}</div>
+            <div matListItemLine>Ime in priimek</div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+    <mat-divider/>
+    <p class="text-center mt-3">{{sporociloInfo.vsebina}}</p>
+  </div>
+  <div mat-dialog-actions>
+    <button apperence="fill" color=primary class="w-100" mat-raised-button mat-dialog-close>Zapri</button>
+  </div>
+</div>

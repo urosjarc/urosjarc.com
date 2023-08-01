@@ -1,14 +1,11 @@
 package api.routes
 
 import api.extend.client_error
-import api.extend.request_info
 import api.extend.profil
+import api.extend.request_info
 import api.request.NapakaReq
 import base.Id
-import domain.Naloga
-import domain.Napaka
-import domain.Status
-import domain.Test
+import domain.*
 import extend.ime
 import io.ktor.resources.*
 import io.ktor.server.application.*
@@ -23,6 +20,8 @@ import org.koin.ktor.ext.inject
 import services.DbService
 import si.urosjarc.server.api.response.StatusUpdateReq
 import si.urosjarc.server.api.response.TestUpdateReq
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 
 @Resource("ucenec")
@@ -71,36 +70,71 @@ fun Route.ucenec() {
         this.call.respond(ucenec)
     }
 
-    this.put<ucenec.test.test_id.naloga.naloga_id> {
+    this.post<ucenec.test.test_id.naloga.naloga_id> {
         val profil = this.call.profil()
         val body = this.call.receive<StatusUpdateReq>()
         val test_id = it.parent.parent.test_id
-        when (db.status_obstaja(id = body.id, oseba_id = profil.id, test_id = test_id, naloga_id = it.naloga_id)) {
-            false -> this.call.client_error(info = "${ime<Status>()} ne obstaja!")
-            true -> when (val r = db.status_update(
-                id = body.id,
-                oseba_id = profil.id,
-                test_id = it.parent.parent.test_id,
-                naloga_id = it.naloga_id,
-                sekund = body.sekund,
-                tip = body.tip
-            )) {
-                null -> this.call.client_error(info = "${ime<Status>()} ni posodobljen!")
-                else -> this.call.respond(r)
+        val status: Status =
+            when (val status = db.najdi_status(oseba_id = profil.id, test_id = test_id, naloga_id = it.naloga_id)) {
+                null -> {
+                    val status = Status(
+                        naloga_id = it.naloga_id,
+                        test_id = test_id,
+                        oseba_id = profil.id,
+                        tip = body.tip,
+                        pojasnilo = ""
+                    )
+                    if (db.ustvari(status)) status
+                    else return@post this.call.client_error(info = "${ime<Status>()} ni posodobljen!")
+                }
+
+                else -> when (val r = db.status_update(
+                    id = status._id,
+                    oseba_id = profil.id,
+                    test_id = test_id,
+                    naloga_id = it.naloga_id,
+                    sekund = body.sekund,
+                    tip = body.tip
+                )) {
+                    null -> return@post this.call.client_error(info = "${ime<Status>()} ni posodobljen!")
+                    else -> r
+                }
             }
-        }
+
+        val audit = Audit(
+            entitete_id = setOf(profil.id.vAnyId(), test_id.vAnyId(), it.naloga_id.vAnyId()),
+            tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
+            trajanje = body.sekund.toDuration(unit = DurationUnit.SECONDS),
+            opis = status.tip.name,
+            entiteta = ime<Status>()
+        )
+
+        db.ustvari(audit)
+        this.call.respond(status)
     }
     this.put<ucenec.test.test_id> {
         val profil = this.call.profil()
         val body = this.call.receive<TestUpdateReq>()
-        when (val r = db.test_update(
+        val test: Test = when (val r = db.test_update(
             id = it.test_id,
             oseba_id = profil.id,
             datum = body.datum
         )) {
-            null -> this.call.client_error(info = "Uporabnik nima dovoljenj!")
-            else -> this.call.respond(r)
+            null -> return@put this.call.client_error(info = "Uporabnik nima dovoljenj!")
+            else -> r
         }
+
+        val audit = Audit(
+            entitete_id = setOf(profil.id.vAnyId(), it.test_id.vAnyId()),
+            tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
+            trajanje = 0.toDuration(unit = DurationUnit.SECONDS),
+            opis = body.datum.toString(),
+            entiteta = ime<Test>()
+        )
+
+        db.ustvari(audit)
+
+        this.call.respond(test)
     }
 
     this.get<ucenec.test.test_id.naloga.naloga_id.audit> {

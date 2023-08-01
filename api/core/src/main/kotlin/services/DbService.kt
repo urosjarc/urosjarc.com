@@ -155,7 +155,8 @@ class DbService(val db_url: String, val db_name: String) {
                  * Naslovi
                  */
                 Aggregates_lookup(
-                    from = Naslov::oseba_id, to = Oseba::_id
+                    from = Naslov::oseba_id,
+                    to = Oseba::_id
                 ),
                 /**
                  * Testi
@@ -185,7 +186,9 @@ class DbService(val db_url: String, val db_name: String) {
                  * Kontakti
                  */
                 Aggregates_lookup(
-                    from = Kontakt::oseba_id, to = Oseba::_id, pipeline = listOf(
+                    from = Kontakt::oseba_id,
+                    to = Oseba::_id,
+                    pipeline = listOf(
                         Aggregates_lookup(
                             from = Sporocilo::kontakt_prejemnik_id, to = Kontakt::_id, pipeline = listOf(
                                 Aggregates_lookup(
@@ -222,6 +225,13 @@ class DbService(val db_url: String, val db_name: String) {
                             to = Ucenje::oseba_ucitelj_id,
                         )
                     )
+                ),
+                /**
+                 * Audits
+                 */
+                Aggregates_lookup(
+                    from = Audit::entitete_id,
+                    to = Oseba::_id
                 )
             )
         )
@@ -278,15 +288,14 @@ class DbService(val db_url: String, val db_name: String) {
     /**
      * Zaradi tega ker se mora preveriti ali je uporabnik owner statusa!
      */
-    fun status_obstaja(id: Id<Status>, oseba_id: Id<Oseba>, test_id: Id<Test>, naloga_id: Id<Naloga>): Boolean {
+    fun najdi_status(oseba_id: Id<Oseba>, test_id: Id<Test>, naloga_id: Id<Naloga>): Status? {
         return statusi.find(
             filter = Filters.AND(
-                Filters.EQ(id),
                 Filters.EQ(Status::oseba_id, oseba_id),
                 Filters.EQ(Status::test_id, test_id),
                 Filters.EQ(Status::naloga_id, naloga_id),
             )
-        ).firstOrNull() != null
+        ).firstOrNull()
     }
 
     fun status_update(

@@ -225,7 +225,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/Audit"
   /ucenec/test/{test_id}/naloga/{naloga_id}:
-    put:
+    post:
       description: ""
       parameters:
       - name: "test_id"
@@ -312,8 +312,6 @@ components:
     StatusUpdateReq:
       type: "object"
       properties:
-        id:
-          type: "string"
         tip:
           type: "string"
           enum:
@@ -607,40 +605,6 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/UcenjeData"
-    UcenecData:
-      type: "object"
-      properties:
-        oseba:
-          $ref: "#/components/schemas/Oseba"
-        naslov_refs:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/Naslov"
-        kontakt_refs:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/KontaktData"
-        ucenje_ucenec_refs:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/UcenjeData"
-        test_ucenec_refs:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/TestData"
-    AdminData:
-      type: "object"
-      properties:
-        oseba:
-          $ref: "#/components/schemas/Oseba"
-        naslov_refs:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/Naslov"
-        kontakt_refs:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/KontaktData"
     AnyId:
       type: "object"
       properties:
@@ -669,6 +633,44 @@ components:
           type: "string"
         ustvarjeno:
           $ref: "#/components/schemas/LocalDateTime"
+    UcenecData:
+      type: "object"
+      properties:
+        oseba:
+          $ref: "#/components/schemas/Oseba"
+        naslov_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Naslov"
+        kontakt_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/KontaktData"
+        ucenje_ucenec_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/UcenjeData"
+        test_ucenec_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/TestData"
+        audit_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Audit"
+    AdminData:
+      type: "object"
+      properties:
+        oseba:
+          $ref: "#/components/schemas/Oseba"
+        naslov_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Naslov"
+        kontakt_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/KontaktData"
     Napaka:
       type: "object"
       properties:

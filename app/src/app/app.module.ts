@@ -1,5 +1,6 @@
 import {LOCALE_ID, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
+import * as moment from "moment"
 
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -33,14 +34,26 @@ import {ProfilComponent} from "./routes/ucenec/profil/profil.component";
 import {DateOddaljenostPipe} from "./pipes/DateOddaljenost/date-oddaljenost.pipe";
 import {DATE_PIPE_DEFAULT_OPTIONS} from "@angular/common";
 import "@angular/common/locales/global/sl"
+import 'moment/locale/sl';
 import {MatListModule} from "@angular/material/list";
 import {MatCardModule} from "@angular/material/card";
 import {SporocilaComponent} from "./routes/ucenec/sporocila/sporocila.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
 import {TestComponent} from "./routes/ucenec/test/test.component";
-import {StatusClassPipe} from "./pipes/StatusClass/status-class.pipe";
+import {NalogaComponent} from "./routes/ucenec/naloga/naloga.component";
+import {MatTabsModule} from "@angular/material/tabs";
+import {StatusStylePipe} from "./pipes/StatusClass/status-style.pipe";
+import {StoparicaPipe} from "./pipes/Stoparica/stoparica.pipe";
+import {TrajanjePipe} from "./pipes/Trajanje/trajanje.pipe";
+import {ZgodovinaComponent} from "./routes/ucenec/zgodovina/zgodovina.component";
+import {PieChartModule} from "@swimlane/ngx-charts";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MAT_DATE_LOCALE, MatNativeDateModule} from "@angular/material/core";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
 
+const locale = 'sl'
+moment.locale(locale);
 
 @NgModule({
   declarations: [
@@ -60,10 +73,13 @@ import {StatusClassPipe} from "./pipes/StatusClass/status-class.pipe";
     UcenecComponent,
     ProfilComponent,
     TestiComponent,
-    DateOddaljenostPipe,
     SporocilaComponent,
     TestComponent,
-    StatusClassPipe
+    StatusStylePipe,
+    NalogaComponent,
+    StoparicaPipe,
+    TrajanjePipe,
+    ZgodovinaComponent
   ],
   imports: [
     BrowserModule,
@@ -81,14 +97,22 @@ import {StatusClassPipe} from "./pipes/StatusClass/status-class.pipe";
     MatListModule,
     MatCardModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    MatTabsModule,
+    PieChartModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    DateOddaljenostPipe,
+    MatButtonToggleModule,
   ],
   providers: [
     DefaultService,
     AlertService,
-    {provide: LOCALE_ID, useValue: 'sl'},
+    {provide: LOCALE_ID, useValue: locale},
+    {provide: MAT_DATE_LOCALE, useValue: locale},
     {provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: {dateFormat: 'EEE d.M.YYYY', timezone: '+2'}},
   ],
+  exports: [],
   bootstrap: [RootComponent]
 })
 export class AppModule {

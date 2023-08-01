@@ -17,6 +17,9 @@ import {
 } from "./api";
 import {ime, isObject} from "./utils";
 
+// @ts-ignore
+Dexie.debug = false as any;
+
 export class AppDB extends Dexie {
   root_id!: Table<string, number>
   oseba!: Table<Oseba, number>

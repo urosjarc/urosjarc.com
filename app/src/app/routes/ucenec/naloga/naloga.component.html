@@ -1,0 +1,48 @@
+<h1 class="text-center py-2 m-0"
+    style="{{(status?.tip || Status.tip.NEZACETO) | StatusStyle}}">{{sekunde | Stoparica}}</h1>
+<mat-divider/>
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
+  <mat-tab label="Naloga">
+    <img src="{{naloga.vsebina}}">
+  </mat-tab>
+
+  <mat-tab label="Resitev">
+    <img class="col-12" src="{{naloga.resitev}}">
+    <div id="izbira" class="row">
+      <button class="col" mat-raised-button (click)="nastaviStatus(status)" *ngFor="let status of statusi">{{status}}</button>
+    </div>
+  </mat-tab>
+
+  <mat-tab label="Zgodovina">
+
+
+    <table mat-table [dataSource]="audits" class="mat-elevation-z8 text-center">
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="opis">
+        <th mat-header-cell *matHeaderCellDef> Opis</th>
+        <td mat-cell *matCellDef="let audit"> {{audit.opis}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="trajanje">
+        <th mat-header-cell *matHeaderCellDef> Trajanje</th>
+        <td mat-cell *matCellDef="let audit"> {{audit.trajanje | Trajanje}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="ustvarjeno">
+        <th mat-header-cell *matHeaderCellDef> Datum</th>
+        <td mat-cell *matCellDef="let audit"> {{audit.ustvarjeno | date}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="pred">
+        <th mat-header-cell *matHeaderCellDef> Pred</th>
+        <td mat-cell *matCellDef="let audit"> {{audit.ustvarjeno | DateOddaljenost }} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let audit; columns: displayedColumns;"></tr>
+    </table>
+
+
+  </mat-tab>
+</mat-tab-group>

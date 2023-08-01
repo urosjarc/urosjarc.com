@@ -9,6 +9,8 @@ import {ProfilComponent} from "./routes/ucenec/profil/profil.component";
 import {UcenecComponent} from "./routes/ucenec/ucenec.component";
 import {SporocilaComponent} from "./routes/ucenec/sporocila/sporocila.component";
 import {TestComponent} from "./routes/ucenec/test/test.component";
+import {NalogaComponent} from "./routes/ucenec/naloga/naloga.component";
+import {ZgodovinaComponent} from "./routes/ucenec/zgodovina/zgodovina.component";
 
 const routes: Routes = [
   {path: '', component: PublicComponent},
@@ -19,8 +21,10 @@ const routes: Routes = [
     path: 'ucenec', component: UcenecComponent, children: [
       {path: 'profil', component: ProfilComponent},
       {path: 'sporocila', component: SporocilaComponent},
+      {path: 'zgodovina', component: ZgodovinaComponent},
       {path: 'testi', component: TestiComponent},
-      {path: 'testi/:test_id', component: TestComponent}
+      {path: 'testi/:test_id', component: TestComponent},
+      {path: 'testi/:test_id/naloge/:naloga_id', component: NalogaComponent}
     ]
   },
   {path: '**', component: PublicComponent},

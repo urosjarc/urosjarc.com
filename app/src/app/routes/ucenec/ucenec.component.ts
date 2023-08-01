@@ -24,6 +24,11 @@ export class UcenecComponent implements OnInit {
       tekst: "Sporocila",
       ikona: "sms",
       route: "/ucenec/sporocila"
+    },
+    {
+      tekst: "Zgodovina",
+      ikona: "history",
+      route: "/ucenec/zgodovina"
     }
   ];
 
