@@ -5,6 +5,7 @@ import {AlertService} from "../../../components/alert/alert.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {db} from "../../../db";
+import {routing} from "../../../app-routing.module";
 
 @Component({
   selector: 'app-public-prijava',
@@ -60,7 +61,7 @@ export class PublicPrijavaComponent implements OnInit {
     this.defaultService.getUcenec().subscribe({
       next(ucenecData) {
         db.reset(ucenecData).then(r => {
-          self.router.navigateByUrl("/ucenec")
+          self.router.navigateByUrl(routing.ucenec({}).$)
         })
       },
       error(err: HttpErrorResponse) {
@@ -74,7 +75,7 @@ export class PublicPrijavaComponent implements OnInit {
     this.defaultService.getAdmin().subscribe({
       next(adminData) {
         db.reset(adminData as OsebaData).then(r => {
-          self.router.navigateByUrl("/admin")
+          alert("NOt implemented.")
         })
       },
       error(err: HttpErrorResponse) {

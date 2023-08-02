@@ -54,6 +54,7 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {AuditsTabelaComponent} from "./components/audits-tabela/audits-tabela.component";
 import {PublicComponent} from "./routes/public/public.component";
 import {DateOddaljenostClassPipe} from "./pipes/DateOddaljenostClass/date-oddaljenost-class.pipe";
+import {TableTestiComponent} from "./components/table-testi/table-testi.component";
 
 const locale = 'sl'
 moment.locale(locale);
@@ -85,6 +86,7 @@ moment.locale(locale);
     UcenecDeloComponent,
     AuditsTabelaComponent,
     PublicComponent,
+    TableTestiComponent,
   ],
   imports: [
     BrowserModule,

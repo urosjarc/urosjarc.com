@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {DefaultService} from "../../api";
 import {AlertService} from "../../components/alert/alert.service";
 import {NavGumb} from "../../components/nav-gumb/NavGumb";
+import {routing} from "../../app-routing.module";
 
 @Component({
   selector: 'app-ucenec',
@@ -14,31 +15,31 @@ export class UcenecComponent implements OnInit {
     {
       tekst: "Testi",
       ikona: "edit",
-      route: "/ucenec",
+      route: routing.ucenec({}).testi({}).$,
       style: this.navStyle
     },
     {
       tekst: "Sporocila",
       ikona: "sms",
-      route: "/ucenec/sporocila",
+      route: routing.ucenec({}).sporocila({}).$,
       style: this.navStyle
     },
     {
       tekst: "Delo",
       ikona: "work",
-      route: "/ucenec/delo",
+      route: routing.ucenec({}).delo({}).$,
       style: this.navStyle
     },
     {
       tekst: "Profil",
       ikona: "person",
-      route: "/ucenec/profil",
+      route: routing.ucenec({}).profil({}).$,
       style: this.navStyle
     },
     {
       tekst: "Odjava",
       ikona: "close",
-      route: "/prijava"
+      route: routing.public({}).prijava({}).$,
     },
   ];
 

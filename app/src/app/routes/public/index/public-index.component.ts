@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {NavGumb} from "../../../components/nav-gumb/NavGumb";
+import {routing} from "../../../app-routing.module";
 
 @Component({
   selector: 'app-public-index',
@@ -11,12 +12,12 @@ export class PublicIndexComponent {
     {
       tekst: "051-240-885",
       ikona: "phone",
-      route: "/kontakt"
+      route: routing.public({}).kontakt({}).$
     },
     {
       tekst: "jar.fmf@gmail.com",
       ikona: "email",
-      route: "/kontakt"
+      route: routing.public({}).kontakt({}).$
     },
   ]
   infos: { naslov: string, vsebina: string }[] = [

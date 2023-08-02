@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {NavGumb} from "../../components/nav-gumb/NavGumb";
+import {routing} from "../../app-routing.module";
 
 @Component({
   selector: 'app-public',
@@ -11,22 +12,22 @@ export class PublicComponent {
     {
       tekst: "Domov",
       ikona: "home",
-      route: "/"
+      route: routing.public({}).index({}).$
     },
     {
       tekst: "Koledar",
       ikona: "calendar_month",
-      route: "/koledar",
+      route: routing.public({}).koledar({}).$
     },
     {
       tekst: "Kontakt",
       ikona: "mail",
-      route: "/kontakt",
+      route: routing.public({}).kontakt({}).$
     },
     {
       tekst: "Prijava",
       ikona: "lock",
-      route: "/prijava",
+      route: routing.public({}).prijava({}).$
     },
   ]
 }

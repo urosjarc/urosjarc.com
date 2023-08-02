@@ -4,7 +4,8 @@ import {db} from "../../../db";
 import {ime} from "../../../utils";
 import {Status, Test} from "../../../api";
 import {String_vDate} from "../../../extends/String";
-import {TestInfo} from "./TestInfo";
+import {TableTest} from "../../../components/table-testi/TableTest";
+import {routing} from "../../../app-routing.module";
 
 @Component({
   selector: 'app-ucenec-testi',
@@ -12,9 +13,7 @@ import {TestInfo} from "./TestInfo";
   styleUrls: ['./ucenec-testi.component.scss']
 })
 export class UcenecTestiComponent implements OnInit {
-
-  testi: MatTableDataSource<TestInfo> = new MatTableDataSource()
-  displayedColumns: any[] = ['naslov', 'opravljeno', 'datum', 'oddaljenost'];
+  testi: MatTableDataSource<TableTest> = new MatTableDataSource()
 
   async ngOnInit() {
     await this.initTestVrstice()
@@ -27,7 +26,7 @@ export class UcenecTestiComponent implements OnInit {
       .equals(root_id)
       .toArray()
 
-    const newTesti = []
+    const newTesti: TableTest[] = []
     for (const test of testi) {
       const st_nalog = test.naloga_id?.length || -1
       const opravljeni_statusi = await db.status.where({
@@ -37,10 +36,10 @@ export class UcenecTestiComponent implements OnInit {
       }).count()
 
       newTesti.push({
-        id: test._id || "",
         naslov: test.naslov || "",
         opravljeno: opravljeni_statusi / st_nalog,
-        datum: String_vDate(test.deadline as string)
+        datum: String_vDate(test.deadline as string),
+        link: routing.ucenec({}).test({test_id: test._id || ""}).$
       })
 
     }
