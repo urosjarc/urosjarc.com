@@ -1,0 +1,28 @@
+<table mat-table [dataSource]="testi">
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="naslov">
+    <th mat-header-cell *matHeaderCellDef> Naslov</th>
+    <td mat-cell *matCellDef="let test" class="{{test.datum | DateOddaljenostClass}}"> {{test.naslov}} </td>
+  </ng-container>
+
+  <!-- Weight Column -->
+  <ng-container matColumnDef="opravljeno">
+    <th mat-header-cell *matHeaderCellDef> Opravljeno</th>
+    <td mat-cell *matCellDef="let test" class="{{test.datum | DateOddaljenostClass}}"> {{test.opravljeno | percent}} </td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="datum">
+    <th mat-header-cell *matHeaderCellDef> Deadline</th>
+    <td mat-cell *matCellDef="let test" class="{{test.datum | DateOddaljenostClass}}"> {{test.datum | date}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="oddaljenost">
+    <th mat-header-cell *matHeaderCellDef> Ostalo</th>
+    <td mat-cell *matCellDef="let test" class="{{test.datum | DateOddaljenostClass}}">{{test.datum | DateOddaljenost}}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr class="{{test.datum | DateOddaljenostClass}}" mat-row *matRowDef="let test; columns: displayedColumns;" routerLink="{{test.link}}"></tr>
+</table>
