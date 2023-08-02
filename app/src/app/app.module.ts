@@ -55,6 +55,8 @@ import {AuditsTabelaComponent} from "./components/audits-tabela/audits-tabela.co
 import {PublicComponent} from "./routes/public/public.component";
 import {DateOddaljenostClassPipe} from "./pipes/DateOddaljenostClass/date-oddaljenost-class.pipe";
 import {TableTestiComponent} from "./components/table-testi/table-testi.component";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {BtnLoadingComponent} from "./components/btn-loading/btn-loading.component";
 
 const locale = 'sl'
 moment.locale(locale);
@@ -87,6 +89,7 @@ moment.locale(locale);
     AuditsTabelaComponent,
     PublicComponent,
     TableTestiComponent,
+    BtnLoadingComponent,
   ],
   imports: [
     BrowserModule,
@@ -112,6 +115,7 @@ moment.locale(locale);
     DateOddaljenostPipe,
     DateOddaljenostClassPipe,
     MatButtonToggleModule,
+    MatProgressSpinnerModule,
   ],
   providers: [
     DefaultService,

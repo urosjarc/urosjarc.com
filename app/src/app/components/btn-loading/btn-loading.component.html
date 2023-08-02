@@ -1,0 +1,4 @@
+<button [disabled]="loading" mat-raised-button (click)="login()" [color]="color" class="w-100">
+  <div *ngIf="!loading">{{vsebina}}</div>
+  <mat-spinner diameter="28" mode="indeterminate" *ngIf="loading"></mat-spinner>
+</button>

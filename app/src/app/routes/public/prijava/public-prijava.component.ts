@@ -14,6 +14,7 @@ import {routing} from "../../../app-routing.module";
 })
 export class PublicPrijavaComponent implements OnInit {
   uporabnik: FormControl<string | null> = new FormControl('', [Validators.required]);
+  loading = false
 
   constructor(
     private defaultService: DefaultService,
@@ -36,8 +37,9 @@ export class PublicPrijavaComponent implements OnInit {
   }
 
   login() {
-    const self = this
+    this.loading = true
 
+    const self = this
     this.defaultService.postAuthPrijava({
       username: this.uporabnik.getRawValue() || ""
     }).subscribe({
@@ -47,7 +49,8 @@ export class PublicPrijavaComponent implements OnInit {
       },
       error(err: HttpErrorResponse) {
         self.alertService.error(err.message)
-      }
+        self.loading = false
+      },
     })
   }
 

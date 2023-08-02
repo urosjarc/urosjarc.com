@@ -70,6 +70,7 @@ export class AppDB extends Dexie {
 
   async reset(osebaData: OsebaData) {
     console.log("Reset db: ", osebaData)
+    const count = (JSON.stringify(osebaData).match(/\{/g) || []).length
 
     await this.delete()
     await this.open()
@@ -81,6 +82,7 @@ export class AppDB extends Dexie {
     const cakalnica_key: string[] = ["object"]
     const seed_data = new Map<string, any[]>()
 
+    let i = 0
     while (cakalnica_value.length > 0) {
       let pacient_value = cakalnica_value.shift()
       let pacient_key = cakalnica_key.shift()
