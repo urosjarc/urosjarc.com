@@ -13,7 +13,7 @@
 
     <div class="col-12">
       <app-input-msg/>
-      <button mat-raised-button (click)="poslji()" color="primary" class="w-100">Pošlji</button>
+      <button [disabled]="loading" mat-raised-button (click)="poslji()" color="primary" class="w-100">Pošlji</button>
     </div>
   </div>
 </form>

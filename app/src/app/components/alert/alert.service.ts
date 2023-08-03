@@ -8,16 +8,17 @@ export class AlertService {
 
   private alertsObserver: Subject<Alert> = new Subject();
 
-  info(vsebina: string) {
-    this.alert("INFORMACIJA", vsebina, "primary");
+  info(naslov: string, vsebina: string) {
+    console.log({naslov, vsebina})
+    this.alert(naslov, vsebina, "primary");
   }
 
-  warn(vsebina: string) {
-    this.alert("OPOZORILO", vsebina, "accent");
+  warn(naslov: string, vsebina: string) {
+    this.alert(naslov, vsebina, "accent");
   }
 
-  error(vsebina: string) {
-    this.alert("NAPAKA", vsebina, "warn");
+  error(naslov: string, vsebina: string) {
+    this.alert(naslov, vsebina, "warn");
   }
 
   private alert(naslov: string, vsebina: string, color: ThemePalette) {

@@ -7,12 +7,23 @@ import {FormControl, Validators} from "@angular/forms";
   styleUrls: ['./input-msg.component.scss']
 })
 export class InputMsgComponent {
-  @Input() formControl = new FormControl('', [Validators.required, Validators.minLength(10)]);
+  @Input() formControl = new FormControl('', [
+    Validators.required,
+    Validators.minLength(10),
+    Validators.pattern("\\S+\\s+\\S+\\s+\\S+")
+  ]);
 
   getErrorMessage() {
     if (this.formControl.hasError('required')) {
       return 'Sporočilo je obvezno!';
     }
-    return 'Sporočilo je premajhno!';
+    if (this.formControl.hasError('minlength')){
+      return 'Sporočilo je premajhno!';
+    }
+    if (this.formControl.hasError('pattern')){
+      return 'Sporočilo ima premalo besed!';
+    }
+
+    return 'Sporočilo ni veljavno!'
   }
 }

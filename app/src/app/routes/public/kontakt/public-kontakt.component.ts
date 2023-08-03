@@ -6,6 +6,7 @@ import {InputOsebaComponent} from "../../../components/input-oseba/input-oseba.c
 import {InputMsgComponent} from "../../../components/input-msg/input-msg.component";
 import {InputEmailComponent} from "../../../components/input-email/input-email.component";
 import {ApiService} from "../../../api/services/api.service";
+import {KontaktObrazecRes} from "../../../api/models/kontakt-obrazec-res";
 
 @Component({
   selector: 'app-public-kontakt',
@@ -37,7 +38,9 @@ export class PublicKontaktComponent implements AfterViewInit {
     const self = this
     if (this.formGroup?.invalid) return;
 
+    if (this.loading) return
     this.loading = true
+
     this.ApiService.kontaktPost({
       body: {
         ime_priimek: this.input_oseba?.formControl.getRawValue() || "",
@@ -46,12 +49,19 @@ export class PublicKontaktComponent implements AfterViewInit {
         vsebina: this.input_msg?.formControl.getRawValue() || "",
       }
     }).subscribe({
-      next(value) {
-        self.alertService.info(JSON.stringify(value, null, 4))
+      next(value: KontaktObrazecRes) {
+        self.alertService.info('Vaše sporočilo je bilo sprejeto!', `
+          Preverite prejem potrditvenih sporočil.<br>
+          <br>
+          <h3>
+            Email: ${value.email?.data}
+            <br>
+            Telefon: ${value.telefon?.data}
+          </h3>
+        `)
         self.loading = false
       },
-      error(err) {
-        self.alertService.error(err)
+      error() {
         self.loading = false
       },
     })

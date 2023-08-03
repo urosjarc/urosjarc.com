@@ -4,7 +4,6 @@ import {Subscription, timer} from 'rxjs';
 import {db} from "../../../db";
 import {ime} from "../../../utils";
 import {AlertService} from "../../../components/alert/alert.service";
-import {HttpErrorResponse} from "@angular/common/http";
 import {Location} from '@angular/common';
 import {MatTableDataSource} from "@angular/material/table";
 import {ApiService} from "../../../api/services/api.service";
@@ -85,12 +84,8 @@ export class UcenecNalogaComponent implements OnDestroy {
         if (value.status) db.status.put(value.status)
         if (value.audit) db.audit.put(value.audit)
         self._location.back()
-      },
-      error(err: HttpErrorResponse) {
-        self.alertService.error(err.message)
       }
     })
-
 
   }
 }

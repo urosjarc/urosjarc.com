@@ -50,8 +50,7 @@ export class PublicPrijavaComponent implements OnInit {
         db.set_token(res.token || "")
         self.prijava(res.tip || [])
       },
-      error(err: HttpErrorResponse) {
-        self.alertService.error(err.message)
+      error() {
         self.loading = false
       },
     })
@@ -69,9 +68,6 @@ export class PublicPrijavaComponent implements OnInit {
         db.reset(ucenecData).then(r => {
           self.router.navigateByUrl(routing.ucenec({}).$)
         })
-      },
-      error(err: HttpErrorResponse) {
-        self.alertService.error(err.message)
       }
     })
   }
@@ -83,9 +79,6 @@ export class PublicPrijavaComponent implements OnInit {
         db.reset(adminData as OsebaData).then(r => {
           alert("NOt implemented.")
         })
-      },
-      error(err: HttpErrorResponse) {
-        self.alertService.error(err.message)
       }
     })
   }

@@ -22,11 +22,27 @@ export class ApiInterceptor implements HttpInterceptor {
     });
     return next.handle(req).pipe(
       tap(x => x, (err: HttpErrorResponse) => {
-        // Handle this err
-        console.error({err})
-        if (err.status == 404 || err.status >= 500) this.alertService.error(err.message)
-        else this.alertService.warn(err.message)
+        if (err.error) {
+          if (err.status == 404 || err.status >= 500) this.serverNapaka(err)
+          else this.uporabniskaNapaka(err)
+        } else {
+          this.serverNapaka(err)
+        }
       })
     );
+  }
+
+  serverNapaka(err: HttpErrorResponse) {
+    this.alertService.error("KRITIČNA NAPAKA", `
+      Zgodila se je kritična napaka! Incident se je že registriral!<br>
+      Sporočite mi svoje podatke preko email-a ali telefona,<br>
+      da Vas bom lahko obvestil, ko bo apliakcija spet normalno delovala.<br>
+      Za vse nevšečnosti se Vam iskreno opravičujem!<br>
+      <br>
+      ${err.error.status}: ${err.error.info}
+    `)
+  }
+  uporabniskaNapaka(err: HttpErrorResponse) {
+    this.alertService.warn(err.error.info, `Aplikacijo uporabljate na napačen način!<br>Incident se je registriral!`)
   }
 }
