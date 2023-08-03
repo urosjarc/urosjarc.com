@@ -1,18 +1,19 @@
 <app-loading [loading]="loading"/>
 <form [formGroup]="formGroup" (ngSubmit)="poslji()">
-<div class="row p-4">
-  <div class="col-sm-12">
-    <app-input-oseba [oseba]="oseba"/>
-  </div>
-  <div class="col-sm-12 col-md-6">
-    <app-input-email [email]="email"/>
-  </div>
-  <div class="col-sm-12 col-md-6">
-    <app-input-telefon [telefon]="telefon"/>
-  </div>
+  <div class="row p-4">
+    <div class="col-sm-12">
+      <app-input-oseba/>
+    </div>
+    <div class="col-sm-12 col-md-6">
+      <app-input-email/>
+    </div>
+    <div class="col-sm-12 col-md-6">
+      <app-input-telefon/>
+    </div>
 
-  <div class="col-12">
-    <app-input-msg [sporocilo]="sporocilo"/>
-    <button mat-raised-button (click)="poslji()" color="primary" class="w-100">Pošlji</button>
+    <div class="col-12">
+      <app-input-msg/>
+      <button mat-raised-button (click)="poslji()" color="primary" class="w-100">Pošlji</button>
+    </div>
   </div>
-</div>
+</form>

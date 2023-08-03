@@ -1,6 +1,6 @@
 <mat-form-field class="w-100">
   <mat-label>Geslo</mat-label>
-  <input matInput [formControl]="geslo" required>
+  <input matInput [formControl]="formControl" required>
   <mat-icon matPrefix>lock</mat-icon>
-  <mat-error *ngIf="geslo.invalid">{{getErrorMessage()}}</mat-error>
+  <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
 </mat-form-field>

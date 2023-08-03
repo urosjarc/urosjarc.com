@@ -1,6 +1,6 @@
 <mat-form-field class="w-100">
   <mat-label>Email</mat-label>
-  <input matInput [formControl]="email" required>
+  <input matInput [formControl]="formControl" required>
   <mat-icon matPrefix>email</mat-icon>
-  <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+  <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
 </mat-form-field>

@@ -7,10 +7,10 @@ import {FormControl, Validators} from "@angular/forms";
   styleUrls: ['./input-msg.component.scss']
 })
 export class InputMsgComponent {
-  @Input() sporocilo = new FormControl('', [Validators.required, Validators.minLength(10)]);
+  @Input() formControl = new FormControl('', [Validators.required, Validators.minLength(10)]);
 
   getErrorMessage() {
-    if (this.sporocilo.hasError('required')) {
+    if (this.formControl.hasError('required')) {
       return 'Sporočilo je obvezno!';
     }
     return 'Sporočilo je premajhno!';

@@ -7,10 +7,10 @@ import {FormControl, Validators} from "@angular/forms";
   styleUrls: ['./input-email.component.scss']
 })
 export class InputEmailComponent {
-  @Input() email = new FormControl('', [Validators.required, Validators.email]);
+  @Input() formControl = new FormControl('', [Validators.required, Validators.email]);
 
   getErrorMessage() {
-    if (this.email.hasError('required')) {
+    if (this.formControl.hasError('required')) {
       return 'Email je obvezen!';
     }
 

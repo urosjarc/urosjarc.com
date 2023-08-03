@@ -1,5 +1,5 @@
 <mat-form-field class="w-100" style="min-height: 150px">
   <mat-label>Sporocilo</mat-label>
-  <textarea matInput [formControl]="sporocilo" required></textarea>
-  <mat-error *ngIf="sporocilo.invalid">{{getErrorMessage()}}</mat-error>
+  <textarea matInput [formControl]="formControl" required></textarea>
+  <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
 </mat-form-field>

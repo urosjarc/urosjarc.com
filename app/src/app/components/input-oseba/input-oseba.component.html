@@ -1,6 +1,6 @@
 <mat-form-field class="w-100">
   <mat-label>{{label}}</mat-label>
-  <input matInput [formControl]="oseba" required>
+  <input matInput [formControl]="formControl" required>
   <mat-icon matPrefix>person</mat-icon>
-  <mat-error *ngIf="oseba.invalid">{{getErrorMessage()}}</mat-error>
+  <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
 </mat-form-field>

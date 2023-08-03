@@ -8,9 +8,9 @@ import {FormControl, Validators} from "@angular/forms";
 })
 export class InputOsebaComponent {
   @Input() label: string = "Ime in priimek"
-  @Input() oseba = new FormControl('', [Validators.required, Validators.pattern("[a-zA-Z]+\\s[a-zA-Z]+")]);
+  @Input() formControl = new FormControl('', [Validators.required, Validators.pattern("[a-zA-Z]+\\s+[a-zA-Z]+")]);
   getErrorMessage() {
-    if (this.oseba.hasError('required')) {
+    if (this.formControl.hasError('required')) {
       return 'Vnos je obvezen!';
     }
     return 'Vnos nima dveh veljavnih besed!';

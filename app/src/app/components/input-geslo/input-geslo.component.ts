@@ -7,10 +7,10 @@ import {FormControl, Validators} from "@angular/forms";
   styleUrls: ['./input-geslo.component.scss']
 })
 export class InputGesloComponent {
-  @Input() geslo = new FormControl('', [Validators.required, Validators.minLength(4)]);
+  @Input() formControl = new FormControl('', [Validators.required, Validators.minLength(4)]);
 
   getErrorMessage() {
-    if (this.geslo.hasError('required')) {
+    if (this.formControl.hasError('required')) {
       return 'Geslo je obvezno!';
     }
 
