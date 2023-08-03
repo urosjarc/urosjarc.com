@@ -13,6 +13,7 @@ import {UcenecNalogaComponent} from "./routes/ucenec/naloga/ucenec-naloga.compon
 import {UcenecTestiComponent} from "./routes/ucenec/testi/ucenec-testi.component";
 import {RouterModule} from "@angular/router";
 import {NgModule} from "@angular/core";
+import {ucenecGuard} from "./routes/ucenec/ucenec.guard";
 
 const index = route('', {}, {})
 
@@ -42,7 +43,7 @@ const routes = [
     ]
   },
   {
-    path: routing.ucenec.template, component: UcenecComponent, children: [
+    path: routing.ucenec.template, canActivate: [ucenecGuard], component: UcenecComponent, children: [
       {path: index.template, component: UcenecTestiComponent},
       {path: delo.template, component: UcenecDeloComponent},
       {path: naloga.template, component: UcenecNalogaComponent},

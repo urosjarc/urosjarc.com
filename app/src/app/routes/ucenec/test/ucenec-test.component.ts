@@ -173,9 +173,6 @@ export class UcenecTestComponent implements OnInit {
               if (res.test) db.test.put(res.test)
               if (res.audit) db.audit.put(res.audit)
               self.ngOnInit()
-            },
-            error(err: any) {
-              console.log("Error: ", err)
             }
           }
         )

@@ -2,7 +2,7 @@
   <div *ngFor="let navGumb of navGumbi" class="col">
     <app-nav-gumb
       [style]="navGumb.style"
-      [route]="navGumb.route"
+      [route]="navGumb.route || ''"
       [ikona]="navGumb.ikona"
       [tekst]="navGumb.tekst"/>
   </div>

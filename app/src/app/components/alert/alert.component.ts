@@ -3,7 +3,7 @@ import {MAT_DIALOG_DATA, MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
 import {NgStyle} from "@angular/common";
 import {MatListModule} from "@angular/material/list";
-import {Alert} from "./Alert";
+import {Alert} from "../../services/alert/Alert";
 
 @Component({
   selector: 'app-alert',

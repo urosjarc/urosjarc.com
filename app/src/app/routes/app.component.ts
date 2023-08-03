@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {AlertService} from "../components/alert/alert.service";
+import {AlertService} from "../services/alert/alert.service";
 import {MatDialog} from "@angular/material/dialog";
 import {AlertComponent} from "../components/alert/alert.component";
-import {Alert} from "../components/alert/Alert";
+import {Alert} from "../services/alert/Alert";
 
 @Component({
   selector: 'app',
@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.alertService.alerts.subscribe(alert => {
+    this.alertService.alerts.subscribe((alert: Alert) => {
       if (alert) this.onAlert(alert)
     })
   }

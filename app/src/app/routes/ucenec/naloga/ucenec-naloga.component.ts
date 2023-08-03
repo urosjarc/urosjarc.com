@@ -3,7 +3,7 @@ import {ActivatedRoute} from "@angular/router";
 import {Subscription, timer} from 'rxjs';
 import {db} from "../../../db";
 import {ime} from "../../../utils";
-import {AlertService} from "../../../components/alert/alert.service";
+import {AlertService} from "../../../services/alert/alert.service";
 import {Location} from '@angular/common';
 import {MatTableDataSource} from "@angular/material/table";
 import {ApiService} from "../../../api/services/api.service";
@@ -66,7 +66,6 @@ export class UcenecNalogaComponent implements OnDestroy {
   }
 
   async initAudits() {
-    console.log(this.status)
     this.audits.data = await db.audit.where(ime<Audit>("entitete_id")).equals(this.status?._id || "").toArray()
   }
 

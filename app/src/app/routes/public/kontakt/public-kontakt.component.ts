@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {FormGroup} from "@angular/forms";
-import {AlertService} from "../../../components/alert/alert.service";
+import {AlertService} from "../../../services/alert/alert.service";
 import {InputTelefonComponent} from "../../../components/input-phone/input-telefon.component";
 import {InputOsebaComponent} from "../../../components/input-oseba/input-oseba.component";
 import {InputMsgComponent} from "../../../components/input-msg/input-msg.component";

@@ -1,8 +1,9 @@
 import {Component, OnInit} from "@angular/core";
-import {AlertService} from "../../components/alert/alert.service";
+import {AlertService} from "../../services/alert/alert.service";
 import {NavGumb} from "../../components/nav-gumb/NavGumb";
 import {routing} from "../../app-routing.module";
 import {ApiService} from "../../api/services/api.service";
+import {db} from "../../db";
 
 @Component({
   selector: 'app-ucenec',
@@ -12,6 +13,11 @@ import {ApiService} from "../../api/services/api.service";
 export class UcenecComponent implements OnInit {
   private navStyle = "background-color: forestgreen; color: white"
   navGumbi: NavGumb[] = [
+    {
+      tekst: "Nazaj",
+      ikona: "reply",
+      route: routing.public({}).$,
+    },
     {
       tekst: "Testi",
       ikona: "edit",
@@ -39,7 +45,10 @@ export class UcenecComponent implements OnInit {
     {
       tekst: "Odjava",
       ikona: "close",
-      route: routing.public({}).prijava({}).$,
+      onClick: () => {
+        db.set_token("")
+        alert("Token cleared")
+      }
     },
   ];
 

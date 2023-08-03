@@ -2,7 +2,8 @@ import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest}
 import {Observable, tap} from "rxjs";
 import {db} from "./db";
 import {Injectable} from "@angular/core";
-import {AlertService} from "./components/alert/alert.service";
+import {AlertService} from "./services/alert/alert.service";
+import {ApiService} from "./api/services/api.service";
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
@@ -22,12 +23,16 @@ export class ApiInterceptor implements HttpInterceptor {
     });
     return next.handle(req).pipe(
       tap(x => x, (err: HttpErrorResponse) => {
+
+        if (err.url?.endsWith(ApiService.AuthProfilGetPath)) return
+
         if (err.error) {
           if (err.status == 404 || err.status >= 500) this.serverNapaka(err)
           else this.uporabniskaNapaka(err)
         } else {
           this.serverNapaka(err)
         }
+
       })
     );
   }
@@ -43,7 +48,8 @@ export class ApiInterceptor implements HttpInterceptor {
       ${msg}
     `)
   }
+
   uporabniskaNapaka(err: HttpErrorResponse) {
-    this.alertService.warn(err.error.info, `Aplikacijo uporabljate na napačen način!<br>Incident se je registriral!`)
+    this.alertService.warn(err.error.info, `Aplikacijo uporabljate na napačen način!<br>Incident se je zabeležil!`)
   }
 }

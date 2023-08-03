@@ -25,7 +25,7 @@ import {MatTableModule} from "@angular/material/table";
 import {InputMsgComponent} from "./components/input-msg/input-msg.component";
 import {InputGesloComponent} from "./components/input-geslo/input-geslo.component";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
-import {AlertService} from "./components/alert/alert.service";
+import {AlertService} from "./services/alert/alert.service";
 import {MatDialogModule} from "@angular/material/dialog";
 import {UcenecComponent} from "./routes/ucenec/ucenec.component";
 import {UcenecTestiComponent} from "./routes/ucenec/testi/ucenec-testi.component";
@@ -57,7 +57,6 @@ import {TableTestiComponent} from "./components/table-testi/table-testi.componen
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {LoadingComponent} from "./components/loading/loading.component";
-import {ApiModule} from "./api/api.module";
 import {ApiInterceptor} from "./api";
 
 const locale = 'sl'

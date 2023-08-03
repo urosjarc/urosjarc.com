@@ -5,3 +5,5 @@ export function isObject(o: any) {
 export function ime<T>(name: keyof T) {
   return name;
 }
+
+export type ArrayTypes<T extends Array<any> | undefined> = T extends Array<infer E> ? E : never;

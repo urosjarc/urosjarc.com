@@ -1,5 +1,4 @@
 import {Component, Input} from '@angular/core';
-import {ThemePalette} from "@angular/material/core";
 
 @Component({
   selector: 'app-nav-gumb',
@@ -11,4 +10,6 @@ export class NavGumbComponent {
   @Input() ikona: string = ""
   @Input() route: string = ""
   @Input() style: string | undefined = ""
+  @Input() onClick: () => void = () => {
+  }
 }

@@ -21,8 +21,6 @@ import {ime, isObject} from "./utils";
 Dexie.debug = false as any;
 
 export class AppDB extends Dexie {
-  private token!: Table<string, number>
-  private root_id!: Table<string, number>
   oseba!: Table<Oseba, number>
   naslov!: Table<Naslov, number>
   ucenje!: Table<Ucenje, number>
@@ -39,8 +37,6 @@ export class AppDB extends Dexie {
   constructor() {
     super('urosjarc.com')
     this.version(3).stores({
-      token: "",
-      root_id: "",
       oseba: `&_id`,
       naslov: `&_id, ${ime<Naslov>('oseba_id')}`,
       ucenje: `&_id, ${ime<Ucenje>('oseba_ucenec_id')}, ${ime<Ucenje>('oseba_ucitelj_id')}`,
