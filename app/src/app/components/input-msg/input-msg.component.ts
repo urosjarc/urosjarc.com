@@ -10,6 +10,9 @@ export class InputMsgComponent {
   @Input() sporocilo = new FormControl('', [Validators.required, Validators.minLength(10)]);
 
   getErrorMessage() {
-    "Fail"
+    if (this.sporocilo.hasError('required')) {
+      return 'Sporočilo je obvezno!';
+    }
+    return 'Sporočilo je premajhno!';
   }
 }

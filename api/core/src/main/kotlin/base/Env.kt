@@ -9,7 +9,6 @@ object Env {
     val TWILIO_ACCOUNT_SID: String = System.getenv("TWILIO_ACCOUNT_SID")
     val TWILIO_AUTH_TOKEN: String = System.getenv("TWILIO_AUTH_TOKEN")
     val TWILIO_DEFAULT_REGION: String = System.getenv("TWILIO_DEFAULT_REGION")
-    val TWILIO_PHONE: String = System.getenv("TWILIO_PHONE")
 
     val SMTP_PORT: Int = System.getenv("SMTP_PORT").toInt()
     val SMTP_PASSWORD: String = System.getenv("SMTP_PASSWORD")

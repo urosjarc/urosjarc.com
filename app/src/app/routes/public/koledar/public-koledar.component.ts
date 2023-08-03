@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-public-koledar',
@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class PublicKoledarComponent {
 
+  loading: boolean = true
+
+  loaded() {
+    this.loading = false
+  }
 }

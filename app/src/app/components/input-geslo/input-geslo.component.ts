@@ -14,6 +14,6 @@ export class InputGesloComponent {
       return 'Geslo je obvezno!';
     }
 
-    return 'Ni veljavno geslo!';
+    return 'Geslo je premajhno!';
   }
 }

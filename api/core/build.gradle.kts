@@ -24,7 +24,7 @@ configure<BuildSrc_domainMap_gradle.DomainMapExtension> {
 
 val openapi_dist = file("$projectDir/../api/src/main/resources/openapi")
 val openapi_target = file("$projectDir/../../app")
-tasks.register("client") {
+tasks.register("OpenApi") {
     doLast {
         logger.warn("")
         openapi_dist.listFilesOrdered { it.isFile && it.extension == "yaml" }.forEach {

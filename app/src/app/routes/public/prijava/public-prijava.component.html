@@ -1,3 +1,4 @@
+<app-loading [loading]="loading"/>
 <div class="row p-4">
 
   <div class="col-sm-6">
@@ -9,6 +10,6 @@
   </div>
 
   <div class="col-12">
-    <app-btn-loading [loading]="loading" [login]="login" vsebina="Prijava"/>
+    <button color="primary" [disabled]="loading" (click)="login()" mat-raised-button class="w-100">Pošlji</button>
   </div>
 </div>

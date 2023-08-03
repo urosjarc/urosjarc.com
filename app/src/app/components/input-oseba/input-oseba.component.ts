@@ -13,7 +13,6 @@ export class InputOsebaComponent {
     if (this.oseba.hasError('required')) {
       return 'Vnos je obvezen!';
     }
-    return 'Vnos ni veljaven!';
+    return 'Vnos nima dveh veljavnih besed!';
   }
-
 }
