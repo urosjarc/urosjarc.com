@@ -1,4 +1,4 @@
-import {Status} from "../../../api";
+import {Status} from "../../../api/models/status";
 
 export interface NalogaInfo {
   id: string,

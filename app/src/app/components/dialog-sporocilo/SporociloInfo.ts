@@ -1,4 +1,4 @@
-import {Kontakt, Oseba} from "../../api";
+import {Kontakt, Oseba} from "../../api/models";
 
 export interface SporociloInfo {
   smer: "POSLANO" | "PREJETO",

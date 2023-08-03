@@ -1,11 +1,11 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {FormGroup} from "@angular/forms";
-import {DefaultService} from "../../../api";
 import {AlertService} from "../../../components/alert/alert.service";
 import {InputTelefonComponent} from "../../../components/input-phone/input-telefon.component";
 import {InputOsebaComponent} from "../../../components/input-oseba/input-oseba.component";
 import {InputMsgComponent} from "../../../components/input-msg/input-msg.component";
 import {InputEmailComponent} from "../../../components/input-email/input-email.component";
+import {ApiService} from "../../../api/services/api.service";
 
 @Component({
   selector: 'app-public-kontakt',
@@ -20,7 +20,8 @@ export class PublicKontaktComponent implements AfterViewInit {
   @ViewChild(InputEmailComponent) input_email?: InputEmailComponent;
   formGroup: FormGroup = new FormGroup({});
 
-  constructor(private defaultService: DefaultService, private alertService: AlertService) {
+  constructor(private ApiService: ApiService,
+              private alertService: AlertService) {
   }
 
   ngAfterViewInit(): void {
@@ -37,11 +38,13 @@ export class PublicKontaktComponent implements AfterViewInit {
     if (this.formGroup?.invalid) return;
 
     this.loading = true
-    this.defaultService.postKontakt({
-      ime_priimek: this.input_oseba?.formControl.getRawValue() || "",
-      email: this.input_email?.formControl.getRawValue() || "",
-      telefon: this.input_telefon?.formControl.getRawValue() || "",
-      vsebina: this.input_msg?.formControl.getRawValue() || "",
+    this.ApiService.kontaktPost({
+      body: {
+        ime_priimek: this.input_oseba?.formControl.getRawValue() || "",
+        email: this.input_email?.formControl.getRawValue() || "",
+        telefon: this.input_telefon?.formControl.getRawValue() || "",
+        vsebina: this.input_msg?.formControl.getRawValue() || "",
+      }
     }).subscribe({
       next(value) {
         self.alertService.info(JSON.stringify(value, null, 4))

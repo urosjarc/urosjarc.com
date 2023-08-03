@@ -1,8 +1,8 @@
 import {Component, OnInit} from "@angular/core";
-import {DefaultService} from "../../api";
 import {AlertService} from "../../components/alert/alert.service";
 import {NavGumb} from "../../components/nav-gumb/NavGumb";
 import {routing} from "../../app-routing.module";
+import {ApiService} from "../../api/services/api.service";
 
 @Component({
   selector: 'app-ucenec',
@@ -45,7 +45,7 @@ export class UcenecComponent implements OnInit {
 
   constructor(
     private alertService: AlertService,
-    private defaultService: DefaultService
+    private apiService: ApiService
   ) {
   }
 

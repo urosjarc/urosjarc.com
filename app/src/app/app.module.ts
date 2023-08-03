@@ -1,4 +1,4 @@
-import {LOCALE_ID, NgModule} from '@angular/core';
+import {forwardRef, LOCALE_ID, NgModule, Provider} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import * as moment from "moment"
 
@@ -24,8 +24,7 @@ import {InputOsebaComponent} from './components/input-oseba/input-oseba.componen
 import {MatTableModule} from "@angular/material/table";
 import {InputMsgComponent} from "./components/input-msg/input-msg.component";
 import {InputGesloComponent} from "./components/input-geslo/input-geslo.component";
-import {DefaultService} from "./api";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AlertService} from "./components/alert/alert.service";
 import {MatDialogModule} from "@angular/material/dialog";
 import {UcenecComponent} from "./routes/ucenec/ucenec.component";
@@ -58,9 +57,17 @@ import {TableTestiComponent} from "./components/table-testi/table-testi.componen
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {LoadingComponent} from "./components/loading/loading.component";
+import {ApiModule} from "./api/api.module";
+import {ApiInterceptor} from "./api";
 
 const locale = 'sl'
 moment.locale(locale);
+
+export const API_INTERCEPTOR_PROVIDER: Provider = {
+  provide: HTTP_INTERCEPTORS,
+  useExisting: forwardRef(() => ApiInterceptor),
+  multi: true
+};
 
 @NgModule({
   declarations: [
@@ -120,7 +127,8 @@ moment.locale(locale);
     MatProgressBarModule,
   ],
   providers: [
-    DefaultService,
+    ApiInterceptor,
+    API_INTERCEPTOR_PROVIDER,
     AlertService,
     {provide: LOCALE_ID, useValue: locale},
     {provide: MAT_DATE_LOCALE, useValue: locale},

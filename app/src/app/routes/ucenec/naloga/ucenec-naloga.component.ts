@@ -2,12 +2,15 @@ import {Component, Input, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {Subscription, timer} from 'rxjs';
 import {db} from "../../../db";
-import {Audit, DefaultService, Naloga, Status} from "../../../api";
 import {ime} from "../../../utils";
 import {AlertService} from "../../../components/alert/alert.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Location} from '@angular/common';
 import {MatTableDataSource} from "@angular/material/table";
+import {ApiService} from "../../../api/services/api.service";
+import {Naloga} from "../../../api/models/naloga";
+import {Status} from "../../../api/models/status";
+import {Audit} from "../../../api/models/audit";
 
 @Component({
   selector: 'app-ucenec-naloga',
@@ -15,7 +18,6 @@ import {MatTableDataSource} from "@angular/material/table";
   styleUrls: ['./ucenec-naloga.component.scss']
 })
 export class UcenecNalogaComponent implements OnDestroy {
-  protected readonly Status = Status;
   test_id: string
   naloga_id: string
 
@@ -24,16 +26,16 @@ export class UcenecNalogaComponent implements OnDestroy {
   naloga: Naloga = {}
   status: Status | undefined
   @Input() audits = new MatTableDataSource<Audit>()
-  statusi: Status.tip[] = [
-    Status.tip.NERESENO,
-    Status.tip.PRAVILNO,
-    Status.tip.NAPACNO,
+  statusi: Status['tip'][] = [
+    'NERESENO',
+    'PRAVILNO',
+    'NAPACNO',
   ];
 
   constructor(
     private _location: Location,
     private alertService: AlertService,
-    private defaultService: DefaultService,
+    private apiService: ApiService,
     private route: ActivatedRoute) {
     this.test_id = route.snapshot.paramMap.get("test_id") || ""
     this.naloga_id = route.snapshot.paramMap.get("naloga_id") || ""
@@ -69,11 +71,15 @@ export class UcenecNalogaComponent implements OnDestroy {
     this.audits.data = await db.audit.where(ime<Audit>("entitete_id")).equals(this.status?._id || "").toArray()
   }
 
-  nastaviStatus(status_tip: Status.tip) {
+  nastaviStatus(status_tip: Status['tip']) {
     const self = this;
-    this.defaultService.postUcenecTestNaloga(this.test_id, this.naloga_id, {
-      tip: status_tip,
-      sekund: this.sekunde,
+    this.apiService.ucenecTestTestIdNalogaNalogaIdPost({
+      test_id: this.test_id,
+      naloga_id: this.naloga_id,
+      body: {
+        tip: status_tip,
+        sekund: this.sekunde,
+      }
     }).subscribe({
       next(value) {
         if (value.status) db.status.put(value.status)

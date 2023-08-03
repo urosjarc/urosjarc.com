@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {db} from "../../../db";
 import {ime} from "../../../utils";
-import {Audit} from "../../../api";
+import {Audit} from "../../../api/models/audit";
 
 @Component({
   selector: 'app-ucenec-delo',

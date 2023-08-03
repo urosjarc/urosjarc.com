@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {db} from "../../../db";
-import {Kontakt, Oseba, Sporocilo} from "../../../api";
 import {ime} from "../../../utils";
 import {String_vDate} from "../../../extends/String";
 import {MatTableDataSource} from "@angular/material/table";
@@ -10,6 +9,9 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {SporociloInfo} from "../../../components/dialog-sporocilo/SporociloInfo";
 import {MatDialog} from "@angular/material/dialog";
 import {DialogSporociloComponent} from "../../../components/dialog-sporocilo/dialog-sporocilo.component";
+import {Oseba} from "../../../api/models/oseba";
+import {Sporocilo} from "../../../api/models/sporocilo";
+import {Kontakt} from "../../../api/models/kontakt";
 
 
 @Component({

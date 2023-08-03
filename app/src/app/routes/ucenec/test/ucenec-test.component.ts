@@ -2,12 +2,17 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {NalogaInfo} from "./NalogaInfo";
 import {db} from "../../../db";
-import {Audit, DefaultService, Naloga, Status, Tematika, Test} from "../../../api";
 import {ime} from "../../../utils";
 import * as moment from "moment";
 import {median, standardDeviation} from "simple-statistics";
 import {MatDialog} from "@angular/material/dialog";
 import {DialogIzberiDatumComponent} from "../../../components/dialog-izberi-datum/dialog-izberi-datum.component";
+import {ApiService} from "../../../api/services/api.service";
+import {Test} from "../../../api/models/test";
+import {Audit} from "../../../api/models/audit";
+import {Status} from "../../../api/models/status";
+import {Tematika} from "../../../api/models/tematika";
+import {Naloga} from "../../../api/models/naloga";
 
 @Component({
   selector: 'app-ucenec-test',
@@ -15,7 +20,6 @@ import {DialogIzberiDatumComponent} from "../../../components/dialog-izberi-datu
   styleUrls: ['./ucenec-test.component.scss']
 })
 export class UcenecTestComponent implements OnInit {
-  protected readonly Status = Status;
   test_id: string
 
   statistika_barve: any = {
@@ -36,7 +40,7 @@ export class UcenecTestComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private defaultService: DefaultService
+    private apiService: ApiService
   ) {
     this.test_id = route.snapshot.paramMap.get("test_id") || ""
   }
@@ -58,10 +62,12 @@ export class UcenecTestComponent implements OnInit {
 
 
   async initCasovnaStatistika(root_id: string, test: Test) {
+    const audit_tip: Audit['tip'] = 'STATUS_TIP_POSODOBITEV'
+    const status_tip: Status['tip'] = 'PRAVILNO'
     const audits = await db.audit.where({
       [ime<Audit>("entitete_id")]: this.test_id,
-      [ime<Audit>("tip")]: Audit.tip.STATUS_TIP_POSODOBITEV,
-      [ime<Audit>("opis")]: Status.tip.PRAVILNO
+      [ime<Audit>("tip")]: audit_tip,
+      [ime<Audit>("opis")]: status_tip
     }).toArray()
 
     let trajanja_sek = audits.map(audit => moment.duration(audit.trajanje).asSeconds())
@@ -81,20 +87,22 @@ export class UcenecTestComponent implements OnInit {
 
     const statistika_num = new Map<string, number>()
     for (const status of statusi) {
-      const status_tip = status.tip || Status.tip.NEZACETO
-      const st = statistika_num.get(status_tip) || 0
-      statistika_num.set(status_tip, st + 1)
+      const status_tip: Status['tip'] = status.tip || 'NEZACETO'
+      const st = statistika_num.get(status_tip as string) || 0
+      statistika_num.set(status_tip as string, st + 1)
     }
-    const pravilno = statistika_num.get(Status.tip.PRAVILNO) || 0
+    const status_tip: Status['tip'] = 'PRAVILNO'
+    const pravilno = statistika_num.get(status_tip) || 0
     const vse_naloge = test.naloga_id?.length || 0
     const manjka = vse_naloge - pravilno
 
     const dni_ostalo = moment(test.deadline).diff(moment(), 'days')
     this.delo = `${dni_ostalo > 0 ? Math.ceil(manjka / dni_ostalo) : manjka} nalog na dan`
 
+    const PRAVILNO: Status['tip'] = "PRAVILNO"
     this.opravljeno = [
       {
-        name: Status.tip.PRAVILNO,
+        name: PRAVILNO,
         value: pravilno
       },
       {
@@ -154,16 +162,19 @@ export class UcenecTestComponent implements OnInit {
     matDialogRef.afterClosed().subscribe((datum: Date) => {
       if (datum) {
         let deadline = moment(datum).toISOString(true).split("T")[0]
-        this.defaultService.putUcenecTest(this.test_id, {
-          datum: deadline
+        this.apiService.ucenecTestTestIdPut({
+          test_id: this.test_id,
+          body: {
+            datum: deadline
+          }
         }).subscribe(
           {
-            next(value) {
-              if(value.test) db.test.put(value.test)
-              if(value.audit) db.audit.put(value.audit)
+            next(res) {
+              if (res.test) db.test.put(res.test)
+              if (res.audit) db.audit.put(res.audit)
               self.ngOnInit()
             },
-            error(err) {
+            error(err: any) {
               console.log("Error: ", err)
             }
           }

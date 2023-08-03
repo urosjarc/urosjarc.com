@@ -14,7 +14,7 @@ import {
   Test,
   Ucenje,
   Zvezek
-} from "./api";
+} from "./api/models";
 import {ime, isObject} from "./utils";
 
 // @ts-ignore

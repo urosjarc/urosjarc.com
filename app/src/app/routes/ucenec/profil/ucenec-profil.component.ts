@@ -1,7 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {db} from "../../../db";
-import {Id, Kontakt, Naslov, Oseba} from "../../../api";
 import {ime} from "../../../utils";
+import {Oseba} from "../../../api/models/oseba";
+import {Naslov} from "../../../api/models/naslov";
+import {Kontakt} from "../../../api/models/kontakt";
 
 
 @Component({
