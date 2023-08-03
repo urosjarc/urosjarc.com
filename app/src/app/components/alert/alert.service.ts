@@ -9,7 +9,6 @@ export class AlertService {
   private alertsObserver: Subject<Alert> = new Subject();
 
   info(naslov: string, vsebina: string) {
-    console.log({naslov, vsebina})
     this.alert(naslov, vsebina, "primary");
   }
 

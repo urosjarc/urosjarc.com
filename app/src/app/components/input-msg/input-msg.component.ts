@@ -10,7 +10,7 @@ export class InputMsgComponent {
   @Input() formControl = new FormControl('', [
     Validators.required,
     Validators.minLength(10),
-    Validators.pattern("\\S+\\s+\\S+\\s+\\S+")
+    Validators.pattern(".*\\S+\\s+\\S+\\s+\\S+.*")
   ]);
 
   getErrorMessage() {

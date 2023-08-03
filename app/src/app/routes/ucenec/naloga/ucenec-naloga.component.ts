@@ -52,7 +52,7 @@ export class UcenecNalogaComponent implements OnDestroy {
 
   async initNaloga() {
 
-    const root_id = await db.get_root_id()
+    const root_id = db.get_root_id()
     const naloga = await db.naloga.where(ime<Naloga>("_id")).equals(this.naloga_id).first()
 
     if (!naloga) return

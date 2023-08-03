@@ -46,7 +46,7 @@ export class UcenecTestComponent implements OnInit {
   }
 
   async ngOnInit() {
-    const root_id = await db.get_root_id()
+    const root_id = db.get_root_id()
     const test = await db.test.where({
       [ime<Test>("_id")]: this.test_id,
       [ime<Test>("oseba_ucenec_id")]: root_id

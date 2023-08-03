@@ -54,7 +54,7 @@ export class UcenecSporocilaComponent implements OnInit, AfterViewInit {
   }
 
   async initSporocila() {
-    const root_id = await db.get_root_id()
+    const root_id = db.get_root_id()
     const oseba = await db.oseba.where(ime<Oseba>("_id")).equals(root_id).first()
 
     if (!oseba) return

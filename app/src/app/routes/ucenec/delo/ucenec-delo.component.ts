@@ -13,7 +13,7 @@ export class UcenecDeloComponent {
   audits = new MatTableDataSource<Audit>()
 
   async ngOnInit() {
-    const root_id = await db.get_root_id()
+    const root_id = db.get_root_id()
     this.audits.data = await db.audit.where(ime<Audit>("entitete_id")).equals(root_id).toArray()
   }
 }

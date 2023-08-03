@@ -56,26 +56,28 @@ export class AppDB extends Dexie {
     })
   }
 
-  async get_root_id() {
-    return await this.root_id.get(0) || ""
+  get_root_id(): string {
+    return localStorage.getItem("root_id") || ""
   }
 
-  async get_token() {
-    return await this.token.get(0)
+  set_root_id(root_id: string) {
+    return localStorage.setItem("root_id", root_id)
+  }
+
+  get_token(): string {
+    return localStorage.getItem("token") || ""
   }
 
   set_token(token: string) {
-    this.token.put(token, 0)
+    localStorage.setItem("token", token)
   }
 
   async reset(osebaData: OsebaData) {
-    console.log("Reset db: ", osebaData)
-    const count = (JSON.stringify(osebaData).match(/\{/g) || []).length
+    this.set_root_id(osebaData.oseba?._id || "")
 
+    console.log("Reset db: ", osebaData)
     await this.delete()
     await this.open()
-
-    this.root_id.put(osebaData.oseba?._id || "", 0)
 
     const imena_tabel = this.tables.map((table) => table.name)
     const cakalnica_value: any[] = [osebaData]

@@ -21,7 +21,7 @@ export class UcenecTestiComponent implements OnInit {
   }
 
   async initTestVrstice() {
-    const root_id = await db.get_root_id()
+    const root_id = db.get_root_id()
     const testi = await db.test
       .where(ime<Test>("oseba_ucenec_id"))
       .equals(root_id)

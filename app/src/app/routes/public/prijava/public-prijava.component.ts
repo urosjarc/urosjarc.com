@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 import {AlertService} from "../../../components/alert/alert.service";
-import {HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {db} from "../../../db";
 import {routing} from "../../../app-routing.module";
@@ -26,13 +25,9 @@ export class PublicPrijavaComponent implements OnInit {
 
   async ngOnInit() {
     const self = this
-    const token = await db.get_token()
-    if (token) this.apiService.authProfilGet().subscribe({
+    if (db.get_token()) this.apiService.authProfilGet().subscribe({
       next(profil) {
         self.prijava(profil.tip || [])
-      },
-      error(err) {
-
       }
     })
   }
@@ -79,6 +74,9 @@ export class PublicPrijavaComponent implements OnInit {
         db.reset(adminData as OsebaData).then(r => {
           alert("NOt implemented.")
         })
+      },
+      error() {
+        self.loading = false
       }
     })
   }

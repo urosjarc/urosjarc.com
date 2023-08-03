@@ -14,7 +14,7 @@ export class ApiInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const self = this
-    // Apply the headers
+
     req = req.clone({
       setHeaders: {
         Authorization: `Bearer ${db.get_token()}`
@@ -33,13 +33,14 @@ export class ApiInterceptor implements HttpInterceptor {
   }
 
   serverNapaka(err: HttpErrorResponse) {
+    const msg = err.error ? `${err.error.status}: ${err.error.info}` : err.message
     this.alertService.error("KRITIČNA NAPAKA", `
       Zgodila se je kritična napaka! Incident se je že registriral!<br>
       Sporočite mi svoje podatke preko email-a ali telefona,<br>
       da Vas bom lahko obvestil, ko bo apliakcija spet normalno delovala.<br>
       Za vse nevšečnosti se Vam iskreno opravičujem!<br>
       <br>
-      ${err.error.status}: ${err.error.info}
+      ${msg}
     `)
   }
   uporabniskaNapaka(err: HttpErrorResponse) {
