@@ -8,10 +8,16 @@ export const ucenecGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService)
 
   return new Promise(resolve => {
-    authService.profilTip("UCENEC", (has) => resolve(has), () => {
-      resolve(router.createUrlTree([
-        routing.public({}).prijava({}).$
-      ]))
+    authService.profilTip({
+      tip: "UCENEC",
+      next(hasTip: boolean) {
+        resolve(hasTip)
+      },
+      error(err: any) {
+        resolve(router.createUrlTree([
+          routing.public({}).prijava({}).$
+        ]))
+      }
     })
   })
 };

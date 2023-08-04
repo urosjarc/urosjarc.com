@@ -12,7 +12,7 @@ export class AuthService {
   }
 
   profil(authProfil: AuthProfil) {
-    if (!this.dbService.get_token()) fail()
+    if (!this.dbService.get_token()) authProfil.error(null)
     this.apiService.authProfilGet({}).subscribe({
       error: authProfil.error,
       next(res) {

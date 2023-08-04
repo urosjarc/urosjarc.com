@@ -62,6 +62,7 @@ import {SyncService} from "./services/sync/sync.service";
 import {API_INTERCEPTOR_PROVIDER, ApiInterceptor} from "./services/api/ApiInterceptor";
 import "@angular/common/locales/global/sl"
 import 'moment/locale/sl';
+import { AdminComponent } from './routes/admin/admin.component';
 
 const locale = 'sl'
 moment.locale(locale);
@@ -95,6 +96,7 @@ moment.locale(locale);
     PublicComponent,
     TableTestiComponent,
     LoadingComponent,
+    AdminComponent,
   ],
   imports: [
     DateOddaljenostPipe,

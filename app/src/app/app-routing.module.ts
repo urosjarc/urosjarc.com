@@ -14,6 +14,9 @@ import {UcenecTestiComponent} from "./routes/ucenec/testi/ucenec-testi.component
 import {RouterModule} from "@angular/router";
 import {NgModule} from "@angular/core";
 import {ucenecGuard} from "./routes/ucenec/ucenec.guard";
+import {AdminComponent} from "./routes/admin/admin.component";
+import {publicPrijavaGuard} from "./routes/public/prijava/public-prijava.guard";
+import {adminGuard} from "./routes/admin/admin.guard";
 
 const index = route('', {}, {})
 
@@ -31,6 +34,7 @@ const testi = route('testi', {}, {})
 export const routing = {
   "public": route('/', {}, {index, koledar, kontakt, prijava}),
   "ucenec": route('/ucenec', {}, {delo, naloga, profil, sporocila, test, testi}),
+  "admin": route('/admin', {}, {}),
 }
 
 const routes = [
@@ -39,7 +43,7 @@ const routes = [
       {path: index.template, component: PublicIndexComponent},
       {path: koledar.template, component: PublicKoledarComponent},
       {path: kontakt.template, component: PublicKontaktComponent},
-      {path: prijava.template, component: PublicPrijavaComponent},
+      {path: prijava.template, component: PublicPrijavaComponent, canActivate: [publicPrijavaGuard]},
     ]
   },
   {
@@ -53,6 +57,7 @@ const routes = [
       {path: testi.template, component: UcenecTestiComponent},
     ]
   },
+  {path: routing.admin.template, component: AdminComponent, canActivate: [adminGuard]},
   {path: '**', component: PublicIndexComponent},
 ];
 

@@ -1,4 +1,4 @@
-openapi: "2.0.3"
+openapi: "3.0.3"
 info:
   title: "server API"
   description: "server API"
@@ -308,6 +308,8 @@ components:
       type: "object"
       properties:
         username:
+          type: "string"
+        geslo:
           type: "string"
     StatusUpdateReq:
       type: "object"

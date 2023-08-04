@@ -4,5 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PrijavaReq(
-    val username: String
+    val username: String,
+    val geslo: String
 )
