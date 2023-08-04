@@ -1,5 +1,4 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {db} from "../../../db";
 import {ime} from "../../../utils";
 import {String_vDate} from "../../../extends/String";
 import {MatTableDataSource} from "@angular/material/table";
@@ -9,10 +8,10 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {SporociloInfo} from "../../../components/dialog-sporocilo/SporociloInfo";
 import {MatDialog} from "@angular/material/dialog";
 import {DialogSporociloComponent} from "../../../components/dialog-sporocilo/dialog-sporocilo.component";
-import {Oseba} from "../../../api/models/oseba";
-import {Sporocilo} from "../../../api/models/sporocilo";
-import {Kontakt} from "../../../api/models/kontakt";
-
+import {DbService} from "../../../services/db/db.service";
+import {Oseba} from "../../../services/api/openapi/models/oseba";
+import {Kontakt} from "../../../services/api/openapi/models/kontakt";
+import {Sporocilo} from "../../../services/api/openapi/models/sporocilo";
 
 @Component({
   selector: 'app-ucenec-sporocila',
@@ -36,7 +35,9 @@ export class UcenecSporocilaComponent implements OnInit, AfterViewInit {
   sporocila: MatTableDataSource<SporociloInfo> = new MatTableDataSource<SporociloInfo>()
   displayedColumns = ["smer", "pred", "posiljatelj", "prejemnik", "datum"]
 
-  constructor(private dialog: MatDialog) {
+  constructor(
+    private dbService: DbService,
+    private dialog: MatDialog) {
   }
 
   ngAfterViewInit() {
@@ -54,28 +55,28 @@ export class UcenecSporocilaComponent implements OnInit, AfterViewInit {
   }
 
   async initSporocila() {
-    const root_id = db.get_root_id()
-    const oseba = await db.oseba.where(ime<Oseba>("_id")).equals(root_id).first()
+    const root_id = this.dbService.get_root_id()
+    const oseba = await this.dbService.oseba.where(ime<Oseba>("_id")).equals(root_id).first()
 
     if (!oseba) return
 
-    const kontakti = await db.kontakt.where(ime<Kontakt>("oseba_id")).equals(root_id).toArray()
+    const kontakti = await this.dbService.kontakt.where(ime<Kontakt>("oseba_id")).equals(root_id).toArray()
     const vsa_sporocila: SporociloInfo[] = []
 
     for (const kontakt of kontakti) {
-      const prejeta_sporocila = await db.sporocilo.where(ime<Sporocilo>("kontakt_prejemnik_id")).equals(kontakt._id as string).toArray()
-      const poslana_sporocila = await db.sporocilo.where(ime<Sporocilo>("kontakt_posiljatelj_id")).equals(kontakt._id as string).toArray()
+      const prejeta_sporocila = await this.dbService.sporocilo.where(ime<Sporocilo>("kontakt_prejemnik_id")).equals(kontakt._id as string).toArray()
+      const poslana_sporocila = await this.dbService.sporocilo.where(ime<Sporocilo>("kontakt_posiljatelj_id")).equals(kontakt._id as string).toArray()
       const sporocila = [...prejeta_sporocila, ...poslana_sporocila]
 
       for (const sporocilo of sporocila) {
         if (!sporocilo.kontakt_posiljatelj_id) continue
         const je_posiljatelj = sporocilo.kontakt_posiljatelj_id == kontakt._id
 
-        const posiljatelj_kontakt = await db.kontakt.where(ime<Kontakt>("_id")).equals(sporocilo.kontakt_posiljatelj_id).first()
+        const posiljatelj_kontakt = await this.dbService.kontakt.where(ime<Kontakt>("_id")).equals(sporocilo.kontakt_posiljatelj_id).first()
         if (!posiljatelj_kontakt) continue
 
         const posiljatelj_id = posiljatelj_kontakt.oseba_id?.[0] as string
-        const posiljatelj = await db.oseba.where(ime<Oseba>("_id")).equals(posiljatelj_id).first()
+        const posiljatelj = await this.dbService.oseba.where(ime<Oseba>("_id")).equals(posiljatelj_id).first()
         if (!posiljatelj) continue
 
         vsa_sporocila.push({

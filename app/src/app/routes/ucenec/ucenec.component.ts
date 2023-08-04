@@ -1,16 +1,14 @@
-import {Component, OnInit} from "@angular/core";
-import {AlertService} from "../../services/alert/alert.service";
+import {Component} from "@angular/core";
 import {NavGumb} from "../../components/nav-gumb/NavGumb";
 import {routing} from "../../app-routing.module";
-import {ApiService} from "../../api/services/api.service";
-import {db} from "../../db";
+import {DbService} from "../../services/db/db.service";
 
 @Component({
   selector: 'app-ucenec',
   templateUrl: './ucenec.component.html',
   styleUrls: ['./ucenec.component.scss']
 })
-export class UcenecComponent implements OnInit {
+export class UcenecComponent {
   private navStyle = "background-color: forestgreen; color: white"
   navGumbi: NavGumb[] = [
     {
@@ -45,20 +43,14 @@ export class UcenecComponent implements OnInit {
     {
       tekst: "Odjava",
       ikona: "close",
-      onClick: () => {
-        db.set_token("")
-        alert("Token cleared")
-      }
+      onClick: this.odjava
     },
   ];
 
-  constructor(
-    private alertService: AlertService,
-    private apiService: ApiService
-  ) {
+  constructor(private dbService: DbService) {
   }
 
-  ngOnInit() {
+  odjava() {
+    this.dbService.set_token("")
   }
-
 }

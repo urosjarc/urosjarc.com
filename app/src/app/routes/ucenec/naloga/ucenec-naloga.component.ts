@@ -1,15 +1,15 @@
 import {Component, Input, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {Subscription, timer} from 'rxjs';
-import {db} from "../../../db";
 import {ime} from "../../../utils";
 import {AlertService} from "../../../services/alert/alert.service";
 import {Location} from '@angular/common';
 import {MatTableDataSource} from "@angular/material/table";
-import {ApiService} from "../../../api/services/api.service";
-import {Naloga} from "../../../api/models/naloga";
-import {Status} from "../../../api/models/status";
-import {Audit} from "../../../api/models/audit";
+import {Naloga} from "../../../services/api/openapi/models/naloga";
+import {Status} from "../../../services/api/openapi/models/status";
+import {Audit} from "../../../services/api/openapi/models/audit";
+import {ApiService} from "../../../services/api/openapi/services/api.service";
+import {DbService} from "../../../services/db/db.service";
 
 @Component({
   selector: 'app-ucenec-naloga',
@@ -33,6 +33,7 @@ export class UcenecNalogaComponent implements OnDestroy {
 
   constructor(
     private _location: Location,
+    private dbService: DbService,
     private alertService: AlertService,
     private apiService: ApiService,
     private route: ActivatedRoute) {
@@ -52,13 +53,13 @@ export class UcenecNalogaComponent implements OnDestroy {
 
   async initNaloga() {
 
-    const root_id = db.get_root_id()
-    const naloga = await db.naloga.where(ime<Naloga>("_id")).equals(this.naloga_id).first()
+    const root_id = this.dbService.get_root_id()
+    const naloga = await this.dbService.naloga.where(ime<Naloga>("_id")).equals(this.naloga_id).first()
 
     if (!naloga) return
 
     this.naloga = naloga
-    this.status = await db.status.where({
+    this.status = await this.dbService.status.where({
       [ime<Status>("naloga_id")]: this.naloga_id,
       [ime<Status>("oseba_id")]: root_id,
       [ime<Status>("test_id")]: this.test_id,
@@ -66,7 +67,7 @@ export class UcenecNalogaComponent implements OnDestroy {
   }
 
   async initAudits() {
-    this.audits.data = await db.audit.where(ime<Audit>("entitete_id")).equals(this.status?._id || "").toArray()
+    this.audits.data = await this.dbService.audit.where(ime<Audit>("entitete_id")).equals(this.status?._id || "").toArray()
   }
 
   nastaviStatus(status_tip: Status['tip']) {
@@ -80,8 +81,8 @@ export class UcenecNalogaComponent implements OnDestroy {
       }
     }).subscribe({
       next(value) {
-        if (value.status) db.status.put(value.status)
-        if (value.audit) db.audit.put(value.audit)
+        if (value.status) self.dbService.status.put(value.status)
+        if (value.audit) self.dbService.audit.put(value.audit)
         self._location.back()
       }
     })

@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {Status} from "../../api/models/status";
+import {Status} from "../../services/api/openapi/models/status";
 
 @Pipe({
   name: 'StatusStyle',

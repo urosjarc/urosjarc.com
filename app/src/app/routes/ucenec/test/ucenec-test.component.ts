@@ -1,18 +1,18 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {NalogaInfo} from "./NalogaInfo";
-import {db} from "../../../db";
 import {ime} from "../../../utils";
 import * as moment from "moment";
 import {median, standardDeviation} from "simple-statistics";
 import {MatDialog} from "@angular/material/dialog";
 import {DialogIzberiDatumComponent} from "../../../components/dialog-izberi-datum/dialog-izberi-datum.component";
-import {ApiService} from "../../../api/services/api.service";
-import {Test} from "../../../api/models/test";
-import {Audit} from "../../../api/models/audit";
-import {Status} from "../../../api/models/status";
-import {Tematika} from "../../../api/models/tematika";
-import {Naloga} from "../../../api/models/naloga";
+import {ApiService} from "../../../services/api/openapi/services/api.service";
+import {Test} from "../../../services/api/openapi/models/test";
+import {DbService} from "../../../services/db/db.service";
+import {Audit} from "../../../services/api/openapi/models/audit";
+import {Status} from "../../../services/api/openapi/models/status";
+import {Naloga} from "../../../services/api/openapi/models/naloga";
+import {Tematika} from "../../../services/api/openapi/models/tematika";
 
 @Component({
   selector: 'app-ucenec-test',
@@ -38,6 +38,7 @@ export class UcenecTestComponent implements OnInit {
   deadline: Date = new Date();
 
   constructor(
+    private dbService: DbService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private apiService: ApiService
@@ -46,8 +47,8 @@ export class UcenecTestComponent implements OnInit {
   }
 
   async ngOnInit() {
-    const root_id = db.get_root_id()
-    const test = await db.test.where({
+    const root_id = this.dbService.get_root_id()
+    const test = await this.dbService.test.where({
       [ime<Test>("_id")]: this.test_id,
       [ime<Test>("oseba_ucenec_id")]: root_id
     }).first()
@@ -64,7 +65,7 @@ export class UcenecTestComponent implements OnInit {
   async initCasovnaStatistika(root_id: string, test: Test) {
     const audit_tip: Audit['tip'] = 'STATUS_TIP_POSODOBITEV'
     const status_tip: Status['tip'] = 'PRAVILNO'
-    const audits = await db.audit.where({
+    const audits = await this.dbService.audit.where({
       [ime<Audit>("entitete_id")]: this.test_id,
       [ime<Audit>("tip")]: audit_tip,
       [ime<Audit>("opis")]: status_tip
@@ -80,7 +81,7 @@ export class UcenecTestComponent implements OnInit {
   }
 
   async initStatistikaOpravljenoDelo(root_id: string, test: Test) {
-    const statusi = await db.status.where({
+    const statusi = await this.dbService.status.where({
       [ime<Status>("oseba_id")]: root_id,
       [ime<Status>("test_id")]: this.test_id,
     }).toArray()
@@ -124,17 +125,17 @@ export class UcenecTestComponent implements OnInit {
     let i = 0
     const tema_nalogeInfo = new Map<string, NalogaInfo[]>()
     for (const nalogaId of naloga_ids) {
-      const naloga = await db.naloga.where(ime<Naloga>("_id")).equals(nalogaId).first()
+      const naloga = await this.dbService.naloga.where(ime<Naloga>("_id")).equals(nalogaId).first()
 
       if (!naloga) return
 
-      const status = await db.status.where({
+      const status = await this.dbService.status.where({
         [ime<Status>("naloga_id")]: naloga._id,
         [ime<Status>("oseba_id")]: root_id,
         [ime<Status>("test_id")]: this.test_id,
       }).first()
 
-      const tema = await db.tematika.where(ime<Tematika>("_id")).equals(naloga.tematika_id || "").first()
+      const tema = await this.dbService.tematika.where(ime<Tematika>("_id")).equals(naloga.tematika_id || "").first()
 
       if (!tema) continue
       if (!tema.naslov) continue
@@ -170,8 +171,8 @@ export class UcenecTestComponent implements OnInit {
         }).subscribe(
           {
             next(res) {
-              if (res.test) db.test.put(res.test)
-              if (res.audit) db.audit.put(res.audit)
+              if (res.test) self.dbService.test.put(res.test)
+              if (res.audit) self.dbService.audit.put(res.audit)
               self.ngOnInit()
             }
           }
