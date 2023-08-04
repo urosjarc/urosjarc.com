@@ -1,5 +1,6 @@
 package domain
 
+import base.Encrypted
 import base.Id
 import kotlinx.serialization.Serializable
 
@@ -7,8 +8,8 @@ import kotlinx.serialization.Serializable
 data class Kontakt(
     override var _id: Id<Kontakt> = Id(),
     var oseba_id: MutableSet<Id<Oseba>>, // Mama in sin si lahko delita kontakt!
-    val data: String,
-    var tip: Tip
+    var tip: Tip,
+    @Encrypted val data: String
 ) : Entiteta<Kontakt> {
     enum class Tip { EMAIL, TELEFON }
 }

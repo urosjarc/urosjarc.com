@@ -1,5 +1,6 @@
 package domain
 
+import base.Encrypted
 import base.Id
 import extend.zdaj
 import kotlinx.datetime.LocalDateTime
@@ -10,6 +11,6 @@ data class Sporocilo(
     override var _id: Id<Sporocilo> = Id(),
     var kontakt_posiljatelj_id: Id<Kontakt>,
     var kontakt_prejemnik_id: MutableSet<Id<Kontakt>>,
-    val vsebina: String,
-    var poslano: LocalDateTime = LocalDateTime.zdaj()
+    @Encrypted var poslano: LocalDateTime = LocalDateTime.zdaj(),
+    @Encrypted val vsebina: String,
 ) : Entiteta<Sporocilo>

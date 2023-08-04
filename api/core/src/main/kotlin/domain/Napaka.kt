@@ -1,6 +1,7 @@
 package domain
 
 import base.AnyId
+import base.Encrypted
 import base.Id
 import extend.zdaj
 import kotlinx.datetime.LocalDateTime
@@ -12,9 +13,9 @@ data class Napaka(
     override var _id: Id<Napaka> = Id(),
     var entitete_id: Set<AnyId>,
     val tip: Tip,
-    val vsebina: String,
-    val dodatno: String,
-    val ustvarjeno: LocalDateTime = LocalDateTime.zdaj()
+    @Encrypted val ustvarjeno: LocalDateTime = LocalDateTime.zdaj(),
+    @Encrypted val vsebina: String,
+    @Encrypted val dodatno: String,
 ) : Entiteta<Napaka> {
     enum class Tip { ERROR, WARN, FATAL }
 

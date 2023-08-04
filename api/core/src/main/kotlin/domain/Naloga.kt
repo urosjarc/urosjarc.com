@@ -1,5 +1,6 @@
 package domain
 
+import base.Encrypted
 import base.Id
 import kotlinx.serialization.Serializable
 
@@ -7,6 +8,6 @@ import kotlinx.serialization.Serializable
 data class Naloga(
     override var _id: Id<Naloga> = Id(),
     var tematika_id: Id<Tematika>,
-    val resitev: String,
-    val vsebina: String,
+    @Encrypted val resitev: String,
+    @Encrypted val vsebina: String,
 ) : Entiteta<Naloga>

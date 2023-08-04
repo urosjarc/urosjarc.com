@@ -1,5 +1,6 @@
 package domain
 
+import base.Encrypted
 import base.Id
 import kotlinx.serialization.Serializable
 
@@ -7,9 +8,9 @@ import kotlinx.serialization.Serializable
 data class Naslov(
     override var _id: Id<Naslov> = Id(),
     var oseba_id: Id<Oseba>,
-    val drzava: String,
-    val mesto: String,
-    val ulica: String,
-    val zip: Int,
-    val dodatno: String
+    @Encrypted val drzava: String,
+    @Encrypted val mesto: String,
+    @Encrypted val zip: Int,
+    @Encrypted val ulica: String,
+    @Encrypted val dodatno: String
 ) : Entiteta<Naslov>

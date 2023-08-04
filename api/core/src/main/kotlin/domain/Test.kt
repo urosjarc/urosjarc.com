@@ -1,5 +1,6 @@
 package domain
 
+import base.Encrypted
 import base.Id
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
@@ -11,7 +12,7 @@ data class Test(
     var oseba_admin_id: MutableSet<Id<Oseba>>,
     var oseba_ucenec_id: MutableSet<Id<Oseba>>,
     var naloga_id: MutableSet<Id<Naloga>>,
-    val naslov: String,
-    val podnaslov: String,
-    val deadline: LocalDate,
+    @Encrypted val naslov: String,
+    @Encrypted val podnaslov: String,
+    @Encrypted val deadline: LocalDate,
 ) : Entiteta<Test>
