@@ -1,4 +1,4 @@
-import {forwardRef, LOCALE_ID, NgModule, Provider} from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import * as moment from "moment"
 
@@ -24,7 +24,7 @@ import {InputOsebaComponent} from './components/input-oseba/input-oseba.componen
 import {MatTableModule} from "@angular/material/table";
 import {InputMsgComponent} from "./components/input-msg/input-msg.component";
 import {InputGesloComponent} from "./components/input-geslo/input-geslo.component";
-import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {HttpClientModule} from "@angular/common/http";
 import {AlertService} from "./services/alert/alert.service";
 import {MatDialogModule} from "@angular/material/dialog";
 import {UcenecComponent} from "./routes/ucenec/ucenec.component";
@@ -32,8 +32,6 @@ import {UcenecTestiComponent} from "./routes/ucenec/testi/ucenec-testi.component
 import {UcenecProfilComponent} from "./routes/ucenec/profil/ucenec-profil.component";
 import {DateOddaljenostPipe} from "./pipes/DateOddaljenost/date-oddaljenost.pipe";
 import {DATE_PIPE_DEFAULT_OPTIONS} from "@angular/common";
-import "@angular/common/locales/global/sl"
-import 'moment/locale/sl';
 import {MatListModule} from "@angular/material/list";
 import {MatCardModule} from "@angular/material/card";
 import {UcenecSporocilaComponent} from "./routes/ucenec/sporocila/ucenec-sporocila.component";
@@ -57,16 +55,16 @@ import {TableTestiComponent} from "./components/table-testi/table-testi.componen
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {LoadingComponent} from "./components/loading/loading.component";
-import {ApiInterceptor} from "./api";
+import {ApiService} from "./services/api/openapi/services";
+import {AuthService} from "./services/auth/auth.service";
+import {DbService} from "./services/db/db.service";
+import {SyncService} from "./services/sync/sync.service";
+import {API_INTERCEPTOR_PROVIDER, ApiInterceptor} from "./services/api/ApiInterceptor";
+import "@angular/common/locales/global/sl"
+import 'moment/locale/sl';
 
 const locale = 'sl'
 moment.locale(locale);
-
-export const API_INTERCEPTOR_PROVIDER: Provider = {
-  provide: HTTP_INTERCEPTORS,
-  useExisting: forwardRef(() => ApiInterceptor),
-  multi: true
-};
 
 @NgModule({
   declarations: [
@@ -96,9 +94,11 @@ export const API_INTERCEPTOR_PROVIDER: Provider = {
     AuditsTabelaComponent,
     PublicComponent,
     TableTestiComponent,
-    LoadingComponent
+    LoadingComponent,
   ],
   imports: [
+    DateOddaljenostPipe,
+    DateOddaljenostClassPipe,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -119,16 +119,18 @@ export const API_INTERCEPTOR_PROVIDER: Provider = {
     PieChartModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    DateOddaljenostPipe,
-    DateOddaljenostClassPipe,
     MatButtonToggleModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
   ],
   providers: [
+    AlertService,
+    ApiService,
+    AuthService,
+    DbService,
+    SyncService,
     ApiInterceptor,
     API_INTERCEPTOR_PROVIDER,
-    AlertService,
     {provide: LOCALE_ID, useValue: locale},
     {provide: MAT_DATE_LOCALE, useValue: locale},
     {provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: {dateFormat: 'EEE d.M.YYYY', timezone: '+2'}},
@@ -137,5 +139,6 @@ export const API_INTERCEPTOR_PROVIDER: Provider = {
   exports: [],
   bootstrap: [AppComponent]
 })
+
 export class AppModule {
 }

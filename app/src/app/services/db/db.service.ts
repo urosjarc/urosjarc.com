@@ -1,5 +1,7 @@
-// db.ts
+import {Injectable} from '@angular/core';
+
 import Dexie, {Table} from 'dexie';
+import {ime, isObject} from "../../utils";
 import {
   Audit,
   Kontakt,
@@ -14,13 +16,11 @@ import {
   Test,
   Ucenje,
   Zvezek
-} from "./api/models";
-import {ime, isObject} from "./utils";
+} from "../api/openapi/models";
 
-// @ts-ignore
-Dexie.debug = false as any;
+@Injectable({providedIn: 'root'})
+export class DbService extends Dexie {
 
-export class AppDB extends Dexie {
   oseba!: Table<Oseba, number>
   naslov!: Table<Naslov, number>
   ucenje!: Table<Ucenje, number>
@@ -80,7 +80,6 @@ export class AppDB extends Dexie {
     const cakalnica_key: string[] = ["object"]
     const seed_data = new Map<string, any[]>()
 
-    let i = 0
     while (cakalnica_value.length > 0) {
       let pacient_value = cakalnica_value.shift()
       let pacient_key = cakalnica_key.shift()
@@ -121,7 +120,4 @@ export class AppDB extends Dexie {
 
     return await Promise.allSettled(promisses)
   }
-
 }
-
-export const db = new AppDB()

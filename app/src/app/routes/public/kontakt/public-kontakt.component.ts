@@ -5,8 +5,8 @@ import {InputTelefonComponent} from "../../../components/input-phone/input-telef
 import {InputOsebaComponent} from "../../../components/input-oseba/input-oseba.component";
 import {InputMsgComponent} from "../../../components/input-msg/input-msg.component";
 import {InputEmailComponent} from "../../../components/input-email/input-email.component";
-import {ApiService} from "../../../api/services/api.service";
-import {KontaktObrazecRes} from "../../../api/models/kontakt-obrazec-res";
+import {ApiService} from "../../../services/api/openapi/services/api.service";
+import {KontaktObrazecRes} from "../../../services/api/openapi/models/kontakt-obrazec-res";
 
 @Component({
   selector: 'app-public-kontakt',
@@ -21,7 +21,7 @@ export class PublicKontaktComponent implements AfterViewInit {
   @ViewChild(InputEmailComponent) input_email?: InputEmailComponent;
   formGroup: FormGroup = new FormGroup({});
 
-  constructor(private ApiService: ApiService,
+  constructor(private apiService: ApiService,
               private alertService: AlertService) {
   }
 
@@ -41,7 +41,7 @@ export class PublicKontaktComponent implements AfterViewInit {
     if (this.loading) return
     this.loading = true
 
-    this.ApiService.kontaktPost({
+    this.apiService.kontaktPost({
       body: {
         ime_priimek: this.input_oseba?.formControl.getRawValue() || "",
         email: this.input_email?.formControl.getRawValue() || "",

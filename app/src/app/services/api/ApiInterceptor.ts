@@ -1,24 +1,34 @@
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
+import {
+  HTTP_INTERCEPTORS,
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest
+} from "@angular/common/http";
 import {Observable, tap} from "rxjs";
-import {db} from "./db";
-import {Injectable} from "@angular/core";
-import {AlertService} from "./services/alert/alert.service";
-import {ApiService} from "./api/services/api.service";
+import {forwardRef, Injectable, Provider} from "@angular/core";
+import {AlertService} from "../alert/alert.service";
+import {ApiService} from "./openapi/services";
+import {DbService} from "../db/db.service";
+
+export const API_INTERCEPTOR_PROVIDER: Provider = {
+  provide: HTTP_INTERCEPTORS,
+  useExisting: forwardRef(() => ApiInterceptor),
+  multi: true
+};
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
-  alertService: AlertService
-
-  constructor(alertService: AlertService) {
-    this.alertService = alertService
+  constructor(
+    private dbService: DbService,
+    private alertService: AlertService) {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const self = this
-
     req = req.clone({
       setHeaders: {
-        Authorization: `Bearer ${db.get_token()}`
+        Authorization: `Bearer ${this.dbService.get_token()}`
       }
     });
     return next.handle(req).pipe(

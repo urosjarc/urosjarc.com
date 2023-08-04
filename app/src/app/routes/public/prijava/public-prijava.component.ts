@@ -1,13 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl, Validators} from "@angular/forms";
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {AlertService} from "../../../services/alert/alert.service";
 import {Router} from "@angular/router";
-import {db} from "../../../db";
-import {routing} from "../../../app-routing.module";
-import {ApiService} from "../../../api/services/api.service";
-import {OsebaData} from "../../../api/models/oseba-data";
-import {Observable} from "rxjs";
 import {AuthService} from "../../../services/auth/auth.service";
+import {InputOsebaComponent} from "../../../components/input-oseba/input-oseba.component";
+import {InputGesloComponent} from "../../../components/input-geslo/input-geslo.component";
+import {Profil} from "../../../services/api/openapi/models/profil";
+import {routing} from "../../../app-routing.module";
 
 @Component({
   selector: 'app-public-prijava',
@@ -15,7 +13,10 @@ import {AuthService} from "../../../services/auth/auth.service";
   styleUrls: ['./public-prijava.component.scss']
 })
 export class PublicPrijavaComponent implements OnInit {
-  uporabnik: FormControl<string | null> = new FormControl('', [Validators.required]);
+  // @ts-ignore
+  @ViewChild(InputOsebaComponent) oseba: InputOsebaComponent // @ts-ignore
+  @ViewChild(InputGesloComponent) geslo: InputGesloComponent
+
   loading = false
 
   constructor(
@@ -26,65 +27,15 @@ export class PublicPrijavaComponent implements OnInit {
   }
 
   async ngOnInit() {
-    const self = this
-    if (db.get_token()) this.apiService.authProfilGet().subscribe({
-      next(profil) {
-        self.prijava(true, profil.tip || [])
+    const self = this;
+    this.authService.profil({
+      next(profil: Profil) {
+        if(profil.tip?.length == 1) self.router.navigateByUrl(routing.)
       }
     })
   }
 
   login() {
-    const self = this
-    this.apiService.authPrijavaPost({
-      body: {
-        username: self.uporabnik.getRawValue() || "",
-      }
-    }).subscribe({
-      next(res) {
-        db.set_token(res.token || "")
-        self.prijava(false, res.tip || [])
-      }
-    })
-  }
-
-  prijava(je_prijavljen: boolean, tipi: string[]) {
-    if (tipi.includes("ADMIN")) return this.req(this.apiService.adminGet({}), routing.public({}).$, je_prijavljen)
-    if (tipi.includes("UCENEC")) return this.req(this.apiService.ucenecGet({}), routing.ucenec({}).$, je_prijavljen)
-  }
-
-  req(observable: Observable<any>, redirect_url: string, je_prijavljen: boolean) {
-
-    if (je_prijavljen) {
-      this.router.navigateByUrl(redirect_url)
-      return
-    }
-
-    const self = this;
-    observable.subscribe({
-      next(adminData) {
-        db.reset(adminData as OsebaData).then(r => {
-          self.router.navigateByUrl(redirect_url)
-        })
-      },
-      error() {
-        self.loading = false
-      }
-    })
-  }
-
-  prijavaAdmina() {
-    const self = this;
-    this.apiService.adminGet().subscribe({
-      next(adminData) {
-        db.reset(adminData as OsebaData).then(r => {
-          alert("NOt implemented.")
-        })
-      },
-      error() {
-        self.loading = false
-      }
-    })
   }
 
 }
