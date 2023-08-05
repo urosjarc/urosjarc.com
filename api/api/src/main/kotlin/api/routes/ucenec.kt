@@ -6,8 +6,8 @@ import api.extend.request_info
 import api.request.NapakaReq
 import api.response.AuditRes
 import base.Id
-import base.encrypt
 import domain.*
+import extend.encrypted
 import extend.ime
 import io.ktor.resources.*
 import io.ktor.server.application.*
@@ -85,7 +85,7 @@ fun Route.ucenec() {
                         test_id = test_id,
                         oseba_id = profil.id,
                         tip = body.tip,
-                        pojasnilo = "".encrypt()
+                        pojasnilo = "".encrypted()
                     )
                     if (db.ustvari(status)) status
                     else return@post this.call.client_error(info = "${ime<Status>()} ni posodobljen!")
@@ -108,8 +108,8 @@ fun Route.ucenec() {
             entitete_id = setOf(profil.id.vAnyId(), test_id.vAnyId(), it.naloga_id.vAnyId()),
             tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
             trajanje = body.sekund.toDuration(unit = DurationUnit.SECONDS),
-            opis = status.tip.name.encrypt(),
-            entiteta = ime<Status>().encrypt()
+            opis = status.tip.name.encrypted(),
+            entiteta = ime<Status>().encrypted()
         )
 
         db.ustvari(audit)
@@ -131,8 +131,8 @@ fun Route.ucenec() {
             entitete_id = setOf(profil.id.vAnyId(), it.test_id.vAnyId()),
             tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
             trajanje = 0.toDuration(unit = DurationUnit.SECONDS),
-            opis = body.datum.toString().encrypt(),
-            entiteta = ime<Test>().encrypt()
+            opis = body.datum.toString().encrypted(),
+            entiteta = ime<Test>().encrypted()
         )
 
         db.ustvari(audit)
@@ -170,8 +170,8 @@ fun Route.ucenec() {
         val napaka = Napaka(
             entitete_id = setOf(profil.id.vAnyId()),
             tip = body.tip,
-            vsebina = body.vsebina.encrypt(),
-            dodatno = this.call.request_info().encrypt()
+            vsebina = body.vsebina.encrypted(),
+            dodatno = this.call.request_info().encrypted()
         )
 
         napaka.logiraj()

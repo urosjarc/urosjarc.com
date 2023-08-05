@@ -11,7 +11,7 @@ import kotlinx.serialization.encoding.Encoder
 object EncriptedSerializer : KSerializer<Encrypted> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Encripted", PrimitiveKind.STRING)
     override fun serialize(encoder: Encoder, value: Encrypted) {
-        encoder.encodeString(String(value.value))
+        encoder.encodeString(value.decript())
     }
 
     override fun deserialize(decoder: Decoder): Encrypted {

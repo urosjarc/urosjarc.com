@@ -2,6 +2,7 @@ package services
 
 import base.AnyId
 import base.Encrypted
+import base.Hashed
 import base.Id
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
@@ -41,16 +42,20 @@ class Filters {
             return com.mongodb.client.model.Filters.eq(id.value)
         }
 
-        fun <T> EQ(prop: KProperty1<*, T>, value: T): Bson {
-            return com.mongodb.client.model.Filters.eq(prop.name, value)
-        }
-
         fun <T> EQ(prop: KProperty1<*, Id<T>>, value: Id<T>): Bson {
             return com.mongodb.client.model.Filters.eq(prop.name, value.value)
         }
 
         fun EQ(prop: KProperty1<*, AnyId>, value: AnyId): Bson {
             return com.mongodb.client.model.Filters.eq(prop.name, value.value)
+        }
+
+        fun EQ(prop: KProperty1<*, Encrypted>, value: Encrypted): Bson {
+            return com.mongodb.client.model.Filters.eq(prop.name, String(value.ciphertext))
+        }
+
+        fun EQ(prop: KProperty1<*, Hashed>, value: Hashed): Bson {
+            return com.mongodb.client.model.Filters.eq(prop.name, String(value.hashedBytes))
         }
 
         fun <T> CONTAINS(prop: KProperty1<*, Set<Id<T>>>, value: Id<T>): Bson {
@@ -230,7 +235,7 @@ class DbService(val db_url: String, val db_name: String) {
         return aggregation.first()
     }
 
-    fun oseba_najdi(ime: String, priimek: String, telefon: String, email: String): OsebaData? {
+    fun oseba_najdi(ime: Encrypted, priimek: Encrypted, telefon: Encrypted, email: Encrypted): OsebaData? {
         val aggregation: AggregateIterable<OsebaData> = osebe.aggregate<OsebaData>(
             listOf(
                 Aggregates.match(
@@ -273,7 +278,8 @@ class DbService(val db_url: String, val db_name: String) {
         return aggregation.toList()
     }
 
-    fun kontakt_najdi(data: String): Kontakt? = kontakti.find(Filters.EQ(Kontakt::data, data)).firstOrNull()
+    fun kontakt_najdi(data: Encrypted): Kontakt? =
+        kontakti.find(Filters.EQ(Kontakt::data, data)).firstOrNull()
 
     /**
      * Zaradi tega ker se mora preveriti ali je uporabnik owner statusa!
@@ -308,10 +314,10 @@ class DbService(val db_url: String, val db_name: String) {
         ) ?: return null
 
         val audit = Audit(
-            entiteta = Encrypted(ime<Status>()),
+            entiteta = ime<Status>().encrypted(),
             tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
             trajanje = sekund.toDuration(DurationUnit.MINUTES),
-            opis = Encrypted(r.tip.name),
+            opis = r.tip.name.encrypted(),
             entitete_id = setOf(id.vAnyId(), oseba_id.vAnyId(), test_id.vAnyId(), naloga_id.vAnyId())
         )
 
@@ -331,10 +337,10 @@ class DbService(val db_url: String, val db_name: String) {
         ) ?: return null
 
         val audit = Audit(
-            entiteta = Encrypted(ime<Test>()),
+            entiteta = ime<Test>().encrypted(),
             tip = Audit.Tip.TEST_DATUM_POSODOBITEV,
             trajanje = Duration.ZERO,
-            opis = Encrypted(r.deadline.toString()),
+            opis = r.deadline.toString().encrypted(),
             entitete_id = setOf(id.vAnyId(), oseba_id.vAnyId())
         )
 

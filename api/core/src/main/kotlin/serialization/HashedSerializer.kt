@@ -11,7 +11,7 @@ import kotlinx.serialization.encoding.Encoder
 object HashedSerializer : KSerializer<Hashed> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Hashed", PrimitiveKind.STRING)
     override fun serialize(encoder: Encoder, value: Hashed) {
-        encoder.encodeString(String(value.value))
+        encoder.encodeString(String(value.hashedBytes))
     }
 
     override fun deserialize(decoder: Decoder): Hashed {

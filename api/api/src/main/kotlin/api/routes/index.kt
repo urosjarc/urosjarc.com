@@ -5,8 +5,8 @@ import api.extend.request_info
 import api.request.NapakaReq
 import api.response.IndexRes
 import api.response.KontaktObrazecRes
-import base.encrypt
 import domain.Napaka
+import extend.encrypted
 import io.ktor.resources.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
@@ -57,8 +57,8 @@ fun Route.index() {
 
         val napaka = Napaka(
             tip = body.tip,
-            vsebina = body.vsebina.encrypt(),
-            dodatno = this.call.request_info().encrypt(),
+            vsebina = body.vsebina.encrypted(),
+            dodatno = this.call.request_info().encrypted(),
             entitete_id = setOf()
         )
 

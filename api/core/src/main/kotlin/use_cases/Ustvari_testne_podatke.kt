@@ -4,10 +4,7 @@ import base.Encrypted
 import base.Hashed
 import base.Id
 import domain.*
-import extend.danes
-import extend.dodaj
-import extend.nakljucni
-import extend.zdaj
+import extend.*
 import io.github.serpro69.kfaker.Faker
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -37,12 +34,12 @@ class Ustvari_testne_podatke(
             this.typeGenerator<Encrypted> { pInfo ->
                 val value = counters.getOrDefault(pInfo.name, -1) + 1
                 counters[pInfo.name] = value
-                Encrypted("${pInfo.name}_${value}")
+                "${pInfo.name}_${value}".encrypted()
             }
             this.typeGenerator<Hashed> { pInfo ->
                 val value = counters.getOrDefault(pInfo.name, -1) + 1
                 counters[pInfo.name] = value
-                Hashed("${pInfo.name}_${value}")
+                "${pInfo.name}_${value}".hashed()
             }
         }
         return obj
@@ -55,10 +52,10 @@ class Ustvari_testne_podatke(
          * Ustvari nujne stvari
          */
         val admin = Oseba(
-            ime = Encrypted("Uros"),
-            priimek = Encrypted("Jarc"),
-            username = Hashed("urosjarc"),
-            geslo = Hashed("asdf"),
+            ime = "Uros".encrypted(),
+            priimek = "Jarc".encrypted(),
+            username = "urosjarc".hashed(),
+            geslo = "asdf".hashed(),
             tip = mutableSetOf(Oseba.Tip.SERVER, Oseba.Tip.ADMIN)
         )
         val admin_telefon = Kontakt(

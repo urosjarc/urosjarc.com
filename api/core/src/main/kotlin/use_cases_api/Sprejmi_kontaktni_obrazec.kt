@@ -1,10 +1,9 @@
 package use_cases_api
 
-import base.Encrypted
-import base.encrypt
 import domain.Kontakt
 import domain.Oseba
 import domain.Sporocilo
+import extend.encrypted
 import org.apache.logging.log4j.kotlin.logger
 import services.DbService
 import services.EmailService
@@ -51,10 +50,10 @@ class Sprejmi_kontaktni_obrazec(
          * Pripravi osebo
          */
         when (val r = db.oseba_najdi(
-            ime = obrazec.oseba.ime.toString(),
-            priimek = obrazec.oseba.priimek.toString(),
-            telefon = obrazec.telefon.data.toString(),
-            email = obrazec.email.data.toString()
+            ime = obrazec.oseba.ime,
+            priimek = obrazec.oseba.priimek,
+            telefon = obrazec.telefon.data,
+            email = obrazec.email.data
         )) {
             null -> db.ustvari(obrazec.oseba)
             else -> obrazec.oseba = r.oseba
@@ -63,7 +62,7 @@ class Sprejmi_kontaktni_obrazec(
         /**
          * Pripravi email kontakt
          */
-        when (val r = db.kontakt_najdi(data = obrazec.email.data.toString())) {
+        when (val r = db.kontakt_najdi(data = obrazec.email.data)) {
             null -> obrazec.email.oseba_id.add(obrazec.oseba._id)
             else -> obrazec.email = r
         }
@@ -71,7 +70,7 @@ class Sprejmi_kontaktni_obrazec(
         /**
          * Pripravi telefon kontakt
          */
-        when (val r = db.kontakt_najdi(data = obrazec.telefon.data.toString())) {
+        when (val r = db.kontakt_najdi(data = obrazec.telefon.data)) {
             null -> obrazec.telefon.oseba_id.add(obrazec.oseba._id)
             else -> obrazec.telefon = r
         }
@@ -91,16 +90,16 @@ class Sprejmi_kontaktni_obrazec(
                     when (kontakt.tip) {
                         Kontakt.Tip.EMAIL -> {
                             val template = ustvari_template.email_potrditev_prejema_kontaktnega_obrazca(
-                                ime = obrazec.oseba.ime.toString(),//Todo!
-                                priimek = obrazec.oseba.priimek.toString(),
-                                telefon = obrazec.telefon.data.toString(),
-                                email = obrazec.email.data.toString(),
+                                ime = obrazec.oseba.ime.decript(),
+                                priimek = obrazec.oseba.priimek.decript(),
+                                telefon = obrazec.telefon.data.decript(),
+                                email = obrazec.email.data.decript(),
                                 vsebina = obrazec.vsebina
                             )
                             if (this.email.poslji_email(
                                     fromName = template.posiljatelj,
-                                    from = serverKontaktData.kontakt.data.toString(),
-                                    to = kontakt.data.toString(),
+                                    from = serverKontaktData.kontakt.data.decript(),
+                                    to = kontakt.data.decript(),
                                     subject = template.subjekt,
                                     html = template.html
                                 )
@@ -108,7 +107,7 @@ class Sprejmi_kontaktni_obrazec(
                                 val sporocilo = Sporocilo(
                                     kontakt_posiljatelj_id = serverKontaktData.kontakt._id,
                                     kontakt_prejemnik_id = mutableSetOf(kontakt._id),
-                                    vsebina = template.html.encrypt()
+                                    vsebina = template.html.encrypted()
                                 )
                                 db.ustvari(sporocilo)
                                 sporocila.add(sporocilo)
@@ -129,7 +128,7 @@ class Sprejmi_kontaktni_obrazec(
                                     val sporocilo = Sporocilo(
                                         kontakt_posiljatelj_id = serverKontaktData.kontakt._id,
                                         kontakt_prejemnik_id = mutableSetOf(kontakt._id),
-                                        vsebina = template.encrypt()
+                                        vsebina = template.encrypted()
                                     )
                                     db.ustvari(sporocilo)
                                     sporocila.add(sporocilo)

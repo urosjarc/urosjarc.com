@@ -8,22 +8,17 @@ val encoder = BCryptPasswordEncoder()
 
 @Serializable(with = HashedSerializer::class)
 class Hashed {
-    val value: ByteArray
+    val hash: Hash
 
     fun match(key: String): Boolean {
-        return encoder.matches(key, String(this.value))
+        return encoder.matches(key, String(this.hashedBytes))
     }
-
-    constructor(value: ByteArray) {
-        this.value = value
-    }
-
     constructor(value: String) {
-
-        this.value = encoder.encode(value).toByteArray()
+        if(value.startsWith("HASH:")){
+            this.hashedBytes = value.toByteArray()
+        } else {
+            this.hashedBytes = encoder.encode("HASH:$value").toByteArray()
+        }
     }
 
-    override fun toString(): String {
-        return this.value.toString()
-    }
 }
