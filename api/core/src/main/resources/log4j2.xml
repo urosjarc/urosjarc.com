@@ -28,12 +28,18 @@
                     password="${env:MYSQL_PASSWORD}"
                     driverClassName="com.mysql.cj.jdbc.Driver"
                     poolName="jdbc:apache:commons:dbcp:Logs"/>
-            <Column name="EVENT_ID" literal="LOGGING.APPLICATION_LOG_SEQUENCE.NEXTVAL"/>
-            <Column name="EVENT_DATE" isEventTimestamp="true"/>
-            <Column name="LEVEL" pattern="%level"/>
-            <Column name="LOGGER" pattern="%logger"/>
-            <Column name="MESSAGE" pattern="%message"/>
-            <Column name="THROWABLE" pattern="%ex{full}"/>
+            <Column name="level" pattern="%level"/>
+            <Column name="message" pattern="%message"/>
+            <Column name="exception" pattern="%ex{full}"/>
+            <Column name="time" pattern="%r"/>
+            <Column name="timestamp" isEventTimestamp="true"/>
+            <Column name="hostname" pattern="${hostName}"/>
+            <Column name="thread" pattern="%thread"/>
+            <Column name="logger" pattern="%logger"/>
+            <Column name="file" pattern="%file"/>
+            <Column name="class" pattern="%class"/>
+            <Column name="method" pattern="%method"/>
+            <Column name="line" pattern="%line"/>
         </JDBC>
 
         <SMTP name="Email"
@@ -79,7 +85,7 @@
     <Loggers>
         <Root includeLocation="true" level="TRACE">
             <AppenderRef ref="Async-Console"/>
-        <!--<AppenderRef ref="Async-File"/>-->
+            <!--<AppenderRef ref="Async-File"/>-->
             <AppenderRef ref="Async-Db"/>
             <AppenderRef ref="Async-Email"/>
         </Root>
