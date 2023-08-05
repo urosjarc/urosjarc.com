@@ -57,7 +57,7 @@ fun Route.index() {
 
         val napaka = Napaka(
             tip = body.tip,
-            vsebina = body.vsebina.encrypted(),
+            vsebina = body.vsebina.decrypt().encrypted(),
             dodatno = this.call.request_info().encrypted(),
             entitete_id = setOf()
         )

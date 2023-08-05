@@ -3,26 +3,18 @@ package base
 import kotlinx.serialization.Serializable
 import org.springframework.security.crypto.encrypt.Encryptors
 import org.springframework.security.crypto.encrypt.TextEncryptor
-import serialization.EncriptedSerializer
 
 val encryptor: TextEncryptor = Encryptors.delux(Env.ENCRYPTION_PASSWORD, Env.ENCRYPTION_SALT)
-@Serializable(with = EncriptedSerializer::class)
+
+@Serializable
 class Encrypted {
-    val ciphertext: CiperText
-
-    fun decript(): String {
-        return encryptor.decrypt(this.ciphertext)
-    }
-
+    val encrypted_bytes: ByteArray
     constructor(value: String) {
-        if(value.startsWith("CRY:")){
-            this.ciphertext = value
-        } else {
-            this.ciphertext = encryptor.encrypt("CRY:$value")
-        }
+        this.encrypted_bytes = encryptor.encrypt(value).toByteArray()
     }
-}
 
-fun main() {
+    fun decrypt(): String {
+        return encryptor.decrypt(String(this.encrypted_bytes))
+    }
 
 }

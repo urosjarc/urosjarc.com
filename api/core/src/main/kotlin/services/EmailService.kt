@@ -1,5 +1,6 @@
 package services
 
+import base.Encrypted
 import org.apache.logging.log4j.kotlin.logger
 import java.net.InetAddress
 import java.net.UnknownHostException
@@ -74,7 +75,7 @@ class EmailService(
             mimeMessage.setFrom(fromAddresses)
             mimeMessage.addRecipient(Message.RecipientType.TO, toAddress)
 
-            mimeMessage.setContent(html, "text/html; charset=utf-8");
+            mimeMessage.setContent(html, "text/html; charset=utf-8")
             mimeMessage.subject = subject
             mimeMessage.sentDate = Date()
 

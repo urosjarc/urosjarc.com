@@ -2,6 +2,7 @@
 <Configuration scan="true">
 
     <Appenders>
+
         <Console name="Console"
                  target="SYSTEM_OUT">
             <PatternLayout pattern="%30file:%-3line | %-5level | %msg%n"/>
@@ -18,6 +19,22 @@
                 <TimeBasedTriggeringPolicy/>
             </Policies>
         </RollingRandomAccessFile>
+
+        <JDBC name="Db"
+              tableName="Logs">
+            <PoolingDriver
+                    connectionString="${env:MYSQL_CONNECTION}"
+                    userName="${env:MYSQL_USERNAME}"
+                    password="${env:MYSQL_PASSWORD}"
+                    driverClassName="com.mysql.jdbc.Driver"
+                    poolName="jdbc:apache:commons:dbcp:Logs"/>
+            <Column name="EVENT_ID" literal="LOGGING.APPLICATION_LOG_SEQUENCE.NEXTVAL"/>
+            <Column name="EVENT_DATE" isEventTimestamp="true"/>
+            <Column name="LEVEL" pattern="%level"/>
+            <Column name="LOGGER" pattern="%logger"/>
+            <Column name="MESSAGE" pattern="%message"/>
+            <Column name="THROWABLE" pattern="%ex{full}"/>
+        </JDBC>
 
         <SMTP name="Email"
               smtpProtocol="smtp"
@@ -37,14 +54,19 @@
             <ThresholdFilter level="WARN"/>
         </SMTP>
 
-        <Async name="Async-File"
-               includeLocation="true">
-            <AppenderRef ref="File"/>
-        </Async>
         <Async name="Async-Console"
                ignoreExceptions="false"
                includeLocation="true">
             <AppenderRef ref="Console"/>
+        </Async>
+        <Async name="Async-File"
+               includeLocation="true">
+            <AppenderRef ref="File"/>
+        </Async>
+        <Async name="Async-Db"
+               ignoreExceptions="false"
+               includeLocation="true">
+            <AppenderRef ref="Db"/>
         </Async>
         <Async name="Async-Email"
                ignoreExceptions="false"
@@ -56,9 +78,9 @@
 
     <Loggers>
         <Root includeLocation="true" level="TRACE">
-            <AppenderRef ref="Email"/>
             <AppenderRef ref="Async-Console"/>
-            <AppenderRef ref="Async-File"/>
+        <!--<AppenderRef ref="Async-File"/>-->
+            <AppenderRef ref="Async-Db"/>
             <AppenderRef ref="Async-Email"/>
         </Root>
     </Loggers>

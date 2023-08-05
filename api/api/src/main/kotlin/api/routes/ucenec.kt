@@ -17,7 +17,6 @@ import io.ktor.server.resources.post
 import io.ktor.server.resources.put
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.util.Identity.encode
 import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
 import services.DbService
@@ -170,7 +169,7 @@ fun Route.ucenec() {
         val napaka = Napaka(
             entitete_id = setOf(profil.id.vAnyId()),
             tip = body.tip,
-            vsebina = body.vsebina.encrypted(),
+            vsebina = body.vsebina,
             dodatno = this.call.request_info().encrypted()
         )
 

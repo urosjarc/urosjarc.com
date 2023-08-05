@@ -48,9 +48,6 @@ fun Route.auth(jwkProvider: JwkProvider) {
         log.info("Body: $body")
 
         //TODO: Naredi pravilno logiko
-        if (body.username == "a") this.call.client_unauthorized()
-        if (body.username == "b") this.call.client_error(info = "To je uporabniska napaka!")
-        if (body.username == "c") this.call.system_error(info = "To je sistemska napaka!")
         val oseba = db.osebe.find(Filters.eq(Oseba::tip.name, Oseba.Tip.UCENEC.name)).first()
         log.info("Oseba: $oseba")
         //TODO: Naredi pravilno logiko

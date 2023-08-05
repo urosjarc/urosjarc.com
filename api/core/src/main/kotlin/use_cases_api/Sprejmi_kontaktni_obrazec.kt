@@ -1,5 +1,6 @@
 package use_cases_api
 
+import base.Encrypted
 import domain.Kontakt
 import domain.Oseba
 import domain.Sporocilo
@@ -29,7 +30,7 @@ class Sprejmi_kontaktni_obrazec(
         data class WARN(val info: String) : Rezultat
     }
 
-    fun exe(ime_priimek: String, email: String, telefon: String, vsebina: String): Rezultat {
+    fun exe(ime_priimek: Encrypted, email: Encrypted, telefon: Encrypted, vsebina: Encrypted): Rezultat {
 
         /**
          * Pripravi obrazec
@@ -90,16 +91,16 @@ class Sprejmi_kontaktni_obrazec(
                     when (kontakt.tip) {
                         Kontakt.Tip.EMAIL -> {
                             val template = ustvari_template.email_potrditev_prejema_kontaktnega_obrazca(
-                                ime = obrazec.oseba.ime.decript(),
-                                priimek = obrazec.oseba.priimek.decript(),
-                                telefon = obrazec.telefon.data.decript(),
-                                email = obrazec.email.data.decript(),
-                                vsebina = obrazec.vsebina
+                                ime = obrazec.oseba.ime.decrypt(),
+                                priimek = obrazec.oseba.priimek.decrypt(),
+                                telefon = obrazec.telefon.data.decrypt(),
+                                email = obrazec.email.data.decrypt(),
+                                vsebina = obrazec.vsebina.decrypt()
                             )
                             if (this.email.poslji_email(
                                     fromName = template.posiljatelj,
-                                    from = serverKontaktData.kontakt.data.decript(),
-                                    to = kontakt.data.decript(),
+                                    from = serverKontaktData.kontakt.data.decrypt(),
+                                    to = kontakt.data.decrypt(),
                                     subject = template.subjekt,
                                     html = template.html
                                 )
@@ -118,8 +119,8 @@ class Sprejmi_kontaktni_obrazec(
                         Kontakt.Tip.TELEFON -> {
                             val template = ustvari_template.sms_potrditev_prejema_kontaktnega_obrazca()
                             when (this.telefon.poslji_sms(
-                                from = serverKontaktData.kontakt.data.decript(),
-                                to = kontakt.data.decript(),
+                                from = serverKontaktData.kontakt.data.decrypt(),
+                                to = kontakt.data.decrypt(),
                                 text = template
                             )
                             ) {

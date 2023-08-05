@@ -2,6 +2,7 @@ package api.extend
 
 import api.plugins.Profil
 import api.response.ErrorRes
+import extend.encrypted
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -38,8 +39,8 @@ suspend fun ApplicationCall.client_error(info: String) {
         status = HttpStatusCode.BadRequest,
         message = ErrorRes(
             napaka = ErrorRes.Tip.UPORABNISKA,
-            status = status.description,
-            info = info
+            status = status.description.encrypted(),
+            info = info.encrypted()
         )
     )
 }
@@ -50,8 +51,8 @@ suspend fun ApplicationCall.client_unauthorized() {
         status = status,
         message = ErrorRes(
             napaka = ErrorRes.Tip.UPORABNISKA,
-            status = status.description,
-            info = "Uporabnik ni avtoriziran!"
+            status = status.description.encrypted(),
+            info = "Uporabnik ni avtoriziran!".encrypted()
         )
     )
 }
@@ -62,8 +63,8 @@ suspend fun ApplicationCall.system_error(info: String) {
         status = HttpStatusCode.InternalServerError,
         message = ErrorRes(
             napaka = ErrorRes.Tip.SISTEMSKA,
-            status = status.description,
-            info = info
+            status = status.description.encrypted(),
+            info = info.encrypted()
         )
     )
 }

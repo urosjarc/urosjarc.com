@@ -14,7 +14,7 @@ class Ustvari_templejt {
         email: String,
         vsebina: String
     ) = Email(
-        posiljatelj="Uroš Jarc",
+        posiljatelj = "Uroš Jarc",
         subjekt = "Uroš Jarc | Vaše sporočilo je bilo sprejeto!",
         html = """
             <br><br><br>
@@ -24,7 +24,7 @@ class Ustvari_templejt {
                 
                 <hr width=700>
                 
-                <p><i>"$ime $priimek", $telefon, $email<br>"$vsebina"</i></p>
+                <p><i>"${ime} ${priimek}", ${telefon}, ${email}<br>"${vsebina}"</i></p>
                 
                 <hr width=800>
                 

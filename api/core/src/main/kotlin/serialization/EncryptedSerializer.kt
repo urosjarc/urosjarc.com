@@ -11,10 +11,12 @@ import kotlinx.serialization.encoding.Encoder
 object EncriptedSerializer : KSerializer<Encrypted> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Encripted", PrimitiveKind.STRING)
     override fun serialize(encoder: Encoder, value: Encrypted) {
-        encoder.encodeString(value.decript())
+        //Če ustvarjaš JSON objekt za pošiljanje stvar dekriptiraj saj zaupaš da je uporabnik pravi.
+        encoder.encodeString(value.decrypt())
     }
 
     override fun deserialize(decoder: Decoder): Encrypted {
-        return Encrypted(decoder.decodeString().toByteArray())
+        //Če sprejemaš JSON object potem takoj zakriptiraj in nadaljno v aplikaciji dekriptiraj če potrebuješ vrednost.
+        return Encrypted(decoder.decodeString())
     }
 }
