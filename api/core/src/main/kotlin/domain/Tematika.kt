@@ -8,5 +8,5 @@ import kotlinx.serialization.Serializable
 data class Tematika(
     override var _id: Id<Tematika> = Id(),
     var zvezek_id: Id<Zvezek>,
-    @Encrypted val naslov: String,
+    val naslov: Encrypted,
 ) : Entiteta<Tematika>

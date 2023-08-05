@@ -11,7 +11,7 @@ data class Status(
     var test_id: Id<Test>,
     var oseba_id: Id<Oseba>,
     var tip: Tip,
-    @Encrypted val pojasnilo: String
+    val pojasnilo: Encrypted
 ) : Entiteta<Status> {
     enum class Tip { NEZACETO, NERESENO, NAPACNO, PRAVILNO }
 }

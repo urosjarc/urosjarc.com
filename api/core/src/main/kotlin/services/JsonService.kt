@@ -8,6 +8,8 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.contextual
+import serialization.EncriptedSerializer
+import serialization.HashedSerializer
 
 
 class JsonService {
@@ -16,6 +18,8 @@ class JsonService {
             contextual(LocalDateTimeIso8601Serializer)
             contextual(LocalTimeIso8601Serializer)
             contextual(LocalDateIso8601Serializer)
+            contextual(EncriptedSerializer)
+            contextual(HashedSerializer)
         }
         this.prettyPrint = false
         this.isLenient = true

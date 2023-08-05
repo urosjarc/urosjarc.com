@@ -7,6 +7,7 @@ plugins {
     this.id("buildSrc.datetime")
     this.id("buildSrc.domainMap")
     this.id("buildSrc.injections")
+    this.id("buildSrc.reflection")
     this.id("buildSrc.db")
 }
 

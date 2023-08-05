@@ -1,5 +1,7 @@
 package use_cases
 
+import base.Encrypted
+import base.Hashed
 import domain.Kontakt
 import domain.Oseba
 import services.EmailService
@@ -67,17 +69,18 @@ class Pripravi_kontaktni_obrazec(
             return Rezultat.WARN("Telefon ne obstaja!")
 
         val oseba = Oseba(
-            ime = imePriimekList.first(),
-            priimek = imePriimekList.last(),
-            username = imePriimekList.joinToString("").lowercase(),
+            ime = Encrypted(imePriimekList.first()),
+            priimek = Encrypted(imePriimekList.last()),
+            username = Hashed(imePriimekList.joinToString("").lowercase()),
+            geslo = Hashed(imePriimekList.joinToString("").lowercase()),
             tip = mutableSetOf(Oseba.Tip.KONTAKT)
         )
 
         return Rezultat.PASS(
             oseba = oseba,
             vsebina = vsebina,
-            email = Kontakt(oseba_id = mutableSetOf(oseba._id), data = formatiranEmail, tip = Kontakt.Tip.EMAIL),
-            telefon = Kontakt(oseba_id = mutableSetOf(oseba._id), data = formatiranTelefon, tip = Kontakt.Tip.TELEFON)
+            email = Kontakt(oseba_id = mutableSetOf(oseba._id), data = Encrypted(formatiranEmail), tip = Kontakt.Tip.EMAIL),
+            telefon = Kontakt(oseba_id = mutableSetOf(oseba._id), data = Encrypted(formatiranTelefon), tip = Kontakt.Tip.TELEFON)
         )
     }
 }

@@ -12,7 +12,7 @@ data class Test(
     var oseba_admin_id: MutableSet<Id<Oseba>>,
     var oseba_ucenec_id: MutableSet<Id<Oseba>>,
     var naloga_id: MutableSet<Id<Naloga>>,
-    @Encrypted val naslov: String,
-    @Encrypted val podnaslov: String,
-    @Encrypted val deadline: LocalDate,
+    val naslov: Encrypted,
+    val podnaslov: Encrypted,
+    val deadline: LocalDate,
 ) : Entiteta<Test>

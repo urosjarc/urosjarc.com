@@ -8,9 +8,9 @@ import kotlinx.serialization.Serializable
 data class Naslov(
     override var _id: Id<Naslov> = Id(),
     var oseba_id: Id<Oseba>,
-    @Encrypted val drzava: String,
-    @Encrypted val mesto: String,
-    @Encrypted val zip: Int,
-    @Encrypted val ulica: String,
-    @Encrypted val dodatno: String
+    val drzava: Encrypted,
+    val mesto: Encrypted,
+    val zip: Encrypted,
+    val ulica: Encrypted,
+    val dodatno: Encrypted
 ) : Entiteta<Naslov>

@@ -1,6 +1,9 @@
 package base
 
 object Env {
+    val ENCRYPTION_PASSWORD: String = System.getenv("ENCRYPTION_PASSWORD")
+    val ENCRYPTION_SALT: String = System.getenv("ENCRYPTION_SALT")
+
     val PORT: Int = System.getenv("PORT").toInt()
 
     val DB_URL: String = System.getenv("DB_URL")

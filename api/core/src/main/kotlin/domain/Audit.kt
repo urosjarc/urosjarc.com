@@ -14,9 +14,9 @@ data class Audit(
     var entitete_id: Set<AnyId>,
     val tip: Tip,
     val trajanje: Duration,
-    @Encrypted val ustvarjeno: LocalDateTime = LocalDateTime.zdaj(),
-    @Encrypted var opis: String,
-    @Encrypted val entiteta: String,
+    val ustvarjeno: LocalDateTime = LocalDateTime.zdaj(),
+    var opis: Encrypted,
+    val entiteta: Encrypted,
 ) : Entiteta<Audit> {
     enum class Tip {
         STATUS_TIP_POSODOBITEV,

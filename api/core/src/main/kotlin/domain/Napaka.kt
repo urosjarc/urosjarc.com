@@ -13,9 +13,9 @@ data class Napaka(
     override var _id: Id<Napaka> = Id(),
     var entitete_id: Set<AnyId>,
     val tip: Tip,
-    @Encrypted val ustvarjeno: LocalDateTime = LocalDateTime.zdaj(),
-    @Encrypted val vsebina: String,
-    @Encrypted val dodatno: String,
+    val ustvarjeno: LocalDateTime = LocalDateTime.zdaj(),
+    val vsebina: Encrypted,
+    val dodatno: Encrypted,
 ) : Entiteta<Napaka> {
     enum class Tip { ERROR, WARN, FATAL }
 

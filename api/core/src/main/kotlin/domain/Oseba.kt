@@ -8,11 +8,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Oseba(
     override var _id: Id<Oseba> = Id(),
-    @Hashed val username: String,
-    @Hashed val geslo: String,
-    @Encrypted var tip: MutableSet<Tip>,
-    @Encrypted val ime: String,
-    @Encrypted val priimek: String,
+    var tip: MutableSet<Tip>,
+    val username: Hashed,
+    val geslo: Hashed,
+    val ime: Encrypted,
+    val priimek: Encrypted,
 ) : Entiteta<Oseba> {
     enum class Tip { UCENEC, UCITELJ, INSTRUKTOR, ADMIN, KONTAKT, SERVER }
 }

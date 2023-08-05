@@ -1,5 +1,7 @@
 package use_cases_api
 
+import base.Encrypted
+import base.encrypt
 import domain.Kontakt
 import domain.Oseba
 import domain.Sporocilo
@@ -49,10 +51,10 @@ class Sprejmi_kontaktni_obrazec(
          * Pripravi osebo
          */
         when (val r = db.oseba_najdi(
-            ime = obrazec.oseba.ime,
-            priimek = obrazec.oseba.priimek,
-            telefon = obrazec.telefon.data,
-            email = obrazec.email.data
+            ime = obrazec.oseba.ime.toString(),
+            priimek = obrazec.oseba.priimek.toString(),
+            telefon = obrazec.telefon.data.toString(),
+            email = obrazec.email.data.toString()
         )) {
             null -> db.ustvari(obrazec.oseba)
             else -> obrazec.oseba = r.oseba
@@ -61,7 +63,7 @@ class Sprejmi_kontaktni_obrazec(
         /**
          * Pripravi email kontakt
          */
-        when (val r = db.kontakt_najdi(data = obrazec.email.data)) {
+        when (val r = db.kontakt_najdi(data = obrazec.email.data.toString())) {
             null -> obrazec.email.oseba_id.add(obrazec.oseba._id)
             else -> obrazec.email = r
         }
@@ -69,7 +71,7 @@ class Sprejmi_kontaktni_obrazec(
         /**
          * Pripravi telefon kontakt
          */
-        when (val r = db.kontakt_najdi(data = obrazec.telefon.data)) {
+        when (val r = db.kontakt_najdi(data = obrazec.telefon.data.toString())) {
             null -> obrazec.telefon.oseba_id.add(obrazec.oseba._id)
             else -> obrazec.telefon = r
         }
@@ -89,16 +91,16 @@ class Sprejmi_kontaktni_obrazec(
                     when (kontakt.tip) {
                         Kontakt.Tip.EMAIL -> {
                             val template = ustvari_template.email_potrditev_prejema_kontaktnega_obrazca(
-                                ime = obrazec.oseba.ime,
-                                priimek = obrazec.oseba.priimek,
-                                telefon = obrazec.telefon.data,
-                                email = obrazec.email.data,
+                                ime = obrazec.oseba.ime.toString(),//Todo!
+                                priimek = obrazec.oseba.priimek.toString(),
+                                telefon = obrazec.telefon.data.toString(),
+                                email = obrazec.email.data.toString(),
                                 vsebina = obrazec.vsebina
                             )
                             if (this.email.poslji_email(
                                     fromName = template.posiljatelj,
-                                    from = serverKontaktData.kontakt.data,
-                                    to = kontakt.data,
+                                    from = serverKontaktData.kontakt.data.toString(),
+                                    to = kontakt.data.toString(),
                                     subject = template.subjekt,
                                     html = template.html
                                 )
@@ -106,7 +108,7 @@ class Sprejmi_kontaktni_obrazec(
                                 val sporocilo = Sporocilo(
                                     kontakt_posiljatelj_id = serverKontaktData.kontakt._id,
                                     kontakt_prejemnik_id = mutableSetOf(kontakt._id),
-                                    vsebina = template.html
+                                    vsebina = template.html.encrypt()
                                 )
                                 db.ustvari(sporocilo)
                                 sporocila.add(sporocilo)
@@ -117,8 +119,8 @@ class Sprejmi_kontaktni_obrazec(
                         Kontakt.Tip.TELEFON -> {
                             val template = ustvari_template.sms_potrditev_prejema_kontaktnega_obrazca()
                             when (this.telefon.poslji_sms(
-                                from = serverKontaktData.kontakt.data,
-                                to = kontakt.data,
+                                from = serverKontaktData.kontakt.data.decript(),
+                                to = kontakt.data.decript(),
                                 text = template
                             )
                             ) {
@@ -127,7 +129,7 @@ class Sprejmi_kontaktni_obrazec(
                                     val sporocilo = Sporocilo(
                                         kontakt_posiljatelj_id = serverKontaktData.kontakt._id,
                                         kontakt_prejemnik_id = mutableSetOf(kontakt._id),
-                                        vsebina = template
+                                        vsebina = template.encrypt()
                                     )
                                     db.ustvari(sporocilo)
                                     sporocila.add(sporocilo)

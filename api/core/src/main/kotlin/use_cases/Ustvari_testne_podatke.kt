@@ -1,5 +1,7 @@
 package use_cases
 
+import base.Encrypted
+import base.Hashed
 import base.Id
 import domain.*
 import extend.danes
@@ -32,6 +34,16 @@ class Ustvari_testne_podatke(
                 counters[pInfo.name] = value
                 "${pInfo.name}_${value}"
             }
+            this.typeGenerator<Encrypted> { pInfo ->
+                val value = counters.getOrDefault(pInfo.name, -1) + 1
+                counters[pInfo.name] = value
+                Encrypted("${pInfo.name}_${value}")
+            }
+            this.typeGenerator<Hashed> { pInfo ->
+                val value = counters.getOrDefault(pInfo.name, -1) + 1
+                counters[pInfo.name] = value
+                Hashed("${pInfo.name}_${value}")
+            }
         }
         return obj
     }
@@ -43,19 +55,20 @@ class Ustvari_testne_podatke(
          * Ustvari nujne stvari
          */
         val admin = Oseba(
-            ime = "Uroš",
-            priimek = "Jarc",
-            username = "urosjarc",
+            ime = Encrypted("Uros"),
+            priimek = Encrypted("Jarc"),
+            username = Hashed("urosjarc"),
+            geslo = Hashed("asdf"),
             tip = mutableSetOf(Oseba.Tip.SERVER, Oseba.Tip.ADMIN)
         )
         val admin_telefon = Kontakt(
             oseba_id = mutableSetOf(admin._id),
-            data = "Uros Jarc",
+            data = Encrypted("Uros Jarc"),
             tip = Kontakt.Tip.TELEFON
         )
         val admin_email = Kontakt(
             oseba_id = mutableSetOf(admin._id),
-            data = "info@urosjarc.com",
+            data = Encrypted("info@urosjarc.com"),
             tip = Kontakt.Tip.EMAIL
         )
         db.ustvari(admin)
@@ -268,7 +281,7 @@ class Ustvari_testne_podatke(
         return (0..n).map {
             val audit = this.nakljucni<Audit>().apply {
                 this.entitete_id = entitete_id.map { it.vAnyId() }.toMutableSet()
-                this.opis = Status.Tip.entries.toTypedArray().random().toString()
+                this.opis = Encrypted(Status.Tip.entries.toTypedArray().random().toString())
             }
             audit
         }.toMutableSet()

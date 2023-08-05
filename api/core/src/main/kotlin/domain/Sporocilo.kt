@@ -11,6 +11,6 @@ data class Sporocilo(
     override var _id: Id<Sporocilo> = Id(),
     var kontakt_posiljatelj_id: Id<Kontakt>,
     var kontakt_prejemnik_id: MutableSet<Id<Kontakt>>,
-    @Encrypted var poslano: LocalDateTime = LocalDateTime.zdaj(),
-    @Encrypted val vsebina: String,
+    var poslano: LocalDateTime = LocalDateTime.zdaj(),
+    val vsebina: Encrypted,
 ) : Entiteta<Sporocilo>

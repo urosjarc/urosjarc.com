@@ -1,6 +1,7 @@
 package services
 
 import base.AnyId
+import base.Encrypted
 import base.Id
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
@@ -15,9 +16,7 @@ import domain.*
 import extend.*
 import kotlinx.datetime.LocalDate
 import org.apache.logging.log4j.kotlin.logger
-import org.bson.codecs.configuration.CodecRegistries
 import org.bson.conversions.Bson
-import serialization.IdCodec
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
 import kotlin.time.Duration
@@ -74,23 +73,14 @@ class Filters {
 
 }
 
-
 class DbService(val db_url: String, val db_name: String) {
-
-    val idCodecRegistry = CodecRegistries.fromCodecs(IdCodec())
-    var codecRegistry = CodecRegistries.fromRegistries(
-        MongoClientSettings.getDefaultCodecRegistry(),
-        idCodecRegistry
-    )
-
-
     private val serverApi = ServerApi.builder().version(ServerApiVersion.V1).build()
     private val settings =
         MongoClientSettings.builder().applyConnectionString(ConnectionString(db_url)).serverApi(serverApi).build()
     private val mongoClient = MongoClient.create(settings)
 
     val log = this.logger()
-    val db = mongoClient.getDatabase(db_name).withCodecRegistry(codecRegistry)
+    val db = mongoClient.getDatabase(db_name)
     val audits = db.getCollection<Audit>(collectionName = ime<Audit>())
     val osebe = db.getCollection<Oseba>(collectionName = ime<Oseba>())
     val statusi = db.getCollection<Status>(collectionName = ime<Status>())
@@ -318,10 +308,10 @@ class DbService(val db_url: String, val db_name: String) {
         ) ?: return null
 
         val audit = Audit(
-            entiteta = ime<Status>(),
+            entiteta = Encrypted(ime<Status>()),
             tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
             trajanje = sekund.toDuration(DurationUnit.MINUTES),
-            opis = r.tip.name,
+            opis = Encrypted(r.tip.name),
             entitete_id = setOf(id.vAnyId(), oseba_id.vAnyId(), test_id.vAnyId(), naloga_id.vAnyId())
         )
 
@@ -341,10 +331,10 @@ class DbService(val db_url: String, val db_name: String) {
         ) ?: return null
 
         val audit = Audit(
-            entiteta = ime<Test>(),
+            entiteta = Encrypted(ime<Test>()),
             tip = Audit.Tip.TEST_DATUM_POSODOBITEV,
             trajanje = Duration.ZERO,
-            opis = r.deadline.toString(),
+            opis = Encrypted(r.deadline.toString()),
             entitete_id = setOf(id.vAnyId(), oseba_id.vAnyId())
         )
 

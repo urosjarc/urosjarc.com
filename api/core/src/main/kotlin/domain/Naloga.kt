@@ -8,6 +8,6 @@ import kotlinx.serialization.Serializable
 data class Naloga(
     override var _id: Id<Naloga> = Id(),
     var tematika_id: Id<Tematika>,
-    @Encrypted val resitev: String,
-    @Encrypted val vsebina: String,
+    val resitev: Encrypted,
+    val vsebina: Encrypted,
 ) : Entiteta<Naloga>
