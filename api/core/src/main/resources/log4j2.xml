@@ -26,7 +26,7 @@
                     connectionString="${env:MYSQL_CONNECTION}"
                     userName="${env:MYSQL_USERNAME}"
                     password="${env:MYSQL_PASSWORD}"
-                    driverClassName="com.mysql.jdbc.Driver"
+                    driverClassName="com.mysql.cj.jdbc.Driver"
                     poolName="jdbc:apache:commons:dbcp:Logs"/>
             <Column name="EVENT_ID" literal="LOGGING.APPLICATION_LOG_SEQUENCE.NEXTVAL"/>
             <Column name="EVENT_DATE" isEventTimestamp="true"/>
