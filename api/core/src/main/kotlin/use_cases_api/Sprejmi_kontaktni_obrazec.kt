@@ -30,7 +30,7 @@ class Sprejmi_kontaktni_obrazec(
         data class WARN(val info: String) : Rezultat
     }
 
-    fun exe(ime_priimek: Encrypted, email: Encrypted, telefon: Encrypted, vsebina: Encrypted): Rezultat {
+    fun exe(ime_priimek: String, email: String, telefon: String, vsebina: String): Rezultat {
 
         /**
          * Pripravi obrazec
@@ -95,7 +95,7 @@ class Sprejmi_kontaktni_obrazec(
                                 priimek = obrazec.oseba.priimek.decrypt(),
                                 telefon = obrazec.telefon.data.decrypt(),
                                 email = obrazec.email.data.decrypt(),
-                                vsebina = obrazec.vsebina.decrypt()
+                                vsebina = obrazec.vsebina
                             )
                             if (this.email.poslji_email(
                                     fromName = template.posiljatelj,

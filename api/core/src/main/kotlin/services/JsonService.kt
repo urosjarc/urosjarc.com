@@ -15,9 +15,9 @@ import serialization.HashedSerializer
 class JsonService {
     val module = Json {
         serializersModule = SerializersModule {
-            contextual(LocalDateTimeIso8601Serializer)
-            contextual(LocalTimeIso8601Serializer)
-            contextual(LocalDateIso8601Serializer)
+//            contextual(LocalDateTimeIso8601Serializer)
+//            contextual(LocalTimeIso8601Serializer)
+//            contextual(LocalDateIso8601Serializer)
             contextual(EncriptedSerializer)
             contextual(HashedSerializer)
         }

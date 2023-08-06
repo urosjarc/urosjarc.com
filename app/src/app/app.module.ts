@@ -59,10 +59,10 @@ import {ApiService} from "./services/api/openapi/services";
 import {AuthService} from "./services/auth/auth.service";
 import {DbService} from "./services/db/db.service";
 import {SyncService} from "./services/sync/sync.service";
-import {API_INTERCEPTOR_PROVIDER, ApiInterceptor} from "./services/api/ApiInterceptor";
 import "@angular/common/locales/global/sl"
 import 'moment/locale/sl';
 import { AdminComponent } from './routes/admin/admin.component';
+import {API_INTERCEPTOR_PROVIDER, Interceptor} from "./interceptor";
 
 const locale = 'sl'
 moment.locale(locale);
@@ -131,7 +131,7 @@ moment.locale(locale);
     AuthService,
     DbService,
     SyncService,
-    ApiInterceptor,
+    Interceptor,
     API_INTERCEPTOR_PROVIDER,
     {provide: LOCALE_ID, useValue: locale},
     {provide: MAT_DATE_LOCALE, useValue: locale},

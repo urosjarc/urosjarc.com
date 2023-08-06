@@ -70,10 +70,10 @@ fun Route.index() {
     this.post<index.kontakt> {
         val body = this.call.receive<KontaktObrazecReq>()
         when (val r = sprejmi_kontaktni_obrazec.exe(
-            ime_priimek = body.ime_priimek,
-            email = body.email,
-            telefon = body.telefon,
-            vsebina = body.vsebina
+            ime_priimek = body.ime_priimek.decrypt(),
+            email = body.email.decrypt(),
+            telefon = body.telefon.decrypt(),
+            vsebina = body.vsebina.decrypt()
         )) {
             is Sprejmi_kontaktni_obrazec.Rezultat.WARN -> this.call.client_error(r.info)
             is Sprejmi_kontaktni_obrazec.Rezultat.PASS -> this.call.respond(

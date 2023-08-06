@@ -3,6 +3,7 @@ package domain
 import base.Encrypted
 import base.Hashed
 import base.Id
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -11,8 +12,8 @@ data class Oseba(
     var tip: MutableSet<Tip>,
     val username: Hashed,
     val geslo: Hashed,
-    val ime: Encrypted,
-    val priimek: Encrypted,
+    @Contextual val ime: Encrypted,
+    @Contextual val priimek: Encrypted,
 ) : Entiteta<Oseba> {
     enum class Tip { UCENEC, UCITELJ, INSTRUKTOR, ADMIN, KONTAKT, SERVER }
 }

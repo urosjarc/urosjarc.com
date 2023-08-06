@@ -1,8 +1,8 @@
 import {CanActivateFn, Router, UrlTree} from '@angular/router';
 import {inject} from "@angular/core";
-import {AuthService} from "../../../services/auth/auth.service";
-import {Profil} from "../../../services/api/openapi/models/profil";
-import {routing} from "../../../app-routing.module";
+import {AuthService} from "../../services/auth/auth.service";
+import {routing} from "../../app-routing.module";
+import {Profil} from "../../services/api/openapi/models/profil";
 
 export function publicPrijavaGuard_urlTree(profil: Profil): UrlTree | null {
   const router = inject(Router)

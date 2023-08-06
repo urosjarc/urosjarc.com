@@ -14,15 +14,15 @@ class Pripravi_kontaktni_obrazec(
 ) {
 
     sealed interface Rezultat {
-        data class PASS(var oseba: Oseba, var email: Kontakt, var telefon: Kontakt, val vsebina: Encrypted) : Rezultat
+        data class PASS(var oseba: Oseba, var email: Kontakt, var telefon: Kontakt, val vsebina: String) : Rezultat
         data class WARN(val info: String) : Rezultat
     }
 
-    fun zdaj(ime_priimek: Encrypted, email: Encrypted, telefon: Encrypted, vsebina: Encrypted): Rezultat {
+    fun zdaj(ime_priimek: String, email: String, telefon: String, vsebina: String): Rezultat {
         /**
          * Ime in priimek validacija
          */
-        val imePriimek: String = ime_priimek.decrypt().trim()
+        val imePriimek: String = ime_priimek.trim()
         if (!imePriimek.contains(' '))
             return Rezultat.WARN(info = "Ime ime priimek morata biti ločena z presledkom!")
 
@@ -35,14 +35,14 @@ class Pripravi_kontaktni_obrazec(
         /**
          * Vsebina validacija
          */
-        val cistaVsebina = vsebina.decrypt().trim().replace("""\s+""".toRegex(), " ")
+        val cistaVsebina = vsebina.trim().replace("""\s+""".toRegex(), " ")
         if (cistaVsebina.count { it.equals(' ') } < 2)
             return Rezultat.WARN(info = "Vsebina mora vsebovati vsaj 3 besede!")
 
         /**
          * Email formatiranje
          */
-        val formatiranEmail = when (val r = this.email.formatiraj(email.decrypt())) {
+        val formatiranEmail = when (val r = this.email.formatiraj(email)) {
             is EmailService.RezultatEmailFormatiranja.WARN_EMAIL_NI_PRAVILNE_OBLIKE -> {
                 return Rezultat.WARN("Email nima pravilne oblike!")
             }
@@ -53,7 +53,7 @@ class Pripravi_kontaktni_obrazec(
         /**
          * Telefon formatiranje
          */
-        val formatiranTelefon = when (val r = this.telefon.formatiraj(telefon.decrypt())) {
+        val formatiranTelefon = when (val r = this.telefon.formatiraj(telefon)) {
             is TelefonService.FormatirajRezultat.WARN_TELEFON_NI_PRAVILNE_OBLIKE -> {
                 return Rezultat.WARN("Telefon nima pravilne oblike!")
             }

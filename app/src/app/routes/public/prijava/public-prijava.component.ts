@@ -4,8 +4,8 @@ import {InputGesloComponent} from "../../../components/input-geslo/input-geslo.c
 import {AuthService} from "../../../services/auth/auth.service";
 import {Profil} from "../../../services/api/openapi/models/profil";
 import {Router} from "@angular/router";
-import {publicPrijavaGuard_urlTree} from "./public-prijava.guard";
 import {AlertService} from "../../../services/alert/alert.service";
+import {publicPrijavaGuard_urlTree} from "../../../guards/prijava/public-prijava.guard";
 
 @Component({
   selector: 'app-public-prijava',

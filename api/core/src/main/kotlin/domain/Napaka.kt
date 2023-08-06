@@ -5,6 +5,7 @@ import base.Encrypted
 import base.Id
 import extend.zdaj
 import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.apache.logging.log4j.kotlin.logger
 
@@ -14,8 +15,8 @@ data class Napaka(
     var entitete_id: Set<AnyId>,
     val tip: Tip,
     val ustvarjeno: LocalDateTime = LocalDateTime.zdaj(),
-    val vsebina: Encrypted,
-    val dodatno: Encrypted,
+    @Contextual val vsebina: Encrypted,
+    @Contextual val dodatno: Encrypted,
 ) : Entiteta<Napaka> {
     enum class Tip { ERROR, WARN, FATAL }
 

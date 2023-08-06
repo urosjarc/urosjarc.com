@@ -13,10 +13,10 @@ import {UcenecNalogaComponent} from "./routes/ucenec/naloga/ucenec-naloga.compon
 import {UcenecTestiComponent} from "./routes/ucenec/testi/ucenec-testi.component";
 import {RouterModule} from "@angular/router";
 import {NgModule} from "@angular/core";
-import {ucenecGuard} from "./routes/ucenec/ucenec.guard";
 import {AdminComponent} from "./routes/admin/admin.component";
-import {publicPrijavaGuard} from "./routes/public/prijava/public-prijava.guard";
-import {adminGuard} from "./routes/admin/admin.guard";
+import {publicPrijavaGuard} from "./guards/prijava/public-prijava.guard";
+import {ucenecGuard} from "./guards/ucenec/ucenec.guard";
+import {adminGuard} from "./guards/admin/admin.guard";
 
 const index = route('', {}, {})
 

@@ -26,7 +26,7 @@ export class PublicIndexComponent {
       vsebina: `
         Inštrukcije gimnazijske matematike in fizike, ter programiranja na univerzitetnem nivoju.
         Priprava učencev na popravni izpit matematike in fizike. Dolgotrajna pomoč pri učenju programiranja za potrebe
-        strokovnih srednjih šol pri programskih jezikih (C, C++, Java, Javascript, Node, Python, Kotlin).
+        strokovnih srednjih šol pri programskih jezikih (C, C++, Java, Javascript, Node, Python, Bash, Linux).
       `
     },
     {

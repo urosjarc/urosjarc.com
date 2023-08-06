@@ -11,6 +11,7 @@ import kotlinx.serialization.encoding.Encoder
 
 object HashedSerializer : KSerializer<Hashed> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Hashed", PrimitiveKind.STRING)
+
     @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: Hashed) {
         //Nikoli se ne bo zgodilo da boš uporabniku moral poslati hash!
