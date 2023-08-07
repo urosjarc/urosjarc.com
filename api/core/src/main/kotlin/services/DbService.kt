@@ -17,7 +17,10 @@ import domain.*
 import extend.*
 import kotlinx.datetime.LocalDate
 import org.apache.logging.log4j.kotlin.logger
+import org.bson.codecs.configuration.CodecRegistries
 import org.bson.conversions.Bson
+import serialization.EncryptedCodec
+import serialization.HashedCodec
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
 import kotlin.time.Duration
@@ -79,13 +82,19 @@ class Filters {
 }
 
 class DbService(val db_url: String, val db_name: String) {
+
+    val codecRegistry = CodecRegistries.fromRegistries(
+        CodecRegistries.fromCodecs(HashedCodec(), EncryptedCodec()),
+        MongoClientSettings.getDefaultCodecRegistry()
+    )
+
     private val serverApi = ServerApi.builder().version(ServerApiVersion.V1).build()
     private val settings =
         MongoClientSettings.builder().applyConnectionString(ConnectionString(db_url)).serverApi(serverApi).build()
     private val mongoClient = MongoClient.create(settings)
 
     val log = this.logger()
-    val db = mongoClient.getDatabase(db_name)
+    val db = mongoClient.getDatabase(db_name).withCodecRegistry(codecRegistry)
     val audits = db.getCollection<Audit>(collectionName = ime<Audit>())
     val osebe = db.getCollection<Oseba>(collectionName = ime<Oseba>())
     val statusi = db.getCollection<Status>(collectionName = ime<Status>())
