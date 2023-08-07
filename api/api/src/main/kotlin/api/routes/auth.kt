@@ -45,8 +45,6 @@ fun Route.auth(jwkProvider: JwkProvider) {
     this.post<auth.prijava> {
         val body = this.call.receive<PrijavaReq>()
 
-        log.info("Body: $body")
-
         //TODO: Naredi pravilno logiko
         val oseba = db.osebe.find(Filters.eq(Oseba::tip.name, Oseba.Tip.UCENEC.name)).first()
         log.info("Oseba: $oseba")

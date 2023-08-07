@@ -20,6 +20,7 @@ object HashedSerializer : KSerializer<Hashed> {
 
     override fun deserialize(decoder: Decoder): Hashed {
         //Nikoli se ne bo zgodilo da boš od uporabnika prejel hash!
+        decoder.decodeString()
         return Hashed("")
     }
 }
