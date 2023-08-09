@@ -1,24 +1,16 @@
 package base
 
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
-import org.bson.BsonReader
+import org.bson.BsonBinary
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 
-private val hasher = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8()
+val hasher = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8()
 
+@JvmInline
 @Serializable
-class Hashed {
-    val hashed_bytes: ByteArray
-
-    constructor(value: String) {
-        this.hashed_bytes = hasher.encode(value).toByteArray()
-    }
-
-    constructor(bsonReader: BsonReader) {
-        this.hashed_bytes = bsonReader.readBinaryData().data
-    }
-
-    fun match(key: String): Boolean {
-        return hasher.matches(key, String(this.hashed_bytes))
+value class Hashed(@Contextual val bytes: BsonBinary) {
+    fun match(password: String): Boolean {
+        return hasher.matches(password, String(this.bytes.data))
     }
 }

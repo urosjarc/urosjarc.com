@@ -10,11 +10,11 @@ import org.bson.codecs.EncoderContext
 
 class HashedCodec : Codec<Hashed> {
     override fun encode(writer: BsonWriter, value: Hashed, encoderContext: EncoderContext) {
-        writer.writeBinaryData(BsonBinary(value.hashed_bytes))
+        writer.writeBinaryData(BsonBinary(value.bytes.data))
     }
 
     override fun decode(reader: BsonReader, decoderContext: DecoderContext): Hashed {
-        return Hashed(reader)
+        return Hashed(reader.readBinaryData())
     }
 
     override fun getEncoderClass(): Class<Hashed> = Hashed::class.java

@@ -1,18 +1,12 @@
 package base
 
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.bson.types.ObjectId
-import kotlin.io.encoding.Base64
-import kotlin.io.encoding.ExperimentalEncodingApi
-
-@OptIn(ExperimentalEncodingApi::class)
-private fun UUID(): String {
-    return Base64.encode(source = ObjectId().toByteArray().reversedArray())
-}
 
 @JvmInline
 @Serializable
-value class Id<T>(val value: String = UUID()) {
+value class Id<T>(@Contextual val value: ObjectId = ObjectId()) {
     fun vAnyId(): AnyId {
         return AnyId(this.value)
     }
@@ -20,4 +14,4 @@ value class Id<T>(val value: String = UUID()) {
 
 @JvmInline
 @Serializable
-value class AnyId(val value: String = UUID())
+value class AnyId(@Contextual val value: ObjectId = ObjectId())

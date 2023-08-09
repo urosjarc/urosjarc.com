@@ -1,6 +1,5 @@
 package use_cases_api
 
-import base.Encrypted
 import domain.Kontakt
 import domain.Oseba
 import domain.Sporocilo

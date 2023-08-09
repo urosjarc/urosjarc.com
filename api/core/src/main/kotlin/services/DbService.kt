@@ -1,9 +1,6 @@
 package services
 
-import base.AnyId
-import base.Encrypted
-import base.Hashed
-import base.Id
+import base.*
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
 import com.mongodb.ServerApi
@@ -54,11 +51,10 @@ class Filters {
         }
 
         fun EQ(prop: KProperty1<*, Encrypted>, value: Encrypted): Bson {
-            return com.mongodb.client.model.Filters.eq(prop.name, value.encrypted_bytes)
+            return com.mongodb.client.model.Filters.eq(prop.name, value.bytes)
         }
-
         fun EQ(prop: KProperty1<*, Hashed>, value: Hashed): Bson {
-            return com.mongodb.client.model.Filters.eq(prop.name, value.hashed_bytes)
+            return com.mongodb.client.model.Filters.eq(prop.name, value.bytes)
         }
 
         fun <T> CONTAINS(prop: KProperty1<*, Set<Id<T>>>, value: Id<T>): Bson {

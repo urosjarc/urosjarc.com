@@ -8,9 +8,10 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import org.bson.BsonBinary
 
 object HashedSerializer : KSerializer<Hashed> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("Hashed", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("HashedBytes", PrimitiveKind.STRING)
 
     @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: Hashed) {
@@ -21,6 +22,6 @@ object HashedSerializer : KSerializer<Hashed> {
     override fun deserialize(decoder: Decoder): Hashed {
         //Nikoli se ne bo zgodilo da boš od uporabnika prejel hash!
         decoder.decodeString()
-        return Hashed("")
+        return Hashed(BsonBinary(ByteArray(0)))
     }
 }

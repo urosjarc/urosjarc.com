@@ -1,8 +1,6 @@
 package use_cases
 
-import base.Encrypted
-import base.Hashed
-import base.Id
+import base.*
 import domain.*
 import extend.*
 import io.github.serpro69.kfaker.Faker
@@ -60,12 +58,12 @@ class Ustvari_testne_podatke(
         )
         val admin_telefon = Kontakt(
             oseba_id = mutableSetOf(admin._id),
-            data = Encrypted("Uros Jarc"),
+            data = "Uros Jarc".encrypted(),
             tip = Kontakt.Tip.TELEFON
         )
         val admin_email = Kontakt(
             oseba_id = mutableSetOf(admin._id),
-            data = Encrypted("info@urosjarc.com"),
+            data = "info@urosjarc.com".encrypted(),
             tip = Kontakt.Tip.EMAIL
         )
         db.ustvari(admin)
@@ -278,7 +276,7 @@ class Ustvari_testne_podatke(
         return (0..n).map {
             val audit = this.nakljucni<Audit>().apply {
                 this.entitete_id = entitete_id.map { it.vAnyId() }.toMutableSet()
-                this.opis = Encrypted(Status.Tip.entries.toTypedArray().random().toString())
+                this.opis = Status.Tip.entries.toTypedArray().random().toString().encrypted()
             }
             audit
         }.toMutableSet()

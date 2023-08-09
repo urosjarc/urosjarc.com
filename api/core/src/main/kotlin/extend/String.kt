@@ -2,11 +2,14 @@ package extend
 
 import base.Encrypted
 import base.Hashed
+import base.encryptor
+import base.hasher
+import org.bson.BsonBinary
 
 fun String.encrypted(): Encrypted {
-    return Encrypted(this)
+    return Encrypted(BsonBinary(encryptor.doFinal(this.toByteArray())))
 }
 
 fun String.hashed(): Hashed {
-    return Hashed(this)
+    return Hashed(BsonBinary(hasher.encode(this).toByteArray()))
 }

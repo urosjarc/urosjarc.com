@@ -1,6 +1,5 @@
 package services
 
-import base.Encrypted
 import org.apache.logging.log4j.kotlin.logger
 import java.net.InetAddress
 import java.net.UnknownHostException

@@ -1,7 +1,8 @@
 package base
 
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
-import org.bson.BsonReader
+import org.bson.BsonBinary
 import java.security.spec.KeySpec
 import javax.crypto.Cipher
 import javax.crypto.SecretKeyFactory
@@ -19,24 +20,14 @@ private val spec: KeySpec = PBEKeySpec(
 private val secretKey = SecretKeySpec(factory.generateSecret(spec).encoded, "AES")
 private val ivParameterSpec = IvParameterSpec(Env.ENCRYPTION_SALT.toByteArray())
 private val transformation = "AES/CBC/PKCS5Padding"
-private val encryptor =
-    Cipher.getInstance(transformation).apply { init(Cipher.ENCRYPT_MODE, secretKey, ivParameterSpec) }
+val encryptor = Cipher.getInstance(transformation).apply { init(Cipher.ENCRYPT_MODE, secretKey, ivParameterSpec) }
 private val decryptor =
     Cipher.getInstance(transformation).apply { init(Cipher.DECRYPT_MODE, secretKey, ivParameterSpec) }
 
+@JvmInline
 @Serializable
-class Encrypted {
-    val encrypted_bytes: ByteArray
-
-    constructor(value: String) {
-        this.encrypted_bytes = encryptor.doFinal(value.toByteArray())
-    }
-
-    constructor(bsonReader: BsonReader) {
-        this.encrypted_bytes = bsonReader.readBinaryData().data
-    }
-
+value class Encrypted(@Contextual val bytes: BsonBinary) {
     fun decrypt(): String {
-        return String(decryptor.doFinal(this.encrypted_bytes))
+        return String(decryptor.doFinal(this.bytes.data))
     }
 }

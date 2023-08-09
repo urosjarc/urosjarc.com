@@ -10,11 +10,11 @@ import org.bson.codecs.EncoderContext
 
 class EncryptedCodec : Codec<Encrypted> {
     override fun encode(writer: BsonWriter, value: Encrypted, encoderContext: EncoderContext) {
-        writer.writeBinaryData(BsonBinary(value.encrypted_bytes))
+        writer.writeBinaryData(BsonBinary(value.bytes.data))
     }
 
     override fun decode(reader: BsonReader, decoderContext: DecoderContext): Encrypted {
-        return Encrypted(reader)
+        return Encrypted(reader.readBinaryData())
     }
 
     override fun getEncoderClass(): Class<Encrypted> = Encrypted::class.java

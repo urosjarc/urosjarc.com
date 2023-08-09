@@ -1,23 +1,24 @@
 package services
 
-import base.Encrypted
-import base.Hashed
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.contextual
-import serialization.EncriptedSerializer
+import serialization.BsonBinarySerializer
+import serialization.EncryptedSerializer
 import serialization.HashedSerializer
+import serialization.ObjectIdSerializer
 
 
 class JsonService {
+    @OptIn(ExperimentalSerializationApi::class)
     val module = Json {
         serializersModule = SerializersModule {
-//            contextual(LocalDateTimeIso8601Serializer)
-//            contextual(LocalTimeIso8601Serializer)
-//            contextual(LocalDateIso8601Serializer)
-            contextual(EncriptedSerializer)
+            contextual(ObjectIdSerializer)
+            contextual(BsonBinarySerializer)
+            contextual(EncryptedSerializer)
             contextual(HashedSerializer)
         }
         this.prettyPrint = false

@@ -1,6 +1,5 @@
 package use_cases
 
-import base.Encrypted
 import domain.Kontakt
 import domain.Oseba
 import extend.encrypted
