@@ -6,6 +6,7 @@ import {Profil} from "../../../services/api/openapi/models/profil";
 import {Router} from "@angular/router";
 import {AlertService} from "../../../services/alert/alert.service";
 import {publicPrijavaGuard_urlTree} from "../../../guards/prijava/public-prijava.guard";
+import {trace} from "../../../utils";
 
 @Component({
   selector: 'app-public-prijava',
@@ -26,8 +27,10 @@ export class PublicPrijavaComponent {
     private authService: AuthService) {
   }
 
+  @trace()
   prijava() {
     const self = this
+    this.loading = true
     this.authService.login({
       body: {
         username: this.oseba.formControl.getRawValue() || "",

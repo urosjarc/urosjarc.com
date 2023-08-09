@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+import { ObjectId } from './object-id';
 export interface AnyId {
-  value?: string;
+  value?: ObjectId;
 }

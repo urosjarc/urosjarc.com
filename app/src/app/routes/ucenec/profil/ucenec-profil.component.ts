@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ime} from "../../../utils";
+import {ime, trace} from "../../../utils";
 import {Oseba} from "../../../services/api/openapi/models/oseba";
 import {Naslov} from "../../../services/api/openapi/models/naslov";
 import {Kontakt} from "../../../services/api/openapi/models/kontakt";
@@ -20,10 +20,12 @@ export class UcenecProfilComponent implements OnInit {
   constructor(private dbService: DbService) {
   }
 
+  @trace()
   ngOnInit(): void {
     this.initOsebaProfil()
   }
 
+  @trace()
   async initOsebaProfil() {
     const root_id = this.dbService.get_root_id()
     this.oseba = await this.dbService.oseba.where(ime<Oseba>("_id")).equals(root_id).first()

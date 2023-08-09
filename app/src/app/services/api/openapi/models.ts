@@ -1,5 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
+export { BsonBinary } from './models/bson-binary';
 export { KontaktObrazecReq } from './models/kontakt-obrazec-req';
 export { NapakaReq } from './models/napaka-req';
 export { PrijavaReq } from './models/prijava-req';
@@ -7,6 +8,7 @@ export { StatusUpdateReq } from './models/status-update-req';
 export { LocalDate } from './models/local-date';
 export { TestUpdateReq } from './models/test-update-req';
 export { ErrorRes } from './models/error-res';
+export { ObjectId } from './models/object-id';
 export { Oseba } from './models/oseba';
 export { Id } from './models/id';
 export { Kontakt } from './models/kontakt';

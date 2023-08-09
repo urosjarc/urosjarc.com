@@ -2,6 +2,7 @@ import {Component} from "@angular/core";
 import {NavGumb} from "../../components/nav-gumb/NavGumb";
 import {routing} from "../../app-routing.module";
 import {DbService} from "../../services/db/db.service";
+import {trace} from "../../utils";
 
 @Component({
   selector: 'app-ucenec',
@@ -50,6 +51,7 @@ export class UcenecComponent {
   constructor(private dbService: DbService) {
   }
 
+  @trace()
   odjava() {
     this.dbService.set_token("")
   }

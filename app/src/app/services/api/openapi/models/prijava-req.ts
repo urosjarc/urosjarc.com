@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
+import { BsonBinary } from './bson-binary';
 export interface PrijavaReq {
-  geslo?: string;
-  username?: string;
+  geslo?: BsonBinary;
+  username?: BsonBinary;
 }

@@ -2,15 +2,19 @@ import {Injectable} from '@angular/core';
 import {AuthLogin, AuthProfil, AuthProfilTip} from "./AuthArgs";
 import {ApiService} from "../api/openapi/services/api.service";
 import {DbService} from "../db/db.service";
+import {NGXLogger} from "ngx-logger";
+import {trace} from "../../utils";
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
 
   constructor(
+    private log: NGXLogger,
     private dbService: DbService,
     private apiService: ApiService) {
   }
 
+  @trace()
   profil(authProfil: AuthProfil) {
     if (!this.dbService.get_token()) authProfil.error(null)
     this.apiService.authProfilGet({}).subscribe({
@@ -21,6 +25,7 @@ export class AuthService {
     })
   }
 
+  @trace()
   profilTip(authProfilTip: AuthProfilTip) {
     this.profil({
       error: authProfilTip.error,
@@ -30,6 +35,7 @@ export class AuthService {
     })
   }
 
+  @trace()
   login(authLogin: AuthLogin) {
     const self = this
     this.apiService

@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {ime} from "../../../utils";
+import {ime, trace} from "../../../utils";
 import {String_vDate} from "../../../extends/String";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
@@ -40,20 +40,24 @@ export class UcenecSporocilaComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog) {
   }
 
+  @trace()
   ngAfterViewInit() {
     this.sporocila.paginator = this.paginator;
     this.sporocila.sort = this.sort;
     this.sporocila.filterPredicate = this.filterSporociloPredicate
   }
 
+  @trace()
   ngOnInit(): void {
     this.initSporocila()
   }
 
+  @trace()
   odpriSporociloDialog(sporociloInfo: SporociloInfo) {
     this.dialog.open(DialogSporociloComponent, {data: sporociloInfo});
   }
 
+  @trace()
   async initSporocila() {
     const root_id = this.dbService.get_root_id()
     const oseba = await this.dbService.oseba.where(ime<Oseba>("_id")).equals(root_id).first()
@@ -94,11 +98,13 @@ export class UcenecSporocilaComponent implements OnInit, AfterViewInit {
     this.sporocila.data = vsa_sporocila
   }
 
+  @trace()
   applySporocilaFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.sporocila.filter = filterValue.trim()
   }
 
+  @trace()
   filterSporociloPredicate(data: SporociloInfo, filter: string) {
     return JSON.stringify(data).includes(filter)
   }

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {NalogaInfo} from "./NalogaInfo";
-import {ime} from "../../../utils";
+import {ime, trace} from "../../../utils";
 import * as moment from "moment";
 import {median, standardDeviation} from "simple-statistics";
 import {MatDialog} from "@angular/material/dialog";
@@ -46,6 +46,7 @@ export class UcenecTestComponent implements OnInit {
     this.test_id = route.snapshot.paramMap.get("test_id") || ""
   }
 
+  @trace()
   async ngOnInit() {
     const root_id = this.dbService.get_root_id()
     const test = await this.dbService.test.where({
@@ -62,6 +63,7 @@ export class UcenecTestComponent implements OnInit {
   }
 
 
+  @trace()
   async initCasovnaStatistika(root_id: string, test: Test) {
     const audit_tip: Audit['tip'] = 'STATUS_TIP_POSODOBITEV'
     const status_tip: Status['tip'] = 'PRAVILNO'
@@ -80,6 +82,7 @@ export class UcenecTestComponent implements OnInit {
     this.hitrost = `(${mediana} ± ${deviacija}) minut na nalogo`
   }
 
+  @trace()
   async initStatistikaOpravljenoDelo(root_id: string, test: Test) {
     const statusi = await this.dbService.status.where({
       [ime<Status>("oseba_id")]: root_id,
@@ -119,6 +122,7 @@ export class UcenecTestComponent implements OnInit {
     this.statistika = statistika.sort((a, b) => a.name.localeCompare(b.name))
   }
 
+  @trace()
   async initNaloge(root_id: string, test: Test) {
     const naloga_ids = test.naloga_id?.map(ele => ele.toString()) || []
 
@@ -155,6 +159,7 @@ export class UcenecTestComponent implements OnInit {
     this.tema_nalogeInfo = tema_nalogeInfo
   }
 
+  @trace()
   nastaviDatum() {
     const self = this;
     let matDialogRef = this.dialog.open(DialogIzberiDatumComponent, {

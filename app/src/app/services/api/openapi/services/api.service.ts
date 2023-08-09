@@ -502,7 +502,8 @@ export class ApiService extends BaseService {
    */
   ucenecTestTestIdPut$Response(
     params: {
-      test_id: string;
+      test_id: {
+};
       body: TestUpdateReq
     },
     context?: HttpContext
@@ -531,7 +532,8 @@ export class ApiService extends BaseService {
    */
   ucenecTestTestIdPut(
     params: {
-      test_id: string;
+      test_id: {
+};
       body: TestUpdateReq
     },
     context?: HttpContext
@@ -552,7 +554,8 @@ export class ApiService extends BaseService {
    */
   ucenecTestTestIdAuditGet$Response(
     params: {
-      test_id: string;
+      test_id: {
+};
     },
     context?: HttpContext
   ): Observable<StrictHttpResponse<Array<Audit>>> {
@@ -579,7 +582,8 @@ export class ApiService extends BaseService {
    */
   ucenecTestTestIdAuditGet(
     params: {
-      test_id: string;
+      test_id: {
+};
     },
     context?: HttpContext
   ): Observable<Array<Audit>> {
@@ -599,8 +603,10 @@ export class ApiService extends BaseService {
    */
   ucenecTestTestIdNalogaNalogaIdPost$Response(
     params: {
-      test_id: string;
-      naloga_id: string;
+      test_id: {
+};
+      naloga_id: {
+};
       body: StatusUpdateReq
     },
     context?: HttpContext
@@ -630,8 +636,10 @@ export class ApiService extends BaseService {
    */
   ucenecTestTestIdNalogaNalogaIdPost(
     params: {
-      test_id: string;
-      naloga_id: string;
+      test_id: {
+};
+      naloga_id: {
+};
       body: StatusUpdateReq
     },
     context?: HttpContext
@@ -652,8 +660,10 @@ export class ApiService extends BaseService {
    */
   ucenecTestTestIdNalogaNalogaIdAuditGet$Response(
     params: {
-      test_id: string;
-      naloga_id: string;
+      test_id: {
+};
+      naloga_id: {
+};
     },
     context?: HttpContext
   ): Observable<StrictHttpResponse<Array<Audit>>> {
@@ -681,8 +691,10 @@ export class ApiService extends BaseService {
    */
   ucenecTestTestIdNalogaNalogaIdAuditGet(
     params: {
-      test_id: string;
-      naloga_id: string;
+      test_id: {
+};
+      naloga_id: {
+};
     },
     context?: HttpContext
   ): Observable<Array<Audit>> {

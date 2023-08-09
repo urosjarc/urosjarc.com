@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
+import { ObjectId } from './object-id';
 export interface Profil {
-  id?: string;
+  id?: ObjectId;
   tip?: Array<'UCENEC' | 'UCITELJ' | 'INSTRUKTOR' | 'ADMIN' | 'KONTAKT' | 'SERVER'>;
 }

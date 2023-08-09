@@ -1,7 +1,7 @@
 import {Component, Input, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {Subscription, timer} from 'rxjs';
-import {ime} from "../../../utils";
+import {ime, trace} from "../../../utils";
 import {AlertService} from "../../../services/alert/alert.service";
 import {Location} from '@angular/common';
 import {MatTableDataSource} from "@angular/material/table";
@@ -47,10 +47,12 @@ export class UcenecNalogaComponent implements OnDestroy {
     })
   }
 
+  @trace()
   ngOnDestroy() {
     this.stoparica.unsubscribe()
   }
 
+  @trace()
   async initNaloga() {
 
     const root_id = this.dbService.get_root_id()
@@ -66,10 +68,12 @@ export class UcenecNalogaComponent implements OnDestroy {
     }).first()
   }
 
+  @trace()
   async initAudits() {
     this.audits.data = await this.dbService.audit.where(ime<Audit>("entitete_id")).equals(this.status?._id || "").toArray()
   }
 
+  @trace()
   nastaviStatus(status_tip: Status['tip']) {
     const self = this;
     this.apiService.ucenecTestTestIdNalogaNalogaIdPost({

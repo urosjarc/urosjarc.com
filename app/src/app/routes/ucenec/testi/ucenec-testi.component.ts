@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
-import {ime} from "../../../utils";
+import {ime, trace} from "../../../utils";
 import {String_vDate} from "../../../extends/String";
 import {TableTest} from "../../../components/table-testi/TableTest";
 import {routing} from "../../../app-routing.module";
@@ -19,10 +19,12 @@ export class UcenecTestiComponent implements OnInit {
   constructor(private db: DbService) {
   }
 
+  @trace()
   async ngOnInit() {
     await this.initTestVrstice()
   }
 
+  @trace()
   async initTestVrstice() {
     const root_id = this.db.get_root_id()
     const testi = await this.db.test

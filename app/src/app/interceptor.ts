@@ -11,6 +11,7 @@ import {forwardRef, Injectable, Provider} from "@angular/core";
 import {DbService} from "./services/db/db.service";
 import {AlertService} from "./services/alert/alert.service";
 import {ApiService} from "./services/api/openapi/services";
+import {trace} from "./utils";
 
 export const API_INTERCEPTOR_PROVIDER: Provider = {
   provide: HTTP_INTERCEPTORS,
@@ -25,6 +26,7 @@ export class Interceptor implements HttpInterceptor {
     private alertService: AlertService) {
   }
 
+  @trace()
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     req = req.clone({
       setHeaders: {
@@ -32,8 +34,7 @@ export class Interceptor implements HttpInterceptor {
       }
     });
     return next.handle(req).pipe(
-      tap(x => x, (err: HttpErrorResponse) => {
-        console.log(err)
+      tap(this.odgovor, (err: HttpErrorResponse) => {
         if (err.url?.endsWith(ApiService.AuthProfilGetPath)) return
 
         if (err.status == 0) this.serverNiDostopen(err)
@@ -44,6 +45,12 @@ export class Interceptor implements HttpInterceptor {
     );
   }
 
+  @trace()
+  odgovor(ele: any) {
+    return ele
+  }
+
+  @trace()
   serverNiDostopen(err: HttpErrorResponse) {
     const msg = err.message
     this.alertService.error("SERVER NEDOSTOPEN", `
@@ -56,6 +63,7 @@ export class Interceptor implements HttpInterceptor {
     `)
   }
 
+  @trace()
   serverNapaka(err: HttpErrorResponse) {
     const msg = err.message
     this.alertService.error("KRITIČNA NAPAKA", `
@@ -67,6 +75,7 @@ export class Interceptor implements HttpInterceptor {
     `)
   }
 
+  @trace()
   uporabniskaNapaka(err: HttpErrorResponse) {
     this.alertService.warn(err.error.info, `
       Aplikacijo uporabljate na napačen način.<br>

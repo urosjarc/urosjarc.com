@@ -1,7 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
+import { BsonBinary } from './bson-binary';
 export interface ErrorRes {
-  info?: string;
+  info?: BsonBinary;
   napaka?: 'UPORABNISKA' | 'SISTEMSKA';
-  status?: string;
+  status?: BsonBinary;
 }

@@ -7,3 +7,22 @@ export function ime<T>(name: keyof T) {
 }
 
 export type ArrayTypes<T extends Array<any> | undefined> = T extends Array<infer E> ? E : never;
+
+export function trace() {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    const targetMethod = descriptor.value;
+    descriptor.value = function (...args: any[]) {
+      console.group(`CALL ${target.constructor.name}.${propertyKey}`, args)
+      let returned = null
+      try {
+        const returned = targetMethod.apply(this, args);
+      } catch (e) {
+        console.error(e)
+      }
+      console.groupEnd()
+
+      if(returned) console.info(`RETURN`, returned)
+      return returned
+    }
+  };
+}

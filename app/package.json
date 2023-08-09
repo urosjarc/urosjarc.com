@@ -26,6 +26,7 @@
     "dexie": "^3.2.4",
     "iso8601-duration": "^2.1.1",
     "moment": "^2.29.4",
+    "ngx-logger": "^5.0.12",
     "rxjs": "~7.8.0",
     "simple-statistics": "^7.8.3",
     "tslib": "^2.3.0",
@@ -33,7 +34,6 @@
     "zone.js": "~0.13.0"
   },
   "devDependencies": {
-    "ng-openapi-gen": "^0.25.1",
     "@angular-devkit/build-angular": "^16.1.6",
     "@angular/cli": "~16.1.6",
     "@angular/compiler-cli": "^16.1.0",
@@ -45,6 +45,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "ng-openapi-gen": "^0.25.1",
     "typescript": "~5.1.3"
   }
 }

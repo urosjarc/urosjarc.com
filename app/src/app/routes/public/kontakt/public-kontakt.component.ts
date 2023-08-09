@@ -7,6 +7,7 @@ import {InputMsgComponent} from "../../../components/input-msg/input-msg.compone
 import {InputEmailComponent} from "../../../components/input-email/input-email.component";
 import {ApiService} from "../../../services/api/openapi/services/api.service";
 import {KontaktObrazecRes} from "../../../services/api/openapi/models/kontakt-obrazec-res";
+import {trace} from "../../../utils";
 
 @Component({
   selector: 'app-public-kontakt',
@@ -25,6 +26,7 @@ export class PublicKontaktComponent implements AfterViewInit {
               private alertService: AlertService) {
   }
 
+  @trace()
   ngAfterViewInit(): void {
     this.formGroup = new FormGroup({//@ts-ignore
       oseba: this.input_oseba?.formControl, //@ts-ignore
@@ -34,6 +36,7 @@ export class PublicKontaktComponent implements AfterViewInit {
     });
   }
 
+  @trace()
   poslji() {
     const self = this
     if (this.formGroup?.invalid) return;

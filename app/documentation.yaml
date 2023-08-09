@@ -39,24 +39,6 @@ paths:
               $ref: "#/components/schemas/PrijavaReq"
         required: true
       responses:
-        "401":
-          description: "Unauthorized"
-          content:
-            'application/json':
-              schema:
-                $ref: "#/components/schemas/ErrorRes"
-        "400":
-          description: "Bad Request"
-          content:
-            'application/json':
-              schema:
-                $ref: "#/components/schemas/ErrorRes"
-        "500":
-          description: "Internal Server Error"
-          content:
-            'application/json':
-              schema:
-                $ref: "#/components/schemas/ErrorRes"
         "200":
           description: "OK"
           content:
@@ -186,7 +168,7 @@ paths:
         in: "path"
         required: true
         schema:
-          type: "string"
+          type: "object"
       requestBody:
         content:
           'application/json':
@@ -214,7 +196,7 @@ paths:
         in: "path"
         required: true
         schema:
-          type: "string"
+          type: "object"
       responses:
         "200":
           description: "OK"
@@ -232,12 +214,12 @@ paths:
         in: "path"
         required: true
         schema:
-          type: "string"
+          type: "object"
       - name: "naloga_id"
         in: "path"
         required: true
         schema:
-          type: "string"
+          type: "object"
       requestBody:
         content:
           'application/json':
@@ -265,12 +247,12 @@ paths:
         in: "path"
         required: true
         schema:
-          type: "string"
+          type: "object"
       - name: "naloga_id"
         in: "path"
         required: true
         schema:
-          type: "string"
+          type: "object"
       responses:
         "200":
           description: "OK"
@@ -282,22 +264,33 @@ paths:
                   $ref: "#/components/schemas/Audit"
 components:
   schemas:
+    BsonBinary:
+      type: "object"
+      properties:
+        type:
+          type: "string"
+          format: "byte"
+        data:
+          type: "array"
+          items:
+            type: "string"
+            format: "byte"
     KontaktObrazecReq:
       type: "object"
       properties:
         ime_priimek:
-          type: "string"
+          $ref: "#/components/schemas/BsonBinary"
         email:
-          type: "string"
+          $ref: "#/components/schemas/BsonBinary"
         telefon:
-          type: "string"
+          $ref: "#/components/schemas/BsonBinary"
         vsebina:
-          type: "string"
+          $ref: "#/components/schemas/BsonBinary"
     NapakaReq:
       type: "object"
       properties:
         vsebina:
-          type: "string"
+          $ref: "#/components/schemas/BsonBinary"
         tip:
           type: "string"
           enum:
@@ -308,9 +301,9 @@ components:
       type: "object"
       properties:
         username:
-          type: "string"
+          $ref: "#/components/schemas/BsonBinary"
         geslo:
-          type: "string"
+          $ref: "#/components/schemas/BsonBinary"
     StatusUpdateReq:
       type: "object"
       properties:
@@ -341,20 +334,20 @@ components:
           - "UPORABNISKA"
           - "SISTEMSKA"
         status:
-          type: "string"
+          $ref: "#/components/schemas/BsonBinary"
         info:
-          type: "string"
+          $ref: "#/components/schemas/BsonBinary"
+    ObjectId:
+      type: "object"
+      properties:
+        timestamp:
+          type: "integer"
+          format: "int32"
     Oseba:
       type: "object"
       properties:
         _id:
-          type: "string"
-        ime:
-          type: "string"
-        priimek:
-          type: "string"
-        username:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         tip:
           type: "array"
           items:
@@ -366,27 +359,35 @@ components:
             - "ADMIN"
             - "KONTAKT"
             - "SERVER"
+        username:
+          $ref: "#/components/schemas/BsonBinary"
+        geslo:
+          $ref: "#/components/schemas/BsonBinary"
+        ime:
+          $ref: "#/components/schemas/BsonBinary"
+        priimek:
+          $ref: "#/components/schemas/BsonBinary"
     Id:
       type: "object"
       properties:
         value:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
     Kontakt:
       type: "object"
       properties:
         _id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         oseba_id:
           type: "array"
           items:
             $ref: "#/components/schemas/Id"
-        data:
-          type: "string"
         tip:
           type: "string"
           enum:
           - "EMAIL"
           - "TELEFON"
+        data:
+          $ref: "#/components/schemas/BsonBinary"
     LocalDateTime:
       type: "object"
       properties: {}
@@ -394,17 +395,17 @@ components:
       type: "object"
       properties:
         _id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         kontakt_posiljatelj_id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         kontakt_prejemnik_id:
           type: "array"
           items:
             $ref: "#/components/schemas/Id"
-        vsebina:
-          type: "string"
         poslano:
           $ref: "#/components/schemas/LocalDateTime"
+        vsebina:
+          $ref: "#/components/schemas/BsonBinary"
     KontaktObrazecRes:
       type: "object"
       properties:
@@ -464,22 +465,22 @@ components:
       type: "object"
       properties:
         _id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         tematika_id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         resitev:
-          type: "string"
+          $ref: "#/components/schemas/BsonBinary"
         vsebina:
-          type: "string"
+          $ref: "#/components/schemas/BsonBinary"
     Tematika:
       type: "object"
       properties:
         _id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         zvezek_id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         naslov:
-          type: "string"
+          $ref: "#/components/schemas/BsonBinary"
     NalogaData:
       type: "object"
       properties:
@@ -493,20 +494,19 @@ components:
       type: "object"
       properties:
         _id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         oseba_id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         drzava:
-          type: "string"
+          $ref: "#/components/schemas/BsonBinary"
         mesto:
-          type: "string"
-        ulica:
-          type: "string"
+          $ref: "#/components/schemas/BsonBinary"
         zip:
-          type: "integer"
-          format: "int32"
+          $ref: "#/components/schemas/BsonBinary"
+        ulica:
+          $ref: "#/components/schemas/BsonBinary"
         dodatno:
-          type: "string"
+          $ref: "#/components/schemas/BsonBinary"
     OsebaData:
       type: "object"
       properties:
@@ -524,13 +524,13 @@ components:
       type: "object"
       properties:
         _id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         naloga_id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         test_id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         oseba_id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         tip:
           type: "string"
           enum:
@@ -539,7 +539,7 @@ components:
           - "NAPACNO"
           - "PRAVILNO"
         pojasnilo:
-          type: "string"
+          $ref: "#/components/schemas/BsonBinary"
     StatusData:
       type: "object"
       properties:
@@ -553,7 +553,11 @@ components:
       type: "object"
       properties:
         _id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
+        naloga_id:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Id"
         oseba_admin_id:
           type: "array"
           items:
@@ -562,16 +566,12 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/Id"
-        naloga_id:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/Id"
-        naslov:
-          type: "string"
-        podnaslov:
-          type: "string"
         deadline:
           $ref: "#/components/schemas/LocalDate"
+        naslov:
+          $ref: "#/components/schemas/BsonBinary"
+        podnaslov:
+          $ref: "#/components/schemas/BsonBinary"
     TestData:
       type: "object"
       properties:
@@ -589,11 +589,11 @@ components:
       type: "object"
       properties:
         _id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         oseba_ucenec_id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         oseba_ucitelj_id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
     UcenjeData:
       type: "object"
       properties:
@@ -611,12 +611,12 @@ components:
       type: "object"
       properties:
         value:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
     Audit:
       type: "object"
       properties:
         _id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         entitete_id:
           type: "array"
           items:
@@ -626,15 +626,15 @@ components:
           enum:
           - "STATUS_TIP_POSODOBITEV"
           - "TEST_DATUM_POSODOBITEV"
-        opis:
-          type: "string"
         trajanje:
           type: "integer"
           format: "int64"
-        entiteta:
-          type: "string"
         ustvarjeno:
           $ref: "#/components/schemas/LocalDateTime"
+        opis:
+          $ref: "#/components/schemas/BsonBinary"
+        entiteta:
+          $ref: "#/components/schemas/BsonBinary"
     UcenecData:
       type: "object"
       properties:
@@ -677,7 +677,7 @@ components:
       type: "object"
       properties:
         _id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         entitete_id:
           type: "array"
           items:
@@ -688,24 +688,24 @@ components:
           - "ERROR"
           - "WARN"
           - "FATAL"
-        vsebina:
-          type: "string"
-        dodatno:
-          type: "string"
         ustvarjeno:
           $ref: "#/components/schemas/LocalDateTime"
+        vsebina:
+          $ref: "#/components/schemas/BsonBinary"
+        dodatno:
+          $ref: "#/components/schemas/BsonBinary"
     Zvezek:
       type: "object"
       properties:
         _id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         tip:
           type: "string"
           enum:
           - "DELOVNI"
           - "TEORETSKI"
         naslov:
-          type: "string"
+          $ref: "#/components/schemas/BsonBinary"
     IndexRes:
       type: "object"
       properties:
@@ -773,7 +773,7 @@ components:
       type: "object"
       properties:
         id:
-          type: "string"
+          $ref: "#/components/schemas/ObjectId"
         tip:
           type: "array"
           items:

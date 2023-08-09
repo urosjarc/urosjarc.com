@@ -2,6 +2,7 @@ import {LOCALE_ID, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import * as moment from "moment"
 
+import { LoggerModule, NgxLoggerLevel } from "ngx-logger"
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatIconModule} from "@angular/material/icon";
@@ -63,9 +64,16 @@ import "@angular/common/locales/global/sl"
 import 'moment/locale/sl';
 import { AdminComponent } from './routes/admin/admin.component';
 import {API_INTERCEPTOR_PROVIDER, Interceptor} from "./interceptor";
+import {ApiModule} from "./services/api/openapi/api.module";
 
 const locale = 'sl'
 moment.locale(locale);
+
+const loggerModule = LoggerModule.forRoot({
+  serverLoggingUrl: '/api/logs',
+  level: NgxLoggerLevel.DEBUG,
+  serverLogLevel: NgxLoggerLevel.ERROR
+})
 
 @NgModule({
   declarations: [
@@ -124,10 +132,11 @@ moment.locale(locale);
     MatButtonToggleModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
+    ApiModule,
+    loggerModule,
   ],
   providers: [
     AlertService,
-    ApiService,
     AuthService,
     DbService,
     SyncService,

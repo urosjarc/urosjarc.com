@@ -3,6 +3,7 @@ import {AlertService} from "../services/alert/alert.service";
 import {MatDialog} from "@angular/material/dialog";
 import {AlertComponent} from "../components/alert/alert.component";
 import {Alert} from "../services/alert/Alert";
+import {trace} from "../utils";
 
 @Component({
   selector: 'app',
@@ -15,12 +16,14 @@ export class AppComponent implements OnInit {
     private alertService: AlertService) {
   }
 
+  @trace()
   ngOnInit() {
     this.alertService.alerts.subscribe((alert: Alert) => {
       if (alert) this.onAlert(alert)
     })
   }
 
+  @trace()
   private onAlert(data: Alert) {
     this.dialog.open(AlertComponent, {
       enterAnimationDuration: 250,

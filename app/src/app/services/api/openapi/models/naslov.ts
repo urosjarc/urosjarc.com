@@ -1,11 +1,13 @@
 /* tslint:disable */
 /* eslint-disable */
+import { BsonBinary } from './bson-binary';
+import { ObjectId } from './object-id';
 export interface Naslov {
-  '_id'?: string;
-  dodatno?: string;
-  drzava?: string;
-  mesto?: string;
-  oseba_id?: string;
-  ulica?: string;
-  zip?: number;
+  '_id'?: ObjectId;
+  dodatno?: BsonBinary;
+  drzava?: BsonBinary;
+  mesto?: BsonBinary;
+  oseba_id?: ObjectId;
+  ulica?: BsonBinary;
+  zip?: BsonBinary;
 }

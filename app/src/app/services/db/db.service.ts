@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 
 import Dexie, {Table} from 'dexie';
-import {ime, isObject} from "../../utils";
+import {ime, isObject, trace} from "../../utils";
 import {
   Audit,
   Kontakt,
@@ -52,26 +52,30 @@ export class DbService extends Dexie {
     })
   }
 
+  @trace()
   get_root_id(): string {
     return localStorage.getItem("root_id") || ""
   }
 
+  @trace()
   set_root_id(root_id: string) {
     return localStorage.setItem("root_id", root_id)
   }
 
+  @trace()
   get_token(): string {
     return localStorage.getItem("token") || ""
   }
 
+  @trace()
   set_token(token: string) {
     localStorage.setItem("token", token)
   }
 
+  @trace()
   async reset(osebaData: OsebaData) {
     this.set_root_id(osebaData.oseba?._id || "")
 
-    console.log("Reset db: ", osebaData)
     await this.delete()
     await this.open()
 
