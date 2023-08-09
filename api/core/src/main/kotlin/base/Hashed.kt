@@ -9,8 +9,8 @@ val hasher = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8()
 
 @JvmInline
 @Serializable
-value class Hashed(@Contextual val bytes: BsonBinary) {
+value class Hashed(@Contextual val bin: BsonBinary) {
     fun match(password: String): Boolean {
-        return hasher.matches(password, String(this.bytes.data))
+        return hasher.matches(password, String(this.bin.data))
     }
 }

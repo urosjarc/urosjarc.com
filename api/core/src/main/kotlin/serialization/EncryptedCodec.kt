@@ -10,7 +10,7 @@ import org.bson.codecs.EncoderContext
 
 class EncryptedCodec : Codec<Encrypted> {
     override fun encode(writer: BsonWriter, value: Encrypted, encoderContext: EncoderContext) {
-        writer.writeBinaryData(BsonBinary(value.bytes.data))
+        writer.writeBinaryData(BsonBinary(value.bin.data))
     }
 
     override fun decode(reader: BsonReader, decoderContext: DecoderContext): Encrypted {

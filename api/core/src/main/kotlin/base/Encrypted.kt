@@ -26,8 +26,8 @@ private val decryptor =
 
 @JvmInline
 @Serializable
-value class Encrypted(@Contextual val bytes: BsonBinary) {
+value class Encrypted(@Contextual val bin: BsonBinary) {
     fun decrypt(): String {
-        return String(decryptor.doFinal(this.bytes.data))
+        return String(decryptor.doFinal(this.bin.data))
     }
 }

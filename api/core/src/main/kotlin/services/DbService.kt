@@ -51,10 +51,10 @@ class Filters {
         }
 
         fun EQ(prop: KProperty1<*, Encrypted>, value: Encrypted): Bson {
-            return com.mongodb.client.model.Filters.eq(prop.name, value.bytes)
+            return com.mongodb.client.model.Filters.eq(prop.name, value.bin)
         }
         fun EQ(prop: KProperty1<*, Hashed>, value: Hashed): Bson {
-            return com.mongodb.client.model.Filters.eq(prop.name, value.bytes)
+            return com.mongodb.client.model.Filters.eq(prop.name, value.bin)
         }
 
         fun <T> CONTAINS(prop: KProperty1<*, Set<Id<T>>>, value: Id<T>): Bson {
