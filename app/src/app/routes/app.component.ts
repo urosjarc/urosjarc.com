@@ -4,6 +4,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {AlertComponent} from "../components/alert/alert.component";
 import {Alert} from "../services/alert/Alert";
 import {trace} from "../utils";
+import {NavigationStart, Router} from "@angular/router";
 
 @Component({
   selector: 'app',
@@ -12,8 +13,18 @@ import {trace} from "../utils";
 })
 export class AppComponent implements OnInit {
   constructor(
+    private router: Router,
     private dialog: MatDialog,
     private alertService: AlertService) {
+
+    this.router.events.subscribe({
+      next(value) {
+        if (value instanceof NavigationStart) {
+          console.groupEnd()
+          console.group(`${value.id} ${value.url}`)
+        }
+      }
+    })
   }
 
   @trace()

@@ -6,12 +6,12 @@ import {
   HttpInterceptor,
   HttpRequest
 } from "@angular/common/http";
-import {Observable, tap} from "rxjs";
 import {forwardRef, Injectable, Provider} from "@angular/core";
 import {DbService} from "./services/db/db.service";
 import {AlertService} from "./services/alert/alert.service";
 import {ApiService} from "./services/api/openapi/services";
 import {trace} from "./utils";
+import {Observable, tap} from "rxjs";
 
 export const API_INTERCEPTOR_PROVIDER: Provider = {
   provide: HTTP_INTERCEPTORS,
@@ -26,23 +26,27 @@ export class Interceptor implements HttpInterceptor {
     private alertService: AlertService) {
   }
 
-  @trace()
+  // The interceptor does not work nice with @trace
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const self = this
     req = req.clone({
       setHeaders: {
         Authorization: `Bearer ${this.dbService.get_token()}`
       }
     });
+    console.log("REQ ", req)
     return next.handle(req).pipe(
-      tap(this.odgovor, (err: HttpErrorResponse) => {
-        if (err.url?.endsWith(ApiService.AuthProfilGetPath)) return
+      tap({
+        next: self.odgovor,
+        error(err: HttpErrorResponse) {
+          if (err.url?.endsWith(ApiService.AuthProfilGetPath)) return
 
-        if (err.status == 0) this.serverNiDostopen(err)
-        else if (!err.error || err.status == 404 || err.status >= 500) this.serverNapaka(err)
-        else this.uporabniskaNapaka(err)
+          if (err.status == 0) self.serverNiDostopen(err)
+          else if (!err.error || err.status == 404 || err.status >= 500) self.serverNapaka(err)
+          else self.uporabniskaNapaka(err)
 
-      })
-    );
+        }
+      }))
   }
 
   @trace()

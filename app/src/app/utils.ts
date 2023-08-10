@@ -21,7 +21,7 @@ export function trace() {
       }
       console.groupEnd()
 
-      if(returned) console.info(`RETURN`, returned)
+      if (returned) console.info(`RETURN`, returned)
       return returned
     }
   };
