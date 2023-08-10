@@ -2,7 +2,7 @@ import {LOCALE_ID, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import * as moment from "moment"
 
-import { LoggerModule, NgxLoggerLevel } from "ngx-logger"
+import {LoggerModule, NgxLoggerLevel} from "ngx-logger"
 import {AppRoutingModule} from './app-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatIconModule} from "@angular/material/icon";
@@ -56,13 +56,12 @@ import {TableTestiComponent} from "./components/table-testi/table-testi.componen
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {LoadingComponent} from "./components/loading/loading.component";
-import {ApiService} from "./services/api/openapi/services";
 import {AuthService} from "./services/auth/auth.service";
 import {DbService} from "./services/db/db.service";
 import {SyncService} from "./services/sync/sync.service";
 import "@angular/common/locales/global/sl"
 import 'moment/locale/sl';
-import { AdminComponent } from './routes/admin/admin.component';
+import {AdminComponent} from './routes/admin/admin.component';
 import {API_INTERCEPTOR_PROVIDER, Interceptor} from "./interceptor";
 import {ApiModule} from "./services/api/openapi/api.module";
 

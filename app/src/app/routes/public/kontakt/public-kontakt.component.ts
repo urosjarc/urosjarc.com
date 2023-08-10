@@ -53,15 +53,7 @@ export class PublicKontaktComponent implements AfterViewInit {
       }
     }).subscribe({
       next(value: KontaktObrazecRes) {
-        self.alertService.info('Vaše sporočilo je bilo sprejeto!', `
-          Preverite prejem potrditvenih sporočil.<br>
-          <br>
-          <h3>
-            Email: ${value.email?.data}
-            <br>
-            Telefon: ${value.telefon?.data}
-          </h3>
-        `)
+        self.alertService.sprejetnoSporocilo(value)
         self.loading = false
       },
       error() {

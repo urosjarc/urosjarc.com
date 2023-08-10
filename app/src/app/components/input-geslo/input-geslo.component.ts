@@ -9,6 +9,9 @@ import {FormControl, Validators} from "@angular/forms";
 export class InputGesloComponent {
   @Input() formControl = new FormControl('', [Validators.required, Validators.minLength(4)]);
 
+  hide = true;
+  get value() { return this.formControl.getRawValue() }
+
   getErrorMessage() {
     if (this.formControl.hasError('required')) {
       return 'Geslo je obvezno!';

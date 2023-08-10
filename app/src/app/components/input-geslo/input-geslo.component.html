@@ -1,6 +1,7 @@
 <mat-form-field class="w-100">
   <mat-label>Geslo</mat-label>
-  <input matInput [formControl]="formControl" required>
   <mat-icon matPrefix>lock</mat-icon>
+  <input matInput [formControl]="formControl" [type]="hide ? 'password' : 'text'" required>
+  <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
   <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
 </mat-form-field>
