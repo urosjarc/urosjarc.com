@@ -57,15 +57,17 @@ export class PublicPrijavaComponent implements AfterViewInit {
           self.syncSerivce.osebaData({
             profil: profil,
             next() {
+              self.loading = false
               self.router.navigateByUrl(urlTree)
             },
             error() {
+              self.loading = false
             }
           })
-        } else self.alertService.manjkajocaAvtorizacija()
+        } else self.alertService.warnManjkajocaAvtorizacija()
       },
       error(err: any) {
-        self.alertService.neuspesnaPrijava()
+        self.loading = false
       }
     })
 

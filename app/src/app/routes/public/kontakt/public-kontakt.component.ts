@@ -53,7 +53,7 @@ export class PublicKontaktComponent implements AfterViewInit {
       }
     }).subscribe({
       next(value: KontaktObrazecRes) {
-        self.alertService.sprejetnoSporocilo(value)
+        self.alertService.infoSprejetnoSporocilo(value)
         self.loading = false
       },
       error() {

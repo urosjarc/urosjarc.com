@@ -35,7 +35,7 @@ export class AlertService {
     return this.alertsObserver.asObservable();
   }
 
-  serverNiDostopen(err: HttpErrorResponse) {
+  errorServerNiDostopen(err: HttpErrorResponse) {
     const msg = err.message
     this.error("SERVER NEDOSTOPEN", `
       Komunikacija z serverjem ni bila vspostavljena! Incident se ni mogel registrirati!<br>
@@ -47,7 +47,7 @@ export class AlertService {
     `)
   }
 
-  sinhronizacijskaNapaka(err: Error) {
+  errorSinhronizacijskaNapaka(err: Error) {
     const msg = err.message
     this.error("KRITICNA SINHRONIZACIJSKA NAPAKA", `
       Zgodila se je kriticna sinhronizacijska napaka! Incident se je registriral!<br>
@@ -58,7 +58,7 @@ export class AlertService {
     `)
   }
 
-  serverNapaka(err: HttpErrorResponse) {
+  errorServerNapaka(err: HttpErrorResponse) {
     const msg = err.message
     this.error("KRITIČNA NAPAKA", `
       Zgodila se je kritična napaka! Incident se je registriral!<br>
@@ -69,19 +69,14 @@ export class AlertService {
     `)
   }
 
-  neuspesnaPrijava() {
-    this.info("Prijava ni bila uspešna!", "")
-  }
-
-  uporabniskaNapaka(err: HttpErrorResponse) {
+  warnUporabniskaNapaka(err: HttpErrorResponse) {
     this.warn(err.error.info, `
       Aplikacijo uporabljate na napačen način.<br>
       Incident se je zabeležil!
     `)
   }
 
-
-  manjkajocaAvtorizacija() {
+  warnManjkajocaAvtorizacija() {
     this.warn(
       "Neaktivno avtorizacijsko dovoljenje!", `
       Uspešno ste se prijavili.
@@ -91,7 +86,7 @@ export class AlertService {
     `)
   }
 
-  sprejetnoSporocilo(obrazec: KontaktObrazecRes) {
+  infoSprejetnoSporocilo(obrazec: KontaktObrazecRes) {
     this.info('Vaše sporočilo je bilo sprejeto!', `
       Preverite prejem potrditvenih sporočil.<br>
       <br>

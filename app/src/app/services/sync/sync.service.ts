@@ -31,7 +31,7 @@ export class SyncService {
         self.dbService.reset(value).then(() => {
           args.next()
         }).catch((err) => {
-          self.alertSerivce.sinhronizacijskaNapaka(err)
+          self.alertSerivce.errorSinhronizacijskaNapaka(err)
           args.error()
         })
       },

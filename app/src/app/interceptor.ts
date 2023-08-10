@@ -49,9 +49,9 @@ export class Interceptor implements HttpInterceptor {
         error(err: HttpErrorResponse) {
           console.error(`${count} RES `, err)
           if (err.url?.endsWith(ApiService.AuthProfilGetPath)) return
-          if (err.status == 0) self.alertService.serverNiDostopen(err)
-          else if (!err.error || err.status == 404 || err.status >= 500) self.alertService.serverNapaka(err)
-          else self.alertService.uporabniskaNapaka(err)
+          if (err.status == 0) self.alertService.errorServerNiDostopen(err)
+          else if (!err.error || err.status == 404 || err.status >= 500) self.alertService.errorServerNapaka(err)
+          else self.alertService.warnUporabniskaNapaka(err)
         }
       }))
   }

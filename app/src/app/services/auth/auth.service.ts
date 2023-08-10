@@ -41,6 +41,7 @@ export class AuthService {
     this.apiService
       .authPrijavaPost({body: authLogin.body})
       .subscribe({
+        error: authLogin.error,
         next(res) {
           self.dbService.set_token(res.token || "")
           authLogin.next(res)
