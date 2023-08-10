@@ -52,7 +52,6 @@ export class DbService extends Dexie {
     })
   }
 
-  @trace()
   get_root_id(): string {
     return localStorage.getItem("root_id") || ""
   }
@@ -62,7 +61,6 @@ export class DbService extends Dexie {
     return localStorage.setItem("root_id", root_id)
   }
 
-  @trace()
   get_token(): string {
     return localStorage.getItem("token") || ""
   }

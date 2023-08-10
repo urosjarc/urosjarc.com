@@ -37,7 +37,7 @@ export class PublicPrijavaComponent {
         geslo: this.geslo.formControl.getRawValue() || ""
       },
       next(profil: Profil) {
-        const urlTree = publicPrijavaGuard_urlTree(profil)
+        const urlTree = publicPrijavaGuard_urlTree(self.router, profil)
         if (urlTree) self.router.navigateByUrl(urlTree)
         else self.alertService.warn(
           "Neaktivno avtorizacijsko dovoljenje!", `

@@ -4,7 +4,7 @@ import {
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
-  HttpRequest
+  HttpRequest, HttpResponse
 } from "@angular/common/http";
 import {forwardRef, Injectable, Provider} from "@angular/core";
 import {DbService} from "./services/db/db.service";
@@ -21,6 +21,8 @@ export const API_INTERCEPTOR_PROVIDER: Provider = {
 
 @Injectable()
 export class Interceptor implements HttpInterceptor {
+  static count: number = 0
+
   constructor(
     private dbService: DbService,
     private alertService: AlertService) {
@@ -34,27 +36,27 @@ export class Interceptor implements HttpInterceptor {
         Authorization: `Bearer ${this.dbService.get_token()}`
       }
     });
-    console.log("REQ ", req)
+    const count = ++Interceptor.count
+    console.log(`${count} REQ `, req)
     return next.handle(req).pipe(
       tap({
-        next: self.odgovor,
+        next(ele: any){
+          if(ele instanceof HttpResponse){
+            console.info(`${count} RES `, ele)
+          }
+          return ele
+        },
         error(err: HttpErrorResponse) {
+          console.error(`${count} RES `, err)
           if (err.url?.endsWith(ApiService.AuthProfilGetPath)) return
-
           if (err.status == 0) self.serverNiDostopen(err)
           else if (!err.error || err.status == 404 || err.status >= 500) self.serverNapaka(err)
           else self.uporabniskaNapaka(err)
-
         }
       }))
   }
 
-  @trace()
-  odgovor(ele: any) {
-    return ele
-  }
 
-  @trace()
   serverNiDostopen(err: HttpErrorResponse) {
     const msg = err.message
     this.alertService.error("SERVER NEDOSTOPEN", `
@@ -67,7 +69,6 @@ export class Interceptor implements HttpInterceptor {
     `)
   }
 
-  @trace()
   serverNapaka(err: HttpErrorResponse) {
     const msg = err.message
     this.alertService.error("KRITIČNA NAPAKA", `
@@ -79,7 +80,6 @@ export class Interceptor implements HttpInterceptor {
     `)
   }
 
-  @trace()
   uporabniskaNapaka(err: HttpErrorResponse) {
     this.alertService.warn(err.error.info, `
       Aplikacijo uporabljate na napačen način.<br>

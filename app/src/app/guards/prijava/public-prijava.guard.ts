@@ -3,10 +3,8 @@ import {inject} from "@angular/core";
 import {AuthService} from "../../services/auth/auth.service";
 import {routing} from "../../app-routing.module";
 import {Profil} from "../../services/api/openapi/models/profil";
-import {trace} from "../../utils";
 
-export function publicPrijavaGuard_urlTree(profil: Profil): UrlTree | null {
-  const router = inject(Router)
+export function publicPrijavaGuard_urlTree(router: Router, profil: Profil): UrlTree | null {
   const ucenec_url = router.createUrlTree([routing.ucenec({}).$])
   const admin_url = router.createUrlTree([routing.admin({}).$])
   if (profil.tip?.includes("ADMIN")) return admin_url
@@ -16,14 +14,20 @@ export function publicPrijavaGuard_urlTree(profil: Profil): UrlTree | null {
 
 export const publicPrijavaGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService)
+  const router = inject(Router)
 
   return new Promise(resolve => {
+    console.group("GURARD", publicPrijavaGuard.name)
     authService.profil({
       next(profil) {
-        const urlTree = publicPrijavaGuard_urlTree(profil)
+        const urlTree = publicPrijavaGuard_urlTree(router, profil)
+        console.groupEnd()
+        console.log("GUARD", publicPrijavaGuard.name, urlTree)
         resolve(urlTree || true)
       },
       error() {
+        console.groupEnd()
+        console.log("GUARD", publicPrijavaGuard.name, true)
         resolve(true)
       }
     })
