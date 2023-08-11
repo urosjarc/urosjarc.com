@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
+import {Validator_besede} from "../../validators/besede.validator";
 
 @Component({
   selector: 'app-input-msg',
@@ -10,7 +11,7 @@ export class InputMsgComponent {
   @Input() formControl = new FormControl('', [
     Validators.required,
     Validators.minLength(10),
-    Validators.pattern(".*\\S+\\s+\\S+\\s+\\S+.*")
+    Validator_besede(3)
   ]);
 
   getErrorMessage() {
@@ -20,7 +21,7 @@ export class InputMsgComponent {
     if (this.formControl.hasError('minlength')){
       return 'Sporočilo je premajhno!';
     }
-    if (this.formControl.hasError('pattern')){
+    if (this.formControl.hasError('Validator_besed')){
       return 'Sporočilo ima premalo besed!';
     }
 

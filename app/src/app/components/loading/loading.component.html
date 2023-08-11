@@ -1,1 +1,1 @@
-<mat-progress-bar [ngClass]="{'invisible': !loading}" [mode]="loading ? 'indeterminate' : 'determinate'"/>
+<mat-progress-bar [value]="value" [ngClass]="{'invisible': !loading}" [mode]="value < 0 ? 'indeterminate' : 'determinate'"/>

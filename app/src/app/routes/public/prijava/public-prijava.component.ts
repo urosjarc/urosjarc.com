@@ -59,18 +59,17 @@ export class PublicPrijavaComponent implements AfterViewInit {
             next() {
               self.loading = false
               self.router.navigateByUrl(urlTree)
-            },
-            error() {
-              self.loading = false
-            }
+            }, error: self.zakljuci_prijavo,
           })
         } else self.alertService.warnManjkajocaAvtorizacija()
-      },
-      error(err: any) {
-        self.loading = false
-      }
+      }, error: self.zakljuci_prijavo
     })
 
+  }
+
+  @trace()
+  zakljuci_prijavo() {
+    this.loading = false
   }
 
 }
