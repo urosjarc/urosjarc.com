@@ -3,7 +3,7 @@ import {Observable} from "rxjs";
 import {DbService} from "../db/db.service";
 import {ApiService} from "../api/openapi/services/api.service";
 import {trace} from "../../utils";
-import {SyncOsebaData} from "./SyncArgs";
+import {SyncProfil} from "./SyncArgs";
 import {AlertService} from "../alert/alert.service";
 
 @Injectable({providedIn: 'root'})
@@ -15,7 +15,7 @@ export class SyncService {
   }
 
   @trace()
-  osebaData(args: SyncOsebaData) {
+  sync(args: SyncProfil) {
     const self = this;
     let observer: Observable<any>
     if (args.profil.tip?.includes("UCENEC"))
@@ -27,18 +27,21 @@ export class SyncService {
     }
 
     return observer.subscribe({
-      next(value) {
-        self.dbService.reset(value).then(() => {
-          args.next()
-        }).catch((err) => {
-          self.alertSerivce.errorSinhronizacijskaNapaka(err)
-          args.error()
-        })
+      async next(value) {
+        await self.dbService.reset(value)
+        args.next()
       },
       error() {
         args.error()
       }
     })
 
+  }
+
+  @trace()
+  pocisti() {
+    this.dbService.delete()
+    this.dbService.set_token("")
+    this.dbService.set_root_id("")
   }
 }

@@ -15,13 +15,12 @@ export function trace() {
       console.group(`CALL ${target.constructor.name}.${propertyKey}`, args)
       let returned = null
       try {
-        const returned = targetMethod.apply(this, args);
+        returned = targetMethod.apply(this, args);
       } catch (e) {
         console.error(e)
       }
       console.groupEnd()
-
-      if (returned) console.info(`RETURN`, returned)
+      console.info(`RETURN ${target.constructor.name}.${propertyKey}`, returned)
       return returned
     }
   };

@@ -25,7 +25,7 @@ export class PublicPrijavaComponent implements AfterViewInit {
   loading = false
 
   constructor(
-    private syncSerivce: SyncService,
+    private syncService: SyncService,
     private alertService: AlertService,
     private router: Router,
     private authService: AuthService) {
@@ -54,7 +54,7 @@ export class PublicPrijavaComponent implements AfterViewInit {
       next(profil: Profil) {
         const urlTree = publicPrijavaGuard_urlTree(self.router, profil)
         if (urlTree) {
-          self.syncSerivce.osebaData({
+          self.syncService.sync({
             profil: profil,
             next() {
               self.loading = false

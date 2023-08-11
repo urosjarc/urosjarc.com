@@ -8,4 +8,8 @@ import {NavGumb} from "../nav-gumb/NavGumb";
 })
 export class NavBarComponent {
   @Input() navGumbi: NavGumb[] = []
+
+  onClick() {
+
+  }
 }

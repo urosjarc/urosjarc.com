@@ -1,6 +1,6 @@
 import {Profil} from "../api/openapi/models/profil";
 
-export interface SyncOsebaData {
+export interface SyncProfil {
   profil: Profil
 
   next(): void

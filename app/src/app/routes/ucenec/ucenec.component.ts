@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 import {NavGumb} from "../../components/nav-gumb/NavGumb";
 import {routing} from "../../app-routing.module";
-import {DbService} from "../../services/db/db.service";
+import {SyncService} from "../../services/sync/sync.service";
 import {trace} from "../../utils";
 
 @Component({
@@ -44,15 +44,17 @@ export class UcenecComponent {
     {
       tekst: "Odjava",
       ikona: "close",
-      onClick: this.odjava
+      onClick: () => {
+        this.odjava()
+      }
     },
   ];
 
-  constructor(private dbService: DbService) {
+  constructor(private syncService: SyncService) {
   }
 
   @trace()
   odjava() {
-    this.dbService.set_token("")
+    this.syncService.pocisti()
   }
 }
