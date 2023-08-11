@@ -71,7 +71,7 @@ class Pripravi_kontaktni_obrazec(
         val oseba = Oseba(
             ime = imePriimekList.first().encrypted(),
             priimek = imePriimekList.last().encrypted(),
-            username = imePriimekList.joinToString("").lowercase().hashed(),
+            username = imePriimekList.joinToString("").lowercase().encrypted(),
             geslo = imePriimekList.joinToString("").lowercase().hashed(),
             tip = mutableSetOf(Oseba.Tip.KONTAKT)
         )

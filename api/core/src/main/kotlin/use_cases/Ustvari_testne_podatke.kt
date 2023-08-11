@@ -52,7 +52,7 @@ class Ustvari_testne_podatke(
         val admin = Oseba(
             ime = "Uros".encrypted(),
             priimek = "Jarc".encrypted(),
-            username = "urosjarc".hashed(),
+            username = "urosjarc".encrypted(),
             geslo = "asdf".hashed(),
             tip = mutableSetOf(Oseba.Tip.SERVER, Oseba.Tip.ADMIN)
         )

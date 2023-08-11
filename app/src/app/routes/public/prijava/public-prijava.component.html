@@ -1,15 +1,17 @@
 <app-loading [loading]="loading"/>
-<div class="row p-4">
+<form [formGroup]="formGroup" (ngSubmit)="prijava()">
+  <div class="row p-4">
 
-  <div class="col-sm-6">
-    <app-input-oseba label="Uporabniško ime"/>
-  </div>
+    <div class="col-sm-6">
+      <app-input-oseba label="Uporabniško ime"/>
+    </div>
 
-  <div class="col-sm-6">
-    <app-input-geslo/>
-  </div>
+    <div class="col-sm-6">
+      <app-input-geslo/>
+    </div>
 
-  <div class="col-12">
-    <button color="primary" [disabled]="loading" (click)="prijava()" mat-raised-button class="w-100">Prijava</button>
+    <div class="col-12">
+      <button color="primary" [disabled]="loading" type="submit" mat-raised-button class="w-100">Prijava</button>
+    </div>
   </div>
-</div>
+</form>
