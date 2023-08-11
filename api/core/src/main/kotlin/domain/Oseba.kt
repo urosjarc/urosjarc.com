@@ -10,8 +10,8 @@ import kotlinx.serialization.Serializable
 data class Oseba(
     override var _id: Id<Oseba> = Id(),
     var tip: MutableSet<Tip>,
-    val username: Encrypted,
     val geslo: Hashed,
+    @Contextual val username: Encrypted,
     @Contextual val ime: Encrypted,
     @Contextual val priimek: Encrypted,
 ) : Entiteta<Oseba> {

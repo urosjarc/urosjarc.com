@@ -1,6 +1,8 @@
 package use_cases
 
-import base.*
+import base.Encrypted
+import base.Hashed
+import base.Id
 import domain.*
 import extend.*
 import io.github.serpro69.kfaker.Faker
