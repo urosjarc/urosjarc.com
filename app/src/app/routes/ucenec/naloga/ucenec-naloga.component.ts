@@ -27,8 +27,8 @@ export class UcenecNalogaComponent implements OnDestroy {
   @Input() audits = new MatTableDataSource<Audit>()
   statusi: Status['tip'][] = [
     'NERESENO',
-    'PRAVILNO',
     'NAPACNO',
+    'PRAVILNO',
   ];
 
   constructor(

@@ -1,7 +1,7 @@
 <div class="pb-3 pt-1">
 
   <h1 class="text-center pt-3">
-    Deadline je v <button (click)="nastaviDatum()" style="padding-top: 13px" mat-flat-button><h1><b>{{deadline | date}}, čez {{deadline | DateOddaljenost }}</b></h1></button>
+    Deadline je v <button (click)="nastaviDatum()" style="top: 0px; padding-top: 15px" mat-raised-button><h1>{{deadline | date}}, {{deadline | DateOddaljenost }}</h1></button>
     <br>Idealno delo je <b>{{delo}}</b>.
 
     <br>Tvoja hitrost je <b>{{hitrost}}</b>.

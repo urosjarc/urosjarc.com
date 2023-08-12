@@ -9,7 +9,7 @@
   <mat-tab label="Resitev">
     <img class="col-12" src="{{naloga.resitev}}">
     <div id="izbira" class="row">
-      <button class="col" mat-raised-button (click)="nastaviStatus(status)" *ngFor="let status of statusi">{{status}}</button>
+      <button class="col" style="{{status | StatusStyle}}" mat-raised-button (click)="nastaviStatus(status)" *ngFor="let status of statusi">{{status}}</button>
     </div>
   </mat-tab>
 

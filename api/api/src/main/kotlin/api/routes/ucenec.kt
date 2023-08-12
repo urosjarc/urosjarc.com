@@ -140,7 +140,6 @@ fun Route.ucenec() {
         db.ustvari(audit)
 
         this.call.respond(AuditRes(test = test, audit = audit))
-
     }
 
     this.get<ucenec.test.test_id.naloga.naloga_id.audit> {
