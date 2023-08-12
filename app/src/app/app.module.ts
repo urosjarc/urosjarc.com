@@ -41,7 +41,7 @@ import {MatSortModule} from "@angular/material/sort";
 import {UcenecTestComponent} from "./routes/ucenec/test/ucenec-test.component";
 import {UcenecNalogaComponent} from "./routes/ucenec/naloga/ucenec-naloga.component";
 import {MatTabsModule} from "@angular/material/tabs";
-import {StatusStylePipe} from "./pipes/StatusClass/status-style.pipe";
+import {StatusStylePipe} from "./pipes/StatusStyle/status-style.pipe";
 import {StoparicaPipe} from "./pipes/Stoparica/stoparica.pipe";
 import {TrajanjePipe} from "./pipes/Trajanje/trajanje.pipe";
 import {UcenecDeloComponent} from "./routes/ucenec/delo/ucenec-delo.component";
