@@ -7,7 +7,9 @@ import {Profil} from "../../services/api/openapi/models/profil";
 export function publicPrijavaGuard_urlTree(router: Router, profil: Profil): UrlTree | null {
   const ucenec_url = router.createUrlTree([routing.ucenec({}).$])
   const admin_url = router.createUrlTree([routing.admin({}).$])
+  const ucitelj_url = router.createUrlTree([routing.ucitelj({}).$])
   if (profil.tip?.includes("ADMIN")) return admin_url
+  if (profil.tip?.includes("UCITELJ")) return ucitelj_url
   if (profil.tip?.includes("UCENEC")) return ucenec_url
   return null
 }

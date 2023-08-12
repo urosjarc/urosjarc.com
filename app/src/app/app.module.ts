@@ -61,9 +61,16 @@ import {DbService} from "./services/db/db.service";
 import {SyncService} from "./services/sync/sync.service";
 import "@angular/common/locales/global/sl"
 import 'moment/locale/sl';
-import {AdminComponent} from './routes/admin/admin.component';
+import {UciteljComponent} from './routes/ucitelj/ucitelj.component';
 import {API_INTERCEPTOR_PROVIDER, Interceptor} from "./interceptor";
 import {ApiModule} from "./services/api/openapi/api.module";
+import {UciteljUcenciComponent} from "./routes/ucitelj/ucenci/ucitelj-ucenci.component";
+import {UciteljTestiComponent} from "./routes/ucitelj/testi/ucitelj-testi.component";
+import {UciteljSporocilaComponent} from "./routes/ucitelj/sporocila/ucitelj-sporocila.component";
+import {UciteljDeloComponent} from "./routes/ucitelj/delo/ucitelj-delo.component";
+import {UciteljProfilComponent} from "./routes/ucitelj/profil/ucitelj-profil.component";
+import {AdminComponent} from "./routes/admin/admin.component";
+import {AdminIndexComponent} from "./routes/admin/index/admin-index.component";
 
 const locale = 'sl'
 moment.locale(locale);
@@ -103,7 +110,14 @@ const loggerModule = LoggerModule.forRoot({
     PublicComponent,
     TableTestiComponent,
     LoadingComponent,
+    UciteljComponent,
+    UciteljUcenciComponent,
+    UciteljTestiComponent,
+    UciteljSporocilaComponent,
+    UciteljDeloComponent,
+    UciteljProfilComponent,
     AdminComponent,
+    AdminIndexComponent
   ],
   imports: [
     DateOddaljenostPipe,

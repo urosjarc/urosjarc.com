@@ -8,8 +8,10 @@ import com.mongodb.ServerApiVersion
 import com.mongodb.client.model.*
 import com.mongodb.kotlin.client.AggregateIterable
 import com.mongodb.kotlin.client.MongoClient
+import data.AdminData
 import data.OsebaData
 import data.UcenecData
+import data.UciteljData
 import domain.*
 import extend.*
 import kotlinx.datetime.LocalDate
@@ -148,6 +150,191 @@ class DbService(val db_url: String, val db_name: String) {
 
     fun ucenec(id: Id<Oseba>): UcenecData {
         val aggregation: AggregateIterable<UcenecData> = osebe.aggregate<UcenecData>(
+            listOf(
+                Aggregates.match(Filters.EQ(id)),
+                Aggregates_project_root(Oseba::class),
+                /**
+                 * Naslovi
+                 */
+                Aggregates_lookup(
+                    from = Naslov::oseba_id,
+                    to = Oseba::_id
+                ),
+                /**
+                 * Testi
+                 */
+                Aggregates_lookup(
+                    from = Test::oseba_ucenec_id,
+                    to = Oseba::_id,
+                    pipeline = listOf(
+                        Aggregates_lookup(
+                            from = Status::test_id,
+                            to = Test::_id,
+                            filter = Filters.EQ(Status::oseba_id, id)
+                        ),
+                        Aggregates_lookup(
+                            from = Naloga::_id,
+                            to = Test::naloga_id,
+                            pipeline = listOf(
+                                Aggregates_lookup(
+                                    from = Tematika::_id,
+                                    to = Naloga::tematika_id
+                                )
+                            )
+                        ),
+                    ),
+                ),
+                /**
+                 * Kontakti
+                 */
+                Aggregates_lookup(
+                    from = Kontakt::oseba_id,
+                    to = Oseba::_id,
+                    pipeline = listOf(
+                        Aggregates_lookup(
+                            from = Sporocilo::kontakt_prejemnik_id, to = Kontakt::_id, pipeline = listOf(
+                                Aggregates_lookup(
+                                    from = Kontakt::_id, to = Sporocilo::kontakt_posiljatelj_id, pipeline = listOf(
+                                        Aggregates_lookup(
+                                            from = Oseba::_id, to = Kontakt::oseba_id
+                                        ),
+                                    )
+                                ),
+                            )
+                        ),
+                        Aggregates_lookup(
+                            from = Sporocilo::kontakt_posiljatelj_id, to = Kontakt::_id, pipeline = listOf(
+                                Aggregates_lookup(
+                                    from = Kontakt::_id, to = Sporocilo::kontakt_prejemnik_id, pipeline = listOf(
+                                        Aggregates_lookup(
+                                            from = Oseba::_id, to = Kontakt::oseba_id
+                                        ),
+                                    )
+                                ),
+                            )
+                        ),
+                    )
+                ),
+                /**
+                 * Ucenje
+                 */
+                Aggregates_lookup(
+                    from = Ucenje::oseba_ucenec_id,
+                    to = Oseba::_id,
+                    pipeline = listOf(
+                        Aggregates_lookup(
+                            from = Oseba::_id,
+                            to = Ucenje::oseba_ucitelj_id,
+                        )
+                    )
+                ),
+                /**
+                 * Audits
+                 */
+                Aggregates_lookup(
+                    from = Audit::entitete_id,
+                    to = Oseba::_id
+                )
+            )
+        )
+        return aggregation.first()
+    }
+
+    fun admin(id: Id<Oseba>): AdminData {
+        val aggregation: AggregateIterable<AdminData> = osebe.aggregate<AdminData>(
+            listOf(
+                Aggregates.match(Filters.EQ(id)),
+                Aggregates_project_root(Oseba::class),
+                /**
+                 * Naslovi
+                 */
+                Aggregates_lookup(
+                    from = Naslov::oseba_id,
+                    to = Oseba::_id
+                ),
+                /**
+                 * Testi
+                 */
+                Aggregates_lookup(
+                    from = Test::oseba_ucenec_id,
+                    to = Oseba::_id,
+                    pipeline = listOf(
+                        Aggregates_lookup(
+                            from = Status::test_id,
+                            to = Test::_id,
+                            filter = Filters.EQ(Status::oseba_id, id)
+                        ),
+                        Aggregates_lookup(
+                            from = Naloga::_id,
+                            to = Test::naloga_id,
+                            pipeline = listOf(
+                                Aggregates_lookup(
+                                    from = Tematika::_id,
+                                    to = Naloga::tematika_id
+                                )
+                            )
+                        ),
+                    ),
+                ),
+                /**
+                 * Kontakti
+                 */
+                Aggregates_lookup(
+                    from = Kontakt::oseba_id,
+                    to = Oseba::_id,
+                    pipeline = listOf(
+                        Aggregates_lookup(
+                            from = Sporocilo::kontakt_prejemnik_id, to = Kontakt::_id, pipeline = listOf(
+                                Aggregates_lookup(
+                                    from = Kontakt::_id, to = Sporocilo::kontakt_posiljatelj_id, pipeline = listOf(
+                                        Aggregates_lookup(
+                                            from = Oseba::_id, to = Kontakt::oseba_id
+                                        ),
+                                    )
+                                ),
+                            )
+                        ),
+                        Aggregates_lookup(
+                            from = Sporocilo::kontakt_posiljatelj_id, to = Kontakt::_id, pipeline = listOf(
+                                Aggregates_lookup(
+                                    from = Kontakt::_id, to = Sporocilo::kontakt_prejemnik_id, pipeline = listOf(
+                                        Aggregates_lookup(
+                                            from = Oseba::_id, to = Kontakt::oseba_id
+                                        ),
+                                    )
+                                ),
+                            )
+                        ),
+                    )
+                ),
+                /**
+                 * Ucenje
+                 */
+                Aggregates_lookup(
+                    from = Ucenje::oseba_ucenec_id,
+                    to = Oseba::_id,
+                    pipeline = listOf(
+                        Aggregates_lookup(
+                            from = Oseba::_id,
+                            to = Ucenje::oseba_ucitelj_id,
+                        )
+                    )
+                ),
+                /**
+                 * Audits
+                 */
+                Aggregates_lookup(
+                    from = Audit::entitete_id,
+                    to = Oseba::_id
+                )
+            )
+        )
+        return aggregation.first()
+    }
+
+
+    fun ucitelj(id: Id<Oseba>): UciteljData {
+        val aggregation: AggregateIterable<UciteljData> = osebe.aggregate<UciteljData>(
             listOf(
                 Aggregates.match(Filters.EQ(id)),
                 Aggregates_project_root(Oseba::class),

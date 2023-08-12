@@ -13,10 +13,18 @@ import {UcenecNalogaComponent} from "./routes/ucenec/naloga/ucenec-naloga.compon
 import {UcenecTestiComponent} from "./routes/ucenec/testi/ucenec-testi.component";
 import {RouterModule} from "@angular/router";
 import {NgModule} from "@angular/core";
-import {AdminComponent} from "./routes/admin/admin.component";
+import {UciteljComponent} from "./routes/ucitelj/ucitelj.component";
 import {publicPrijavaGuard} from "./guards/prijava/public-prijava.guard";
 import {ucenecGuard} from "./guards/ucenec/ucenec.guard";
 import {adminGuard} from "./guards/admin/admin.guard";
+import {UciteljTestiComponent} from "./routes/ucitelj/testi/ucitelj-testi.component";
+import {UciteljSporocilaComponent} from "./routes/ucitelj/sporocila/ucitelj-sporocila.component";
+import {UciteljDeloComponent} from "./routes/ucitelj/delo/ucitelj-delo.component";
+import {UciteljProfilComponent} from "./routes/ucitelj/profil/ucitelj-profil.component";
+import {UciteljUcenciComponent} from "./routes/ucitelj/ucenci/ucitelj-ucenci.component";
+import {AdminComponent} from "./routes/admin/admin.component";
+import {uciteljGuard} from "./guards/ucitelj/ucitelj.guard";
+import {AdminIndexComponent} from "./routes/admin/index/admin-index.component";
 
 const index = route('', {}, {})
 
@@ -24,17 +32,20 @@ const koledar = route('koledar', {}, {})
 const kontakt = route('kontakt', {}, {})
 const prijava = route('prijava', {}, {})
 
-const delo = route('prijava', {}, {})
-const naloga = route('testi/:test_id/naloge/:naloga_id', {test_id: stringParser, naloga_id: stringParser}, {})
-const profil = route('koledar', {}, {})
-const sporocila = route('kontakt', {}, {})
-const test = route('testi/:test_id', {test_id: stringParser}, {})
+const profil = route('profil', {}, {})
+const delo = route('delo', {}, {})
+const sporocila = route('sporocila', {}, {})
 const testi = route('testi', {}, {})
+const test = route('testi/:test_id', {test_id: stringParser}, {})
+const naloga = route('testi/:test_id/naloge/:naloga_id', {test_id: stringParser, naloga_id: stringParser}, {})
+
+const ucenci = route('ucenci', {}, {})
 
 export const routing = {
   "public": route('/', {}, {index, koledar, kontakt, prijava}),
-  "ucenec": route('/ucenec', {}, {delo, naloga, profil, sporocila, test, testi}),
-  "admin": route('/admin', {}, {}),
+  "ucenec": route('/ucenec', {}, {profil, sporocila, delo, test, testi, naloga}),
+  "ucitelj": route('/ucitelj', {}, {profil, ucenci, sporocila, delo, test, testi, naloga}),
+  "admin": route('/admin', {}, {index}),
 }
 
 const routes = [
@@ -49,15 +60,25 @@ const routes = [
   {
     path: routing.ucenec.template, canActivate: [ucenecGuard], component: UcenecComponent, children: [
       {path: index.template, component: UcenecTestiComponent},
-      {path: delo.template, component: UcenecDeloComponent},
-      {path: naloga.template, component: UcenecNalogaComponent},
-      {path: profil.template, component: UcenecProfilComponent},
-      {path: sporocila.template, component: UcenecSporocilaComponent},
-      {path: test.template, component: UcenecTestComponent},
       {path: testi.template, component: UcenecTestiComponent},
+      {path: test.template, component: UcenecTestComponent},
+      {path: naloga.template, component: UcenecNalogaComponent},
+      {path: sporocila.template, component: UcenecSporocilaComponent},
+      {path: delo.template, component: UcenecDeloComponent},
+      {path: profil.template, component: UcenecProfilComponent},
     ]
   },
-  {path: routing.admin.template, component: AdminComponent, canActivate: [adminGuard]},
+  {path: routing.admin.template, canActivate: [adminGuard], component: AdminComponent, children: [
+      {path: index.template, component: AdminIndexComponent},
+    ]},
+  {path: routing.ucitelj.template, canActivate: [uciteljGuard], component: UciteljComponent, children: [
+      {path: index.template, component: UciteljTestiComponent},
+      {path: testi.template, component: UciteljTestiComponent},
+      {path: ucenci.template, component: UciteljUcenciComponent},
+      {path: sporocila.template, component: UciteljSporocilaComponent},
+      {path: delo.template, component: UciteljDeloComponent},
+      {path: profil.template, component: UciteljProfilComponent},
+    ]},
   {path: '**', component: PublicIndexComponent},
 ];
 
