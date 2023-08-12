@@ -24,5 +24,5 @@
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr class="{{test.datum | DateOddaljenostClass}}" mat-row *matRowDef="let test; columns: displayedColumns;" routerLink="{{test.link}}"></tr>
+  <tr class="{{test.datum | DateOddaljenostClass}} cursor-pointer" mat-row *matRowDef="let test; columns: displayedColumns;" routerLink="{{test.link}}"></tr>
 </table>

@@ -34,3 +34,7 @@ mat-label {
   @extend .mat-elevation-z1;
   border-radius: 5px !important;
 }
+
+.mat-mdc-row {
+  cursor: pointer;
+}

@@ -17,8 +17,11 @@ import io.ktor.server.resources.post
 import io.ktor.server.resources.put
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
+import serialization.IdSerializer
 import services.DbService
 import si.urosjarc.server.api.response.StatusUpdateReq
 import si.urosjarc.server.api.response.TestUpdateReq
@@ -39,7 +42,7 @@ class ucenec {
     class test(val parent: ucenec) {
 
         @Resource("{test_id}")
-        class test_id(val parent: test, val test_id: Id<Test>) {
+        class test_id(val parent: test, @Serializable(with=IdSerializer::class) val test_id: Id<Test>) {
 
             @Resource("audit")
             class audit(val parent: test_id)
@@ -48,7 +51,7 @@ class ucenec {
             class naloga(val parent: test_id) {
 
                 @Resource("{naloga_id}")
-                class naloga_id(val parent: naloga, val naloga_id: Id<Naloga>) {
+                class naloga_id(val parent: naloga, @Serializable(with= IdSerializer::class) val naloga_id: Id<Naloga>) {
 
                     @Resource("audit")
                     class audit(val parent: naloga_id)

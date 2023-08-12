@@ -32,15 +32,15 @@ class Test_Ustvari_testne_podatke : KoinTest {
     }
 
     @Test
-    fun `zdaj`() {
-        this.use_case.zdaj(vse=true)
-    }
-
-    @Test
     fun `test`() {
         val oseba = this.db.osebe.find().first()
         println(oseba.username.decrypt())
         println(this.json.module.encodeToString(oseba))
+    }
+
+    @Test
+    fun `zdaj`() {
+        this.use_case.zdaj(vse=true)
     }
 
 }

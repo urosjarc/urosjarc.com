@@ -1,12 +1,10 @@
 <div class="row text-center">
-  <a (click)="onClick()" [routerLink]="route">
-    <div class="col-12">
-      <button mat-fab [style]="style" color="primary">
-        <mat-icon>{{ikona}}</mat-icon>
-      </button>
-    </div>
-    <div class="col-12">
-      <p>{{tekst}}</p>
-    </div>
-  </a>
+  <div class="col-12">
+    <button mat-fab [style]="style" color="primary" (click)="onClick()" [routerLink]="route">
+      <mat-icon>{{ikona}}</mat-icon>
+    </button>
+  </div>
+  <div class="col-12">
+    <p>{{tekst}}</p>
+  </div>
 </div>
