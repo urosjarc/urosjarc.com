@@ -57,12 +57,16 @@ export class PublicPrijavaComponent implements AfterViewInit {
           self.syncService.sync({
             profil: profil,
             next() {
-              self.loading = false
+              self.zakljuci_prijavo()
               self.router.navigateByUrl(urlTree)
-            }, error: self.zakljuci_prijavo,
+            }, error: () => {
+              self.zakljuci_prijavo()
+            },
           })
         } else self.alertService.warnManjkajocaAvtorizacija()
-      }, error: self.zakljuci_prijavo
+      }, error: () => {
+        self.zakljuci_prijavo()
+      },
     })
 
   }

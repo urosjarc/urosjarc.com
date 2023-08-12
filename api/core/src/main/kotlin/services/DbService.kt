@@ -346,28 +346,17 @@ class DbService(val db_url: String, val db_name: String) {
                     to = Oseba::_id
                 ),
                 /**
-                 * Testi
+                 * Ucenje
                  */
                 Aggregates_lookup(
-                    from = Test::oseba_ucenec_id,
+                    from = Ucenje::oseba_ucitelj_id,
                     to = Oseba::_id,
                     pipeline = listOf(
                         Aggregates_lookup(
-                            from = Status::test_id,
-                            to = Test::_id,
-                            filter = Filters.EQ(Status::oseba_id, id)
-                        ),
-                        Aggregates_lookup(
-                            from = Naloga::_id,
-                            to = Test::naloga_id,
-                            pipeline = listOf(
-                                Aggregates_lookup(
-                                    from = Tematika::_id,
-                                    to = Naloga::tematika_id
-                                )
-                            )
-                        ),
-                    ),
+                            from = Oseba::_id,
+                            to = Ucenje::oseba_ucenec_id
+                        )
+                    )
                 ),
                 /**
                  * Kontakti
@@ -401,17 +390,49 @@ class DbService(val db_url: String, val db_name: String) {
                     )
                 ),
                 /**
-                 * Ucenje
+                 * Testi
                  */
                 Aggregates_lookup(
-                    from = Ucenje::oseba_ucenec_id,
+                    from = Test::oseba_admin_id,
                     to = Oseba::_id,
                     pipeline = listOf(
+                        /**
+                         * Osebe na test
+                         */
                         Aggregates_lookup(
                             from = Oseba::_id,
-                            to = Ucenje::oseba_ucitelj_id,
-                        )
-                    )
+                            to = Test::oseba_ucenec_id,
+                        ),
+                        /**
+                         * Statuse na test
+                         */
+                        Aggregates_lookup(
+                            from = Status::test_id,
+                            to = Test::_id
+                        ),
+                        /**
+                         * Naloge na test
+                         */
+                        Aggregates_lookup(
+                            from = Naloga::_id,
+                            to = Test::naloga_id,
+                            pipeline = listOf(
+                                /**
+                                 * Tematike na naloge
+                                 */
+                                Aggregates_lookup(
+                                    from = Tematika::_id,
+                                    to = Naloga::tematika_id,
+                                    pipeline = listOf(
+                                        Aggregates_lookup(
+                                            from = Zvezek::_id,
+                                            to = Tematika::zvezek_id
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                    ),
                 ),
                 /**
                  * Audits

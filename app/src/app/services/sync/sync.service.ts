@@ -22,6 +22,8 @@ export class SyncService {
       observer = this.apiService.ucenecGet({})
     else if (args.profil.tip?.includes("ADMIN"))
       observer = this.apiService.adminGet({})
+    else if (args.profil.tip?.includes("UCITELJ"))
+      observer = this.apiService.uciteljGet({})
     else {
       return args.error()
     }

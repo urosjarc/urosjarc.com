@@ -53,8 +53,10 @@ fun Aggregates_lookup(
     if (filter != null) {
         arr.add(Aggregates.match(filter).toBsonDocument()) //Filtracija mora biti pred projections
     }
+
+    arr.add(Aggregates_project_root(key = foreign_class).toBsonDocument()) //Potem mora biti projekcija (v vsakem primeru)
+
     if (pipeline != null) {
-        arr.add(Aggregates_project_root(key = foreign_class).toBsonDocument()) //Potem mora biti projekcija
         pipeline.forEach { arr.add(it.toBsonDocument()) } //Sele potem pa dodatna agregacija.
     }
     if (arr.isNotEmpty()) inside.append("pipeline", arr)

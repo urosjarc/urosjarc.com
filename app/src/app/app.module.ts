@@ -71,6 +71,9 @@ import {UciteljDeloComponent} from "./routes/ucitelj/delo/ucitelj-delo.component
 import {UciteljProfilComponent} from "./routes/ucitelj/profil/ucitelj-profil.component";
 import {AdminComponent} from "./routes/admin/admin.component";
 import {AdminIndexComponent} from "./routes/admin/index/admin-index.component";
+import {TableOsebeComponent} from "./components/table-osebe/table-osebe.component";
+import {TableSporocilaComponent} from "./components/table-sporocila/table-sporocila.component";
+import {OsebaProfilComponent} from "./components/oseba-profil/oseba-profil.component";
 
 const locale = 'sl'
 moment.locale(locale);
@@ -117,7 +120,11 @@ const loggerModule = LoggerModule.forRoot({
     UciteljDeloComponent,
     UciteljProfilComponent,
     AdminComponent,
-    AdminIndexComponent
+    AdminIndexComponent,
+    TableOsebeComponent,
+    TableOsebeComponent,
+    TableSporocilaComponent,
+    OsebaProfilComponent,
   ],
   imports: [
     DateOddaljenostPipe,

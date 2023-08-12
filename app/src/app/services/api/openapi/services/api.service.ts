@@ -10,6 +10,7 @@ import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 import { RequestBuilder } from '../request-builder';
 
+import { AdminData } from '../models/admin-data';
 import { Audit } from '../models/audit';
 import { AuditRes } from '../models/audit-res';
 import { IndexRes } from '../models/index-res';
@@ -23,6 +24,7 @@ import { Profil } from '../models/profil';
 import { StatusUpdateReq } from '../models/status-update-req';
 import { TestUpdateReq } from '../models/test-update-req';
 import { UcenecData } from '../models/ucenec-data';
+import { UciteljData } from '../models/ucitelj-data';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService extends BaseService {
@@ -87,7 +89,7 @@ export class ApiService extends BaseService {
     params?: {
     },
     context?: HttpContext
-  ): Observable<StrictHttpResponse<string>> {
+  ): Observable<StrictHttpResponse<AdminData>> {
     const rb = new RequestBuilder(this.rootUrl, ApiService.AdminGetPath, 'get');
     if (params) {
     }
@@ -97,7 +99,7 @@ export class ApiService extends BaseService {
     ).pipe(
       filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<string>;
+        return r as StrictHttpResponse<AdminData>;
       })
     );
   }
@@ -112,9 +114,9 @@ export class ApiService extends BaseService {
     params?: {
     },
     context?: HttpContext
-  ): Observable<string> {
+  ): Observable<AdminData> {
     return this.adminGet$Response(params, context).pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
+      map((r: StrictHttpResponse<AdminData>): AdminData => r.body)
     );
   }
 
@@ -700,6 +702,50 @@ export class ApiService extends BaseService {
   ): Observable<Array<Audit>> {
     return this.ucenecTestTestIdNalogaNalogaIdAuditGet$Response(params, context).pipe(
       map((r: StrictHttpResponse<Array<Audit>>): Array<Audit> => r.body)
+    );
+  }
+
+  /** Path part for operation `uciteljGet()` */
+  static readonly UciteljGetPath = '/ucitelj';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `uciteljGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  uciteljGet$Response(
+    params?: {
+    },
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<UciteljData>> {
+    const rb = new RequestBuilder(this.rootUrl, ApiService.UciteljGetPath, 'get');
+    if (params) {
+    }
+
+    return this.http.request(
+      rb.build({ responseType: 'json', accept: 'application/json', context })
+    ).pipe(
+      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<UciteljData>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `uciteljGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  uciteljGet(
+    params?: {
+    },
+    context?: HttpContext
+  ): Observable<UciteljData> {
+    return this.uciteljGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<UciteljData>): UciteljData => r.body)
     );
   }
 

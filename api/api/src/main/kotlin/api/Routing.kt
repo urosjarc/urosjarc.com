@@ -3,10 +3,7 @@ package api
 import api.extend.client_unauthorized
 import api.plugins.PreveriProfil
 import api.plugins.Profil
-import api.routes.admin
-import api.routes.auth
-import api.routes.index
-import api.routes.ucenec
+import api.routes.*
 import base.App
 import base.Env
 import com.auth0.jwk.JwkProviderBuilder
@@ -94,6 +91,13 @@ fun Application.configureRouting() {
                 this.tip_profila = setOf(Oseba.Tip.UCENEC)
             }
             this.ucenec()
+        }
+
+        this.authenticate {
+            this.install(PreveriProfil) {
+                this.tip_profila = setOf(Oseba.Tip.UCITELJ)
+            }
+            this.ucitelj()
         }
 
         this.authenticate {

@@ -4,4 +4,4 @@
 *.iml
 .angular
 ./documentation.yaml
-src/app/api
+./src/app/api/*

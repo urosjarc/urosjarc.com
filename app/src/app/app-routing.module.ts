@@ -68,9 +68,6 @@ const routes = [
       {path: profil.template, component: UcenecProfilComponent},
     ]
   },
-  {path: routing.admin.template, canActivate: [adminGuard], component: AdminComponent, children: [
-      {path: index.template, component: AdminIndexComponent},
-    ]},
   {path: routing.ucitelj.template, canActivate: [uciteljGuard], component: UciteljComponent, children: [
       {path: index.template, component: UciteljTestiComponent},
       {path: testi.template, component: UciteljTestiComponent},
@@ -78,6 +75,9 @@ const routes = [
       {path: sporocila.template, component: UciteljSporocilaComponent},
       {path: delo.template, component: UciteljDeloComponent},
       {path: profil.template, component: UciteljProfilComponent},
+    ]},
+  {path: routing.admin.template, canActivate: [adminGuard], component: AdminComponent, children: [
+      {path: index.template, component: AdminIndexComponent},
     ]},
   {path: '**', component: PublicIndexComponent},
 ];

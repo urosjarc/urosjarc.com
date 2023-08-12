@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 import { Naloga } from './naloga';
-import { Tematika } from './tematika';
+import { TematikaData } from './tematika-data';
 export interface NalogaData {
   naloga?: Naloga;
-  tematika_refs?: Array<Tematika>;
+  tematika_refs?: Array<TematikaData>;
 }

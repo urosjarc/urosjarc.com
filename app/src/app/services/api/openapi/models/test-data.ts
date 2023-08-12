@@ -1,10 +1,10 @@
 /* tslint:disable */
 /* eslint-disable */
 import { NalogaData } from './naloga-data';
-import { Status } from './status';
+import { StatusData } from './status-data';
 import { Test } from './test';
 export interface TestData {
   naloga_refs?: Array<NalogaData>;
-  status_refs?: Array<Status>;
+  status_refs?: Array<StatusData>;
   test?: Test;
 }

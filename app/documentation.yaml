@@ -25,10 +25,7 @@ paths:
           content:
             'application/json':
               schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "OK YOU ARE ADMIN :)"
+                $ref: "#/components/schemas/AdminData"
   /auth/prijava:
     post:
       description: ""
@@ -262,6 +259,16 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Audit"
+  /ucitelj:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/UciteljData"
 components:
   schemas:
     BsonBinary:
@@ -359,9 +366,9 @@ components:
             - "ADMIN"
             - "KONTAKT"
             - "SERVER"
-        username:
-          $ref: "#/components/schemas/BsonBinary"
         geslo:
+          $ref: "#/components/schemas/BsonBinary"
+        username:
           $ref: "#/components/schemas/BsonBinary"
         ime:
           $ref: "#/components/schemas/BsonBinary"
@@ -435,6 +442,41 @@ components:
             - "ADMIN"
             - "KONTAKT"
             - "SERVER"
+    Naslov:
+      type: "object"
+      properties:
+        _id:
+          $ref: "#/components/schemas/ObjectId"
+        oseba_id:
+          $ref: "#/components/schemas/ObjectId"
+        drzava:
+          $ref: "#/components/schemas/BsonBinary"
+        mesto:
+          $ref: "#/components/schemas/BsonBinary"
+        zip:
+          $ref: "#/components/schemas/BsonBinary"
+        ulica:
+          $ref: "#/components/schemas/BsonBinary"
+        dodatno:
+          $ref: "#/components/schemas/BsonBinary"
+    NaslovData:
+      type: "object"
+      properties:
+        naslov:
+          $ref: "#/components/schemas/Naslov"
+    OsebaData:
+      type: "object"
+      properties:
+        oseba:
+          $ref: "#/components/schemas/Oseba"
+        naslov_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/NaslovData"
+        kontakt_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/KontaktData"
     SporociloData:
       type: "object"
       properties:
@@ -452,7 +494,7 @@ components:
         oseba_refs:
           type: "array"
           items:
-            $ref: "#/components/schemas/Oseba"
+            $ref: "#/components/schemas/OsebaData"
         sporocilo_prejemnik_refs:
           type: "array"
           items:
@@ -481,6 +523,32 @@ components:
           $ref: "#/components/schemas/ObjectId"
         naslov:
           $ref: "#/components/schemas/BsonBinary"
+    Zvezek:
+      type: "object"
+      properties:
+        _id:
+          $ref: "#/components/schemas/ObjectId"
+        tip:
+          type: "string"
+          enum:
+          - "DELOVNI"
+          - "TEORETSKI"
+        naslov:
+          $ref: "#/components/schemas/BsonBinary"
+    ZvezekData:
+      type: "object"
+      properties:
+        zvezek:
+          $ref: "#/components/schemas/Zvezek"
+    TematikaData:
+      type: "object"
+      properties:
+        tematika:
+          $ref: "#/components/schemas/Tematika"
+        zvezek_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/ZvezekData"
     NalogaData:
       type: "object"
       properties:
@@ -489,37 +557,7 @@ components:
         tematika_refs:
           type: "array"
           items:
-            $ref: "#/components/schemas/Tematika"
-    Naslov:
-      type: "object"
-      properties:
-        _id:
-          $ref: "#/components/schemas/ObjectId"
-        oseba_id:
-          $ref: "#/components/schemas/ObjectId"
-        drzava:
-          $ref: "#/components/schemas/BsonBinary"
-        mesto:
-          $ref: "#/components/schemas/BsonBinary"
-        zip:
-          $ref: "#/components/schemas/BsonBinary"
-        ulica:
-          $ref: "#/components/schemas/BsonBinary"
-        dodatno:
-          $ref: "#/components/schemas/BsonBinary"
-    OsebaData:
-      type: "object"
-      properties:
-        oseba:
-          $ref: "#/components/schemas/Oseba"
-        naslov_refs:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/Naslov"
-        kontakt_refs:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/KontaktData"
+            $ref: "#/components/schemas/TematikaData"
     Status:
       type: "object"
       properties:
@@ -580,7 +618,7 @@ components:
         status_refs:
           type: "array"
           items:
-            $ref: "#/components/schemas/Status"
+            $ref: "#/components/schemas/StatusData"
         naloga_refs:
           type: "array"
           items:
@@ -594,6 +632,8 @@ components:
           $ref: "#/components/schemas/ObjectId"
         oseba_ucitelj_id:
           $ref: "#/components/schemas/ObjectId"
+        ustvarjeno:
+          $ref: "#/components/schemas/LocalDate"
     UcenjeData:
       type: "object"
       properties:
@@ -602,7 +642,7 @@ components:
         oseba_refs:
           type: "array"
           items:
-            $ref: "#/components/schemas/Oseba"
+            $ref: "#/components/schemas/OsebaData"
         ucenje_ucenec_refs:
           type: "array"
           items:
@@ -635,6 +675,11 @@ components:
           $ref: "#/components/schemas/BsonBinary"
         entiteta:
           $ref: "#/components/schemas/BsonBinary"
+    AuditData:
+      type: "object"
+      properties:
+        audit:
+          $ref: "#/components/schemas/Audit"
     UcenecData:
       type: "object"
       properties:
@@ -643,7 +688,7 @@ components:
         naslov_refs:
           type: "array"
           items:
-            $ref: "#/components/schemas/Naslov"
+            $ref: "#/components/schemas/NaslovData"
         kontakt_refs:
           type: "array"
           items:
@@ -659,7 +704,7 @@ components:
         audit_refs:
           type: "array"
           items:
-            $ref: "#/components/schemas/Audit"
+            $ref: "#/components/schemas/AuditData"
     AdminData:
       type: "object"
       properties:
@@ -668,7 +713,7 @@ components:
         naslov_refs:
           type: "array"
           items:
-            $ref: "#/components/schemas/Naslov"
+            $ref: "#/components/schemas/NaslovData"
         kontakt_refs:
           type: "array"
           items:
@@ -693,18 +738,6 @@ components:
         vsebina:
           $ref: "#/components/schemas/BsonBinary"
         dodatno:
-          $ref: "#/components/schemas/BsonBinary"
-    Zvezek:
-      type: "object"
-      properties:
-        _id:
-          $ref: "#/components/schemas/ObjectId"
-        tip:
-          type: "string"
-          enum:
-          - "DELOVNI"
-          - "TEORETSKI"
-        naslov:
           $ref: "#/components/schemas/BsonBinary"
     IndexRes:
       type: "object"
@@ -794,3 +827,28 @@ components:
           $ref: "#/components/schemas/Test"
         audit:
           $ref: "#/components/schemas/Audit"
+    UciteljData:
+      type: "object"
+      properties:
+        oseba:
+          $ref: "#/components/schemas/Oseba"
+        naslov_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/NaslovData"
+        kontakt_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/KontaktData"
+        ucenje_admin_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/UcenjeData"
+        test_admin_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/TestData"
+        audit_refs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/AuditData"

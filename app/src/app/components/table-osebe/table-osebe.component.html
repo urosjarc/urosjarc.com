@@ -1,0 +1,33 @@
+<div>
+
+  <mat-form-field class="w-100">
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyOsebaFilter($event)">
+  </mat-form-field>
+
+  <table mat-table [dataSource]="osebe"  mat-table matSort multiTemplateDataRows>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="naziv">
+      <th mat-header-cell *matHeaderCellDef> Naslov</th>
+      <td mat-cell *matCellDef="let oseba">{{oseba.naziv}}</td>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="datum">
+      <th mat-header-cell *matHeaderCellDef> Datum</th>
+      <td mat-cell *matCellDef="let oseba"> {{oseba.datum | date}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="oddaljenost">
+      <th mat-header-cell *matHeaderCellDef> Oddaljenost</th>
+      <td mat-cell *matCellDef="let oseba"> {{oseba.datum | DateOddaljenost}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr class="cursor-pointer" mat-row *matRowDef="let oseba; columns: displayedColumns;"
+        routerLink="{{oseba.link}}"></tr>
+  </table>
+
+</div>
