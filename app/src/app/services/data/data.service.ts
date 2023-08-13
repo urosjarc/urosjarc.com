@@ -3,15 +3,19 @@ import {DbService} from "../db/db.service";
 import {Oseba} from "../api/openapi/models/oseba";
 import {Ucenje} from "../api/openapi/models/ucenje";
 import {ime} from "../../utils";
-import {TableOseba} from "../../components/table-osebe/TableOseba";
 import {String_vDate} from "../../extends/String";
 import {Test} from "../api/openapi/models/test";
-import {TableTest} from "../../components/table-testi/TableTest";
 import {routing} from "../../app-routing.module";
 import {Status} from "../api/openapi/models/status";
 import {Kontakt} from "../api/openapi/models/kontakt";
-import {SporociloInfo} from "../../components/dialog-sporocilo/SporociloInfo";
 import {Sporocilo} from "../api/openapi/models/sporocilo";
+import {SporociloInfo} from "./SporociloInfo";
+import {TestInfo} from "./TestInfo";
+import {OsebaInfo} from "./OsebaInfo";
+import {ZvezekInfo} from "./ZvezekInfo";
+import {Tematika} from "../api/openapi/models/tematika";
+import {Naloga} from "../api/openapi/models/naloga";
+import {TematikaInfo} from "./TematikaInfo";
 
 @Injectable({
   providedIn: 'root'
@@ -21,14 +25,14 @@ export class DataService {
   constructor(private db: DbService) {
   }
 
-  async uciteljevi_ucenci(): Promise<TableOseba[]> {
+  async uciteljevi_ucenci(): Promise<OsebaInfo[]> {
     const root_id = this.db.get_root_id()
     const ucenje_vse: Ucenje[] = await this.db.ucenje
       .where(ime<Ucenje>("oseba_ucitelj_id"))
       .equals(root_id)
       .toArray()
 
-    const ucenci: TableOseba[] = []
+    const ucenci: OsebaInfo[] = []
     for (const ucenje of ucenje_vse) {
 
       const ucenec = await this.db.oseba
@@ -54,7 +58,7 @@ export class DataService {
       .equals(root_id)
       .toArray()
 
-    const tableTests: TableTest[] = []
+    const tableTests: TestInfo[] = []
     for (const test of testi) {
       const st_nalog = test.naloga_id?.length || -1
       const status_tip: Status['tip'] = 'PRAVILNO'
@@ -76,14 +80,14 @@ export class DataService {
     return tableTests
   }
 
-  async uciteljevi_testi(): Promise<TableTest[]> {
+  async uciteljevi_testi(): Promise<TestInfo[]> {
     const root_id = this.db.get_root_id()
     const testi = await this.db.test
       .where(ime<Test>("oseba_admin_id"))
       .equals(root_id)
       .toArray()
 
-    const newTesti: TableTest[] = []
+    const newTesti: TestInfo[] = []
     for (const test of testi) {
       newTesti.push({
         naslov: test.naslov || "",
@@ -133,6 +137,34 @@ export class DataService {
       }
     }
     return vsa_sporocila
+  }
+
+  async zvezki(): Promise<ZvezekInfo[]> {
+    const zvezkiInfos: ZvezekInfo[] = []
+    for (const zvezek of await this.db.zvezek.toArray()) {
+      const zvezekInfo: ZvezekInfo = {id: zvezek._id || "", naslov: zvezek.naslov || "", tematike: []}
+      const tematike = await this.db.tematika
+        .where(ime<Tematika>("zvezek_id"))
+        .equals(zvezek._id || "")
+        .toArray()
+      for (const tematika of tematike) {
+        const tematikaInfo: TematikaInfo = {id: tematika._id || '', naslov: tematika.naslov || '', naloge: []}
+        const naloge = await this.db.naloga
+          .where(ime<Naloga>("tematika_id"))
+          .equals(tematika._id || "")
+          .toArray()
+        for (const naloga of naloge) {
+          tematikaInfo.naloge.push({
+            id: naloga._id || '',
+            vsebina: naloga.vsebina || '',
+            resitev: naloga.resitev || ''
+          })
+        }
+        zvezekInfo.tematike.push(tematikaInfo)
+      }
+      zvezkiInfos.push(zvezekInfo)
+    }
+    return zvezkiInfos
   }
 
   ucencevo_delo(id: string) {

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {DataService} from "../../../services/data/data.service";
 import {MatTableDataSource} from "@angular/material/table";
-import {TableTest} from "../../../components/table-testi/TableTest";
+import {TestInfo} from "../../../services/data/TestInfo";
 
 @Component({
   selector: 'app-ucenec-testi',
@@ -9,7 +9,7 @@ import {TableTest} from "../../../components/table-testi/TableTest";
   styleUrls: ['./ucenec-testi.component.scss']
 })
 export class UcenecTestiComponent implements OnInit {
-  testi: MatTableDataSource<TableTest> = new MatTableDataSource()
+  testi: MatTableDataSource<TestInfo> = new MatTableDataSource()
 
   constructor(private data: DataService) {
   }

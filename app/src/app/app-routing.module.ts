@@ -25,6 +25,7 @@ import {UciteljUcenciComponent} from "./routes/ucitelj/ucenci/ucitelj-ucenci.com
 import {AdminComponent} from "./routes/admin/admin.component";
 import {uciteljGuard} from "./guards/ucitelj/ucitelj.guard";
 import {AdminIndexComponent} from "./routes/admin/index/admin-index.component";
+import {UciteljZvezkiComponent} from "./routes/ucitelj/zvezki/ucitelj-zvezki.component";
 
 const index = route('', {}, {})
 
@@ -33,6 +34,7 @@ const kontakt = route('kontakt', {}, {})
 const prijava = route('prijava', {}, {})
 
 const profil = route('profil', {}, {})
+const zvezki = route('zvezki', {}, {})
 const delo = route('delo', {}, {})
 const sporocila = route('sporocila', {}, {})
 const testi = route('testi', {}, {})
@@ -44,7 +46,7 @@ const ucenci = route('ucenci', {}, {})
 export const routing = {
   "public": route('/', {}, {index, koledar, kontakt, prijava}),
   "ucenec": route('/ucenec', {}, {profil, sporocila, delo, test, testi, naloga}),
-  "ucitelj": route('/ucitelj', {}, {profil, ucenci, sporocila, delo, test, testi, naloga}),
+  "ucitelj": route('/ucitelj', {}, {profil, ucenci, sporocila, delo, test, testi, naloga, zvezki}),
   "admin": route('/admin', {}, {index}),
 }
 
@@ -70,6 +72,7 @@ const routes = [
   },
   {path: routing.ucitelj.template, canActivate: [uciteljGuard], component: UciteljComponent, children: [
       {path: index.template, component: UciteljTestiComponent},
+      {path: zvezki.template, component: UciteljZvezkiComponent},
       {path: testi.template, component: UciteljTestiComponent},
       {path: ucenci.template, component: UciteljUcenciComponent},
       {path: sporocila.template, component: UciteljSporocilaComponent},

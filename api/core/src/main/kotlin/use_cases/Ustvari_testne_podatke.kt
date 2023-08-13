@@ -200,6 +200,7 @@ class Ustvari_testne_podatke(
         return this.nakljucni<Ucenje>().apply {
             this.oseba_ucenec_id = ucenec._id
             this.oseba_ucitelj_id = ucitelj._id
+            this.ustvarjeno = LocalDate.danes(dDni=Random.nextInt(-365, -20))
         }
     }
 

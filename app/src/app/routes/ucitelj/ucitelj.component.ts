@@ -18,6 +18,12 @@ export class UciteljComponent {
       route: routing.public({}).$,
     },
     {
+      tekst: "Zvezki",
+      ikona: "local_library",
+      route: routing.ucitelj({}).zvezki({}).$,
+      style: this.navStyle
+    },
+    {
       tekst: "Testi",
       ikona: "edit",
       route: routing.ucitelj({}).testi({}).$,

@@ -2,11 +2,11 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
-import {SporociloInfo} from "../dialog-sporocilo/SporociloInfo";
 import {trace} from "../../utils";
 import {DialogSporociloComponent} from "../dialog-sporocilo/dialog-sporocilo.component";
 import {DataService} from "../../services/data/data.service";
 import {MatDialog} from "@angular/material/dialog";
+import {SporociloInfo} from "../../services/data/SporociloInfo";
 
 @Component({
   selector: 'app-table-sporocila',
@@ -28,6 +28,7 @@ export class TableSporocilaComponent implements OnInit {
     private dialog: MatDialog) {
   }
 
+  @trace()
   async ngOnInit() {
     this.sporocila.data = await this.data.sporocila()
   }

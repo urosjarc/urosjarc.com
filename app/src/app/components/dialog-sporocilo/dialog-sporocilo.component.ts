@@ -3,8 +3,8 @@ import {MAT_DIALOG_DATA, MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
 import {DatePipe, NgStyle} from "@angular/common";
 import {MatListModule} from "@angular/material/list";
-import {SporociloInfo} from "./SporociloInfo";
 import {MatIconModule} from "@angular/material/icon";
+import {SporociloInfo} from "../../services/data/SporociloInfo";
 
 @Component({
   selector: 'app-dialog-sporocilo',

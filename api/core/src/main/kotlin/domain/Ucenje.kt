@@ -9,5 +9,5 @@ data class Ucenje(
     override var _id: Id<Ucenje> = Id(),
     var oseba_ucenec_id: Id<Oseba>,
     var oseba_ucitelj_id: Id<Oseba>,
-    val ustvarjeno: LocalDate
+    var ustvarjeno: LocalDate
 ) : Entiteta<Ucenje>

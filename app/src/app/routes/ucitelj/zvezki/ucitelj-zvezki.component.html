@@ -1,0 +1,46 @@
+<mat-stepper #stepper>
+
+  <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="firstFormGroup">
+      <ng-template matStepLabel>Zvezki</ng-template>
+
+      <h1>Tu so zvezki</h1>
+
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="secondFormGroup">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Tematike</ng-template>
+
+      <h1>Tu so tematike</h1>
+
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="secondFormGroup">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Naloge</ng-template>
+
+      <h1>Tu so naloge</h1>
+
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="secondFormGroup">
+    <form [formGroup]="secondFormGroup">
+      <ng-template matStepLabel>Učenci</ng-template>
+
+      <h1>Tu so učenci</h1>
+
+    </form>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Potrditev</ng-template>
+
+    <h1>Tu je kratka analiza izbire in potrditev testa</h1>
+    <button mat-button (click)="stepper.reset()">Preklici</button>
+  </mat-step>
+
+</mat-stepper>

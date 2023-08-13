@@ -32,7 +32,7 @@ import {UcenecComponent} from "./routes/ucenec/ucenec.component";
 import {UcenecTestiComponent} from "./routes/ucenec/testi/ucenec-testi.component";
 import {UcenecProfilComponent} from "./routes/ucenec/profil/ucenec-profil.component";
 import {DateOddaljenostPipe} from "./pipes/DateOddaljenost/date-oddaljenost.pipe";
-import {DATE_PIPE_DEFAULT_OPTIONS} from "@angular/common";
+import {DATE_PIPE_DEFAULT_OPTIONS, NgFor} from "@angular/common";
 import {MatListModule} from "@angular/material/list";
 import {MatCardModule} from "@angular/material/card";
 import {UcenecSporocilaComponent} from "./routes/ucenec/sporocila/ucenec-sporocila.component";
@@ -74,6 +74,10 @@ import {AdminIndexComponent} from "./routes/admin/index/admin-index.component";
 import {TableOsebeComponent} from "./components/table-osebe/table-osebe.component";
 import {TableSporocilaComponent} from "./components/table-sporocila/table-sporocila.component";
 import {OsebaProfilComponent} from "./components/oseba-profil/oseba-profil.component";
+import {CdkDrag, CdkDropList} from "@angular/cdk/drag-drop";
+import {UciteljZvezkiComponent} from "./routes/ucitelj/zvezki/ucitelj-zvezki.component";
+import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
+import {MatStepperModule} from "@angular/material/stepper";
 
 const locale = 'sl'
 moment.locale(locale);
@@ -125,8 +129,10 @@ const loggerModule = LoggerModule.forRoot({
     TableOsebeComponent,
     TableSporocilaComponent,
     OsebaProfilComponent,
+    UciteljZvezkiComponent
   ],
   imports: [
+    CdkDropList, NgFor, CdkDrag,
     DateOddaljenostPipe,
     DateOddaljenostClassPipe,
     BrowserModule,
@@ -153,7 +159,7 @@ const loggerModule = LoggerModule.forRoot({
     MatProgressSpinnerModule,
     MatProgressBarModule,
     ApiModule,
-    loggerModule,
+    loggerModule, MatStepperModule
   ],
   providers: [
     AlertService,
@@ -164,6 +170,7 @@ const loggerModule = LoggerModule.forRoot({
     API_INTERCEPTOR_PROVIDER,
     {provide: LOCALE_ID, useValue: locale},
     {provide: MAT_DATE_LOCALE, useValue: locale},
+    {provide: STEPPER_GLOBAL_OPTIONS, useValue: {showError: true},},
     {provide: DATE_PIPE_DEFAULT_OPTIONS, useValue: {dateFormat: 'EEE d.M.YYYY', timezone: '+2'}},
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}}
   ],

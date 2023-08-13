@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
-import {DbService} from "../../../services/db/db.service";
-import {TableOseba} from "../../../components/table-osebe/TableOseba";
 import {DataService} from "../../../services/data/data.service";
+import {OsebaInfo} from "../../../services/data/OsebaInfo";
+import {trace} from "../../../utils";
 
 @Component({
   selector: 'app-ucitelj-ucenci',
@@ -10,10 +10,12 @@ import {DataService} from "../../../services/data/data.service";
   styleUrls: ['./ucitelj-ucenci.component.scss']
 })
 export class UciteljUcenciComponent implements OnInit {
-  ucenci: MatTableDataSource<TableOseba> = new MatTableDataSource()
+  ucenci: MatTableDataSource<OsebaInfo> = new MatTableDataSource()
 
-  constructor(private data: DataService) {}
+  constructor(private data: DataService) {
+  }
 
+  @trace()
   async ngOnInit() {
     this.ucenci.data = await this.data.uciteljevi_ucenci()
   }

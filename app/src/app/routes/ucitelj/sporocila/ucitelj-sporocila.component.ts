@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
-import {SporociloInfo} from "../../../components/dialog-sporocilo/SporociloInfo";
 import {DataService} from "../../../services/data/data.service";
+import {SporociloInfo} from "../../../services/data/SporociloInfo";
+import {trace} from "../../../utils";
 
 @Component({
   selector: 'app-ucitelj-sporocila',
@@ -14,6 +15,7 @@ export class UciteljSporocilaComponent {
   constructor(private data: DataService) {
   }
 
+  @trace()
   async ngOnInit() {
     this.sporocila.data = await this.data.sporocila()
   }
