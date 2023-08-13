@@ -142,13 +142,18 @@ export class DataService {
   async zvezki(): Promise<ZvezekInfo[]> {
     const zvezkiInfos: ZvezekInfo[] = []
     for (const zvezek of await this.db.zvezek.toArray()) {
-      const zvezekInfo: ZvezekInfo = {id: zvezek._id || "", naslov: zvezek.naslov || "", tematike: []}
+      const zvezekInfo: ZvezekInfo = {id: zvezek._id || "", naslov: zvezek.naslov || "", tematike: [], izbran: false}
       const tematike = await this.db.tematika
         .where(ime<Tematika>("zvezek_id"))
         .equals(zvezek._id || "")
         .toArray()
       for (const tematika of tematike) {
-        const tematikaInfo: TematikaInfo = {id: tematika._id || '', naslov: tematika.naslov || '', naloge: []}
+        const tematikaInfo: TematikaInfo = {
+          id: tematika._id || '',
+          naslov: tematika.naslov || '',
+          naloge: [],
+          izbran: false
+        }
         const naloge = await this.db.naloga
           .where(ime<Naloga>("tematika_id"))
           .equals(tematika._id || "")
@@ -157,7 +162,8 @@ export class DataService {
           tematikaInfo.naloge.push({
             id: naloga._id || '',
             vsebina: naloga.vsebina || '',
-            resitev: naloga.resitev || ''
+            resitev: naloga.resitev || '',
+            izbran: false
           })
         }
         zvezekInfo.tematike.push(tematikaInfo)
