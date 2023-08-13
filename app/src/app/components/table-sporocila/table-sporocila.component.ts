@@ -37,22 +37,22 @@ export class TableSporocilaComponent implements OnInit {
   ngAfterViewInit() {
     this.sporocila.paginator = this.paginator;
     this.sporocila.sort = this.sort;
-    this.sporocila.filterPredicate = this.filterSporociloPredicate
+    this.sporocila.filterPredicate = this.filterPredicate
   }
 
   @trace()
-  odpriSporociloDialog(sporociloInfo: SporociloInfo) {
+  odpriDialog(sporociloInfo: SporociloInfo) {
     this.dialog.open(DialogSporociloComponent, {data: sporociloInfo});
   }
 
   @trace()
-  applySporocilaFilter(event: Event) {
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.sporocila.filter = filterValue.trim()
   }
 
   @trace()
-  filterSporociloPredicate(data: SporociloInfo, filter: string) {
+  filterPredicate(data: SporociloInfo, filter: string) {
     return JSON.stringify(data).includes(filter)
   }
 }

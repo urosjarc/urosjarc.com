@@ -3,36 +3,36 @@
   <input matInput (keyup)="applyFilter($event)"/>
 </mat-form-field>
 
-<table [dataSource]="sporocila" mat-table matSort multiTemplateDataRows>
+<table [dataSource]="naloge" mat-table matSort multiTemplateDataRows>
 
   <ng-container matColumnDef="smer">
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by smer">Smer</th>
-    <td mat-cell *matCellDef="let sporocilo"> {{sporocilo.smer}} </td>
+    <td mat-cell *matCellDef="let naloga"> {{naloga.smer}} </td>
   </ng-container>
 
   <ng-container matColumnDef="datum">
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date"> Datum</th>
-    <td mat-cell *matCellDef="let sporocilo"> {{sporocilo.datum | date}} </td>
+    <td mat-cell *matCellDef="let naloga"> {{naloga.datum | date}} </td>
   </ng-container>
 
   <ng-container matColumnDef="pred">
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date"> Pred</th>
-    <td mat-cell *matCellDef="let sporocilo"> {{sporocilo.datum | DateOddaljenost}} </td>
+    <td mat-cell *matCellDef="let naloga"> {{naloga.datum | DateOddaljenost}} </td>
   </ng-container>
 
   <ng-container matColumnDef="posiljatelj">
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by posiljatelj"> Posiljatelj
     </th>
-    <td mat-cell *matCellDef="let sporocilo"> {{sporocilo.posiljatelj.ime}} {{sporocilo.posiljatelj.priimek}}</td>
+    <td mat-cell *matCellDef="let naloga"> {{naloga.posiljatelj.ime}} {{naloga.posiljatelj.priimek}}</td>
   </ng-container>
 
   <ng-container matColumnDef="prejemnik">
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by prejemnik"> Prejemnik</th>
-    <td mat-cell *matCellDef="let sporocilo"> {{sporocilo.prejemnik.ime}} {{sporocilo.prejemnik.priimek}}</td>
+    <td mat-cell *matCellDef="let naloga"> {{naloga.prejemnik.ime}} {{naloga.prejemnik.priimek}}</td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let sporocilo; columns: displayedColumns;" (click)="odpriDialog(sporocilo)"></tr>
+  <tr mat-row *matRowDef="let naloga; columns: displayedColumns;"></tr>
 
 </table>
 

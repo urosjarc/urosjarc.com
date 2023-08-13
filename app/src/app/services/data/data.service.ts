@@ -12,9 +12,9 @@ import {Sporocilo} from "../api/openapi/models/sporocilo";
 import {SporociloInfo} from "./SporociloInfo";
 import {TestInfo} from "./TestInfo";
 import {OsebaInfo} from "./OsebaInfo";
-import {ZvezekInfo} from "./ZvezekInfo";
 import {Tematika} from "../api/openapi/models/tematika";
 import {Naloga} from "../api/openapi/models/naloga";
+import {ZvezekInfo} from "./ZvezekInfo";
 import {TematikaInfo} from "./TematikaInfo";
 
 @Injectable({
@@ -180,4 +180,5 @@ export class DataService {
   uciteljevo_delo(id: string) {
 
   }
+
 }

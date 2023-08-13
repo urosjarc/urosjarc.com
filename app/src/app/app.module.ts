@@ -78,6 +78,9 @@ import {CdkDrag, CdkDropList} from "@angular/cdk/drag-drop";
 import {UciteljZvezkiComponent} from "./routes/ucitelj/zvezki/ucitelj-zvezki.component";
 import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
 import {MatStepperModule} from "@angular/material/stepper";
+import {TableNalogeComponent} from "./components/table-naloge/table-naloge.component";
+import {TableTematikeComponent} from "./components/table-tematike/table-tematike.component";
+import {TableZvezkiComponent} from "./components/table-zvezki/table-zvezki.component";
 
 const locale = 'sl'
 moment.locale(locale);
@@ -129,7 +132,10 @@ const loggerModule = LoggerModule.forRoot({
     TableOsebeComponent,
     TableSporocilaComponent,
     OsebaProfilComponent,
-    UciteljZvezkiComponent
+    UciteljZvezkiComponent,
+    TableNalogeComponent,
+    TableTematikeComponent,
+    TableZvezkiComponent
   ],
   imports: [
     CdkDropList, NgFor, CdkDrag,
@@ -159,7 +165,7 @@ const loggerModule = LoggerModule.forRoot({
     MatProgressSpinnerModule,
     MatProgressBarModule,
     ApiModule,
-    loggerModule, MatStepperModule
+    loggerModule, MatStepperModule,
   ],
   providers: [
     AlertService,

@@ -1,8 +1,8 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {DataService} from "../../services/data/data.service";
+import {Test} from "../../services/api/openapi/models/test";
 import {TestInfo} from "../../services/data/TestInfo";
 
 @Component({
@@ -11,7 +11,7 @@ import {TestInfo} from "../../services/data/TestInfo";
   styleUrls: ['./table-testi.component.scss']
 })
 export class TableTestiComponent implements AfterViewInit {
-  @Input() testi: MatTableDataSource<TestInfo> = new MatTableDataSource()
+  @Input() testi: MatTableDataSource<TestInfo> = new MatTableDataSource<TestInfo>()
   @Input() displayedColumns: any[] = ['naslov', 'opravljeno', 'datum', 'oddaljenost'];
   // @ts-ignore
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -21,14 +21,14 @@ export class TableTestiComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.testi.paginator = this.paginator;
     this.testi.sort = this.sort;
-    this.testi.filterPredicate = this.filterTestPredicate
+    this.testi.filterPredicate = this.filterPredicate
   }
 
-  filterTestPredicate(data: TestInfo, filter: string) {
+  filterPredicate(data: Test, filter: string) {
     return JSON.stringify(data).includes(filter)
   }
 
-  applyTestFilter(event: KeyboardEvent) {
+  applyFilter(event: KeyboardEvent) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.testi.filter = filterValue.trim()
   }

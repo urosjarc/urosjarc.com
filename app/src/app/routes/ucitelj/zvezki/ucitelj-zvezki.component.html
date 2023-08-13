@@ -3,38 +3,28 @@
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
       <ng-template matStepLabel>Zvezki</ng-template>
-
-      <h1 *ngFor="let zvezek of zvezki">
-        {{zvezek.naslov}}:  {{zvezek.tematike.length}} tematik
-      </h1>
-
+      <app-table-zvezki [zvezki]="zvezki"/>
     </form>
   </mat-step>
 
   <mat-step [stepControl]="secondFormGroup">
     <form [formGroup]="secondFormGroup">
       <ng-template matStepLabel>Tematike</ng-template>
-
-      <h1>Tu so tematike</h1>
-
+      <app-table-tematike [tematike]="tematike"/>
     </form>
   </mat-step>
 
   <mat-step [stepControl]="secondFormGroup">
     <form [formGroup]="secondFormGroup">
       <ng-template matStepLabel>Naloge</ng-template>
-
-      <h1>Tu so naloge</h1>
-
+      <app-table-naloge [naloge]="naloge"/>
     </form>
   </mat-step>
 
   <mat-step [stepControl]="secondFormGroup">
     <form [formGroup]="secondFormGroup">
       <ng-template matStepLabel>Učenci</ng-template>
-
-      <h1>Tu so učenci</h1>
-
+      <app-table-osebe [osebe]="ucenci"/>
     </form>
   </mat-step>
 

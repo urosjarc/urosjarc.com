@@ -3,6 +3,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {OsebaInfo} from "../../services/data/OsebaInfo";
+import {trace} from "../../utils";
 
 @Component({
   selector: 'app-table-osebe',
@@ -11,7 +12,7 @@ import {OsebaInfo} from "../../services/data/OsebaInfo";
 })
 export class TableOsebeComponent implements AfterViewInit {
 
-  @Input() osebe: MatTableDataSource<OsebaInfo> = new MatTableDataSource()
+  @Input() osebe: MatTableDataSource<OsebaInfo> = new MatTableDataSource<OsebaInfo>()
   @Input() displayedColumns: any[] = ['naziv', 'datum', 'oddaljenost'];
 
   // @ts-ignore
@@ -19,7 +20,8 @@ export class TableOsebeComponent implements AfterViewInit {
   // @ts-ignore
   @ViewChild(MatSort) sort: MatSort;
 
-  applyOsebaFilter(event: KeyboardEvent) {
+  @trace()
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.osebe.filter = filterValue.trim()
   }
@@ -27,11 +29,11 @@ export class TableOsebeComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.osebe.paginator = this.paginator;
     this.osebe.sort = this.sort;
-    this.osebe.filterPredicate = this.filterOsebePredicate
+    this.osebe.filterPredicate = this.filterPredicate
   }
 
 
-  filterOsebePredicate(data: OsebaInfo, filter: string) {
+  filterPredicate(data: OsebaInfo, filter: string) {
     return JSON.stringify(data).includes(filter)
   }
 }
