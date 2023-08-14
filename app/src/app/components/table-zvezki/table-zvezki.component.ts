@@ -5,6 +5,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {trace} from "../../utils";
 import {DataService} from "../../services/data/data.service";
 import {Zvezek} from "../../services/api/openapi/models/zvezek";
+import {ZvezekModel} from "../../models/ZvezekModel";
 
 @Component({
   selector: 'app-table-zvezki',
@@ -13,8 +14,8 @@ import {Zvezek} from "../../services/api/openapi/models/zvezek";
 })
 export class TableZvezkiComponent implements OnInit, AfterViewInit {
 
-  @Input() displayedColumns = ["smer", "pred", "posiljatelj", "prejemnik", "datum"]
-  @Input() zvezki: MatTableDataSource<Zvezek> = new MatTableDataSource<Zvezek>()
+  @Input() displayedColumns = ["tip", "naslov"]
+  @Input() zvezki: MatTableDataSource<ZvezekModel> = new MatTableDataSource<ZvezekModel>()
 
   // @ts-ignore
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -27,6 +28,7 @@ export class TableZvezkiComponent implements OnInit, AfterViewInit {
   @trace()
   async ngOnInit() {
     this.zvezki.data = await this.data.zvezki()
+    console.log(this.zvezki.data)
   }
 
   @trace()

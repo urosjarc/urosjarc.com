@@ -4,13 +4,13 @@ import {
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
-  HttpRequest, HttpResponse
+  HttpRequest,
+  HttpResponse
 } from "@angular/common/http";
 import {forwardRef, Injectable, Provider} from "@angular/core";
 import {DbService} from "./services/db/db.service";
 import {AlertService} from "./services/alert/alert.service";
 import {ApiService} from "./services/api/openapi/services";
-import {trace} from "./utils";
 import {Observable, tap} from "rxjs";
 
 export const API_INTERCEPTOR_PROVIDER: Provider = {
@@ -40,8 +40,8 @@ export class Interceptor implements HttpInterceptor {
     console.log(`${count} REQ `, req)
     return next.handle(req).pipe(
       tap({
-        next(ele: any){
-          if(ele instanceof HttpResponse){
+        next(ele: any) {
+          if (ele instanceof HttpResponse) {
             console.info(`${count} RES `, ele)
           }
           return ele

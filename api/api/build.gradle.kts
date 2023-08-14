@@ -5,6 +5,7 @@ plugins {
     this.id("buildSrc.logging")
     this.id("buildSrc.injections")
     this.id("buildSrc.db")
+    this.id("buildSrc.jwks")
     this.id("io.ktor.plugin") version "2.2.3"
 }
 
@@ -37,4 +38,8 @@ application {
 
 tasks {
     this.create("stage").dependsOn("installDist")
+}
+
+configure<BuildSrc_jwks_gradle.JwksExtension> {
+    this.outputDir.set("src/main/resources/static/.well-known/jwks.json")
 }

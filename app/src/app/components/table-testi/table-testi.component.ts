@@ -3,7 +3,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {Test} from "../../services/api/openapi/models/test";
-import {TestInfo} from "../../services/data/TestInfo";
+import {TestModel} from "../../models/TestModel";
 
 @Component({
   selector: 'app-table-testi',
@@ -11,7 +11,7 @@ import {TestInfo} from "../../services/data/TestInfo";
   styleUrls: ['./table-testi.component.scss']
 })
 export class TableTestiComponent implements AfterViewInit {
-  @Input() testi: MatTableDataSource<TestInfo> = new MatTableDataSource<TestInfo>()
+  @Input() testi: MatTableDataSource<TestModel> = new MatTableDataSource<TestModel>()
   @Input() displayedColumns: any[] = ['naslov', 'opravljeno', 'datum', 'oddaljenost'];
   // @ts-ignore
   @ViewChild(MatPaginator) paginator: MatPaginator;

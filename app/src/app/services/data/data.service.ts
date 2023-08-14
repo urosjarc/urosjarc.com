@@ -9,13 +9,13 @@ import {routing} from "../../app-routing.module";
 import {Status} from "../api/openapi/models/status";
 import {Kontakt} from "../api/openapi/models/kontakt";
 import {Sporocilo} from "../api/openapi/models/sporocilo";
-import {SporociloInfo} from "./SporociloInfo";
-import {TestInfo} from "./TestInfo";
-import {OsebaInfo} from "./OsebaInfo";
 import {Tematika} from "../api/openapi/models/tematika";
 import {Naloga} from "../api/openapi/models/naloga";
-import {ZvezekInfo} from "./ZvezekInfo";
-import {TematikaInfo} from "./TematikaInfo";
+import {OsebaModel} from "../../models/OsebaModel";
+import {TestModel} from "../../models/TestModel";
+import {SporociloModel} from "../../models/SporociloModel";
+import {ZvezekModel} from "../../models/ZvezekModel";
+import {TematikaModel} from "../../models/TematikaModel";
 
 @Injectable({
   providedIn: 'root'
@@ -25,14 +25,14 @@ export class DataService {
   constructor(private db: DbService) {
   }
 
-  async uciteljevi_ucenci(): Promise<OsebaInfo[]> {
+  async uciteljevi_ucenci(): Promise<OsebaModel[]> {
     const root_id = this.db.get_root_id()
     const ucenje_vse: Ucenje[] = await this.db.ucenje
       .where(ime<Ucenje>("oseba_ucitelj_id"))
       .equals(root_id)
       .toArray()
 
-    const ucenci: OsebaInfo[] = []
+    const ucenci: OsebaModel[] = []
     for (const ucenje of ucenje_vse) {
 
       const ucenec = await this.db.oseba
@@ -58,7 +58,7 @@ export class DataService {
       .equals(root_id)
       .toArray()
 
-    const tableTests: TestInfo[] = []
+    const tableTests: TestModel[] = []
     for (const test of testi) {
       const st_nalog = test.naloga_id?.length || -1
       const status_tip: Status['tip'] = 'PRAVILNO'
@@ -80,14 +80,14 @@ export class DataService {
     return tableTests
   }
 
-  async uciteljevi_testi(): Promise<TestInfo[]> {
+  async uciteljevi_testi(): Promise<TestModel[]> {
     const root_id = this.db.get_root_id()
     const testi = await this.db.test
       .where(ime<Test>("oseba_admin_id"))
       .equals(root_id)
       .toArray()
 
-    const newTesti: TestInfo[] = []
+    const newTesti: TestModel[] = []
     for (const test of testi) {
       newTesti.push({
         naslov: test.naslov || "",
@@ -99,14 +99,14 @@ export class DataService {
     return newTesti
   }
 
-  async sporocila(): Promise<SporociloInfo[]> {
+  async sporocila(): Promise<SporociloModel[]> {
     const root_id = this.db.get_root_id()
     const oseba = await this.db.oseba.where(ime<Oseba>("_id")).equals(root_id).first()
 
     if (!oseba) return []
 
     const kontakti = await this.db.kontakt.where(ime<Kontakt>("oseba_id")).equals(root_id).toArray()
-    const vsa_sporocila: SporociloInfo[] = []
+    const vsa_sporocila: SporociloModel[] = []
 
     for (const kontakt of kontakti) {
       const prejeta_sporocila = await this.db.sporocilo.where(ime<Sporocilo>("kontakt_prejemnik_id")).equals(kontakt._id as string).toArray()
@@ -139,16 +139,16 @@ export class DataService {
     return vsa_sporocila
   }
 
-  async zvezki(): Promise<ZvezekInfo[]> {
-    const zvezkiInfos: ZvezekInfo[] = []
+  async zvezki(): Promise<ZvezekModel[]> {
+    const zvezkiInfos: ZvezekModel[] = []
     for (const zvezek of await this.db.zvezek.toArray()) {
-      const zvezekInfo: ZvezekInfo = {id: zvezek._id || "", naslov: zvezek.naslov || "", tematike: [], izbran: false}
+      const zvezekInfo: ZvezekModel = {id: zvezek._id || "", naslov: zvezek.naslov || "", tematike: [], izbran: false, tip: zvezek.tip}
       const tematike = await this.db.tematika
         .where(ime<Tematika>("zvezek_id"))
         .equals(zvezek._id || "")
         .toArray()
       for (const tematika of tematike) {
-        const tematikaInfo: TematikaInfo = {
+        const tematikaInfo: TematikaModel = {
           id: tematika._id || '',
           naslov: tematika.naslov || '',
           naloge: [],
@@ -163,6 +163,8 @@ export class DataService {
             id: naloga._id || '',
             vsebina: naloga.vsebina || '',
             resitev: naloga.resitev || '',
+            stevilka: 1,
+            status: {},
             izbran: false
           })
         }

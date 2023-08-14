@@ -3,7 +3,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {trace} from "../../utils";
-import {Tematika} from "../../services/api/openapi/models/tematika";
+import {TematikaModel} from "../../models/TematikaModel";
 
 @Component({
   selector: 'app-table-tematike',
@@ -13,7 +13,7 @@ import {Tematika} from "../../services/api/openapi/models/tematika";
 export class TableTematikeComponent implements AfterViewInit {
 
   @Input() displayedColumns = ["smer", "pred", "posiljatelj", "prejemnik", "datum"]
-  @Input() tematike: MatTableDataSource<Tematika> = new MatTableDataSource<Tematika>()
+  @Input() tematike: MatTableDataSource<TematikaModel> = new MatTableDataSource<TematikaModel>()
 
   // @ts-ignore
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -34,7 +34,7 @@ export class TableTematikeComponent implements AfterViewInit {
   }
 
   @trace()
-  filterPredicate(data: Tematika, filter: string) {
+  filterPredicate(data: TematikaModel, filter: string) {
     return JSON.stringify(data).includes(filter)
   }
 }

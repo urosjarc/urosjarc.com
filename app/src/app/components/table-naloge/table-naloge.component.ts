@@ -3,7 +3,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {trace} from "../../utils";
-import {Naloga} from "../../services/api/openapi/models/naloga";
+import {NalogaModel} from "../../models/NalogaModel";
 
 @Component({
   selector: 'app-table-naloge',
@@ -13,7 +13,7 @@ import {Naloga} from "../../services/api/openapi/models/naloga";
 export class TableNalogeComponent implements AfterViewInit {
 
   @Input() displayedColumns = ["smer", "pred", "posiljatelj", "prejemnik", "datum"]
-  @Input() naloge: MatTableDataSource<Naloga> = new MatTableDataSource<Naloga>()
+  @Input() naloge: MatTableDataSource<NalogaModel> = new MatTableDataSource<NalogaModel>()
 
   // @ts-ignore
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -34,7 +34,7 @@ export class TableNalogeComponent implements AfterViewInit {
   }
 
   @trace()
-  filterPredicate(data: Naloga, filter: string) {
+  filterPredicate(data: NalogaModel, filter: string) {
     return JSON.stringify(data).includes(filter)
   }
 }

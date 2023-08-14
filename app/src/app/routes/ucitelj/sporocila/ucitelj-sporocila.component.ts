@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {DataService} from "../../../services/data/data.service";
-import {SporociloInfo} from "../../../services/data/SporociloInfo";
 import {trace} from "../../../utils";
+import {SporociloModel} from "../../../models/SporociloModel";
 
 @Component({
   selector: 'app-ucitelj-sporocila',
@@ -10,7 +10,7 @@ import {trace} from "../../../utils";
   styleUrls: ['./ucitelj-sporocila.component.scss']
 })
 export class UciteljSporocilaComponent {
-  sporocila: MatTableDataSource<SporociloInfo> = new MatTableDataSource<SporociloInfo>()
+  sporocila: MatTableDataSource<SporociloModel> = new MatTableDataSource<SporociloModel>()
 
   constructor(private data: DataService) {
   }

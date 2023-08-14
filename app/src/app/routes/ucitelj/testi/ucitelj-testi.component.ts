@@ -1,8 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {DataService} from "../../../services/data/data.service";
 import {MatTableDataSource} from "@angular/material/table";
-import {TestInfo} from "../../../services/data/TestInfo";
 import {trace} from "../../../utils";
+import {TestModel} from "../../../models/TestModel";
 
 @Component({
   selector: 'app-ucitelj-testi',
@@ -10,7 +10,7 @@ import {trace} from "../../../utils";
   styleUrls: ['./ucitelj-testi.component.scss']
 })
 export class UciteljTestiComponent implements OnInit {
-  testi: MatTableDataSource<TestInfo> = new MatTableDataSource()
+  testi: MatTableDataSource<TestModel> = new MatTableDataSource()
   displayedColumns: any[] = ['naslov', 'datum', 'oddaljenost'];
 
   constructor(private data: DataService) {

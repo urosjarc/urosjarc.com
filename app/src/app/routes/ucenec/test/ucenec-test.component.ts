@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {NalogaInfo} from "./NalogaInfo";
 import {ime, trace} from "../../../utils";
 import * as moment from "moment";
 import {median, standardDeviation} from "simple-statistics";
@@ -13,6 +12,7 @@ import {Audit} from "../../../services/api/openapi/models/audit";
 import {Status} from "../../../services/api/openapi/models/status";
 import {Naloga} from "../../../services/api/openapi/models/naloga";
 import {Tematika} from "../../../services/api/openapi/models/tematika";
+import {NalogaModel} from "../../../models/NalogaModel";
 
 @Component({
   selector: 'app-ucenec-test',
@@ -29,7 +29,7 @@ export class UcenecTestComponent implements OnInit {
     domain: ['forestgreen', 'red']
   };
 
-  tema_nalogeInfo = new Map<string, NalogaInfo[]>()
+  tema_nalogeInfo = new Map<string, NalogaModel[]>()
   statistika: { value: number, name: string }[] = [];
   opravljeno: { value: number, name: string }[] = [];
   delo: string = "";
@@ -127,7 +127,7 @@ export class UcenecTestComponent implements OnInit {
     const naloga_ids = test.naloga_id?.map(ele => ele.toString()) || []
 
     let i = 0
-    const tema_nalogeInfo = new Map<string, NalogaInfo[]>()
+    const tema_nalogeInfo = new Map<string, NalogaModel[]>()
     for (const nalogaId of naloga_ids) {
       const naloga = await this.dbService.naloga.where(ime<Naloga>("_id")).equals(nalogaId).first()
 
@@ -144,9 +144,12 @@ export class UcenecTestComponent implements OnInit {
       if (!tema) continue
       if (!tema.naslov) continue
 
-      const nalogaInfo: NalogaInfo = {
+      const nalogaInfo: NalogaModel = {
         id: naloga._id || "",
         stevilka: i++,
+        resitev: naloga.resitev || '',
+        vsebina: naloga.vsebina || '',
+        izbran: false,
         status: status
       }
 

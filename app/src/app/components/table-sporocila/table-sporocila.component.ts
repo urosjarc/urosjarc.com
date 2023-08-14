@@ -6,7 +6,7 @@ import {trace} from "../../utils";
 import {DialogSporociloComponent} from "../dialog-sporocilo/dialog-sporocilo.component";
 import {DataService} from "../../services/data/data.service";
 import {MatDialog} from "@angular/material/dialog";
-import {SporociloInfo} from "../../services/data/SporociloInfo";
+import {SporociloModel} from "../../models/SporociloModel";
 
 @Component({
   selector: 'app-table-sporocila',
@@ -16,7 +16,7 @@ import {SporociloInfo} from "../../services/data/SporociloInfo";
 export class TableSporocilaComponent implements OnInit {
 
   @Input() displayedColumns = ["smer", "pred", "posiljatelj", "prejemnik", "datum"]
-  @Input() sporocila: MatTableDataSource<SporociloInfo> = new MatTableDataSource<SporociloInfo>()
+  @Input() sporocila: MatTableDataSource<SporociloModel> = new MatTableDataSource<SporociloModel>()
 
   // @ts-ignore
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -41,7 +41,7 @@ export class TableSporocilaComponent implements OnInit {
   }
 
   @trace()
-  odpriDialog(sporociloInfo: SporociloInfo) {
+  odpriDialog(sporociloInfo: SporociloModel) {
     this.dialog.open(DialogSporociloComponent, {data: sporociloInfo});
   }
 
@@ -52,7 +52,7 @@ export class TableSporocilaComponent implements OnInit {
   }
 
   @trace()
-  filterPredicate(data: SporociloInfo, filter: string) {
+  filterPredicate(data: SporociloModel, filter: string) {
     return JSON.stringify(data).includes(filter)
   }
 }

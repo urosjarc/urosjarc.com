@@ -50,7 +50,7 @@ fun Route.auth(jwkProvider: JwkProvider) {
         log.info("Oseba: $oseba")
         //TODO: Naredi pravilno logiko
 
-        val publicKey = jwkProvider.get("6f8856ed-9189-488f-9011-0ff4b6c08edc").publicKey
+        val publicKey = jwkProvider.get(Env.JWT_KEYID).publicKey
         val keySpecPKCS8 = PKCS8EncodedKeySpec(Base64.getDecoder().decode(Env.JWT_PRIVATE_KEY))
         val privateKey = KeyFactory.getInstance("RSA").generatePrivate(keySpecPKCS8)
         val token = JWT.create()

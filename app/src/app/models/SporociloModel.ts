@@ -1,7 +1,7 @@
-import {Oseba} from "../../services/api/openapi/models/oseba";
-import {Kontakt} from "../../services/api/openapi/models/kontakt";
+import {Oseba} from "../services/api/openapi/models/oseba";
+import {Kontakt} from "../services/api/openapi/models/kontakt";
 
-export interface SporociloInfo {
+export interface SporociloModel {
   smer: "POSLANO" | "PREJETO",
   vsebina: string,
   datum: Date

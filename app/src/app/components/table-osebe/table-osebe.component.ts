@@ -2,8 +2,8 @@ import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {OsebaInfo} from "../../services/data/OsebaInfo";
 import {trace} from "../../utils";
+import {OsebaModel} from "../../models/OsebaModel";
 
 @Component({
   selector: 'app-table-osebe',
@@ -12,7 +12,7 @@ import {trace} from "../../utils";
 })
 export class TableOsebeComponent implements AfterViewInit {
 
-  @Input() osebe: MatTableDataSource<OsebaInfo> = new MatTableDataSource<OsebaInfo>()
+  @Input() osebe: MatTableDataSource<OsebaModel> = new MatTableDataSource<OsebaModel>()
   @Input() displayedColumns: any[] = ['naziv', 'datum', 'oddaljenost'];
 
   // @ts-ignore
@@ -33,7 +33,7 @@ export class TableOsebeComponent implements AfterViewInit {
   }
 
 
-  filterPredicate(data: OsebaInfo, filter: string) {
+  filterPredicate(data: OsebaModel, filter: string) {
     return JSON.stringify(data).includes(filter)
   }
 }
