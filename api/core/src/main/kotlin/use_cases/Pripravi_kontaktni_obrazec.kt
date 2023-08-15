@@ -73,6 +73,7 @@ class Pripravi_kontaktni_obrazec(
             priimek = imePriimekList.last().encrypted(),
             username = imePriimekList.joinToString("").lowercase().encrypted(),
             geslo = imePriimekList.joinToString("").lowercase().hashed(),
+            letnik = -1,
             tip = mutableSetOf(Oseba.Tip.KONTAKT)
         )
 

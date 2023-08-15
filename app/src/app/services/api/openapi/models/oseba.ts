@@ -6,6 +6,7 @@ export interface Oseba {
   '_id'?: ObjectId;
   geslo?: BsonBinary;
   ime?: BsonBinary;
+  letnik?: number;
   priimek?: BsonBinary;
   tip?: Array<'UCENEC' | 'UCITELJ' | 'INSTRUKTOR' | 'ADMIN' | 'KONTAKT' | 'SERVER'>;
   username?: BsonBinary;

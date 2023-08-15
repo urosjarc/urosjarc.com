@@ -12,5 +12,5 @@ export interface UciteljData {
   naslov_refs?: Array<NaslovData>;
   oseba?: Oseba;
   test_admin_refs?: Array<TestData>;
-  ucenje_admin_refs?: Array<UcenjeData>;
+  ucenje_ucitelj_refs?: Array<UcenjeData>;
 }

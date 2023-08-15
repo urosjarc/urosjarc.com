@@ -11,6 +11,7 @@ data class Oseba(
     override var _id: Id<Oseba> = Id(),
     var tip: MutableSet<Tip>,
     val geslo: Hashed,
+    var letnik: Int,
     @Contextual val username: Encrypted,
     @Contextual val ime: Encrypted,
     @Contextual val priimek: Encrypted,

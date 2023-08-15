@@ -43,7 +43,7 @@ tasks {
 
 configure<BuildSrc_openapi_gradle.OpenApiExtension> {
     this.outputDir.set("../../app")
-    this.inputDir.set("../../app")
+    this.inputDir.set("src/main/resources/openapi")
 }
 
 configure<BuildSrc_jwks_gradle.JwksExtension> {

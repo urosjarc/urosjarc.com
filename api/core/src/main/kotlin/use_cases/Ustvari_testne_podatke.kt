@@ -56,6 +56,7 @@ class Ustvari_testne_podatke(
             priimek = "Jarc".encrypted(),
             username = "urosjarc".encrypted(),
             geslo = "asdf".hashed(),
+            letnik = 1992,
             tip = mutableSetOf(Oseba.Tip.SERVER, Oseba.Tip.ADMIN)
         )
         val admin_telefon = Kontakt(
@@ -182,6 +183,7 @@ class Ustvari_testne_podatke(
         return (0..n).map {
             val oseba = this.nakljucni<Oseba>().apply {
                 this.tip = mutableSetOf(tip)
+                this.letnik = Random.nextInt(1990, 2010)
             }
             oseba
         }.toMutableSet()
