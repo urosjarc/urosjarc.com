@@ -1,31 +1,22 @@
-<mat-stepper #stepper>
-
-  <mat-step [stepControl]="firstFormGroup">
-    <form [formGroup]="firstFormGroup">
+<mat-stepper #stepper (selectionChange)="selectionChange($event)">
+    <mat-step>
       <ng-template matStepLabel>Zvezki</ng-template>
       <app-table-zvezki [zvezki]="zvezki"/>
-    </form>
+    </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Tematike</ng-template>
+    <app-table-tematike [tematike]="tematike"/>
   </mat-step>
 
-  <mat-step [stepControl]="secondFormGroup">
-    <form [formGroup]="secondFormGroup">
-      <ng-template matStepLabel>Tematike</ng-template>
-      <app-table-tematike [tematike]="tematike"/>
-    </form>
+  <mat-step>
+    <ng-template matStepLabel>Naloge</ng-template>
+    <app-table-naloge/>
   </mat-step>
 
-  <mat-step [stepControl]="secondFormGroup">
-    <form [formGroup]="secondFormGroup">
-      <ng-template matStepLabel>Naloge</ng-template>
-      <app-table-naloge/>
-    </form>
-  </mat-step>
-
-  <mat-step [stepControl]="secondFormGroup">
-    <form [formGroup]="secondFormGroup">
-      <ng-template matStepLabel>Učenci</ng-template>
-      <app-table-osebe [osebe]="ucenci"/>
-    </form>
+  <mat-step>
+    <ng-template matStepLabel>Učenci</ng-template>
+    <app-table-osebe [osebe]="ucenci"/>
   </mat-step>
 
   <mat-step>

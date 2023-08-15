@@ -48,4 +48,8 @@ export class TableZvezkiComponent implements OnInit, AfterViewInit {
   filterPredicate(data: Zvezek, filter: string) {
     return JSON.stringify(data).includes(filter)
   }
+
+  izberi(zvezek: ZvezekModel) {
+    zvezek.izbran = !zvezek.izbran
+  }
 }

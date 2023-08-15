@@ -12,7 +12,7 @@ import {TematikaModel} from "../../models/TematikaModel";
 })
 export class TableTematikeComponent implements AfterViewInit {
 
-  @Input() displayedColumns = ["smer", "pred", "posiljatelj", "prejemnik", "datum"]
+  @Input() displayedColumns = ["naslov"]
   @Input() tematike: MatTableDataSource<TematikaModel> = new MatTableDataSource<TematikaModel>()
 
   // @ts-ignore
@@ -36,5 +36,10 @@ export class TableTematikeComponent implements AfterViewInit {
   @trace()
   filterPredicate(data: TematikaModel, filter: string) {
     return JSON.stringify(data).includes(filter)
+  }
+
+  @trace()
+  izberi(tematika: TematikaModel) {
+    tematika.izbran = true
   }
 }

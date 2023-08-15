@@ -165,7 +165,8 @@ const loggerModule = LoggerModule.forRoot({
     MatProgressSpinnerModule,
     MatProgressBarModule,
     ApiModule,
-    loggerModule, MatStepperModule,
+    loggerModule,
+    MatStepperModule
   ],
   providers: [
     AlertService,

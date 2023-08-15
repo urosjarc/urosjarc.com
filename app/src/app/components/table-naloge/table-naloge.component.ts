@@ -12,7 +12,7 @@ import {NalogaModel} from "../../models/NalogaModel";
 })
 export class TableNalogeComponent implements AfterViewInit {
 
-  @Input() displayedColumns = ["smer", "pred", "posiljatelj", "prejemnik", "datum"]
+  @Input() displayedColumns = ["naslov"]
   @Input() naloge: MatTableDataSource<NalogaModel> = new MatTableDataSource<NalogaModel>()
 
   // @ts-ignore
@@ -36,5 +36,9 @@ export class TableNalogeComponent implements AfterViewInit {
   @trace()
   filterPredicate(data: NalogaModel, filter: string) {
     return JSON.stringify(data).includes(filter)
+  }
+
+  izberi(naloga: NalogaModel) {
+    naloga.izbran = true
   }
 }
