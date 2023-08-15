@@ -6,6 +6,7 @@ plugins {
     this.id("buildSrc.injections")
     this.id("buildSrc.db")
     this.id("buildSrc.jwks")
+    this.id("buildSrc.openapi")
     this.id("io.ktor.plugin") version "2.2.3"
 }
 
@@ -38,6 +39,11 @@ application {
 
 tasks {
     this.create("stage").dependsOn("installDist")
+}
+
+configure<BuildSrc_openapi_gradle.OpenApiExtension> {
+    this.outputDir.set("../../app")
+    this.inputDir.set("../../app")
 }
 
 configure<BuildSrc_jwks_gradle.JwksExtension> {
