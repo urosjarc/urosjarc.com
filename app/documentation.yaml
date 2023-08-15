@@ -643,7 +643,7 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/OsebaData"
-        ucenje_ucenec_refs:
+        ucenje_ucitelj_refs:
           type: "array"
           items:
             $ref: "#/components/schemas/UcenjeData"
@@ -840,7 +840,7 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/KontaktData"
-        ucenje_admin_refs:
+        ucenje_ucitelj_refs:
           type: "array"
           items:
             $ref: "#/components/schemas/UcenjeData"
