@@ -81,6 +81,7 @@ import {MatStepperModule} from "@angular/material/stepper";
 import {TableNalogeComponent} from "./components/table-naloge/table-naloge.component";
 import {TableTematikeComponent} from "./components/table-tematike/table-tematike.component";
 import {TableZvezkiComponent} from "./components/table-zvezki/table-zvezki.component";
+import {TableUcenciComponent} from "./components/table-ucenci/table-ucenci.component";
 
 const locale = 'sl'
 moment.locale(locale);
@@ -135,7 +136,8 @@ const loggerModule = LoggerModule.forRoot({
     UciteljZvezkiComponent,
     TableNalogeComponent,
     TableTematikeComponent,
-    TableZvezkiComponent
+    TableZvezkiComponent,
+    TableUcenciComponent
   ],
   imports: [
     CdkDropList, NgFor, CdkDrag,
@@ -166,7 +168,7 @@ const loggerModule = LoggerModule.forRoot({
     MatProgressBarModule,
     ApiModule,
     loggerModule,
-    MatStepperModule
+    MatStepperModule,
   ],
   providers: [
     AlertService,

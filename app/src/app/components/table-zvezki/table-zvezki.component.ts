@@ -50,6 +50,6 @@ export class TableZvezkiComponent implements OnInit, AfterViewInit {
   }
 
   izberi(zvezek: ZvezekModel) {
-    zvezek.izbran = !zvezek.izbran
+    zvezek.izbran = zvezek.izbran ? false : true
   }
 }

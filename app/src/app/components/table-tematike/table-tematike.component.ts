@@ -40,6 +40,6 @@ export class TableTematikeComponent implements AfterViewInit {
 
   @trace()
   izberi(tematika: TematikaModel) {
-    tematika.izbran = true
+    tematika.izbran = tematika.izbran ? false : true
   }
 }

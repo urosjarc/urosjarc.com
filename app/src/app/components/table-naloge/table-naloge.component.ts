@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
@@ -39,6 +39,6 @@ export class TableNalogeComponent implements AfterViewInit {
   }
 
   izberi(naloga: NalogaModel) {
-    naloga.izbran = true
+    naloga.izbran = naloga.izbran ? false : true
   }
 }

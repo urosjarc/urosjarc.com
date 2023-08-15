@@ -44,7 +44,8 @@ export class DataService {
         ucenci.push({
           naziv: `${ucenec.ime} ${ucenec.priimek}`,
           datum: String_vDate(ucenje.ustvarjeno as string),
-          link: ucenec._id as string
+          link: ucenec._id as string,
+          izbran: false
         })
       }
     }

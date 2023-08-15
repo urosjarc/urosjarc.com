@@ -11,18 +11,20 @@
 
   <mat-step>
     <ng-template matStepLabel>Naloge</ng-template>
-    <app-table-naloge/>
+    <app-table-naloge [naloge]="naloge"/>
   </mat-step>
 
   <mat-step>
     <ng-template matStepLabel>Učenci</ng-template>
-    <app-table-osebe [osebe]="ucenci"/>
+    <app-table-ucenci [ucenci]="ucenci"/>
   </mat-step>
 
   <mat-step>
     <ng-template matStepLabel>Potrditev</ng-template>
 
-    <h1>Tu je kratka analiza izbire in potrditev testa</h1>
+    <h1>Stevilo nalog: {{naloge.data.length}}</h1>
+    <h1>Stevilo ucencev: {{ucenci.data.length}}</h1>
+
     <button mat-button (click)="stepper.reset()">Preklici</button>
   </mat-step>
 

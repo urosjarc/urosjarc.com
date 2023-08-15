@@ -1,5 +1,4 @@
-import {Component, Input} from '@angular/core';
-import {FormBuilder, Validators} from "@angular/forms";
+import {Component, Input, OnInit} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {ZvezekModel} from "../../../models/ZvezekModel";
 import {TematikaModel} from "../../../models/TematikaModel";
@@ -7,26 +6,24 @@ import {NalogaModel} from "../../../models/NalogaModel";
 import {OsebaModel} from "../../../models/OsebaModel";
 import {StepperSelectionEvent} from "@angular/cdk/stepper";
 import {trace} from "../../../utils";
+import {DataService} from "../../../services/data/data.service";
 
 @Component({
   selector: 'app-ucitelj-zvezki',
   templateUrl: './ucitelj-zvezki.component.html',
   styleUrls: ['./ucitelj-zvezki.component.scss'],
 })
-export class UciteljZvezkiComponent {
-  firstFormGroup = this._formBuilder.group({
-    firstCtrl: ['', Validators.required],
-  });
-  secondFormGroup = this._formBuilder.group({
-    secondCtrl: ['', Validators.required],
-  });
+export class UciteljZvezkiComponent implements OnInit {
   @Input() zvezki: MatTableDataSource<ZvezekModel> = new MatTableDataSource<ZvezekModel>()
   @Input() tematike: MatTableDataSource<TematikaModel> = new MatTableDataSource<TematikaModel>()
   @Input() naloge: MatTableDataSource<NalogaModel> = new MatTableDataSource<NalogaModel>()
   @Input() ucenci: MatTableDataSource<OsebaModel> = new MatTableDataSource<OsebaModel>()
 
+  constructor(private data: DataService) {
+  }
 
-  constructor(private _formBuilder: FormBuilder) {
+  async ngOnInit(): Promise<void> {
+    this.ucenci.data = await this.data.uciteljevi_ucenci()
   }
 
   selectionChange($event: StepperSelectionEvent) {
