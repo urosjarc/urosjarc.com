@@ -10,6 +10,7 @@ fun main() {
     logger("main").info("Kotlin: ${KotlinVersion.CURRENT}")
     embeddedServer(
         Netty,
+        host = "127.0.0.1",
         port = Env.PORT,
         module = Application::module
     ).start(wait = true)
