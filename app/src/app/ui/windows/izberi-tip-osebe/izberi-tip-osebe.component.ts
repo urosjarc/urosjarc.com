@@ -3,7 +3,7 @@ import {MAT_DIALOG_DATA, MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
 import {NgStyle} from "@angular/common";
 import {MatListModule} from "@angular/material/list";
-import {NavGumb} from "../../parts/buttons/button-toolbar/NavGumb";
+import {ButtonToolbarModel} from "../../parts/buttons/button-toolbar/button-toolbar.model";
 import {IzberiTipOsebeModel} from "./izberi-tip-osebe.model";
 
 @Component({
@@ -14,7 +14,7 @@ import {IzberiTipOsebeModel} from "./izberi-tip-osebe.model";
   imports: [MatDialogModule, MatButtonModule, NgStyle, MatListModule],
 })
 export class IzberiTipOsebeComponent {
-  navGumbi: NavGumb[] = []
+  navGumbi: ButtonToolbarModel[] = []
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public model: IzberiTipOsebeModel) {

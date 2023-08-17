@@ -1,4 +1,4 @@
-export interface NavGumb {
+export interface ButtonToolbarModel {
   tekst: string
   ikona: string
   route?: string

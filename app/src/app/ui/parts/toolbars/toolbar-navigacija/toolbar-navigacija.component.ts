@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {NavGumb} from "../../buttons/button-toolbar/NavGumb";
+import {ButtonToolbarModel} from "../../buttons/button-toolbar/button-toolbar.model";
 
 @Component({
   selector: 'app-toolbar-navigacija',
@@ -7,7 +7,7 @@ import {NavGumb} from "../../buttons/button-toolbar/NavGumb";
   styleUrls: ['./nav-bar.component.scss']
 })
 export class ToolbarNavigacijaComponent {
-  @Input() navGumbi: NavGumb[] = []
+  @Input() navGumbi: ButtonToolbarModel[] = []
 
   onClick() {
 

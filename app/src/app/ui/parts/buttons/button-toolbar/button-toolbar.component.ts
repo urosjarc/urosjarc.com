@@ -5,7 +5,7 @@ import {Component, Input} from '@angular/core';
   templateUrl: './nav-gumb.component.html',
   styleUrls: ['./nav-gumb.component.scss']
 })
-export class NavGumbComponent {
+export class ButtonToolbarComponent {
   @Input() tekst: string = ""
   @Input() ikona: string = ""
   @Input() route: string = ""

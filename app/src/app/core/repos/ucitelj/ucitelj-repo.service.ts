@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {TestModel} from "../../../../assets/models/TestModel";
 import {OsebaModel} from "../../../../assets/models/OsebaModel";
 import {Test} from "../../services/api/models/test";
@@ -6,16 +6,23 @@ import {ime} from "../../../utils/types";
 import {String_vDate} from "../../../utils/String";
 import {Ucenje} from "../../services/api/models/ucenje";
 import {Oseba} from "../../services/api/models/oseba";
+import {IndexDbService} from "../../services/index-db/index-db.service";
+import {LocalStorageService} from "../../services/local-storage/local-storage.service";
+import {routes} from "../../../routes";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UciteljRepoService {
 
-  constructor() { }
+  constructor(
+    private db: IndexDbService,
+    private storage: LocalStorageService
+  ) {
+  }
 
   async testi(): Promise<TestModel[]> {
-    const root_id = this.db.get_root_id()
+    const root_id = this.storage.get_root_id()
     const testi = await this.db.test
       .where(ime<Test>("oseba_admin_id"))
       .equals(root_id)
@@ -27,14 +34,14 @@ export class UciteljRepoService {
         naslov: test.naslov || "",
         opravljeno: 0,
         datum: String_vDate(test.deadline as string),
-        link: routs.ucenec({}).test({test_id: test._id || ""}).$
+        link: routes.ucenec({}).test({test_id: test._id || ""}).$
       })
     }
     return newTesti
   }
 
   async ucenci(): Promise<OsebaModel[]> {
-    const root_id = this.db.get_root_id()
+    const root_id = this.storage.get_root_id()
     const ucenje_vse: Ucenje[] = await this.db.ucenje
       .where(ime<Ucenje>("oseba_ucitelj_id"))
       .equals(root_id)
