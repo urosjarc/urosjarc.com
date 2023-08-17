@@ -10,7 +10,8 @@ import {ZvezekModel} from "../../models/ZvezekModel";
 @Component({
   selector: 'app-table-zvezki',
   templateUrl: './table-zvezki.component.html',
-  styleUrls: ['./table-zvezki.component.scss']
+  styleUrls: ['./table-zvezki.component.scss'],
+  standalone: true
 })
 export class TableZvezkiComponent implements OnInit, AfterViewInit {
 

@@ -4,7 +4,8 @@ import {ButtonToolbarModel} from "../../buttons/button-toolbar/button-toolbar.mo
 @Component({
   selector: 'app-toolbar-navigacija',
   templateUrl: './nav-bar.component.html',
-  styleUrls: ['./nav-bar.component.scss']
+  styleUrls: ['./nav-bar.component.scss'],
+  standalone: true
 })
 export class ToolbarNavigacijaComponent {
   @Input() navGumbi: ButtonToolbarModel[] = []

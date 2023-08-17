@@ -2,12 +2,12 @@ import {Injectable} from '@angular/core';
 import {ApiService} from "../../services/api/services/api.service";
 import {SporociloModel} from "../../../../assets/models/SporociloModel";
 import {ZvezekModel} from "../../../../assets/models/ZvezekModel";
-import {ime} from "../../../utils/types";
+import {exe, ime} from "../../../utils/types";
 import {Oseba} from "../../services/api/models/oseba";
 import {Kontakt} from "../../services/api/models/kontakt";
 import {Tematika} from "../../services/api/models/tematika";
 import {TematikaModel} from "../../../../assets/models/TematikaModel";
-import {IndexDbService} from "../../services/index-db/index-db.service";
+import {DbService} from "../../services/db/db.service";
 import {Sporocilo} from "../../services/api/models/sporocilo";
 import {String_vDate} from "../../../utils/String";
 import {LocalStorageService} from "../../services/local-storage/local-storage.service";
@@ -19,11 +19,11 @@ import {Naloga} from "../../services/api/models/naloga";
   providedIn: 'root'
 })
 export class OsebaRepoService {
-  constructor(private db: IndexDbService, private api: ApiService, private storage: LocalStorageService) {
+  constructor(private db: DbService, private api: ApiService, private storage: LocalStorageService) {
   }
 
-  profil(observer: Observer<Profil>) {
-    this.api.authProfilGet().subscribe(observer)
+  async profil() {
+    return await exe(this.api.authProfilGet())
   }
 
   async sporocila(): Promise<SporociloModel[]> {

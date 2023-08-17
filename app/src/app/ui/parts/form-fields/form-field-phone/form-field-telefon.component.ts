@@ -4,7 +4,8 @@ import {FormControl, Validators} from "@angular/forms";
 @Component({
   selector: 'app-input-telefon',
   templateUrl: './input-telefon.component.html',
-  styleUrls: ['./input-telefon.component.scss']
+  styleUrls: ['./input-telefon.component.scss'],
+  standalone: true
 })
 export class FormFieldTelefonComponent {
   @Input() formControl = new FormControl('', [

@@ -8,7 +8,8 @@ import {NalogaModel} from "../../models/NalogaModel";
 @Component({
   selector: 'app-table-naloge',
   templateUrl: './table-naloge.component.html',
-  styleUrls: ['./table-naloge.component.scss']
+  styleUrls: ['./table-naloge.component.scss'],
+  standalone: true
 })
 export class TableNalogeComponent implements AfterViewInit {
 

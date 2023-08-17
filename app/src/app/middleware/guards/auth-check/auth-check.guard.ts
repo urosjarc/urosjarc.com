@@ -1,32 +1,33 @@
-import {CanActivateFn, Router, UrlTree} from '@angular/router';
+import {CanActivateFn, Router} from '@angular/router';
 import {inject} from "@angular/core";
-import {AuthService} from "../../services/auth/auth.service";
-import {Oseba} from "../../services/api/openapi/models/oseba";
-import {ArrayTypes} from "../../../utils";
+import {OsebaRepoService} from "../../../core/repos/oseba/oseba-repo.service";
+import {Oseba} from "../../../core/services/api/models/oseba";
+import {ArrayTypes} from "../../../utils/types";
 
 export function authCheckGuard(args: {
   tip: ArrayTypes<Oseba['tip']>,
-  error_redirect: {$: string}
+  error_redirect: { $: string }
 }): CanActivateFn {
   const router = inject(Router)
   return () => {
-    const authService = inject(AuthService)
-    return new Promise(resolve => {
-      console.group("GUARD", authCheckGuard.name, args)
-      authService.profilTip({
-        tip: args.tip,
-        next(hasTip: boolean) {
-          console.groupEnd()
-          console.log("GUARD", authCheckGuard.name, args, hasTip)
-          resolve(hasTip)
-        },
-        error() {
-          console.groupEnd()
-          const urlTree = router.createUrlTree([args.error_redirect])
-          console.log("GUARD", authCheckGuard.name, args, urlTree)
-          resolve(urlTree)
-        }
-      })
+    const osebaRepo = inject(OsebaRepoService)
+    return new Promise(async resolve => {
+
+      try {
+        console.group("GUARD", authCheckGuard.name, args)
+        const profil = await osebaRepo.profil()
+        const hasTip = profil.tip.includes(args.tip)
+        console.groupEnd()
+        console.log("GUARD", authCheckGuard.name, args, hasTip)
+        resolve(hasTip)
+
+      } catch (e) {
+        console.groupEnd()
+        const urlTree = router.createUrlTree([args.error_redirect])
+        console.log("GUARD", authCheckGuard.name, args, urlTree)
+        resolve(urlTree)
+      }
+
     })
-  };
+  }
 }

@@ -8,7 +8,8 @@ import {TematikaModel} from "../../models/TematikaModel";
 @Component({
   selector: 'app-table-tematike',
   templateUrl: './table-tematike.component.html',
-  styleUrls: ['./table-tematike.component.scss']
+  styleUrls: ['./table-tematike.component.scss'],
+  standalone: true
 })
 export class TableTematikeComponent implements AfterViewInit {
 

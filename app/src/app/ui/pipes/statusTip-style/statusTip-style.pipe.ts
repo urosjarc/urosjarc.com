@@ -3,6 +3,7 @@ import {Status} from "../../services/api/openapi/models/status";
 
 @Pipe({
   name: 'statusTip_style',
+  standalone: true
 })
 export class StatusTipStylePipe implements PipeTransform {
 

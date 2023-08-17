@@ -6,7 +6,7 @@ import {ime} from "../../../utils/types";
 import {String_vDate} from "../../../utils/String";
 import {Ucenje} from "../../services/api/models/ucenje";
 import {Oseba} from "../../services/api/models/oseba";
-import {IndexDbService} from "../../services/index-db/index-db.service";
+import {DbService} from "../../services/db/db.service";
 import {LocalStorageService} from "../../services/local-storage/local-storage.service";
 import {routes} from "../../../routes";
 
@@ -16,7 +16,7 @@ import {routes} from "../../../routes";
 export class UciteljRepoService {
 
   constructor(
-    private db: IndexDbService,
+    private db: DbService,
     private storage: LocalStorageService
   ) {
   }

@@ -20,7 +20,7 @@ import {ime, isObject} from "../../../utils/types";
 import {trace} from "../../../utils/trace";
 
 @Injectable({providedIn: 'root'})
-export class IndexDbService extends Dexie {
+export class DbService extends Dexie {
 
   oseba!: Table<Oseba, number>
   naslov!: Table<Naslov, number>
@@ -53,14 +53,37 @@ export class IndexDbService extends Dexie {
     })
   }
 
+  get root_id(): string {
+    return localStorage.getItem("root_id") || ""
+  }
+
+  @trace()
+  set root_id(root_id: string) {
+    localStorage.setItem("root_id", root_id)
+  }
+
+  get token(): string {
+    return localStorage.getItem("token") || ""
+  }
+
+  @trace()
+  set token(token: string) {
+    localStorage.setItem("token", token)
+  }
+
   @trace()
   drop() {
+    this.token = ""
+    this.root_id = ""
     this.delete()
   }
+
   @trace()
   async reset(osebaData: OsebaData) {
     await this.delete()
     await this.open()
+
+    this.root_id = osebaData.oseba._id
 
     const imena_tabel = this.tables.map((table) => table.name)
     const cakalnica_value: any[] = [osebaData]

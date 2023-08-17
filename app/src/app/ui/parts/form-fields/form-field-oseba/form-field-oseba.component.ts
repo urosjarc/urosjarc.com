@@ -4,7 +4,8 @@ import {FormControl, Validators} from "@angular/forms";
 @Component({
   selector: 'app-input-oseba',
   templateUrl: './input-oseba.component.html',
-  styleUrls: ['./input-oseba.component.scss']
+  styleUrls: ['./input-oseba.component.scss'],
+  standalone: true
 })
 export class FormFieldOsebaComponent {
   @Input() label: string = "Ime in priimek"

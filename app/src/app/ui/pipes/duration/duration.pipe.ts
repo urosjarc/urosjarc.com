@@ -3,7 +3,8 @@ import * as moment from "moment";
 import {DurationInputArg1} from "moment/moment";
 
 @Pipe({
-  name: 'duration'
+  name: 'duration',
+  standalone: true
 })
 export class DurationPipe implements PipeTransform {
   transform(value: DurationInputArg1): string {

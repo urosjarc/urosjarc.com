@@ -9,7 +9,8 @@ import {ime, trace} from "../../utils";
 @Component({
   selector: 'app-audits-tabela',
   templateUrl: './audits-tabela.component.html',
-  styleUrls: ['./audits-tabela.component.scss']
+  styleUrls: ['./audits-tabela.component.scss'],
+  standalone: true
 })
 export class TableAuditsComponent implements OnInit, AfterViewInit {
   // @ts-ignore

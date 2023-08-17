@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {NavGumb} from "../../components/nav-gumb/NavGumb";
-import {routes} from "../../router.module";
+import {routes} from "../../app.routes";
 
 @Component({
   selector: 'app-public',

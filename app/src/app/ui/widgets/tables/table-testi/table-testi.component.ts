@@ -8,7 +8,8 @@ import {TestModel} from "../../models/TestModel";
 @Component({
   selector: 'app-table-testi',
   templateUrl: './table-testi.component.html',
-  styleUrls: ['./table-testi.component.scss']
+  styleUrls: ['./table-testi.component.scss'],
+  standalone: true
 })
 export class TableTestiComponent implements AfterViewInit {
   @Input() testi: MatTableDataSource<TestModel> = new MatTableDataSource<TestModel>()

@@ -1,7 +1,8 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-  name: 'sekunde_stoparica'
+  name: 'sekunde_stoparica',
+  standalone: true
 })
 export class SekundeStoparicaPipe implements PipeTransform {
 

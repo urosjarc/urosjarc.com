@@ -5,7 +5,8 @@ import {Validator_besede} from "../../validators/besede.validator";
 @Component({
   selector: 'app-input-msg',
   templateUrl: './input-msg.component.html',
-  styleUrls: ['./input-msg.component.scss']
+  styleUrls: ['./input-msg.component.scss'],
+  standalone: true
 })
 export class FormFieldMsgComponent {
   @Input() formControl = new FormControl('', [

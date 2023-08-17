@@ -11,7 +11,8 @@ import {SporociloModel} from "../../models/SporociloModel";
 @Component({
   selector: 'app-table-sporocila',
   templateUrl: './table-sporocila.component.html',
-  styleUrls: ['./table-sporocila.component.scss']
+  styleUrls: ['./table-sporocila.component.scss'],
+  standalone: true
 })
 export class TableSporocilaComponent implements OnInit {
 

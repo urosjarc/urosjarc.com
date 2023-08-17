@@ -8,7 +8,8 @@ import {ime, trace} from "../../utils";
 @Component({
   selector: 'app-oseba-profil',
   templateUrl: './oseba-profil.component.html',
-  styleUrls: ['./oseba-profil.component.scss']
+  styleUrls: ['./oseba-profil.component.scss'],
+  standalone: true
 })
 export class PrikaziProfilOsebeComponent {
   oseba: Oseba | undefined

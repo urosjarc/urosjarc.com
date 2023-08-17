@@ -8,7 +8,8 @@ import {OsebaModel} from "../../models/OsebaModel";
 @Component({
   selector: 'app-table-osebe',
   templateUrl: './table-osebe.component.html',
-  styleUrls: ['./table-osebe.component.scss']
+  styleUrls: ['./table-osebe.component.scss'],
+  standalone: true
 })
 export class TableOsebeComponent implements AfterViewInit {
 

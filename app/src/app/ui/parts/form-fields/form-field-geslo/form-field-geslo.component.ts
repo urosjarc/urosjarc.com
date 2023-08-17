@@ -4,7 +4,8 @@ import {FormControl, Validators} from "@angular/forms";
 @Component({
   selector: 'app-input-geslo',
   templateUrl: './input-geslo.component.html',
-  styleUrls: ['./input-geslo.component.scss']
+  styleUrls: ['./input-geslo.component.scss'],
+  standalone: true
 })
 export class FormFieldGesloComponent {
   @Input() formControl = new FormControl('', [Validators.required, Validators.minLength(4)]);

@@ -3,15 +3,14 @@ import {
   HttpErrorResponse,
   HttpEvent,
   HttpHandler,
-  HttpInterceptor,
   HttpRequest,
   HttpResponse
 } from "@angular/common/http";
 import {forwardRef, Injectable, Provider} from "@angular/core";
-import {DbService} from "./services/db/db.service";
-import {AlertService} from "./services/alert/alert.service";
-import {ApiService} from "./services/api/openapi/services";
 import {Observable, tap} from "rxjs";
+import {DbService} from "../../core/services/db/db.service";
+import {AlertService} from "../../core/services/alert/alert.service";
+import {ApiService} from "../../core/services/api/services";
 
 export const HTTP_INTERCEPTOR_PROVIDER: Provider = {
   provide: HTTP_INTERCEPTORS,
@@ -33,7 +32,7 @@ export class HttpInterceptor implements HttpInterceptor {
     const self = this
     req = req.clone({
       setHeaders: {
-        Authorization: `Bearer ${this.dbService.get_token()}`
+        Authorization: `Bearer ${this.dbService.token}`
       }
     });
     const count = ++HttpInterceptor.count

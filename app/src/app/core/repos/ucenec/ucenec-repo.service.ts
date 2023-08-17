@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {IndexDbService} from "../../services/index-db/index-db.service";
+import {DbService} from "../../services/db/db.service";
 import {ApiService} from "../../services/api/services/api.service";
 import {LocalStorageService} from "../../services/local-storage/local-storage.service";
 import {ime} from "../../../utils/types";
@@ -14,7 +14,7 @@ import {routes} from "../../../routes";
 })
 export class UcenecRepoService {
 
-  constructor(private db: IndexDbService, private api: ApiService, private storage: LocalStorageService) {
+  constructor(private db: DbService, private api: ApiService, private storage: LocalStorageService) {
   }
   async testi() {
     const root_id = this.storage.get_root_id()

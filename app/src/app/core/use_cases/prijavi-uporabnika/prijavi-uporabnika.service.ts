@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from "../../services/api/services/api.service";
 import {PrijavaReq} from "../../services/api/models/prijava-req";
-import {LocalStorageService} from "../../services/local-storage/local-storage.service";
 import {
   SinhronizirajUporabniskePodatkeService
 } from "../sinhroniziraj-uporabniske-podatke/sinhroniziraj-uporabniske-podatke.service";
@@ -16,6 +15,7 @@ import {PrijavaRes} from "../../services/api/models/prijava-res";
 import {IzberiTipOsebeComponent} from "../../../ui/windows/izberi-tip-osebe/izberi-tip-osebe.component";
 import {MatDialog} from "@angular/material/dialog";
 import {IzberiTipOsebeModel} from "../../../ui/windows/izberi-tip-osebe/izberi-tip-osebe.model";
+import {DbService} from "../../services/db/db.service";
 
 @Injectable({providedIn: 'root'})
 export class PrijaviUporabnikaService {
@@ -29,8 +29,8 @@ export class PrijaviUporabnikaService {
     private alert: AlertService,
     private dialog: MatDialog,
     private router: Router,
+    private db: DbService,
     private sinhroniziraj_uporabniske_podatke: SinhronizirajUporabniskePodatkeService,
-    private storage: LocalStorageService,
     private api: ApiService) {
   }
 
@@ -40,7 +40,7 @@ export class PrijaviUporabnikaService {
     const prijavaRes = await exe(this.api.authPrijavaPost({body: prijavaReq}))
 
     // Shrani token da bo lahko uporabnik klical server z autorizacijo
-    this.storage.set_token(prijavaRes.token || "")
+    this.db.token = prijavaRes.token || ""
 
     // Sprozi event za redirect
     this.dialog.open<any, IzberiTipOsebeModel>(IzberiTipOsebeComponent, {
