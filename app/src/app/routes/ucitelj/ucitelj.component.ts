@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {NavGumb} from "../../components/nav-gumb/NavGumb";
-import {routing} from "../../app-routing.module";
+import {routes} from "../../router.module";
 import {SyncService} from "../../services/sync/sync.service";
 import {trace} from "../../utils";
 
@@ -15,42 +15,42 @@ export class UciteljComponent {
     {
       tekst: "Nazaj",
       ikona: "reply",
-      route: routing.public({}).$,
+      route: routes.public({}).$,
     },
     {
       tekst: "Zvezki",
       ikona: "local_library",
-      route: routing.ucitelj({}).zvezki({}).$,
+      route: routes.ucitelj({}).zvezki({}).$,
       style: this.navStyle
     },
     {
       tekst: "Testi",
       ikona: "edit",
-      route: routing.ucitelj({}).testi({}).$,
+      route: routes.ucitelj({}).testi({}).$,
       style: this.navStyle
     },
     {
       tekst: "Učenci",
       ikona: "school",
-      route: routing.ucitelj({}).ucenci({}).$,
+      route: routes.ucitelj({}).ucenci({}).$,
       style: this.navStyle
     },
     {
       tekst: "Sporocila",
       ikona: "sms",
-      route: routing.ucitelj({}).sporocila({}).$,
+      route: routes.ucitelj({}).sporocila({}).$,
       style: this.navStyle
     },
     {
       tekst: "Delo",
       ikona: "work",
-      route: routing.ucitelj({}).delo({}).$,
+      route: routes.ucitelj({}).delo({}).$,
       style: this.navStyle
     },
     {
       tekst: "Profil",
       ikona: "person",
-      route: routing.ucitelj({}).profil({}).$,
+      route: routes.ucitelj({}).profil({}).$,
       style: this.navStyle
     },
     {

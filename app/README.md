@@ -1,27 +1,10 @@
-# App
+# Todo
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.1.6.
+# Pretvori veliko service metod v Use cases
+# Componente zdruzi po obiki (dialogs, tables, etc...)
+# Vsaka komponenta naj ima samo en model kateri skrbi za representacijo!
+# Use case uporablja vec komponent in specijalne modele za izvedbo neke zelo kompleksne akcije... (sestavi test, ) Componente ki sestavljajo use case ne smejo biti uporabljene v routih, v routih je lahko uporabljen samo glavni use case!!!
+# Routi so namenjeni samo prikazovalni logiki in prikazujejo surove podatke component... Routi so brez modelov! Routov component skrbi samo za
+# uspesno komunikacijo component ki jih prikazuje na strani! BREZ MODELOV!!!!
 
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+# Arhitektura mora biti v drevesni strukturi (na vrhu naj bo route) vse ostalo naj sluzi routu! V routu naj ne bo veliko logike, route naj bo kot usecase v serverju.

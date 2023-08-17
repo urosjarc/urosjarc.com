@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AlertService} from "../services/alert/alert.service";
 import {MatDialog} from "@angular/material/dialog";
-import {AlertComponent} from "../components/alert/alert.component";
+import {DialogAlertComponent} from "../components/dialog-alert/dialog-alert.component";
 import {Alert} from "../services/alert/Alert";
 import {trace} from "../utils";
 import {NavigationStart, Router} from "@angular/router";
@@ -36,11 +36,10 @@ export class AppComponent implements OnInit {
 
   @trace()
   private onAlert(data: Alert) {
-    this.dialog.open(AlertComponent, {
+    this.dialog.open<any, Alert>(DialogAlertComponent, {
       enterAnimationDuration: 250,
       exitAnimationDuration: 500,
       data: data
     });
   }
-
 }

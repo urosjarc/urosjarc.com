@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {NavGumb} from "../../components/nav-gumb/NavGumb";
-import {routing} from "../../app-routing.module";
+import {routes} from "../../router.module";
 import {SyncService} from "../../services/sync/sync.service";
 import {trace} from "../../utils";
 
@@ -15,12 +15,12 @@ export class AdminComponent {
     {
       tekst: "Nazaj",
       ikona: "reply",
-      route: routing.public({}).$,
+      route: routes.public({}).$,
     },
     {
       tekst: "Index",
       ikona: "home",
-      route: routing.admin({}).$,
+      route: routes.admin({}).$,
       style: this.navStyle
     },
     {

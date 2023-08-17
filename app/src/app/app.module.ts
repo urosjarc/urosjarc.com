@@ -3,7 +3,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import * as moment from "moment"
 
 import {LoggerModule, NgxLoggerLevel} from "ngx-logger"
-import {AppRoutingModule} from './app-routing.module';
+import {Routing} from './router.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
@@ -49,20 +49,20 @@ import {PieChartModule} from "@swimlane/ngx-charts";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MAT_DATE_LOCALE, MatNativeDateModule} from "@angular/material/core";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
-import {AuditsTabelaComponent} from "./components/audits-tabela/audits-tabela.component";
+import {TableAuditsComponent} from "./components/tabela-audits/table-audits.component";
 import {PublicComponent} from "./routes/public/public.component";
 import {DateOddaljenostClassPipe} from "./pipes/DateOddaljenostClass/date-oddaljenost-class.pipe";
 import {TableTestiComponent} from "./components/table-testi/table-testi.component";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
-import {LoadingComponent} from "./components/loading/loading.component";
+import {ProgressBarComponent} from "./components/progress-bar/progress-bar.component";
 import {AuthService} from "./services/auth/auth.service";
 import {DbService} from "./services/db/db.service";
 import {SyncService} from "./services/sync/sync.service";
 import "@angular/common/locales/global/sl"
 import 'moment/locale/sl';
 import {UciteljComponent} from './routes/ucitelj/ucitelj.component';
-import {API_INTERCEPTOR_PROVIDER, Interceptor} from "./interceptor";
+import {API_INTERCEPTOR_PROVIDER, ApiInterceptor} from "./api-interceptor";
 import {ApiModule} from "./services/api/openapi/api.module";
 import {UciteljUcenciComponent} from "./routes/ucitelj/ucenci/ucitelj-ucenci.component";
 import {UciteljTestiComponent} from "./routes/ucitelj/testi/ucitelj-testi.component";
@@ -73,7 +73,7 @@ import {AdminComponent} from "./routes/admin/admin.component";
 import {AdminIndexComponent} from "./routes/admin/index/admin-index.component";
 import {TableOsebeComponent} from "./components/table-osebe/table-osebe.component";
 import {TableSporocilaComponent} from "./components/table-sporocila/table-sporocila.component";
-import {OsebaProfilComponent} from "./components/oseba-profil/oseba-profil.component";
+import {PrikaziProfilOsebeComponent} from "./components/prikazi-profil-osebe/prikazi-profil-osebe.component";
 import {CdkDrag, CdkDropList} from "@angular/cdk/drag-drop";
 import {UciteljZvezkiComponent} from "./routes/ucitelj/zvezki/ucitelj-zvezki.component";
 import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
@@ -117,10 +117,10 @@ const loggerModule = LoggerModule.forRoot({
     StoparicaPipe,
     TrajanjePipe,
     UcenecDeloComponent,
-    AuditsTabelaComponent,
+    TableAuditsComponent,
     PublicComponent,
     TableTestiComponent,
-    LoadingComponent,
+    ProgressBarComponent,
     UciteljComponent,
     UciteljUcenciComponent,
     UciteljTestiComponent,
@@ -132,7 +132,7 @@ const loggerModule = LoggerModule.forRoot({
     TableOsebeComponent,
     TableOsebeComponent,
     TableSporocilaComponent,
-    OsebaProfilComponent,
+    PrikaziProfilOsebeComponent,
     UciteljZvezkiComponent,
     TableNalogeComponent,
     TableTematikeComponent,
@@ -144,7 +144,7 @@ const loggerModule = LoggerModule.forRoot({
     DateOddaljenostPipe,
     DateOddaljenostClassPipe,
     BrowserModule,
-    AppRoutingModule,
+    Routing,
     BrowserAnimationsModule,
     MatIconModule,
     MatButtonModule,
@@ -175,7 +175,7 @@ const loggerModule = LoggerModule.forRoot({
     AuthService,
     DbService,
     SyncService,
-    Interceptor,
+    ApiInterceptor,
     API_INTERCEPTOR_PROVIDER,
     {provide: LOCALE_ID, useValue: locale},
     {provide: MAT_DATE_LOCALE, useValue: locale},
