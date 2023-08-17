@@ -1,0 +1,64 @@
+import { Injectable } from '@angular/core';
+import {TestModel} from "../../../../assets/models/TestModel";
+import {OsebaModel} from "../../../../assets/models/OsebaModel";
+import {Test} from "../../services/api/models/test";
+import {ime} from "../../../utils/types";
+import {String_vDate} from "../../../utils/String";
+import {Ucenje} from "../../services/api/models/ucenje";
+import {Oseba} from "../../services/api/models/oseba";
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UciteljRepoService {
+
+  constructor() { }
+
+  async testi(): Promise<TestModel[]> {
+    const root_id = this.db.get_root_id()
+    const testi = await this.db.test
+      .where(ime<Test>("oseba_admin_id"))
+      .equals(root_id)
+      .toArray()
+
+    const newTesti: TestModel[] = []
+    for (const test of testi) {
+      newTesti.push({
+        naslov: test.naslov || "",
+        opravljeno: 0,
+        datum: String_vDate(test.deadline as string),
+        link: routs.ucenec({}).test({test_id: test._id || ""}).$
+      })
+    }
+    return newTesti
+  }
+
+  async ucenci(): Promise<OsebaModel[]> {
+    const root_id = this.db.get_root_id()
+    const ucenje_vse: Ucenje[] = await this.db.ucenje
+      .where(ime<Ucenje>("oseba_ucitelj_id"))
+      .equals(root_id)
+      .toArray()
+
+    const ucenci: OsebaModel[] = []
+    for (const ucenje of ucenje_vse) {
+
+      const ucenec = await this.db.oseba
+        .where(ime<Oseba>("_id"))
+        .equals(ucenje.oseba_ucenec_id || "")
+        .first()
+
+      if (ucenec) {
+        ucenci.push({
+          naziv: `${ucenec.ime} ${ucenec.priimek}`,
+          datum: String_vDate(ucenje.ustvarjeno as string),
+          link: ucenec._id as string,
+          izbran: false
+        })
+      }
+    }
+    return ucenci
+  }
+
+
+}
