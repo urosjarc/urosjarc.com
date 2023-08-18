@@ -51,14 +51,11 @@ export class PrijaviUporabnikaService {
         tipi: prijavaRes.tip
       }
     });
-
   }
 
   async redirect(tip: ArrayTypes<Oseba['tip']>) {
 
-    /**
-     * Izberi primeren route za redirect
-     */
+    // Izberi primeren route za redirect
     let clientRoute: { $: string } | null = null
     let serverRoute: Observable<OsebaData> | null = null
     switch (tip) {
@@ -76,9 +73,7 @@ export class PrijaviUporabnikaService {
         break;
     }
 
-    /**
-     * Ce ima neprimerno ali manjkajoco avtorizacijo prikazi alert.
-     */
+    // Ce ima neprimerno ali manjkajoco avtorizacijo prikazi alert.
     if (!clientRoute || !serverRoute)
       return this.alert.warnManjkajocaAvtorizacija()
 

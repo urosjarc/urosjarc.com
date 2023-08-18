@@ -12,6 +12,7 @@ import {DataService} from "../../../services/data/data.service";
   selector: 'app-ucitelj-zvezki',
   templateUrl: './ucitelj-zvezki.component.html',
   styleUrls: ['./ucitelj-zvezki.component.scss'],
+  standalone: true
 })
 export class UciteljZvezkiComponent implements OnInit {
   @Input() zvezki: MatTableDataSource<ZvezekModel> = new MatTableDataSource<ZvezekModel>()

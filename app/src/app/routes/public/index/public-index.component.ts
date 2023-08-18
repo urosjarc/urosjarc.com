@@ -1,14 +1,15 @@
 import {Component} from '@angular/core';
-import {NavGumb} from "../../../components/nav-gumb/NavGumb";
-import {routes} from "../../../app.routes";
+import {ButtonToolbarModel} from "../../../ui/parts/buttons/button-toolbar/button-toolbar.model";
+import {routes} from "../../../routes";
 
 @Component({
   selector: 'app-public-index',
   templateUrl: './public-index.component.html',
-  styleUrls: ['./public-index.component.scss']
+  styleUrls: ['./public-index.component.scss'],
+  standalone: true
 })
 export class PublicIndexComponent {
-  kontakti: NavGumb[] = [
+  kontakti: ButtonToolbarModel[] = [
     {
       tekst: "051-240-885",
       ikona: "phone",

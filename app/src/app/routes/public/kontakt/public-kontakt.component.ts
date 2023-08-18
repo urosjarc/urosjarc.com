@@ -1,25 +1,25 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {FormGroup} from "@angular/forms";
-import {AlertService} from "../../../services/alert/alert.service";
-import {InputTelefonComponent} from "../../../components/input-phone/input-telefon.component";
-import {InputOsebaComponent} from "../../../components/input-oseba/input-oseba.component";
-import {InputMsgComponent} from "../../../components/input-msg/input-msg.component";
-import {InputEmailComponent} from "../../../components/input-email/input-email.component";
-import {ApiService} from "../../../services/api/openapi/services/api.service";
-import {KontaktObrazecRes} from "../../../services/api/openapi/models/kontakt-obrazec-res";
-import {trace} from "../../../utils";
+import {FormFieldTelefonComponent} from "../../../ui/parts/form-fields/form-field-phone/form-field-telefon.component";
+import {FormFieldOsebaComponent} from "../../../ui/parts/form-fields/form-field-oseba/form-field-oseba.component";
+import {FormFieldMsgComponent} from "../../../ui/parts/form-fields/form-field-sporocilo/form-field-msg.component";
+import {FormFieldEmailComponent} from "../../../ui/parts/form-fields/form-field-email/form-field-email.component";
+import {ApiService} from "../../../core/services/api/services/api.service";
+import {AlertService} from "../../../core/services/alert/alert.service";
+import {trace} from "../../../utils/trace";
 
 @Component({
   selector: 'app-public-kontakt',
   templateUrl: './public-kontakt.component.html',
-  styleUrls: ['./public-kontakt.component.scss']
+  styleUrls: ['./public-kontakt.component.scss'],
+  standalone: true
 })
 export class PublicKontaktComponent implements AfterViewInit {
   loading: boolean = false;
-  @ViewChild(InputTelefonComponent) input_telefon?: InputTelefonComponent;
-  @ViewChild(InputOsebaComponent) input_oseba?: InputOsebaComponent;
-  @ViewChild(InputMsgComponent) input_msg?: InputMsgComponent;
-  @ViewChild(InputEmailComponent) input_email?: InputEmailComponent;
+  @ViewChild(FormFieldTelefonComponent) input_telefon?: FormFieldTelefonComponent;
+  @ViewChild(FormFieldOsebaComponent) input_oseba?: FormFieldOsebaComponent;
+  @ViewChild(FormFieldMsgComponent) input_msg?: FormFieldMsgComponent;
+  @ViewChild(FormFieldEmailComponent) input_email?: FormFieldEmailComponent;
   formGroup: FormGroup = new FormGroup({});
 
   constructor(private apiService: ApiService,
@@ -44,22 +44,6 @@ export class PublicKontaktComponent implements AfterViewInit {
     if (this.loading) return
     this.loading = true
 
-    this.apiService.kontaktPost({
-      body: {
-        ime_priimek: this.input_oseba?.formControl.getRawValue() || "",
-        email: this.input_email?.formControl.getRawValue() || "",
-        telefon: this.input_telefon?.formControl.getRawValue() || "",
-        vsebina: this.input_msg?.formControl.getRawValue() || "",
-      }
-    }).subscribe({
-      next(value: KontaktObrazecRes) {
-        self.alertService.infoSprejetnoSporocilo(value)
-        self.loading = false
-      },
-      error() {
-        self.loading = false
-      },
-    })
   }
 
 

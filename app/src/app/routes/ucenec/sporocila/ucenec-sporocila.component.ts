@@ -5,6 +5,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
   selector: 'app-ucenec-sporocila',
   templateUrl: './ucenec-sporocila.component.html',
   styleUrls: ['./ucenec-sporocila.component.scss'],
+  standalone: true,
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({height: '0px', minHeight: '0'})),

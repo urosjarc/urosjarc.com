@@ -7,7 +7,8 @@ import {trace} from "../../utils";
 @Component({
   selector: 'app-ucenec',
   templateUrl: './ucenec.component.html',
-  styleUrls: ['./ucenec.component.scss']
+  styleUrls: ['./ucenec.component.scss'],
+  standalone: true
 })
 export class UcenecComponent {
   private navStyle = "background-color: forestgreen; color: white"

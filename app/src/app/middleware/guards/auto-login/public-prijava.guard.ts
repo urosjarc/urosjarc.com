@@ -1,24 +1,26 @@
 import {Router} from '@angular/router';
 import {inject} from "@angular/core";
 import {Profil} from "../../../core/services/api/models/profil";
-import {OsebaRepoService} from "../../../core/repos/oseba/oseba-repo.service";
+import {ApiService} from "../../../core/services/api/services";
+import {exe} from "../../../utils/types";
 
 export function autoLoginGuard(args: { routeFn: (profil: Profil) => { $: string } | null }) {
   return () => {
-    const osebaRepo = inject(OsebaRepoService)
     const router = inject(Router)
+    const api = inject(ApiService)
 
     return new Promise(async resolve => {
       console.group("GURARD", autoLoginGuard.name)
 
       try {
-        const profil = await osebaRepo.profil()
+        const profil = await exe(api.authProfilGet())
         const route = args.routeFn(profil)
         const urlTree = route ? router.createUrlTree([route]) : true
         console.groupEnd()
         console.log("GUARD", autoLoginGuard.name, urlTree)
 
       } catch (e) {
+        alert()
         throw e
         console.groupEnd()
         console.log("GUARD", autoLoginGuard.name, true)

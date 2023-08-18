@@ -7,7 +7,8 @@ import {OsebaModel} from "../../../models/OsebaModel";
 @Component({
   selector: 'app-ucitelj-ucenci',
   templateUrl: './ucitelj-ucenci.component.html',
-  styleUrls: ['./ucitelj-ucenci.component.scss']
+  styleUrls: ['./ucitelj-ucenci.component.scss'],
+  standalone: true
 })
 export class UciteljUcenciComponent implements OnInit {
   ucenci: MatTableDataSource<OsebaModel> = new MatTableDataSource()

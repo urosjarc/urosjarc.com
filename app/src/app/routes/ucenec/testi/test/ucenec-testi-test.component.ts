@@ -17,9 +17,10 @@ import {NalogaModel} from "../../../models/NalogaModel";
 @Component({
   selector: 'app-ucenec-test',
   templateUrl: './ucenec-test.component.html',
-  styleUrls: ['./ucenec-test.component.scss']
+  styleUrls: ['./ucenec-test.component.scss'],
+  standalone: true
 })
-export class UcenecTestComponent implements OnInit {
+export class UcenecTestiTestComponent implements OnInit {
   test_id: string
 
   statistika_barve: any = {
@@ -47,7 +48,7 @@ export class UcenecTestComponent implements OnInit {
   }
 
   @trace()
-  async ngOnInit() {
+ async ngOnInit() {
     const root_id = this.dbService.get_root_id()
     const test = await this.dbService.test.where({
       [ime<Test>("_id")]: this.test_id,
@@ -61,6 +62,7 @@ export class UcenecTestComponent implements OnInit {
     this.initCasovnaStatistika(root_id, test)
     this.initNaloge(root_id, test)
   }
+
 
 
   @trace()

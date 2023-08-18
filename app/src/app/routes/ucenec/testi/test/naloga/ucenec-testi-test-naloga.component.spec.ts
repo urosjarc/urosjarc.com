@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UcenecNalogaComponent } from './ucenec-naloga.component';
+import { UcenecTestiTestNalogaComponent } from './ucenec-testi-test-naloga.component';
 
 describe('NalogaComponent', () => {
-  let component: UcenecNalogaComponent;
-  let fixture: ComponentFixture<UcenecNalogaComponent>;
+  let component: UcenecTestiTestNalogaComponent;
+  let fixture: ComponentFixture<UcenecTestiTestNalogaComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [UcenecNalogaComponent]
+      declarations: [UcenecTestiTestNalogaComponent]
     });
-    fixture = TestBed.createComponent(UcenecNalogaComponent);
+    fixture = TestBed.createComponent(UcenecTestiTestNalogaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

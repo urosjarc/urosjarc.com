@@ -1,26 +1,28 @@
 import {Injectable} from '@angular/core';
 import {DbService} from "../../services/db/db.service";
 import {ApiService} from "../../services/api/services/api.service";
-import {LocalStorageService} from "../../services/local-storage/local-storage.service";
 import {ime} from "../../../utils/types";
 import {Test} from "../../services/api/models/test";
 import {TestModel} from "../../../../assets/models/TestModel";
 import {Status} from "../../services/api/models/status";
 import {String_vDate} from "../../../utils/String";
 import {routes} from "../../../routes";
+import {Naloga} from "../../services/api/models/naloga";
+import {Audit} from "../../services/api/models/audit";
+import {Id} from "../../services/api/models/id";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UcenecRepoService {
 
-  constructor(private db: DbService, private api: ApiService, private storage: LocalStorageService) {
+  constructor(private db: DbService) {
   }
+
   async testi() {
-    const root_id = this.storage.get_root_id()
     const testi = await this.db.test
       .where(ime<Test>("oseba_ucenec_id"))
-      .equals(root_id)
+      .equals(this.db.profil_id)
       .toArray()
 
     const tableTests: TestModel[] = []
@@ -29,7 +31,7 @@ export class UcenecRepoService {
       const status_tip: Status['tip'] = 'PRAVILNO'
       const opravljeni_statusi = await this.db.status.where({
         [ime<Status>("test_id")]: test._id,
-        [ime<Status>("oseba_id")]: root_id,
+        [ime<Status>("oseba_id")]: this.db.profil_id,
         [ime<Status>("tip")]: status_tip,
       }).count()
 
@@ -43,5 +45,30 @@ export class UcenecRepoService {
     }
 
     return tableTests
+  }
+
+  async test(test_id: string) {
+
+  }
+
+  async naloga(naloga_id: string) {
+    return this.db.naloga
+      .where(ime<Naloga>("_id"))
+      .equals(naloga_id)
+      .first();
+  }
+
+  async status(test_id: string, naloga_id: string) {
+    return this.db.status.where({
+      [ime<Status>("naloga_id")]: naloga_id,
+      [ime<Status>("oseba_id")]: this.db.profil_id,
+      [ime<Status>("test_id")]: test_id,
+    }).first()
+  }
+
+  async audits(status_id: Id<Status>){
+    return this.db.audit
+      .where(ime<Audit>("entitete_id"))
+      .equals(status_id).toArray();
   }
 }

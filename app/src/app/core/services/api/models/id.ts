@@ -1,0 +1,1 @@
+export type Id<T> = string & {_type: T}

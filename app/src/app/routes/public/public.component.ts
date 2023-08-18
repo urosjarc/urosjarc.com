@@ -1,14 +1,15 @@
 import {Component} from '@angular/core';
-import {NavGumb} from "../../components/nav-gumb/NavGumb";
-import {routes} from "../../app.routes";
+import {routes} from "../../routes";
+import {ButtonToolbarModel} from "../../ui/parts/buttons/button-toolbar/button-toolbar.model";
 
 @Component({
   selector: 'app-public',
   templateUrl: './public.component.html',
-  styleUrls: ['./public.component.scss']
+  styleUrls: ['./public.component.scss'],
+  standalone: true
 })
 export class PublicComponent {
-  navGumbi: NavGumb[] = [
+  navGumbi: ButtonToolbarModel[] = [
     {
       tekst: "Domov",
       ikona: "home",

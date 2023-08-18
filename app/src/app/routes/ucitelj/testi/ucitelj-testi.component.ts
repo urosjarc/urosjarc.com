@@ -7,7 +7,8 @@ import {TestModel} from "../../../models/TestModel";
 @Component({
   selector: 'app-ucitelj-testi',
   templateUrl: './ucitelj-testi.component.html',
-  styleUrls: ['./ucitelj-testi.component.scss']
+  styleUrls: ['./ucitelj-testi.component.scss'],
+  standalone: true
 })
 export class UciteljTestiComponent implements OnInit {
   testi: MatTableDataSource<TestModel> = new MatTableDataSource()

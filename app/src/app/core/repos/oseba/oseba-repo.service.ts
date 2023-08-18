@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {ApiService} from "../../services/api/services/api.service";
 import {SporociloModel} from "../../../../assets/models/SporociloModel";
 import {ZvezekModel} from "../../../../assets/models/ZvezekModel";
-import {exe, ime} from "../../../utils/types";
+import {ime} from "../../../utils/types";
 import {Oseba} from "../../services/api/models/oseba";
 import {Kontakt} from "../../services/api/models/kontakt";
 import {Tematika} from "../../services/api/models/tematika";
@@ -10,29 +10,21 @@ import {TematikaModel} from "../../../../assets/models/TematikaModel";
 import {DbService} from "../../services/db/db.service";
 import {Sporocilo} from "../../services/api/models/sporocilo";
 import {String_vDate} from "../../../utils/String";
-import {LocalStorageService} from "../../services/local-storage/local-storage.service";
-import {Observer} from "rxjs";
-import {Profil} from "../../services/api/models/profil";
 import {Naloga} from "../../services/api/models/naloga";
 
 @Injectable({
   providedIn: 'root'
 })
 export class OsebaRepoService {
-  constructor(private db: DbService, private api: ApiService, private storage: LocalStorageService) {
-  }
-
-  async profil() {
-    return await exe(this.api.authProfilGet())
+  constructor(private db: DbService, private api: ApiService) {
   }
 
   async sporocila(): Promise<SporociloModel[]> {
-    const root_id = this.storage.get_root_id()
-    const oseba = await this.db.oseba.where(ime<Oseba>("_id")).equals(root_id).first()
+    const oseba = await this.db.oseba.where(ime<Oseba>("_id")).equals(this.db.profil_id).first()
 
     if (!oseba) return []
 
-    const kontakti = await this.db.kontakt.where(ime<Kontakt>("oseba_id")).equals(root_id).toArray()
+    const kontakti = await this.db.kontakt.where(ime<Kontakt>("oseba_id")).equals(this.db.profil_id).toArray()
     const vsa_sporocila: SporociloModel[] = []
 
     for (const kontakt of kontakti) {

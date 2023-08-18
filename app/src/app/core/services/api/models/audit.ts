@@ -1,10 +1,12 @@
+import { Entitete } from './entitete'
+import { Id } from './id'
 /* tslint:disable */
 /* eslint-disable */
 
 export interface Audit {
-  '_id': string;
+	'_id': Id<Audit>
   entiteta: string;
-  entitete_id: Array<string>;
+  entitete_id: Array<Id<Entitete>>;
   opis: string;
   tip: 'STATUS_TIP_POSODOBITEV' | 'TEST_DATUM_POSODOBITEV';
   trajanje: number;

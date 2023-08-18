@@ -1,27 +1,31 @@
 import {Component, Input, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {Subscription, timer} from 'rxjs';
-import {ime, trace} from "../../../utils";
-import {AlertService} from "../../../services/alert/alert.service";
 import {Location} from '@angular/common';
 import {MatTableDataSource} from "@angular/material/table";
-import {Naloga} from "../../../services/api/openapi/models/naloga";
-import {Status} from "../../../services/api/openapi/models/status";
-import {Audit} from "../../../services/api/openapi/models/audit";
-import {ApiService} from "../../../services/api/openapi/services/api.service";
-import {DbService} from "../../../services/db/db.service";
+import {Naloga} from "../../../../../core/services/api/models/naloga";
+import {Status} from "../../../../../core/services/api/models/status";
+import {Audit} from "../../../../../core/services/api/models/audit";
+import {DbService} from "../../../../../core/services/db/db.service";
+import {AlertService} from "../../../../../core/services/alert/alert.service";
+import {ApiService} from "../../../../../core/services/api/services/api.service";
+import {trace} from "../../../../../utils/trace";
+import {ime} from "../../../../../utils/types";
+import {UcenecRepoService} from "../../../../../core/repos/ucenec/ucenec-repo.service";
 
 @Component({
   selector: 'app-ucenec-naloga',
   templateUrl: './ucenec-naloga.component.html',
-  styleUrls: ['./ucenec-naloga.component.scss']
+  styleUrls: ['./ucenec-naloga.component.scss'],
+  standalone: true
 })
-export class UcenecNalogaComponent implements OnDestroy {
+export class UcenecTestiTestNalogaComponent implements OnDestroy {
   test_id: string
   naloga_id: string
 
   sekunde: number = 0
   stoparica: Subscription;
+  // @ts-ignore
   naloga: Naloga = {}
   status: Status | undefined
   @Input() audits = new MatTableDataSource<Audit>()
@@ -32,19 +36,18 @@ export class UcenecNalogaComponent implements OnDestroy {
   ];
 
   constructor(
+    private ucenecRepo: UcenecRepoService,
     private _location: Location,
     private dbService: DbService,
     private alertService: AlertService,
     private apiService: ApiService,
     private route: ActivatedRoute) {
+
     this.test_id = route.snapshot.paramMap.get("test_id") || ""
     this.naloga_id = route.snapshot.paramMap.get("naloga_id") || ""
-    this.stoparica = timer(0, 1000)
-      .subscribe(val => this.sekunde = val);
+    this.stoparica = timer(0, 1000).subscribe(val => this.sekunde = val);
 
-    this.initNaloga().then(() => {
-      this.initAudits()
-    })
+    this.initNaloga().then(this.initAudits)
   }
 
   @trace()
@@ -55,22 +58,17 @@ export class UcenecNalogaComponent implements OnDestroy {
   @trace()
   async initNaloga() {
 
-    const root_id = this.dbService.get_root_id()
-    const naloga = await this.dbService.naloga.where(ime<Naloga>("_id")).equals(this.naloga_id).first()
+    const naloga = await this.ucenecRepo.naloga(this.naloga_id)
 
     if (!naloga) return
 
-    this.naloga = naloga
-    this.status = await this.dbService.status.where({
-      [ime<Status>("naloga_id")]: this.naloga_id,
-      [ime<Status>("oseba_id")]: root_id,
-      [ime<Status>("test_id")]: this.test_id,
-    }).first()
+    const status = await this.ucenecRepo.status(this.test_id, this.naloga_id)
+
+
   }
 
   @trace()
   async initAudits() {
-    this.audits.data = await this.dbService.audit.where(ime<Audit>("entitete_id")).equals(this.status?._id || "").toArray()
   }
 
   @trace()

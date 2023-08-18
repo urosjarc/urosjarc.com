@@ -1,8 +1,9 @@
+import { Id } from './id'
 /* tslint:disable */
 /* eslint-disable */
 
 export interface Oseba {
-  '_id': string;
+	'_id': Id<Oseba>
   geslo: string;
   ime: string;
   letnik: number;

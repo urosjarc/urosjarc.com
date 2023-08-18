@@ -7,7 +7,8 @@ import {SporociloModel} from "../../../models/SporociloModel";
 @Component({
   selector: 'app-ucitelj-sporocila',
   templateUrl: './ucitelj-sporocila.component.html',
-  styleUrls: ['./ucitelj-sporocila.component.scss']
+  styleUrls: ['./ucitelj-sporocila.component.scss'],
+  standalone: true
 })
 export class UciteljSporocilaComponent {
   sporocila: MatTableDataSource<SporociloModel> = new MatTableDataSource<SporociloModel>()

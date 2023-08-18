@@ -53,13 +53,13 @@ export class DbService extends Dexie {
     })
   }
 
-  get root_id(): string {
+  get profil_id(): string {
     return localStorage.getItem("root_id") || ""
   }
 
   @trace()
-  set root_id(root_id: string) {
-    localStorage.setItem("root_id", root_id)
+  set profil_id(oseba_id: string) {
+    localStorage.setItem("root_id", oseba_id)
   }
 
   get token(): string {
@@ -74,7 +74,7 @@ export class DbService extends Dexie {
   @trace()
   drop() {
     this.token = ""
-    this.root_id = ""
+    this.profil_id = ""
     this.delete()
   }
 
@@ -83,7 +83,7 @@ export class DbService extends Dexie {
     await this.delete()
     await this.open()
 
-    this.root_id = osebaData.oseba._id
+    this.profil_id = osebaData.oseba._id
 
     const imena_tabel = this.tables.map((table) => table.name)
     const cakalnica_value: any[] = [osebaData]

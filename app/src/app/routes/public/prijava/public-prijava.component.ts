@@ -1,19 +1,19 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {InputOsebaComponent} from "../../../components/input-oseba/input-oseba.component";
-import {InputGesloComponent} from "../../../components/input-geslo/input-geslo.component";
-import {AuthService} from "../../../services/auth/auth.service";
-import {Profil} from "../../../services/api/openapi/models/profil";
 import {Router} from "@angular/router";
-import {AlertService} from "../../../services/alert/alert.service";
-import {publicPrijavaGuard_urlTree} from "../../../guards/prijava/public-prijava.guard";
-import {trace} from "../../../utils";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {SyncService} from "../../../services/sync/sync.service";
+import {AlertService} from "../../../core/services/alert/alert.service";
+import {trace} from "../../../utils/trace";
+import {PrijaviUporabnikaService} from "../../../core/use_cases/prijavi-uporabnika/prijavi-uporabnika.service";
+import {
+  SinhronizirajUporabniskePodatkeService
+} from "../../../core/use_cases/sinhroniziraj-uporabniske-podatke/sinhroniziraj-uporabniske-podatke.service";
+import {OsebaRepoService} from "../../../core/repos/oseba/oseba-repo.service";
 
 @Component({
   selector: 'app-public-prijava',
   templateUrl: './public-prijava.component.html',
-  styleUrls: ['./public-prijava.component.scss']
+  styleUrls: ['./public-prijava.component.scss'],
+  standalone: true
 })
 export class PublicPrijavaComponent implements AfterViewInit {
   // @ts-ignore
@@ -25,11 +25,10 @@ export class PublicPrijavaComponent implements AfterViewInit {
   loading = false
 
   constructor(
-    private syncService: SyncService,
-    private alertService: AlertService,
+    private prijavi_uporabnika: PrijaviUporabnikaService,
+    private alert: AlertService,
     private router: Router,
-    private authService: AuthService) {
-
+  ) {
   }
 
   ngAfterViewInit(): void {
@@ -43,36 +42,14 @@ export class PublicPrijavaComponent implements AfterViewInit {
 
 
   @trace()
-  prijava() {
-    const self = this
+  async prijava() {
     this.loading = true
-    this.authService.login({
-      body: {
-        username: this.input_oseba.formControl.getRawValue() || "",
-        geslo: this.input_geslo.formControl.getRawValue() || ""
-      },
-      next(profil: Profil) {
-        const urlTree = publicPrijavaGuard_urlTree(self.router, profil)
-        if (urlTree) {
-          self.syncService.sync({
-            profil: profil,
-            next() {
-              self.zakljuci_prijavo()
-              self.router.navigateByUrl(urlTree)
-            }, error: () => {
-              self.zakljuci_prijavo()
-            },
-          })
-        } else self.alertService.warnManjkajocaAvtorizacija()
-      }, error: () => {
-        self.zakljuci_prijavo()
-      },
+
+    await this.prijavi_uporabnika.zdaj({
+      username: this.input_oseba.formControl.getRawValue() || "",
+      geslo: this.input_geslo.formControl.getRawValue() || ""
     })
 
-  }
-
-  @trace()
-  zakljuci_prijavo() {
     this.loading = false
   }
 

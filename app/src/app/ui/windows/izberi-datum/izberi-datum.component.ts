@@ -12,6 +12,7 @@ import {DateOddaljenostPipe} from "../../pipes/date-oddaljenost/date-oddaljenost
   selector: 'app-dialog-izberi-datum',
   templateUrl: './dialog-izberi-datum.component.html',
   styleUrls: ['./dialog-izberi-datum.component.scss'],
+  standalone: true,
   imports: [
     MatDialogModule,
     MatInputModule,
@@ -21,8 +22,7 @@ import {DateOddaljenostPipe} from "../../pipes/date-oddaljenost/date-oddaljenost
     DateOddaljenostPipe,
     MatDatepickerModule,
     MatCardModule
-  ],
-  standalone: true
+  ]
 })
 export class IzberiDatumComponent {
 

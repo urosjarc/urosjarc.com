@@ -7,7 +7,6 @@ import {String_vDate} from "../../../utils/String";
 import {Ucenje} from "../../services/api/models/ucenje";
 import {Oseba} from "../../services/api/models/oseba";
 import {DbService} from "../../services/db/db.service";
-import {LocalStorageService} from "../../services/local-storage/local-storage.service";
 import {routes} from "../../../routes";
 
 @Injectable({
@@ -16,16 +15,14 @@ import {routes} from "../../../routes";
 export class UciteljRepoService {
 
   constructor(
-    private db: DbService,
-    private storage: LocalStorageService
+    private db: DbService
   ) {
   }
 
   async testi(): Promise<TestModel[]> {
-    const root_id = this.storage.get_root_id()
     const testi = await this.db.test
       .where(ime<Test>("oseba_admin_id"))
-      .equals(root_id)
+      .equals(this.db.profil_id)
       .toArray()
 
     const newTesti: TestModel[] = []
@@ -41,10 +38,9 @@ export class UciteljRepoService {
   }
 
   async ucenci(): Promise<OsebaModel[]> {
-    const root_id = this.storage.get_root_id()
     const ucenje_vse: Ucenje[] = await this.db.ucenje
       .where(ime<Ucenje>("oseba_ucitelj_id"))
-      .equals(root_id)
+      .equals(this.db.profil_id)
       .toArray()
 
     const ucenci: OsebaModel[] = []

@@ -1,17 +1,20 @@
 import { Component } from '@angular/core';
-import {NavGumb} from "../../components/nav-gumb/NavGumb";
-import {routes} from "../../app.routes";
-import {SyncService} from "../../services/sync/sync.service";
-import {trace} from "../../utils";
+import {routes} from "../../routes";
+import {trace} from "../../utils/trace";
+import {
+  IzbrisiUporabniskePodatkeService
+} from "../../core/use_cases/izbrisi-uporabniske-podatke/izbrisi-uporabniske-podatke.service";
+import {ButtonToolbarModel} from "../../ui/parts/buttons/button-toolbar/button-toolbar.model";
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss']
+  styleUrls: ['./admin.component.scss'],
+  standalone: true
 })
 export class AdminComponent {
   private navStyle = "background-color: orange; color: white"
-  navGumbi: NavGumb[] = [
+  navGumbi: ButtonToolbarModel[] = [
     {
       tekst: "Nazaj",
       ikona: "reply",
@@ -32,11 +35,11 @@ export class AdminComponent {
     },
   ];
 
-  constructor(private syncService: SyncService) {
+  constructor(private izbrisi_uporabniske_podatke: IzbrisiUporabniskePodatkeService) {
   }
 
   @trace()
   odjava() {
-    this.syncService.pocisti()
+    this.izbrisi_uporabniske_podatke.zdaj()
   }
 }
