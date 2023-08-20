@@ -8,10 +8,11 @@ export function authCheckGuard(args: {
   tip: ArrayTypes<Oseba['tip']>,
   error_redirect: { $: string }
 }): CanActivateFn {
-  const router = inject(Router)
-  const api = inject(ApiService)
-
   return () => {
+
+    const router = inject(Router)
+    const api = inject(ApiService)
+
     return new Promise(async resolve => {
 
       try {

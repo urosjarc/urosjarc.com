@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-form-field-email',
@@ -10,7 +11,8 @@ import {MatIconModule} from "@angular/material/icon";
   imports: [
     MatInputModule,
     ReactiveFormsModule,
-    MatIconModule
+    MatIconModule,
+    NgIf
   ],
   standalone: true
 })

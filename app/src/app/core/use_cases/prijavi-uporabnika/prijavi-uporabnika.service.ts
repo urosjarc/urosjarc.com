@@ -43,7 +43,7 @@ export class PrijaviUporabnikaService {
     this.db.set_token(prijavaRes.token || "")
 
     // Sprozi event za redirect
-    this.dialog.open<any, IzberiTipOsebeModel>(IzberiTipOsebeComponent, {
+    this.dialog.open(IzberiTipOsebeComponent, {
       enterAnimationDuration: 250,
       exitAnimationDuration: 500,
       data: {

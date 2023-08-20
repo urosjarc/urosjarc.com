@@ -1,11 +1,23 @@
 import {Component} from '@angular/core';
 import {ButtonToolbarModel} from "../../../ui/parts/buttons/button-toolbar/button-toolbar.model";
 import {routes} from "../../../routes";
+import {NgForOf} from "@angular/common";
+import {MatIconModule} from "@angular/material/icon";
+import {MatExpansionModule} from "@angular/material/expansion";
+import {RouterLink} from "@angular/router";
+import {MatButtonModule} from "@angular/material/button";
 
 @Component({
   selector: 'app-public-index',
   templateUrl: './public-index.component.html',
   styleUrls: ['./public-index.component.scss'],
+  imports: [
+    NgForOf,
+    MatIconModule,
+    MatExpansionModule,
+    RouterLink,
+    MatButtonModule
+  ],
   standalone: true
 })
 export class PublicIndexComponent {

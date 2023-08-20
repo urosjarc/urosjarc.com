@@ -7,6 +7,7 @@ import {trace} from "../../../utils/trace";
 import {ime} from "../../../utils/types";
 import {MatListModule} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
+import {NgForOf} from "@angular/common";
 
 @Component({
   selector: 'app-prikazi-profil-osebe',
@@ -14,7 +15,8 @@ import {MatIconModule} from "@angular/material/icon";
   styleUrls: ['./prikazi-profil-osebe.component.scss'],
   imports: [
     MatListModule,
-    MatIconModule
+    MatIconModule,
+    NgForOf
   ],
   standalone: true
 })

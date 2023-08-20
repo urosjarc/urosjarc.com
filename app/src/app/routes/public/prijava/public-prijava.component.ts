@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {Router} from "@angular/router";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {AlertService} from "../../../core/services/alert/alert.service";
 import {trace} from "../../../utils/trace";
 import {PrijaviUporabnikaService} from "../../../core/use_cases/prijavi-uporabnika/prijavi-uporabnika.service";
@@ -8,11 +8,24 @@ import {
   SinhronizirajUporabniskePodatkeService
 } from "../../../core/use_cases/sinhroniziraj-uporabniske-podatke/sinhroniziraj-uporabniske-podatke.service";
 import {OsebaRepoService} from "../../../core/repos/oseba/oseba-repo.service";
+import {
+  ProgressBarLoadingComponent
+} from "../../../ui/parts/progress-bars/progress-bar-loading/progress-bar-loading.component";
+import {FormFieldGesloComponent} from "../../../ui/parts/form-fields/form-field-geslo/form-field-geslo.component";
+import {MatButtonModule} from "@angular/material/button";
+import {FormFieldOsebaComponent} from "../../../ui/parts/form-fields/form-field-oseba/form-field-oseba.component";
 
 @Component({
   selector: 'app-public-prijava',
   templateUrl: './public-prijava.component.html',
   styleUrls: ['./public-prijava.component.scss'],
+  imports: [
+    ProgressBarLoadingComponent,
+    ReactiveFormsModule,
+    FormFieldGesloComponent,
+    MatButtonModule,
+    FormFieldOsebaComponent
+  ],
   standalone: true
 })
 export class PublicPrijavaComponent implements AfterViewInit {

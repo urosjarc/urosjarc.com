@@ -1,27 +1,49 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {ime, trace} from "../../../utils";
+import {ActivatedRoute, RouterLink} from "@angular/router";
 import * as moment from "moment";
 import {median, standardDeviation} from "simple-statistics";
 import {MatDialog} from "@angular/material/dialog";
-import {DialogIzberiDatumComponent} from "../../../components/dialog-izberi-datum/dialog-izberi-datum.component";
-import {ApiService} from "../../../services/api/openapi/services/api.service";
-import {Test} from "../../../services/api/openapi/models/test";
-import {DbService} from "../../../services/db/db.service";
-import {Audit} from "../../../services/api/openapi/models/audit";
-import {Status} from "../../../services/api/openapi/models/status";
-import {Naloga} from "../../../services/api/openapi/models/naloga";
-import {Tematika} from "../../../services/api/openapi/models/tematika";
-import {NalogaModel} from "../../../models/NalogaModel";
-import {exe} from "../../../../utils/types";
+import {exe, ime} from "../../../../utils/types";
+import {NalogaModel} from "../../../../../assets/models/NalogaModel";
+import {ApiService} from "../../../../core/services/api/services/api.service";
+import {DbService} from "../../../../core/services/db/db.service";
+import {trace} from "../../../../utils/trace";
+import {Test} from "../../../../core/services/api/models/test";
+import {Audit} from "../../../../core/services/api/models/audit";
+import {Status} from "../../../../core/services/api/models/status";
+import {Naloga} from "../../../../core/services/api/models/naloga";
+import {Tematika} from "../../../../core/services/api/models/tematika";
+import {Oseba} from "../../../../core/services/api/models/oseba";
+import {Id} from "../../../../core/services/api/models/id";
+import {IzberiDatumComponent} from "../../../../ui/windows/izberi-datum/izberi-datum.component";
+import {PieChartModule} from "@swimlane/ngx-charts";
+import {MatListModule} from "@angular/material/list";
+import {StatusTipStylePipe} from "../../../../ui/pipes/statusTip-style/statusTip-style.pipe";
+import {DatePipe, KeyValuePipe, NgForOf} from "@angular/common";
+import {MatButtonModule} from "@angular/material/button";
+import {DateOddaljenostPipe} from "../../../../ui/pipes/date-oddaljenost/date-oddaljenost.pipe";
+import {routes} from "../../../../routes";
 
 @Component({
-  selector: 'app-ucenec-test',
-  templateUrl: './ucenec-test.component.html',
-  styleUrls: ['./ucenec-test.component.scss'],
+  selector: 'app-ucenec-testi-test',
+  templateUrl: './ucenec-testi-test.component.html',
+  styleUrls: ['./ucenec-testi-test.component.scss'],
+  imports: [
+    PieChartModule,
+    MatListModule,
+    StatusTipStylePipe,
+    KeyValuePipe,
+    MatButtonModule,
+    NgForOf,
+    DatePipe,
+    DateOddaljenostPipe,
+    RouterLink
+  ],
   standalone: true
 })
 export class UcenecTestiTestComponent implements OnInit {
+  protected readonly routes = routes;
+
   test_id: string
 
   statistika_barve: any = {
@@ -50,23 +72,24 @@ export class UcenecTestiTestComponent implements OnInit {
 
   @trace()
   async ngOnInit() {
-    const root_id = this.dbService.get_root_id()
+    const profil_id = this.dbService.get_profil_id()
     const test = await this.dbService.test.where({
       [ime<Test>("_id")]: this.test_id,
-      [ime<Test>("oseba_ucenec_id")]: root_id
+      [ime<Test>("oseba_ucenec_id")]: profil_id
     }).first()
 
     if (!test) return
 
     this.deadline = moment(test.deadline).toDate()
-    this.initStatistikaOpravljenoDelo(root_id, test)
-    this.initCasovnaStatistika(root_id, test)
-    this.initNaloge(root_id, test)
+    await this.initStatistikaOpravljenoDelo(profil_id, test)
+    await this.initCasovnaStatistika()
+    await this.initNaloge(profil_id, test)
   }
 
 
   @trace()
-  async initCasovnaStatistika(root_id: string, test: Test) {
+  async initCasovnaStatistika() {
+
     const audit_tip: Audit['tip'] = 'STATUS_TIP_POSODOBITEV'
     const status_tip: Status['tip'] = 'PRAVILNO'
     const audits = await this.dbService.audit.where({
@@ -85,7 +108,7 @@ export class UcenecTestiTestComponent implements OnInit {
   }
 
   @trace()
-  async initStatistikaOpravljenoDelo(root_id: string, test: Test) {
+  async initStatistikaOpravljenoDelo(root_id: Id<Oseba>, test: Test) {
     const statusi = await this.dbService.status.where({
       [ime<Status>("oseba_id")]: root_id,
       [ime<Status>("test_id")]: this.test_id,
@@ -125,7 +148,7 @@ export class UcenecTestiTestComponent implements OnInit {
   }
 
   @trace()
-  async initNaloge(root_id: string, test: Test) {
+  async initNaloge(root_id: Id<Oseba>, test: Test) {
     const naloga_ids = test.naloga_id?.map(ele => ele.toString()) || []
 
     let i = 0
@@ -141,7 +164,7 @@ export class UcenecTestiTestComponent implements OnInit {
         [ime<Status>("test_id")]: this.test_id,
       }).first()
 
-      const tema = await this.dbService.tematika.where(ime<Tematika>("_id")).equals(naloga.tematika_id || "").first()
+      const tema = await this.dbService.tematika.where(ime<Tematika>("_id")).equals((naloga.tematika_id || "") as string).first()
 
       if (!tema) continue
       if (!tema.naslov) continue
@@ -167,7 +190,7 @@ export class UcenecTestiTestComponent implements OnInit {
   @trace()
   async nastaviDatum() {
     const self = this;
-    let matDialogRef = this.dialog.open(DialogIzberiDatumComponent, {
+    let matDialogRef = this.dialog.open(IzberiDatumComponent, {
       data: this.deadline,
     });
 
@@ -181,4 +204,5 @@ export class UcenecTestiTestComponent implements OnInit {
     self.ngOnInit()
 
   }
+
 }

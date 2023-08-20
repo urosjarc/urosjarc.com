@@ -1,19 +1,19 @@
 <h1 class="text-center py-2 m-0"
-    style="{{(status?.tip || 'NEZACETO') | StatusStyle}}">{{sekunde | Stoparica}}</h1>
+    style="{{(status?.tip || 'NEZACETO') | statusTip_style }}">{{sekunde | sekunde_stoparica}}</h1>
 <mat-divider/>
 <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
   <mat-tab label="Naloga">
-    <img src="{{naloga.vsebina}}">
+    <img alt="none" src="{{naloga.vsebina}}">
   </mat-tab>
 
   <mat-tab label="Resitev">
     <img class="col-12" src="{{naloga.resitev}}">
     <div id="izbira" class="row">
-      <button class="col" style="{{status | StatusStyle}}" mat-raised-button (click)="nastaviStatus(status)" *ngFor="let status of statusi">{{status}}</button>
+      <button class="col" style="{{status | statusTip_style}}" mat-raised-button (click)="nastaviStatus(status)" *ngFor="let status of statusi">{{status}}</button>
     </div>
   </mat-tab>
 
   <mat-tab label="Zgodovina">
-    <app-audits-tabela [audits]="audits"/>
+    <app-table-audits [audits]="audits"/>
   </mat-tab>
 </mat-tab-group>

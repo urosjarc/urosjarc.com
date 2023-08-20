@@ -1,7 +1,7 @@
 import {Component, Input, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {Subscription, timer} from 'rxjs';
-import {Location} from '@angular/common';
+import {Location, NgForOf} from '@angular/common';
 import {MatTableDataSource} from "@angular/material/table";
 import {Naloga} from "../../../../../core/services/api/models/naloga";
 import {Status} from "../../../../../core/services/api/models/status";
@@ -10,13 +10,27 @@ import {DbService} from "../../../../../core/services/db/db.service";
 import {AlertService} from "../../../../../core/services/alert/alert.service";
 import {ApiService} from "../../../../../core/services/api/services/api.service";
 import {trace} from "../../../../../utils/trace";
-import {ime} from "../../../../../utils/types";
 import {UcenecRepoService} from "../../../../../core/repos/ucenec/ucenec-repo.service";
+import {MatListModule} from "@angular/material/list";
+import {StatusTipStylePipe} from "../../../../../ui/pipes/statusTip-style/statusTip-style.pipe";
+import {SekundeStoparicaPipe} from "../../../../../ui/pipes/sekunde-stoparica/sekunde-stoparica.pipe";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatButtonModule} from "@angular/material/button";
+import {TableAuditsComponent} from "../../../../../ui/widgets/tables/table-audits/table-audits.component";
 
 @Component({
-  selector: 'app-ucenec-naloga',
-  templateUrl: './ucenec-naloga.component.html',
-  styleUrls: ['./ucenec-naloga.component.scss'],
+  selector: 'app-ucenec-testi-test-naloga',
+  templateUrl: './ucenec-testi-test-naloga.component.html',
+  styleUrls: ['./ucenec-testi-test-naloga.component.scss'],
+  imports: [
+    MatListModule,
+    StatusTipStylePipe,
+    SekundeStoparicaPipe,
+    MatTabsModule,
+    MatButtonModule,
+    NgForOf,
+    TableAuditsComponent
+  ],
   standalone: true
 })
 export class UcenecTestiTestNalogaComponent implements OnDestroy {

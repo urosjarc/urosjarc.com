@@ -5,11 +5,17 @@ import {
   IzbrisiUporabniskePodatkeService
 } from "../../core/use_cases/izbrisi-uporabniske-podatke/izbrisi-uporabniske-podatke.service";
 import {ButtonToolbarModel} from "../../ui/parts/buttons/button-toolbar/button-toolbar.model";
+import {CardNavigacijaComponent} from "../../ui/parts/cards/card-navigacija/card-navigacija.component";
+import {RouterOutlet} from "@angular/router";
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss'],
+  imports: [
+    CardNavigacijaComponent,
+    RouterOutlet
+  ],
   standalone: true
 })
 export class AdminComponent {

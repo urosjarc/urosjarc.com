@@ -1,13 +1,13 @@
-<app-loading [loading]="loading"/>
+<app-progress-bar-loading [loading]="loading"/>
 <form [formGroup]="formGroup" (ngSubmit)="prijava()">
   <div class="row p-4">
 
     <div class="col-sm-6">
-      <app-input-oseba label="Uporabniško ime"/>
+      <app-form-field-oseba label="Uporabniško ime"/>
     </div>
 
     <div class="col-sm-6">
-      <app-input-geslo/>
+      <app-form-field-geslo/>
     </div>
 
     <div class="col-12">

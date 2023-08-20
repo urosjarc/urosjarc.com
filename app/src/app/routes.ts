@@ -1,5 +1,4 @@
 import {route, stringParser} from "typesafe-routes";
-import {Profil} from "./utils/services/api/openapi/models/profil";
 
 
 const index = route('', {}, {})

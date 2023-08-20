@@ -20,7 +20,7 @@ export class UcenecRepoService {
   async testi() {
     const testi = await this.db.test
       .where(ime<Test>("oseba_ucenec_id"))
-      .equals(this.db.profil_id)
+      .equals(this.db.get_profil_id().toString())
       .toArray()
 
     const tableTests: TestModel[] = []
@@ -29,7 +29,7 @@ export class UcenecRepoService {
       const status_tip: Status['tip'] = 'PRAVILNO'
       const opravljeni_statusi = await this.db.status.where({
         [ime<Status>("test_id")]: test._id,
-        [ime<Status>("oseba_id")]: this.db.profil_id,
+        [ime<Status>("oseba_id")]: this.db.get_profil_id().toString(),
         [ime<Status>("tip")]: status_tip,
       }).count()
 
@@ -37,7 +37,7 @@ export class UcenecRepoService {
         naslov: test.naslov || "",
         opravljeno: opravljeni_statusi / st_nalog,
         datum: String_vDate(test.deadline as string),
-        link: routes.ucenec({}).test({test_id: test._id || ""}).$
+        link: routes.ucenec({}).test({test_id: test._id.toString()}).$
       })
 
     }
@@ -59,7 +59,7 @@ export class UcenecRepoService {
   async status(test_id: string, naloga_id: string) {
     return this.db.status.where({
       [ime<Status>("naloga_id")]: naloga_id,
-      [ime<Status>("oseba_id")]: this.db.profil_id,
+      [ime<Status>("oseba_id")]: this.db.get_profil_id().toString(),
       [ime<Status>("test_id")]: test_id,
     }).first()
   }
@@ -67,6 +67,6 @@ export class UcenecRepoService {
   async audits(status_id: Id<Status>){
     return this.db.audit
       .where(ime<Audit>("entitete_id"))
-      .equals(status_id).toArray();
+      .equals(status_id.toString()).toArray();
   }
 }

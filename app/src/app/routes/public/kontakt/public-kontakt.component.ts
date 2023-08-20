@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {FormGroup} from "@angular/forms";
+import {FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {FormFieldTelefonComponent} from "../../../ui/parts/form-fields/form-field-phone/form-field-telefon.component";
 import {FormFieldOsebaComponent} from "../../../ui/parts/form-fields/form-field-oseba/form-field-oseba.component";
 import {FormFieldMsgComponent} from "../../../ui/parts/form-fields/form-field-sporocilo/form-field-msg.component";
@@ -7,11 +7,26 @@ import {FormFieldEmailComponent} from "../../../ui/parts/form-fields/form-field-
 import {ApiService} from "../../../core/services/api/services/api.service";
 import {AlertService} from "../../../core/services/alert/alert.service";
 import {trace} from "../../../utils/trace";
+import {
+  ProgressBarLoadingComponent
+} from "../../../ui/parts/progress-bars/progress-bar-loading/progress-bar-loading.component";
+import {FormFieldGesloComponent} from "../../../ui/parts/form-fields/form-field-geslo/form-field-geslo.component";
+import {MatButtonModule} from "@angular/material/button";
 
 @Component({
   selector: 'app-public-kontakt',
   templateUrl: './public-kontakt.component.html',
   styleUrls: ['./public-kontakt.component.scss'],
+  imports: [
+    ProgressBarLoadingComponent,
+    ReactiveFormsModule,
+    FormFieldGesloComponent,
+    FormFieldMsgComponent,
+    FormFieldTelefonComponent,
+    FormFieldEmailComponent,
+    FormFieldOsebaComponent,
+    MatButtonModule
+  ],
   standalone: true
 })
 export class PublicKontaktComponent implements AfterViewInit {

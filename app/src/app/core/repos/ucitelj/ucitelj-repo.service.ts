@@ -20,7 +20,7 @@ export class UciteljRepoService {
   async testi(): Promise<TestModel[]> {
     const testi = await this.db.test
       .where(ime<Test>("oseba_admin_id"))
-      .equals(this.db.profil_id)
+      .equals(this.db.get_profil_id().toString())
       .toArray()
 
     const newTesti: TestModel[] = []
@@ -29,7 +29,7 @@ export class UciteljRepoService {
         naslov: test.naslov || "",
         opravljeno: 0,
         datum: String_vDate(test.deadline as string),
-        link: routes.ucenec({}).test({test_id: test._id || ""}).$
+        link: routes.ucenec({}).test({test_id: test._id.toString()}).$
       })
     }
     return newTesti
@@ -38,7 +38,7 @@ export class UciteljRepoService {
   async ucenci(): Promise<OsebaModel[]> {
     const ucenje_vse: Ucenje[] = await this.db.ucenje
       .where(ime<Ucenje>("oseba_ucitelj_id"))
-      .equals(this.db.profil_id)
+      .equals(this.db.get_profil_id().toString())
       .toArray()
 
     const ucenci: OsebaModel[] = []
@@ -46,7 +46,7 @@ export class UciteljRepoService {
 
       const ucenec = await this.db.oseba
         .where(ime<Oseba>("_id"))
-        .equals(ucenje.oseba_ucenec_id || "")
+        .equals(ucenje.oseba_ucenec_id.toString())
         .first()
 
       if (ucenec) {

@@ -1,18 +1,18 @@
-<app-loading [loading]="loading"/>
+<app-progress-bar-loading [loading]="loading"/>
 <form [formGroup]="formGroup" (ngSubmit)="poslji()">
   <div class="row p-4">
     <div class="col-sm-12">
-      <app-input-oseba/>
+      <app-form-field-oseba/>
     </div>
     <div class="col-sm-12 col-md-6">
-      <app-input-email/>
+      <app-form-field-email/>
     </div>
     <div class="col-sm-12 col-md-6">
-      <app-input-telefon/>
+      <app-form-field-telefon/>
     </div>
 
     <div class="col-12">
-      <app-input-msg/>
+      <app-form-field-msg/>
       <button [disabled]="loading" mat-raised-button type="submit" color="primary" class="w-100">Pošlji</button>
     </div>
   </div>

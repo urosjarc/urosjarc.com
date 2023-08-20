@@ -9,9 +9,9 @@ import {MatCardModule} from "@angular/material/card";
 import {DateOddaljenostPipe} from "../../pipes/date-oddaljenost/date-oddaljenost.pipe";
 
 @Component({
-  selector: 'app-dialog-izberi-datum',
-  templateUrl: './dialog-izberi-datum.component.html',
-  styleUrls: ['./dialog-izberi-datum.component.scss'],
+  selector: 'app-izberi-datum',
+  templateUrl: './izberi-datum.component.html',
+  styleUrls: ['./izberi-datum.component.scss'],
   standalone: true,
   imports: [
     MatDialogModule,

@@ -18,11 +18,11 @@ export class OsebaRepoService {
   }
 
   async sporocila(): Promise<SporociloModel[]> {
-    const oseba = await this.db.oseba.where(ime<Oseba>("_id")).equals(this.db.profil_id).first()
+    const oseba = await this.db.oseba.where(ime<Oseba>("_id")).equals(this.db.get_profil_id().toString()).first()
 
     if (!oseba) return []
 
-    const kontakti = await this.db.kontakt.where(ime<Kontakt>("oseba_id")).equals(this.db.profil_id).toArray()
+    const kontakti = await this.db.kontakt.where(ime<Kontakt>("oseba_id")).equals(this.db.get_profil_id().toString()).toArray()
     const vsa_sporocila: SporociloModel[] = []
 
     for (const kontakt of kontakti) {
@@ -34,7 +34,7 @@ export class OsebaRepoService {
         if (!sporocilo.kontakt_posiljatelj_id) continue
         const je_posiljatelj = sporocilo.kontakt_posiljatelj_id == kontakt._id
 
-        const posiljatelj_kontakt = await this.db.kontakt.where(ime<Kontakt>("_id")).equals(sporocilo.kontakt_posiljatelj_id).first()
+        const posiljatelj_kontakt = await this.db.kontakt.where(ime<Kontakt>("_id")).equals(sporocilo.kontakt_posiljatelj_id.toString()).first()
         if (!posiljatelj_kontakt) continue
 
         const posiljatelj_id = posiljatelj_kontakt.oseba_id?.[0] as string
@@ -60,7 +60,7 @@ export class OsebaRepoService {
     const zvezkiInfos: ZvezekModel[] = []
     for (const zvezek of await this.db.zvezek.toArray()) {
       const zvezekInfo: ZvezekModel = {
-        id: zvezek._id || "",
+        id: zvezek._id.toString(),
         naslov: zvezek.naslov || "",
         tematike: [],
         izbran: false,
@@ -68,18 +68,18 @@ export class OsebaRepoService {
       }
       const tematike = await this.db.tematika
         .where(ime<Tematika>("zvezek_id"))
-        .equals(zvezek._id || "")
+        .equals(zvezek._id.toString())
         .toArray()
       for (const tematika of tematike) {
         const tematikaInfo: TematikaModel = {
-          id: tematika._id || '',
+          id: tematika._id.toString(),
           naslov: tematika.naslov || '',
           naloge: [],
           izbran: false
         }
         const naloge = await this.db.naloga
           .where(ime<Naloga>("tematika_id"))
-          .equals(tematika._id || "")
+          .equals(tematika._id.toString())
           .toArray()
         for (const naloga of naloge) {
           tematikaInfo.naloge.push({
@@ -87,7 +87,7 @@ export class OsebaRepoService {
             vsebina: naloga.vsebina || '',
             resitev: naloga.resitev || '',
             stevilka: 1,
-            status: {},
+            status: undefined,
             izbran: false
           })
         }

@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Validator_stevilo_besed} from "../../../validators/stevilo-besed/stevilo-besede.validator";
 import {MatInputModule} from "@angular/material/input";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-form-field-msg',
@@ -9,7 +10,8 @@ import {MatInputModule} from "@angular/material/input";
   styleUrls: ['./form-field-msg.component.scss'],
   imports: [
     MatInputModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgIf
   ],
   standalone: true
 })
