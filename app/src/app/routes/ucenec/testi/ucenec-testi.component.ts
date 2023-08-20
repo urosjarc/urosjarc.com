@@ -1,21 +1,25 @@
 import {Component, OnInit} from '@angular/core';
-import {DataService} from "../../../services/data/data.service";
 import {MatTableDataSource} from "@angular/material/table";
-import {TestModel} from "../../../models/TestModel";
+import {UcenecRepoService} from "../../../core/repos/ucenec/ucenec-repo.service";
+import {TestModel} from "../../../../assets/models/TestModel";
+import {TableTestiComponent} from "../../../ui/widgets/tables/table-testi/table-testi.component";
 
 @Component({
   selector: 'app-ucenec-testi',
   templateUrl: './ucenec-testi.component.html',
   styleUrls: ['./ucenec-testi.component.scss'],
+  imports: [
+    TableTestiComponent
+  ],
   standalone: true
 })
 export class UcenecTestiComponent implements OnInit {
   testi: MatTableDataSource<TestModel> = new MatTableDataSource()
 
-  constructor(private data: DataService) {
+  constructor(private ucenecRepo: UcenecRepoService) {
   }
 
   async ngOnInit() {
-    this.testi.data = await this.data.ucencevi_testi()
+    this.testi.data = await this.ucenecRepo.testi()
   }
 }

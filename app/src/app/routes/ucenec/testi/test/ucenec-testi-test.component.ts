@@ -13,6 +13,7 @@ import {Status} from "../../../services/api/openapi/models/status";
 import {Naloga} from "../../../services/api/openapi/models/naloga";
 import {Tematika} from "../../../services/api/openapi/models/tematika";
 import {NalogaModel} from "../../../models/NalogaModel";
+import {exe} from "../../../../utils/types";
 
 @Component({
   selector: 'app-ucenec-test',
@@ -48,7 +49,7 @@ export class UcenecTestiTestComponent implements OnInit {
   }
 
   @trace()
- async ngOnInit() {
+  async ngOnInit() {
     const root_id = this.dbService.get_root_id()
     const test = await this.dbService.test.where({
       [ime<Test>("_id")]: this.test_id,
@@ -62,7 +63,6 @@ export class UcenecTestiTestComponent implements OnInit {
     this.initCasovnaStatistika(root_id, test)
     this.initNaloge(root_id, test)
   }
-
 
 
   @trace()
@@ -165,29 +165,20 @@ export class UcenecTestiTestComponent implements OnInit {
   }
 
   @trace()
-  nastaviDatum() {
+  async nastaviDatum() {
     const self = this;
     let matDialogRef = this.dialog.open(DialogIzberiDatumComponent, {
       data: this.deadline,
     });
-    matDialogRef.afterClosed().subscribe((datum: Date) => {
-      if (datum) {
-        let deadline = moment(datum).toISOString(true).split("T")[0]
-        this.apiService.ucenecTestTestIdPut({
-          test_id: this.test_id,
-          body: {
-            datum: deadline
-          }
-        }).subscribe(
-          {
-            next(res) {
-              if (res.test) self.dbService.test.put(res.test)
-              if (res.audit) self.dbService.audit.put(res.audit)
-              self.ngOnInit()
-            }
-          }
-        )
-      }
-    });
+
+    const datum: Date = await exe(matDialogRef.afterClosed())
+    const deadline = moment(datum).toISOString(true).split("T")[0]
+    const res = await exe(this.apiService.ucenecTestTestIdPut({test_id: this.test_id, body: {datum: deadline}}))
+
+    if (res.test) self.dbService.test.put(res.test)
+    if (res.audit) self.dbService.audit.put(res.audit)
+
+    self.ngOnInit()
+
   }
 }
