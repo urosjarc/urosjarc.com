@@ -1,5 +1,5 @@
 import {TematikaModel} from "./TematikaModel";
-import {Zvezek} from "../services/api/openapi/models/zvezek";
+import {Zvezek} from "../../app/core/services/api/models/zvezek";
 
 export interface ZvezekModel {
   id: string,

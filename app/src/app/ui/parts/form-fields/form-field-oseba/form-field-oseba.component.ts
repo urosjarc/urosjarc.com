@@ -1,10 +1,17 @@
 import {Component, Input} from '@angular/core';
-import {FormControl, Validators} from "@angular/forms";
+import {FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
+import {MatInputModule} from "@angular/material/input";
+import {MatIconModule} from "@angular/material/icon";
 
 @Component({
-  selector: 'app-input-oseba',
-  templateUrl: './input-oseba.component.html',
-  styleUrls: ['./input-oseba.component.scss'],
+  selector: 'app-form-field-oseba',
+  templateUrl: './form-field-oseba.component.html',
+  styleUrls: ['./form-field-oseba.component.scss'],
+  imports: [
+    MatInputModule,
+    ReactiveFormsModule,
+    MatIconModule
+  ],
   standalone: true
 })
 export class FormFieldOsebaComponent {

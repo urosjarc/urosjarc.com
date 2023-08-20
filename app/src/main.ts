@@ -10,6 +10,8 @@ import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
 import {AppComponent} from "./app/routes/app.component";
 import {AlertService} from "./app/core/services/alert/alert.service";
 import {HTTP_INTERCEPTOR_PROVIDER} from "./app/middleware/http-interceptor/http-interceptor";
+import {PreloadAllModules, provideRouter, withDebugTracing, withPreloading} from "@angular/router";
+import {router} from "./app/router";
 
 const locale = 'sl'
 moment.locale(locale);
@@ -17,6 +19,7 @@ moment.locale(locale);
 bootstrapApplication(AppComponent, {
   providers: [
     AlertService,
+    provideRouter(router, withPreloading(PreloadAllModules), withDebugTracing()),
     HTTP_INTERCEPTOR_PROVIDER,
     {provide: LOCALE_ID, useValue: locale},
     {provide: MAT_DATE_LOCALE, useValue: locale},

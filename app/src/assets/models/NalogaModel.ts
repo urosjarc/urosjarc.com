@@ -1,4 +1,4 @@
-import {Status} from "../services/api/openapi/models/status";
+import {Status} from "../../app/core/services/api/models/status";
 
 export interface NalogaModel {
   id: string,

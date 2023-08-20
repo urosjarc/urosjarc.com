@@ -40,20 +40,22 @@ export class PrijaviUporabnikaService {
     const prijavaRes = await exe(this.api.authPrijavaPost({body: prijavaReq}))
 
     // Shrani token da bo lahko uporabnik klical server z autorizacijo
-    this.db.token = prijavaRes.token || ""
+    this.db.set_token(prijavaRes.token || "")
 
     // Sprozi event za redirect
     this.dialog.open<any, IzberiTipOsebeModel>(IzberiTipOsebeComponent, {
       enterAnimationDuration: 250,
       exitAnimationDuration: 500,
       data: {
-        callback: this.redirect,
+        callback:(tip: ArrayTypes<Oseba['tip']>) => {
+          this.redirect(tip, false)
+        },
         tipi: prijavaRes.tip
       }
     });
   }
 
-  async redirect(tip: ArrayTypes<Oseba['tip']>) {
+  async redirect(tip: ArrayTypes<Oseba['tip']>, sinhroniziraj: boolean) {
 
     // Izberi primeren route za redirect
     let clientRoute: { $: string } | null = null
@@ -76,6 +78,8 @@ export class PrijaviUporabnikaService {
     // Ce ima neprimerno ali manjkajoco avtorizacijo prikazi alert.
     if (!clientRoute || !serverRoute)
       return this.alert.warnManjkajocaAvtorizacija()
+
+    if (!sinhroniziraj) return
 
     // Dobi vse uporabniske podatke
     const osebaData = await exe(serverRoute)

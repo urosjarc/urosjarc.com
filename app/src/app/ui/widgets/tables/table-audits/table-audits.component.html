@@ -19,12 +19,12 @@
 
     <ng-container matColumnDef="trajanje">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date"> Trajanje</th>
-      <td mat-cell *matCellDef="let audit"> {{audit.trajanje | DurationPipe}} </td>
+      <td mat-cell *matCellDef="let audit"> {{audit.trajanje | duration }} </td>
     </ng-container>
 
     <ng-container matColumnDef="ustvarjeno_pred">
       <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by posiljatelj"> Ustvarjeno</th>
-      <td mat-cell *matCellDef="let audit"> {{audit.ustvarjeno | DateOddaljenost}}</td>
+      <td mat-cell *matCellDef="let audit"> {{audit.ustvarjeno | date_oddaljenost }}</td>
     </ng-container>
 
     <ng-container matColumnDef="ustvarjeno">

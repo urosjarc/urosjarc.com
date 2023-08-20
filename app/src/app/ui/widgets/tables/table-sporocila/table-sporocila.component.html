@@ -17,7 +17,7 @@
 
   <ng-container matColumnDef="pred">
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by date"> Pred</th>
-    <td mat-cell *matCellDef="let sporocilo"> {{sporocilo.datum | DateOddaljenost}} </td>
+    <td mat-cell *matCellDef="let sporocilo"> {{sporocilo.datum | date_oddaljenost}} </td>
   </ng-container>
 
   <ng-container matColumnDef="posiljatelj">

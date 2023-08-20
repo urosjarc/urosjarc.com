@@ -1,14 +1,31 @@
 import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
-import {MatTableDataSource} from "@angular/material/table";
-import {MatPaginator} from "@angular/material/paginator";
-import {MatSort} from "@angular/material/sort";
-import {Test} from "../../services/api/openapi/models/test";
-import {TestModel} from "../../models/TestModel";
+import {MatTableDataSource, MatTableModule} from "@angular/material/table";
+import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
+import {MatSort, MatSortModule} from "@angular/material/sort";
+import {TestModel} from "../../../../../assets/models/TestModel";
+import {MatInputModule} from "@angular/material/input";
+import {MatListModule} from "@angular/material/list";
+import {DateOddaljenostPipe} from "../../../pipes/date-oddaljenost/date-oddaljenost.pipe";
+import {DateOddaljenostClassPipe} from "../../../pipes/date-oddaljenost-class/date-oddaljenost-class.pipe";
+import {DatePipe, PercentPipe} from "@angular/common";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-table-testi',
   templateUrl: './table-testi.component.html',
   styleUrls: ['./table-testi.component.scss'],
+  imports: [
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatListModule,
+    MatSortModule,
+    DateOddaljenostPipe,
+    DateOddaljenostClassPipe,
+    PercentPipe,
+    DatePipe,
+    RouterLink
+  ],
   standalone: true
 })
 export class TableTestiComponent implements AfterViewInit {
@@ -25,7 +42,7 @@ export class TableTestiComponent implements AfterViewInit {
     this.testi.filterPredicate = this.filterPredicate
   }
 
-  filterPredicate(data: Test, filter: string) {
+  filterPredicate(data: TestModel, filter: string) {
     return JSON.stringify(data).includes(filter)
   }
 

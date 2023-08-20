@@ -21,18 +21,18 @@ import {Id} from "../api/models/id";
 @Injectable()
 export class DbService extends Dexie {
 
-  oseba!: Table<Oseba, number>
-  naslov!: Table<Naslov, number>
-  ucenje!: Table<Ucenje, number>
-  kontakt!: Table<Kontakt, number>
-  sporocilo!: Table<Sporocilo, number>
-  test!: Table<Test, number>
-  status!: Table<Status, number>
-  naloga!: Table<Naloga, number>
-  tematika!: Table<Tematika, number>
-  zvezek!: Table<Zvezek, number>
-  audit!: Table<Audit, number>
-  napaka!: Table<Napaka, number>
+  oseba!: Table<Oseba, string>
+  naslov!: Table<Naslov, string>
+  ucenje!: Table<Ucenje, string>
+  kontakt!: Table<Kontakt, string>
+  sporocilo!: Table<Sporocilo, string>
+  test!: Table<Test, string>
+  status!: Table<Status, string>
+  naloga!: Table<Naloga, string>
+  tematika!: Table<Tematika, string>
+  zvezek!: Table<Zvezek, string>
+  audit!: Table<Audit, string>
+  napaka!: Table<Napaka, string>
 
   constructor() {
     super('urosjarc.com')

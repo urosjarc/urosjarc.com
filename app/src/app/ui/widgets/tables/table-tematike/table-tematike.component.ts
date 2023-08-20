@@ -1,14 +1,24 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator} from "@angular/material/paginator";
+import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
+import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {MatTableDataSource} from "@angular/material/table";
-import {trace} from "../../utils";
-import {TematikaModel} from "../../models/TematikaModel";
+import {MatTableDataSource, MatTableModule} from "@angular/material/table";
+import {TematikaModel} from "../../../../../assets/models/TematikaModel";
+import {trace} from "../../../../utils/trace";
+import {MatInputModule} from "@angular/material/input";
+import {MatListModule} from "@angular/material/list";
+import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-table-tematike',
   templateUrl: './table-tematike.component.html',
   styleUrls: ['./table-tematike.component.scss'],
+  imports: [
+    MatInputModule,
+    MatTableModule,
+    MatListModule,
+    NgClass,
+    MatPaginatorModule
+  ],
   standalone: true
 })
 export class TableTematikeComponent implements AfterViewInit {

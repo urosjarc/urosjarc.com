@@ -5,13 +5,14 @@ import {NgStyle} from "@angular/common";
 import {MatListModule} from "@angular/material/list";
 import {ButtonToolbarModel} from "../../parts/buttons/button-toolbar/button-toolbar.model";
 import {IzberiTipOsebeModel} from "./izberi-tip-osebe.model";
+import {ToolbarNavigacijaComponent} from "../../parts/toolbars/toolbar-navigacija/toolbar-navigacija.component";
 
 @Component({
   selector: 'app-izberi-tip-osebe',
   templateUrl: 'izberi-tip-osebe.component.html',
   styleUrls: ['izberi-tip-osebe.component.scss'],
   standalone: true,
-  imports: [MatDialogModule, MatButtonModule, NgStyle, MatListModule],
+  imports: [MatDialogModule, MatButtonModule, NgStyle, MatListModule, ToolbarNavigacijaComponent],
 })
 export class IzberiTipOsebeComponent {
   navGumbi: ButtonToolbarModel[] = []

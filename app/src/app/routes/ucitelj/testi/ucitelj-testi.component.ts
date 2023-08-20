@@ -1,24 +1,28 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {DataService} from "../../../services/data/data.service";
 import {MatTableDataSource} from "@angular/material/table";
-import {trace} from "../../../utils";
-import {TestModel} from "../../../models/TestModel";
+import {UciteljRepoService} from "../../../core/repos/ucitelj/ucitelj-repo.service";
+import {TestModel} from "../../../../assets/models/TestModel";
+import {TableTestiComponent} from "../../../ui/widgets/tables/table-testi/table-testi.component";
+import {trace} from "../../../utils/trace";
 
 @Component({
   selector: 'app-ucitelj-testi',
   templateUrl: './ucitelj-testi.component.html',
   styleUrls: ['./ucitelj-testi.component.scss'],
+  imports: [
+    TableTestiComponent
+  ],
   standalone: true
 })
 export class UciteljTestiComponent implements OnInit {
   testi: MatTableDataSource<TestModel> = new MatTableDataSource()
   displayedColumns: any[] = ['naslov', 'datum', 'oddaljenost'];
 
-  constructor(private data: DataService) {
+  constructor(private uciteljRepo: UciteljRepoService) {
   }
 
   @trace()
   async ngOnInit() {
-    this.testi.data = await this.data.uciteljevi_testi()
+    this.testi.data = await this.uciteljRepo.testi()
   }
 }

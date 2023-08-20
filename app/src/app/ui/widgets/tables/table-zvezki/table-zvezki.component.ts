@@ -1,16 +1,26 @@
 import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator} from "@angular/material/paginator";
+import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {MatTableDataSource} from "@angular/material/table";
-import {trace} from "../../utils";
-import {DataService} from "../../services/data/data.service";
-import {Zvezek} from "../../services/api/openapi/models/zvezek";
-import {ZvezekModel} from "../../models/ZvezekModel";
+import {MatTableDataSource, MatTableModule} from "@angular/material/table";
+import {OsebaRepoService} from "../../../../core/repos/oseba/oseba-repo.service";
+import {ZvezekModel} from "../../../../../assets/models/ZvezekModel";
+import {trace} from "../../../../utils/trace";
+import {Zvezek} from "../../../../core/services/api/models/zvezek";
+import {MatInputModule} from "@angular/material/input";
+import {NgClass} from "@angular/common";
+import {MatListModule} from "@angular/material/list";
 
 @Component({
   selector: 'app-table-zvezki',
   templateUrl: './table-zvezki.component.html',
   styleUrls: ['./table-zvezki.component.scss'],
+  imports: [
+    MatInputModule,
+    MatTableModule,
+    NgClass,
+    MatListModule,
+    MatPaginatorModule
+  ],
   standalone: true
 })
 export class TableZvezkiComponent implements OnInit, AfterViewInit {
@@ -23,12 +33,12 @@ export class TableZvezkiComponent implements OnInit, AfterViewInit {
   // @ts-ignore
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private data: DataService) {
+  constructor(private osebaRepo: OsebaRepoService) {
   }
 
   @trace()
   async ngOnInit() {
-    this.zvezki.data = await this.data.zvezki()
+    this.zvezki.data = await this.osebaRepo.zvezki()
     console.log(this.zvezki.data)
   }
 
@@ -46,7 +56,7 @@ export class TableZvezkiComponent implements OnInit, AfterViewInit {
   }
 
   @trace()
-  filterPredicate(data: Zvezek, filter: string) {
+  filterPredicate(data: ZvezekModel, filter: string) {
     return JSON.stringify(data).includes(filter)
   }
 

@@ -1,10 +1,17 @@
 import {Component, Input} from '@angular/core';
-import {FormControl, Validators} from "@angular/forms";
+import {FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
+import {MatInputModule} from "@angular/material/input";
+import {MatIconModule} from "@angular/material/icon";
 
 @Component({
-  selector: 'app-input-telefon',
-  templateUrl: './input-telefon.component.html',
-  styleUrls: ['./input-telefon.component.scss'],
+  selector: 'app-form-field-telefon',
+  templateUrl: './form-field-telefon.component.html',
+  styleUrls: ['./form-field-telefon.component.scss'],
+  imports: [
+    MatInputModule,
+    MatIconModule,
+    ReactiveFormsModule
+  ],
   standalone: true
 })
 export class FormFieldTelefonComponent {

@@ -1,17 +1,26 @@
 import { Component } from '@angular/core';
-import {NavGumb} from "../../components/nav-gumb/NavGumb";
-import {routes} from "../../router";
-import {SyncService} from "../../services/sync/sync.service";
-import {trace} from "../../utils";
+import {
+  IzbrisiUporabniskePodatkeService
+} from "../../core/use_cases/izbrisi-uporabniske-podatke/izbrisi-uporabniske-podatke.service";
+import {ButtonToolbarModel} from "../../ui/parts/buttons/button-toolbar/button-toolbar.model";
+import {routes} from "../../routes";
+import {CardNavigacijaComponent} from "../../ui/parts/cards/card-navigacija/card-navigacija.component";
+import {RouterOutlet} from "@angular/router";
+import {trace} from "../../utils/trace";
 
 @Component({
   selector: 'app-ucitelj',
   templateUrl: './ucitelj.component.html',
-  styleUrls: ['./ucitelj.component.scss']
+  styleUrls: ['./ucitelj.component.scss'],
+  imports: [
+    CardNavigacijaComponent,
+    RouterOutlet
+  ],
+  standalone: true
 })
 export class UciteljComponent {
   private navStyle = "background-color: orange; color: white"
-  navGumbi: NavGumb[] = [
+  buttonToolbarModels: ButtonToolbarModel[] = [
     {
       tekst: "Nazaj",
       ikona: "reply",
@@ -62,11 +71,11 @@ export class UciteljComponent {
     },
   ];
 
-  constructor(private syncService: SyncService) {
+  constructor(private izbrisiUporabniskePodatkeService: IzbrisiUporabniskePodatkeService) {
   }
 
   @trace()
   odjava() {
-    this.syncService.pocisti()
+    this.izbrisiUporabniskePodatkeService.zdaj()
   }
 }

@@ -1,17 +1,31 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator} from "@angular/material/paginator";
+import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {MatTableDataSource} from "@angular/material/table";
-import {trace} from "../../utils";
-import {DialogSporociloComponent} from "../dialog-sporocilo/dialog-sporocilo.component";
-import {DataService} from "../../services/data/data.service";
+import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
-import {SporociloModel} from "../../models/SporociloModel";
+import {SporociloModel} from "../../../../../assets/models/SporociloModel";
+import {trace} from "../../../../utils/trace";
+import {OsebaRepoService} from "../../../../core/repos/oseba/oseba-repo.service";
+import {
+  PrikaziPoslanoSporociloComponent
+} from "../../../windows/prikazi-poslano-sporocilo/prikazi-poslano-sporocilo.component";
+import {MatInputModule} from "@angular/material/input";
+import {MatListModule} from "@angular/material/list";
+import {DateOddaljenostPipe} from "../../../pipes/date-oddaljenost/date-oddaljenost.pipe";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-table-sporocila',
   templateUrl: './table-sporocila.component.html',
   styleUrls: ['./table-sporocila.component.scss'],
+  imports: [
+    MatInputModule,
+    MatTableModule,
+    MatListModule,
+    MatPaginatorModule,
+    DateOddaljenostPipe,
+    DatePipe
+  ],
   standalone: true
 })
 export class TableSporocilaComponent implements OnInit {
@@ -25,13 +39,13 @@ export class TableSporocilaComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private data: DataService,
+    private osebaRepo: OsebaRepoService,
     private dialog: MatDialog) {
   }
 
   @trace()
   async ngOnInit() {
-    this.sporocila.data = await this.data.sporocila()
+    this.sporocila.data = await this.osebaRepo.sporocila()
   }
 
   @trace()
@@ -43,7 +57,7 @@ export class TableSporocilaComponent implements OnInit {
 
   @trace()
   odpriDialog(sporociloInfo: SporociloModel) {
-    this.dialog.open(DialogSporociloComponent, {data: sporociloInfo});
+    this.dialog.open(PrikaziPoslanoSporociloComponent, {data: sporociloInfo});
   }
 
   @trace()

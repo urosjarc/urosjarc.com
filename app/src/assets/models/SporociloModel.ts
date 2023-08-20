@@ -1,5 +1,5 @@
-import {Oseba} from "../services/api/openapi/models/oseba";
-import {Kontakt} from "../services/api/openapi/models/kontakt";
+import {Kontakt} from "../../app/core/services/api/models/kontakt";
+import {Oseba} from "../../app/core/services/api/models/oseba";
 
 export interface SporociloModel {
   smer: "POSLANO" | "PREJETO",

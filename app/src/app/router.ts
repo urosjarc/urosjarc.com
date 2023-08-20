@@ -7,11 +7,7 @@ import {UcenecProfilComponent} from "./routes/ucenec/profil/ucenec-profil.compon
 import {UcenecComponent} from "./routes/ucenec/ucenec.component";
 import {UcenecSporocilaComponent} from "./routes/ucenec/sporocila/ucenec-sporocila.component";
 import {UcenecDeloComponent} from "./routes/ucenec/delo/ucenec-delo.component";
-import {UcenecTestComponent} from "./routes/ucenec/test/ucenec-test.component";
-import {UcenecNalogaComponent} from "./routes/ucenec/naloga/ucenec-naloga.component";
 import {UcenecTestiComponent} from "./routes/ucenec/testi/ucenec-testi.component";
-import {RouterModule} from "@angular/router";
-import {NgModule} from "@angular/core";
 import {UciteljComponent} from "./routes/ucitelj/ucitelj.component";
 import {UciteljTestiComponent} from "./routes/ucitelj/testi/ucitelj-testi.component";
 import {UciteljSporocilaComponent} from "./routes/ucitelj/sporocila/ucitelj-sporocila.component";
@@ -21,11 +17,12 @@ import {UciteljUcenciComponent} from "./routes/ucitelj/ucenci/ucitelj-ucenci.com
 import {AdminComponent} from "./routes/admin/admin.component";
 import {AdminIndexComponent} from "./routes/admin/index/admin-index.component";
 import {UciteljZvezkiComponent} from "./routes/ucitelj/zvezki/ucitelj-zvezki.component";
-import {authCheckGuard} from "./utils/guards/auth-check/auth-check.guard";
-import {autoLoginGuard} from "./utils/guards/auto-login/public-prijava.guard";
 import {paths, routes} from "./routes"
+import {authCheckGuard} from "./middleware/guards/auth-check/auth-check.guard";
+import {UcenecTestiTestComponent} from "./routes/ucenec/testi/test/ucenec-testi-test.component";
+import {UcenecTestiTestNalogaComponent} from "./routes/ucenec/testi/test/naloga/ucenec-testi-test-naloga.component";
 
-const router = [
+const _router = [
   {
     path: routes.public.template,
     component: PublicComponent,
@@ -35,7 +32,7 @@ const router = [
       {path: paths.kontakt.template, component: PublicKontaktComponent},
       {
         path: paths.prijava.template,
-        canActivate: [autoLoginGuard({routeFn: routes.profil_tip})],
+        // canActivate: [autoLoginGuard({routeFn: routes.profil_tip})],
         component: PublicPrijavaComponent
       },
     ]
@@ -47,8 +44,8 @@ const router = [
     children: [
       {path: paths.index.template, component: UcenecTestiComponent},
       {path: paths.testi.template, component: UcenecTestiComponent},
-      {path: paths.test.template, component: UcenecTestComponent},
-      {path: paths.naloga.template, component: UcenecNalogaComponent},
+      {path: paths.test.template, component: UcenecTestiTestComponent},
+      {path: paths.naloga.template, component: UcenecTestiTestNalogaComponent},
       {path: paths.sporocila.template, component: UcenecSporocilaComponent},
       {path: paths.delo.template, component: UcenecDeloComponent},
       {path: paths.profil.template, component: UcenecProfilComponent},
@@ -79,11 +76,6 @@ const router = [
   {path: '**', component: PublicIndexComponent},
 ];
 
-for (const route of router) route.path = route.path.replaceAll("/", "")
+for (const route of _router) route.path = route.path.replaceAll("/", "")
 
-@NgModule({
-  imports: [RouterModule.forRoot(router)],
-  exports: [RouterModule]
-})
-export class Routing {
-}
+export const router = _router

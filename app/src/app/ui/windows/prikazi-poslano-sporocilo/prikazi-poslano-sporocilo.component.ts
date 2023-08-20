@@ -4,12 +4,12 @@ import {MatButtonModule} from "@angular/material/button";
 import {DatePipe, NgStyle} from "@angular/common";
 import {MatListModule} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
-import {SporociloModel} from "../../models/SporociloModel";
+import {SporociloModel} from "../../../../assets/models/SporociloModel";
 
 @Component({
-  selector: 'app-dialog-sporocilo',
-  templateUrl: './dialog-sporocilo.component.html',
-  styleUrls: ['./dialog-sporocilo.component.scss'],
+  selector: 'app-prikazi-poslano-sporocilo',
+  templateUrl: './prikazi-poslano-sporocilo.component.html',
+  styleUrls: ['./prikazi-poslano-sporocilo.component.scss'],
   standalone: true,
   imports: [MatDialogModule, MatButtonModule, NgStyle, MatListModule, DatePipe, MatIconModule],
 })

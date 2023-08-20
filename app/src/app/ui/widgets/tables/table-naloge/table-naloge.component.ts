@@ -1,14 +1,24 @@
 import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
-import {MatPaginator} from "@angular/material/paginator";
+import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {MatTableDataSource} from "@angular/material/table";
-import {trace} from "../../utils";
-import {NalogaModel} from "../../models/NalogaModel";
+import {MatTableDataSource, MatTableModule} from "@angular/material/table";
+import {NalogaModel} from "../../../../../assets/models/NalogaModel";
+import {trace} from "../../../../utils/trace";
+import {MatInputModule} from "@angular/material/input";
+import {NgClass} from "@angular/common";
+import {MatListModule} from "@angular/material/list";
 
 @Component({
   selector: 'app-table-naloge',
   templateUrl: './table-naloge.component.html',
   styleUrls: ['./table-naloge.component.scss'],
+  imports: [
+    MatInputModule,
+    MatTableModule,
+    NgClass,
+    MatListModule,
+    MatPaginatorModule
+  ],
   standalone: true
 })
 export class TableNalogeComponent implements AfterViewInit {

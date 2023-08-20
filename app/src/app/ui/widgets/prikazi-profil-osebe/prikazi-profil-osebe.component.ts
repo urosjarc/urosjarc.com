@@ -1,14 +1,21 @@
 import {Component} from '@angular/core';
-import {Oseba} from "../../services/api/openapi/models/oseba";
-import {Naslov} from "../../services/api/openapi/models/naslov";
-import {Kontakt} from "../../services/api/openapi/models/kontakt";
-import {DbService} from "../../services/db/db.service";
-import {ime, trace} from "../../utils";
+import {Oseba} from "../../../core/services/api/models/oseba";
+import {Naslov} from "../../../core/services/api/models/naslov";
+import {Kontakt} from "../../../core/services/api/models/kontakt";
+import {DbService} from "../../../core/services/db/db.service";
+import {trace} from "../../../utils/trace";
+import {ime} from "../../../utils/types";
+import {MatListModule} from "@angular/material/list";
+import {MatIconModule} from "@angular/material/icon";
 
 @Component({
-  selector: 'app-oseba-profil',
-  templateUrl: './oseba-profil.component.html',
-  styleUrls: ['./oseba-profil.component.scss'],
+  selector: 'app-prikazi-profil-osebe',
+  templateUrl: './prikazi-profil-osebe.component.html',
+  styleUrls: ['./prikazi-profil-osebe.component.scss'],
+  imports: [
+    MatListModule,
+    MatIconModule
+  ],
   standalone: true
 })
 export class PrikaziProfilOsebeComponent {
@@ -21,9 +28,9 @@ export class PrikaziProfilOsebeComponent {
 
   @trace()
   async ngOnInit() {
-    const root_id = this.dbService.get_root_id()
-    this.oseba = await this.dbService.oseba.where(ime<Oseba>("_id")).equals(root_id).first()
-    this.naslovi = await this.dbService.naslov.where(ime<Naslov>("oseba_id")).equals(root_id).toArray()
-    this.kontakti = await this.dbService.kontakt.where(ime<Kontakt>("oseba_id")).equals(root_id).toArray()
+    const profil_id = this.dbService.get_profil_id()
+    this.oseba = await this.dbService.oseba.where(ime<Oseba>("_id")).equals(profil_id as string).first()
+    this.naslovi = await this.dbService.naslov.where(ime<Naslov>("oseba_id")).equals(profil_id as string).toArray()
+    this.kontakti = await this.dbService.kontakt.where(ime<Kontakt>("oseba_id")).equals(profil_id as string).toArray()
   }
 }

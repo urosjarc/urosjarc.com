@@ -1,20 +1,18 @@
 import {Component, Input} from '@angular/core';
 import {ButtonToolbarModel} from "../../buttons/button-toolbar/button-toolbar.model";
 import {ButtonToolbarComponent} from "../../buttons/button-toolbar/button-toolbar.component";
+import {ToolbarNavigacijaComponent} from "../../toolbars/toolbar-navigacija/toolbar-navigacija.component";
 
 @Component({
-  selector: 'app-toolbar-navigacija',
-  templateUrl: './toolbar-navigacija.component.html',
-  styleUrls: ['./toolbar-navigacija.component.scss'],
+  selector: 'app-card-navigacija',
+  templateUrl: './card-navigacija.component.html',
+  styleUrls: ['./card-navigacija.component.scss'],
   imports: [
-    ButtonToolbarComponent
+    ButtonToolbarComponent,
+    ToolbarNavigacijaComponent
   ],
   standalone: true
 })
-export class ToolbarNavigacijaComponent {
+export class CardNavigacijaComponent {
   @Input() buttonToolbarModels: ButtonToolbarModel[] = []
-
-  onClick() {
-
-  }
 }

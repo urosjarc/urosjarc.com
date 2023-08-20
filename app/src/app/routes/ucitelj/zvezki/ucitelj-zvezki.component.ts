@@ -1,17 +1,31 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
-import {ZvezekModel} from "../../../models/ZvezekModel";
-import {TematikaModel} from "../../../models/TematikaModel";
-import {NalogaModel} from "../../../models/NalogaModel";
-import {OsebaModel} from "../../../models/OsebaModel";
 import {StepperSelectionEvent} from "@angular/cdk/stepper";
-import {trace} from "../../../utils";
-import {DataService} from "../../../services/data/data.service";
+import {ZvezekModel} from "../../../../assets/models/ZvezekModel";
+import {TematikaModel} from "../../../../assets/models/TematikaModel";
+import {NalogaModel} from "../../../../assets/models/NalogaModel";
+import {OsebaModel} from "../../../../assets/models/OsebaModel";
+import {trace} from "../../../utils/trace";
+import {UciteljRepoService} from "../../../core/repos/ucitelj/ucitelj-repo.service";
+import {MatStepperModule} from "@angular/material/stepper";
+import {TableZvezkiComponent} from "../../../ui/widgets/tables/table-zvezki/table-zvezki.component";
+import {TableTematikeComponent} from "../../../ui/widgets/tables/table-tematike/table-tematike.component";
+import {TableNalogeComponent} from "../../../ui/widgets/tables/table-naloge/table-naloge.component";
+import {TableUcenciComponent} from "../../../ui/widgets/tables/table-ucenci/table-ucenci.component";
+import {MatButtonModule} from "@angular/material/button";
 
 @Component({
   selector: 'app-ucitelj-zvezki',
   templateUrl: './ucitelj-zvezki.component.html',
   styleUrls: ['./ucitelj-zvezki.component.scss'],
+  imports: [
+    MatStepperModule,
+    TableZvezkiComponent,
+    TableTematikeComponent,
+    TableNalogeComponent,
+    TableUcenciComponent,
+    MatButtonModule
+  ],
   standalone: true
 })
 export class UciteljZvezkiComponent implements OnInit {
@@ -20,11 +34,11 @@ export class UciteljZvezkiComponent implements OnInit {
   @Input() naloge: MatTableDataSource<NalogaModel> = new MatTableDataSource<NalogaModel>()
   @Input() ucenci: MatTableDataSource<OsebaModel> = new MatTableDataSource<OsebaModel>()
 
-  constructor(private data: DataService) {
+  constructor(private uciteljRepo: UciteljRepoService) {
   }
 
-  async ngOnInit(): Promise<void> {
-    this.ucenci.data = await this.data.uciteljevi_ucenci()
+  async ngOnInit() {
+    this.ucenci.data = await this.uciteljRepo.ucenci()
   }
 
   selectionChange($event: StepperSelectionEvent) {

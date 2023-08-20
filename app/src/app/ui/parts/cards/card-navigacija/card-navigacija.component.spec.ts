@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NavStranComponent } from './nav-stran.component';
+import { CardNavigacijaComponent } from './card-navigacija.component';
 
 describe('NavStranComponent', () => {
-  let component: NavStranComponent;
-  let fixture: ComponentFixture<NavStranComponent>;
+  let component: CardNavigacijaComponent;
+  let fixture: ComponentFixture<CardNavigacijaComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [NavStranComponent]
+      declarations: [CardNavigacijaComponent]
     });
-    fixture = TestBed.createComponent(NavStranComponent);
+    fixture = TestBed.createComponent(CardNavigacijaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

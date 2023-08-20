@@ -1,10 +1,17 @@
 import {Component, Input} from '@angular/core';
-import {FormControl, Validators} from "@angular/forms";
+import {FormControl, ReactiveFormsModule, Validators} from "@angular/forms";
+import {MatInputModule} from "@angular/material/input";
+import {MatIconModule} from "@angular/material/icon";
 
 @Component({
-  selector: 'app-input-email',
-  templateUrl: './input-email.component.html',
-  styleUrls: ['./input-email.component.scss'],
+  selector: 'app-form-field-email',
+  templateUrl: './form-field-email.component.html',
+  styleUrls: ['./form-field-email.component.scss'],
+  imports: [
+    MatInputModule,
+    ReactiveFormsModule,
+    MatIconModule
+  ],
   standalone: true
 })
 export class FormFieldEmailComponent {
