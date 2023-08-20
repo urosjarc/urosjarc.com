@@ -17,7 +17,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {IzberiTipOsebeModel} from "../../../ui/windows/izberi-tip-osebe/izberi-tip-osebe.model";
 import {DbService} from "../../services/db/db.service";
 
-@Injectable({providedIn: 'root'})
+@Injectable()
 export class PrijaviUporabnikaService {
   private cakam_redirect: Subject<PrijavaRes> = new Subject();
 

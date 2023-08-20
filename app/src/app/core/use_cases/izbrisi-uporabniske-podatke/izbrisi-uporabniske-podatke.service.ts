@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import {DbService} from "../../services/db/db.service";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class IzbrisiUporabniskePodatkeService {
 
   constructor(private db: DbService) { }

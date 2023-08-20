@@ -12,9 +12,7 @@ import {Sporocilo} from "../../services/api/models/sporocilo";
 import {String_vDate} from "../../../utils/String";
 import {Naloga} from "../../services/api/models/naloga";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class OsebaRepoService {
   constructor(private db: DbService, private api: ApiService) {
   }

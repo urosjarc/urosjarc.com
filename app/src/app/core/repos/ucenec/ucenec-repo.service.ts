@@ -11,9 +11,7 @@ import {Naloga} from "../../services/api/models/naloga";
 import {Audit} from "../../services/api/models/audit";
 import {Id} from "../../services/api/models/id";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class UcenecRepoService {
 
   constructor(private db: DbService) {

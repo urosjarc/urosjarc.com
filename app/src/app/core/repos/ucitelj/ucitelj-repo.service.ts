@@ -9,9 +9,7 @@ import {Oseba} from "../../services/api/models/oseba";
 import {DbService} from "../../services/db/db.service";
 import {routes} from "../../../routes";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class UciteljRepoService {
 
   constructor(

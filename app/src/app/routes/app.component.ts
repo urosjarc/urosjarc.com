@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {NavigationStart, Router, RouterOutlet} from "@angular/router";
 import {AlertService} from "../core/services/alert/alert.service";
 import {trace} from "../utils/trace";
@@ -11,10 +11,8 @@ import {PrikaziAlertComponent} from "../ui/windows/prikazi-alert/prikazi-alert.c
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   imports: [
-    RouterOutlet
-  ],
-  providers: [
-   MatDialog
+    RouterOutlet,
+    MatDialogModule
   ],
   standalone: true
 })

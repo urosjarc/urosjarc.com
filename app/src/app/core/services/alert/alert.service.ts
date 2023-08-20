@@ -6,7 +6,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {trace} from "../../../utils/trace";
 import {KontaktObrazecRes} from "../api/models/kontakt-obrazec-res";
 
-@Injectable({providedIn: 'root'})
+@Injectable()
 export class AlertService {
 
   private alertsObserver: Subject<AlertServiceModel> = new Subject();

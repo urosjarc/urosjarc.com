@@ -4,9 +4,7 @@ import {ApiService} from "../../services/api/services/api.service";
 import {exe} from "../../../utils/types";
 import {AlertService} from "../../services/alert/alert.service";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class PosljiPublicKontaktniObrazecService {
 
   constructor(private api: ApiService, private alert: AlertService) {

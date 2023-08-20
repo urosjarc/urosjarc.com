@@ -2,9 +2,7 @@ import {Injectable} from '@angular/core';
 import {OsebaData} from "../../services/api/models/oseba-data";
 import {DbService} from "../../services/db/db.service";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class SinhronizirajUporabniskePodatkeService {
 
   constructor(

@@ -18,7 +18,7 @@ import {Napaka} from "../api/models/napaka";
 import {OsebaData} from "../api/models/oseba-data";
 import {Id} from "../api/models/id";
 
-@Injectable({providedIn: 'root'})
+@Injectable()
 export class DbService extends Dexie {
 
   oseba!: Table<Oseba, number>
