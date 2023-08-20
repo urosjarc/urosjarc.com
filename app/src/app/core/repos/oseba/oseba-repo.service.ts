@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {ApiService} from "../../services/api/services/api.service";
 import {SporociloModel} from "../../../../assets/models/SporociloModel";
 import {ZvezekModel} from "../../../../assets/models/ZvezekModel";
 import {ime} from "../../../utils/types";
@@ -14,7 +13,7 @@ import {Naloga} from "../../services/api/models/naloga";
 
 @Injectable()
 export class OsebaRepoService {
-  constructor(private db: DbService, private api: ApiService) {
+  constructor(private db: DbService) {
   }
 
   async sporocila(): Promise<SporociloModel[]> {

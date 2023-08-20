@@ -2,8 +2,8 @@ import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {trace} from "../../utils";
-import {OsebaModel} from "../../models/OsebaModel";
+import {OsebaModel} from "../../../../../assets/models/OsebaModel";
+import {trace} from "../../../../utils/trace";
 
 @Component({
   selector: 'app-table-osebe',

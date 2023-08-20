@@ -4,8 +4,6 @@ import {FormFieldTelefonComponent} from "../../../ui/parts/form-fields/form-fiel
 import {FormFieldOsebaComponent} from "../../../ui/parts/form-fields/form-field-oseba/form-field-oseba.component";
 import {FormFieldMsgComponent} from "../../../ui/parts/form-fields/form-field-sporocilo/form-field-msg.component";
 import {FormFieldEmailComponent} from "../../../ui/parts/form-fields/form-field-email/form-field-email.component";
-import {ApiService} from "../../../core/services/api/services/api.service";
-import {AlertService} from "../../../core/services/alert/alert.service";
 import {trace} from "../../../utils/trace";
 import {
   ProgressBarLoadingComponent
@@ -37,10 +35,6 @@ export class PublicKontaktComponent implements AfterViewInit {
   @ViewChild(FormFieldEmailComponent) input_email?: FormFieldEmailComponent;
   formGroup: FormGroup = new FormGroup({});
 
-  constructor(private apiService: ApiService,
-              private alertService: AlertService) {
-  }
-
   @trace()
   ngAfterViewInit(): void {
     this.formGroup = new FormGroup({//@ts-ignore
@@ -53,7 +47,6 @@ export class PublicKontaktComponent implements AfterViewInit {
 
   @trace()
   poslji() {
-    const self = this
     if (this.formGroup?.invalid) return;
 
     if (this.loading) return

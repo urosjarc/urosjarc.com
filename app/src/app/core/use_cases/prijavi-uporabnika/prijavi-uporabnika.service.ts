@@ -7,14 +7,13 @@ import {
 import {Router} from "@angular/router";
 import {ArrayTypes, exe} from "../../../utils/types";
 import {Oseba} from "../../services/api/models/oseba";
-import {routes} from "../../../routes";
+import {appUrls} from "../../../app.urls";
 import {Observable, Subject} from "rxjs";
 import {AlertService} from "../../services/alert/alert.service";
 import {OsebaData} from "../../services/api/models/oseba-data";
 import {PrijavaRes} from "../../services/api/models/prijava-res";
 import {IzberiTipOsebeComponent} from "../../../ui/windows/izberi-tip-osebe/izberi-tip-osebe.component";
 import {MatDialog} from "@angular/material/dialog";
-import {IzberiTipOsebeModel} from "../../../ui/windows/izberi-tip-osebe/izberi-tip-osebe.model";
 import {DbService} from "../../services/db/db.service";
 
 @Injectable()
@@ -47,7 +46,7 @@ export class PrijaviUporabnikaService {
       enterAnimationDuration: 250,
       exitAnimationDuration: 500,
       data: {
-        callback:(tip: ArrayTypes<Oseba['tip']>) => {
+        callback: (tip: ArrayTypes<Oseba['tip']>) => {
           this.redirect(tip, false)
         },
         tipi: prijavaRes.tip
@@ -62,15 +61,15 @@ export class PrijaviUporabnikaService {
     let serverRoute: Observable<OsebaData> | null = null
     switch (tip) {
       case "UCENEC":
-        clientRoute = routes.ucenec({});
+        clientRoute = appUrls.ucenec({});
         serverRoute = this.api.ucenecGet()
         break;
       case "UCITELJ":
-        clientRoute = routes.ucitelj({});
+        clientRoute = appUrls.ucitelj({});
         serverRoute = this.api.uciteljGet()
         break;
       case "ADMIN":
-        clientRoute = routes.ucenec({});
+        clientRoute = appUrls.ucenec({});
         serverRoute = this.api.adminGet()
         break;
     }

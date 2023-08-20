@@ -18,7 +18,7 @@ const naloga = route('testi/:test_id/naloge/:naloga_id', {test_id: stringParser,
 const ucenci = route('ucenci', {}, {})
 
 
-export const routes = {
+export const appUrls = {
   "public": route('/', {}, {index, koledar, kontakt, prijava}),
   "ucenec": route('/ucenec', {}, {profil, sporocila, delo, test, testi, naloga}),
   "ucitelj": route('/ucitelj', {}, {profil, ucenci, sporocila, delo, test, testi, naloga, zvezki}),

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {routes} from "../../routes";
+import {appUrls} from "../../app.urls";
 import {ButtonToolbarModel} from "../../ui/parts/buttons/button-toolbar/button-toolbar.model";
 import {CardNavigacijaComponent} from "../../ui/parts/cards/card-navigacija/card-navigacija.component";
 import {RouterOutlet} from "@angular/router";
@@ -19,22 +19,22 @@ export class PublicComponent {
     {
       tekst: "Domov",
       ikona: "home",
-      route: routes.public({}).index({}).$
+      route: appUrls.public({}).index({}).$
     },
     {
       tekst: "Koledar",
       ikona: "calendar_month",
-      route: routes.public({}).koledar({}).$
+      route: appUrls.public({}).koledar({}).$
     },
     {
       tekst: "Kontakt",
       ikona: "mail",
-      route: routes.public({}).kontakt({}).$
+      route: appUrls.public({}).kontakt({}).$
     },
     {
       tekst: "Prijava",
       ikona: "lock",
-      route: routes.public({}).prijava({}).$
+      route: appUrls.public({}).prijava({}).$
     },
   ]
 }

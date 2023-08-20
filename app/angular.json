@@ -20,7 +20,8 @@
           "options": {
             "allowedCommonJsDependencies": [
               "iso8601-duration",
-              "moment"
+              "moment",
+              "typesafe-routes"
             ],
             "outputPath": "dist/app",
             "index": "src/index.html",
@@ -45,8 +46,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "4mb"
                 },
                 {
                   "type": "anyComponentStyle",

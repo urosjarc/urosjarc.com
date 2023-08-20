@@ -7,7 +7,7 @@ import {String_vDate} from "../../../utils/String";
 import {Ucenje} from "../../services/api/models/ucenje";
 import {Oseba} from "../../services/api/models/oseba";
 import {DbService} from "../../services/db/db.service";
-import {routes} from "../../../routes";
+import {appUrls} from "../../../app.urls";
 
 @Injectable()
 export class UciteljRepoService {
@@ -29,7 +29,7 @@ export class UciteljRepoService {
         naslov: test.naslov || "",
         opravljeno: 0,
         datum: String_vDate(test.deadline as string),
-        link: routes.ucenec({}).test({test_id: test._id.toString()}).$
+        link: appUrls.ucenec({}).test({test_id: test._id.toString()}).$
       })
     }
     return newTesti

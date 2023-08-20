@@ -1,8 +1,8 @@
-import { StatusClassPipe } from './status-color.pipe';
+import {StatusTipStylePipe} from "./statusTip-style.pipe";
 
 describe('StatusColorPipe', () => {
   it('create an instance', () => {
-    const pipe = new StatusClassPipe();
+    const pipe = new StatusTipStylePipe();
     expect(pipe).toBeTruthy();
   });
 });

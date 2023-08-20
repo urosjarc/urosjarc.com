@@ -3,7 +3,7 @@ import {
   IzbrisiUporabniskePodatkeService
 } from "../../core/use_cases/izbrisi-uporabniske-podatke/izbrisi-uporabniske-podatke.service";
 import {ButtonToolbarModel} from "../../ui/parts/buttons/button-toolbar/button-toolbar.model";
-import {routes} from "../../routes";
+import {appUrls} from "../../app.urls";
 import {CardNavigacijaComponent} from "../../ui/parts/cards/card-navigacija/card-navigacija.component";
 import {RouterOutlet} from "@angular/router";
 import {trace} from "../../utils/trace";
@@ -24,42 +24,42 @@ export class UciteljComponent {
     {
       tekst: "Nazaj",
       ikona: "reply",
-      route: routes.public({}).$,
+      route: appUrls.public({}).$,
     },
     {
       tekst: "Zvezki",
       ikona: "local_library",
-      route: routes.ucitelj({}).zvezki({}).$,
+      route: appUrls.ucitelj({}).zvezki({}).$,
       style: this.navStyle
     },
     {
       tekst: "Testi",
       ikona: "edit",
-      route: routes.ucitelj({}).testi({}).$,
+      route: appUrls.ucitelj({}).testi({}).$,
       style: this.navStyle
     },
     {
       tekst: "Učenci",
       ikona: "school",
-      route: routes.ucitelj({}).ucenci({}).$,
+      route: appUrls.ucitelj({}).ucenci({}).$,
       style: this.navStyle
     },
     {
       tekst: "Sporocila",
       ikona: "sms",
-      route: routes.ucitelj({}).sporocila({}).$,
+      route: appUrls.ucitelj({}).sporocila({}).$,
       style: this.navStyle
     },
     {
       tekst: "Delo",
       ikona: "work",
-      route: routes.ucitelj({}).delo({}).$,
+      route: appUrls.ucitelj({}).delo({}).$,
       style: this.navStyle
     },
     {
       tekst: "Profil",
       ikona: "person",
-      route: routes.ucitelj({}).profil({}).$,
+      route: appUrls.ucitelj({}).profil({}).$,
       style: this.navStyle
     },
     {

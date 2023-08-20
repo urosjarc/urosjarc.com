@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {routes} from "../../routes";
+import {appUrls} from "../../app.urls";
 import {trace} from "../../utils/trace";
 import {
   IzbrisiUporabniskePodatkeService
@@ -24,12 +24,12 @@ export class AdminComponent {
     {
       tekst: "Nazaj",
       ikona: "reply",
-      route: routes.public({}).$,
+      route: appUrls.public({}).$,
     },
     {
       tekst: "Index",
       ikona: "home",
-      route: routes.admin({}).$,
+      route: appUrls.admin({}).$,
       style: this.navStyle
     },
     {

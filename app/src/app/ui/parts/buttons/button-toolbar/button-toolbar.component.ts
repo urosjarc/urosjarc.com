@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {MatIconModule} from "@angular/material/icon";
 import {RouterLink} from "@angular/router";
+import {MatButtonModule} from "@angular/material/button";
 
 @Component({
   selector: 'app-button-toolbar',
@@ -8,7 +9,8 @@ import {RouterLink} from "@angular/router";
   styleUrls: ['./button-toolbar.component.scss'],
   imports: [
     MatIconModule,
-    RouterLink
+    RouterLink,
+    MatButtonModule
   ],
   standalone: true
 })

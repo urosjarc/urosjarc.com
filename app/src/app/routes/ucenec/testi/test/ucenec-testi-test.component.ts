@@ -22,7 +22,7 @@ import {StatusTipStylePipe} from "../../../../ui/pipes/statusTip-style/statusTip
 import {DatePipe, KeyValuePipe, NgForOf} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
 import {DateOddaljenostPipe} from "../../../../ui/pipes/date-oddaljenost/date-oddaljenost.pipe";
-import {routes} from "../../../../routes";
+import {appUrls} from "../../../../app.urls";
 
 @Component({
   selector: 'app-ucenec-testi-test',
@@ -42,7 +42,7 @@ import {routes} from "../../../../routes";
   standalone: true
 })
 export class UcenecTestiTestComponent implements OnInit {
-  protected readonly routes = routes;
+  protected readonly routes = appUrls;
 
   test_id: string
 
@@ -201,7 +201,7 @@ export class UcenecTestiTestComponent implements OnInit {
     if (res.test) self.dbService.test.put(res.test)
     if (res.audit) self.dbService.audit.put(res.audit)
 
-    self.ngOnInit()
+    await self.ngOnInit()
 
   }
 

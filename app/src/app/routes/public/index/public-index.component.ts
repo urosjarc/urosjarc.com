@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {ButtonToolbarModel} from "../../../ui/parts/buttons/button-toolbar/button-toolbar.model";
-import {routes} from "../../../routes";
+import {appUrls} from "../../../app.urls";
 import {NgForOf} from "@angular/common";
 import {MatIconModule} from "@angular/material/icon";
 import {MatExpansionModule} from "@angular/material/expansion";
@@ -25,12 +25,12 @@ export class PublicIndexComponent {
     {
       tekst: "051-240-885",
       ikona: "phone",
-      route: routes.public({}).kontakt({}).$
+      route: appUrls.public({}).kontakt({}).$
     },
     {
       tekst: "jar.fmf@gmail.com",
       ikona: "email",
-      route: routes.public({}).kontakt({}).$
+      route: appUrls.public({}).kontakt({}).$
     },
   ]
   infos: { naslov: string, vsebina: string }[] = [

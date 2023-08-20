@@ -1,13 +1,7 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {Router} from "@angular/router";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {AlertService} from "../../../core/services/alert/alert.service";
 import {trace} from "../../../utils/trace";
 import {PrijaviUporabnikaService} from "../../../core/use_cases/prijavi-uporabnika/prijavi-uporabnika.service";
-import {
-  SinhronizirajUporabniskePodatkeService
-} from "../../../core/use_cases/sinhroniziraj-uporabniske-podatke/sinhroniziraj-uporabniske-podatke.service";
-import {OsebaRepoService} from "../../../core/repos/oseba/oseba-repo.service";
 import {
   ProgressBarLoadingComponent
 } from "../../../ui/parts/progress-bars/progress-bar-loading/progress-bar-loading.component";
@@ -24,24 +18,20 @@ import {FormFieldOsebaComponent} from "../../../ui/parts/form-fields/form-field-
     ReactiveFormsModule,
     FormFieldGesloComponent,
     MatButtonModule,
-    FormFieldOsebaComponent
+    FormFieldOsebaComponent,
   ],
   standalone: true
 })
 export class PublicPrijavaComponent implements AfterViewInit {
   // @ts-ignore
-  @ViewChild(InputOsebaComponent) input_oseba: InputOsebaComponent
+  @ViewChild(FormFieldOsebaComponent) input_oseba: FormFieldOsebaComponent
   // @ts-ignore
-  @ViewChild(InputGesloComponent) input_geslo: InputGesloComponent
+  @ViewChild(FormFieldGesloComponent) input_geslo: FormFieldGesloComponent
   formGroup: FormGroup = new FormGroup({});
 
   loading = false
 
-  constructor(
-    private prijavi_uporabnika: PrijaviUporabnikaService,
-    private alert: AlertService,
-    private router: Router,
-  ) {
+  constructor(private prijavi_uporabnika: PrijaviUporabnikaService) {
   }
 
   ngAfterViewInit(): void {

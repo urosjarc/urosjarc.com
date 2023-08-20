@@ -5,7 +5,7 @@ import {
 import {ToolbarNavigacijaComponent} from "../../ui/parts/toolbars/toolbar-navigacija/toolbar-navigacija.component";
 import {RouterOutlet} from "@angular/router";
 import {ButtonToolbarModel} from "../../ui/parts/buttons/button-toolbar/button-toolbar.model";
-import {routes} from "../../routes";
+import {appUrls} from "../../app.urls";
 import {trace} from "../../utils/trace";
 
 @Component({
@@ -24,30 +24,30 @@ export class UcenecComponent {
     {
       tekst: "Nazaj",
       ikona: "reply",
-      route: routes.public({}).$,
+      route: appUrls.public({}).$,
     },
     {
       tekst: "Testi",
       ikona: "edit",
-      route: routes.ucenec({}).testi({}).$,
+      route: appUrls.ucenec({}).testi({}).$,
       style: this.navStyle
     },
     {
       tekst: "Sporocila",
       ikona: "sms",
-      route: routes.ucenec({}).sporocila({}).$,
+      route: appUrls.ucenec({}).sporocila({}).$,
       style: this.navStyle
     },
     {
       tekst: "Delo",
       ikona: "work",
-      route: routes.ucenec({}).delo({}).$,
+      route: appUrls.ucenec({}).delo({}).$,
       style: this.navStyle
     },
     {
       tekst: "Profil",
       ikona: "person",
-      route: routes.ucenec({}).profil({}).$,
+      route: appUrls.ucenec({}).profil({}).$,
       style: this.navStyle
     },
     {

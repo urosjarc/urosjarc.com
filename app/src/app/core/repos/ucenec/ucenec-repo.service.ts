@@ -6,7 +6,7 @@ import {Test} from "../../services/api/models/test";
 import {TestModel} from "../../../../assets/models/TestModel";
 import {Status} from "../../services/api/models/status";
 import {String_vDate} from "../../../utils/String";
-import {routes} from "../../../routes";
+import {appUrls} from "../../../app.urls";
 import {Naloga} from "../../services/api/models/naloga";
 import {Audit} from "../../services/api/models/audit";
 import {Id} from "../../services/api/models/id";
@@ -37,7 +37,7 @@ export class UcenecRepoService {
         naslov: test.naslov || "",
         opravljeno: opravljeni_statusi / st_nalog,
         datum: String_vDate(test.deadline as string),
-        link: routes.ucenec({}).test({test_id: test._id.toString()}).$
+        link: appUrls.ucenec({}).test({test_id: test._id.toString()}).$
       })
 
     }
