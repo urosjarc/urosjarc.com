@@ -4,7 +4,7 @@ info:
   description: "server API"
   version: "1.0.0"
 servers:
-- url: "http://127.0.0.1:8080"
+- test: "http://127.0.0.1:8080"
 paths:
   /:
     get:
@@ -810,7 +810,7 @@ components:
     Profil:
       type: "object"
       properties:
-        id:
+        oseba_id:
           $ref: "#/components/schemas/ObjectId"
         tip:
           type: "array"

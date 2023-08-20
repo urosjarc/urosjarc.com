@@ -10,11 +10,11 @@ import io.ktor.server.auth.*
 import kotlinx.serialization.Serializable
 import org.apache.logging.log4j.kotlin.logger
 
-fun Oseba.profil(): Profil = Profil(id = this._id, tip = this.tip)
+fun Oseba.profil(): Profil = Profil(oseba_id = this._id, tip = this.tip)
 
 @Serializable
 data class Profil(
-    val id: Id<Oseba>,
+    val oseba_id: Id<Oseba>,
     val tip: Set<Oseba.Tip>,
 ) {
     companion object {

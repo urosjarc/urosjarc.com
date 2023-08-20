@@ -17,7 +17,6 @@ import io.ktor.server.resources.post
 import io.ktor.server.resources.put
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
@@ -71,7 +70,7 @@ fun Route.ucenec() {
 
     this.get<ucenec> {
         val profilRes = this.call.profil()
-        val ucenec = db.ucenec(id = profilRes.id)
+        val ucenec = db.ucenec(id = profilRes.oseba_id)
         this.call.respond(ucenec)
     }
 
@@ -80,12 +79,12 @@ fun Route.ucenec() {
         val body = this.call.receive<StatusUpdateReq>()
         val test_id = it.parent.parent.test_id
         val status: Status =
-            when (val status = db.najdi_status(oseba_id = profil.id, test_id = test_id, naloga_id = it.naloga_id)) {
+            when (val status = db.najdi_status(oseba_id = profil.oseba_id, test_id = test_id, naloga_id = it.naloga_id)) {
                 null -> {
                     val status = Status(
                         naloga_id = it.naloga_id,
                         test_id = test_id,
-                        oseba_id = profil.id,
+                        oseba_id = profil.oseba_id,
                         tip = body.tip,
                         pojasnilo = "".encrypted()
                     )
@@ -95,7 +94,7 @@ fun Route.ucenec() {
 
                 else -> when (val r = db.status_update(
                     id = status._id,
-                    oseba_id = profil.id,
+                    oseba_id = profil.oseba_id,
                     test_id = test_id,
                     naloga_id = it.naloga_id,
                     sekund = body.sekund,
@@ -107,7 +106,7 @@ fun Route.ucenec() {
             }
 
         val audit = Audit(
-            entitete_id = setOf(profil.id.vAnyId(), test_id.vAnyId(), it.naloga_id.vAnyId()),
+            entitete_id = setOf(profil.oseba_id.vAnyId(), test_id.vAnyId(), it.naloga_id.vAnyId()),
             tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
             trajanje = body.sekund.toDuration(unit = DurationUnit.SECONDS),
             opis = status.tip.name.encrypted(),
@@ -122,7 +121,7 @@ fun Route.ucenec() {
         val body = this.call.receive<TestUpdateReq>()
         val test: Test = when (val r = db.test_update(
             id = it.test_id,
-            oseba_id = profil.id,
+            oseba_id = profil.oseba_id,
             datum = body.datum
         )) {
             null -> return@put this.call.client_error(info = "Uporabnik nima dovoljenj!")
@@ -130,7 +129,7 @@ fun Route.ucenec() {
         }
 
         val audit = Audit(
-            entitete_id = setOf(profil.id.vAnyId(), it.test_id.vAnyId()),
+            entitete_id = setOf(profil.oseba_id.vAnyId(), it.test_id.vAnyId()),
             tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
             trajanje = 0.toDuration(unit = DurationUnit.SECONDS),
             opis = body.datum.toString().encrypted(),
@@ -145,19 +144,19 @@ fun Route.ucenec() {
     this.get<ucenec.test.test_id.naloga.naloga_id.audit> {
         val status_id = it.parent.naloga_id
         val profil = this.call.profil()
-        val entity_id = setOf(status_id.vAnyId(), profil.id.vAnyId())
+        val entity_id = setOf(status_id.vAnyId(), profil.oseba_id.vAnyId())
         this.call.respond(db.audits(entity_id = entity_id, stran = null))
     }
     this.get<ucenec.test.test_id.audit> {
         val test_id = it.parent.test_id
         val profil = this.call.profil()
-        val entity_id = setOf(test_id.vAnyId(), profil.id.vAnyId())
+        val entity_id = setOf(test_id.vAnyId(), profil.oseba_id.vAnyId())
         this.call.respond(db.audits(entity_id = entity_id, stran = null))
     }
 
     this.get<ucenec.audit> {
         val profil = this.call.profil()
-        val entity_id = setOf(profil.id.vAnyId())
+        val entity_id = setOf(profil.oseba_id.vAnyId())
         this.call.respond(db.audits(entity_id = entity_id, stran = it.stran))
     }
 
@@ -169,7 +168,7 @@ fun Route.ucenec() {
         val body = this.call.receive<NapakaReq>()
 
         val napaka = Napaka(
-            entitete_id = setOf(profil.id.vAnyId()),
+            entitete_id = setOf(profil.oseba_id.vAnyId()),
             tip = body.tip,
             vsebina = body.vsebina,
             dodatno = this.call.request_info().encrypted()
@@ -182,7 +181,7 @@ fun Route.ucenec() {
 
     this.get<ucenec.napaka> {
         val profil = this.call.profil()
-        val napake = db.napake(profil.id.vAnyId(), stran = it.stran)
+        val napake = db.napake(profil.oseba_id.vAnyId(), stran = it.stran)
         this.call.respond(napake)
     }
 

@@ -20,7 +20,7 @@ fun Route.admin() {
 
     this.get<admin> {
         val profilRes = this.call.profil()
-        val admin = db.admin(id = profilRes.id)
+        val admin = db.admin(id = profilRes.oseba_id)
         this.call.respond(admin)
     }
 

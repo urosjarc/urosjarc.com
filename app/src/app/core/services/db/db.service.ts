@@ -1,23 +1,22 @@
 import {Injectable} from '@angular/core';
 
 import Dexie, {Table} from 'dexie';
-import {
-  Audit,
-  Kontakt,
-  Naloga,
-  Napaka,
-  Naslov,
-  Oseba,
-  OsebaData,
-  Sporocilo,
-  Status,
-  Tematika,
-  Test,
-  Ucenje,
-  Zvezek
-} from "../api/models";
 import {ime, isObject} from "../../../utils/types";
 import {trace} from "../../../utils/trace";
+import {Oseba} from "../api/models/oseba";
+import {Naslov} from "../api/models/naslov";
+import {Ucenje} from "../api/models/ucenje";
+import {Kontakt} from "../api/models/kontakt";
+import {Sporocilo} from "../api/models/sporocilo";
+import {Naloga} from "../api/models/naloga";
+import {Status} from "../api/models/status";
+import {Test} from "../api/models/test";
+import {Tematika} from "../api/models/tematika";
+import {Zvezek} from "../api/models/zvezek";
+import {Audit} from "../api/models/audit";
+import {Napaka} from "../api/models/napaka";
+import {OsebaData} from "../api/models/oseba-data";
+import {Id} from "../api/models/id";
 
 @Injectable({providedIn: 'root'})
 export class DbService extends Dexie {
@@ -53,13 +52,13 @@ export class DbService extends Dexie {
     })
   }
 
-  get profil_id(): string {
+  get profil_id(): Id<Oseba> {
     return localStorage.getItem("root_id") || ""
   }
 
   @trace()
-  set profil_id(oseba_id: string) {
-    localStorage.setItem("root_id", oseba_id)
+  set profil_id(oseba_id: Id<Oseba>) {
+    localStorage.setItem("root_id", oseba_id as string)
   }
 
   get token(): string {

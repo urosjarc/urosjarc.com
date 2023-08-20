@@ -1,15 +1,19 @@
 import {Component, OnInit} from '@angular/core';
-import {AlertService} from "../services/alert/alert.service";
 import {MatDialog} from "@angular/material/dialog";
-import {DialogAlertComponent} from "../components/dialog-alert/dialog-alert.component";
-import {Alert} from "../services/alert/Alert";
-import {trace} from "../utils";
-import {NavigationStart, Router} from "@angular/router";
+import {NavigationStart, Router, RouterOutlet} from "@angular/router";
+import {AlertService} from "../core/services/alert/alert.service";
+import {trace} from "../utils/trace";
+import {AlertServiceModel} from "../core/services/alert/alert.service.model";
+import {PrikaziAlertComponent} from "../ui/windows/prikazi-alert/prikazi-alert.component";
 
 @Component({
   selector: 'app',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  imports: [
+    RouterOutlet
+  ],
+  standalone: true
 })
 export class AppComponent implements OnInit {
   constructor(
@@ -29,14 +33,14 @@ export class AppComponent implements OnInit {
 
   @trace()
   ngOnInit() {
-    this.alertService.alerts.subscribe((alert: Alert) => {
+    this.alertService.alerts.subscribe((alert: AlertServiceModel) => {
       if (alert) this.onAlert(alert)
     })
   }
 
   @trace()
-  private onAlert(data: Alert) {
-    this.dialog.open<any, Alert>(DialogAlertComponent, {
+  private onAlert(data: AlertServiceModel) {
+    this.dialog.open<any, AlertServiceModel>(PrikaziAlertComponent, {
       enterAnimationDuration: 250,
       exitAnimationDuration: 500,
       data: data
