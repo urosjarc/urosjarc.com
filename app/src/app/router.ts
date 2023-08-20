@@ -25,7 +25,7 @@ import {authCheckGuard} from "./utils/guards/auth-check/auth-check.guard";
 import {autoLoginGuard} from "./utils/guards/auto-login/public-prijava.guard";
 import {paths, routes} from "./routes"
 
-const appRoutes = [
+const router = [
   {
     path: routes.public.template,
     component: PublicComponent,
@@ -79,10 +79,10 @@ const appRoutes = [
   {path: '**', component: PublicIndexComponent},
 ];
 
-for (const route of appRoutes) route.path = route.path.replaceAll("/", "")
+for (const route of router) route.path = route.path.replaceAll("/", "")
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes)],
+  imports: [RouterModule.forRoot(router)],
   exports: [RouterModule]
 })
 export class Routing {

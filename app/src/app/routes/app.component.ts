@@ -13,6 +13,9 @@ import {PrikaziAlertComponent} from "../ui/windows/prikazi-alert/prikazi-alert.c
   imports: [
     RouterOutlet
   ],
+  providers: [
+   MatDialog
+  ],
   standalone: true
 })
 export class AppComponent implements OnInit {

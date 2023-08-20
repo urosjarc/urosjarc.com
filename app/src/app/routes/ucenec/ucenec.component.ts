@@ -1,6 +1,6 @@
 import {Component} from "@angular/core";
 import {NavGumb} from "../../components/nav-gumb/NavGumb";
-import {routes} from "../../app.routes";
+import {routes} from "../../router";
 import {SyncService} from "../../services/sync/sync.service";
 import {trace} from "../../utils";
 

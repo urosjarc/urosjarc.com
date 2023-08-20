@@ -32,7 +32,7 @@ export class HttpInterceptor implements HttpInterceptor {
     const self = this
     req = req.clone({
       setHeaders: {
-        Authorization: `Bearer ${this.dbService.token}`
+        Authorization: `Bearer ${this.dbService.get_token()}`
       }
     });
     const count = ++HttpInterceptor.count
