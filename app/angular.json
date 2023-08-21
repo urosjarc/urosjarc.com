@@ -4,6 +4,12 @@
   "newProjectRoot": "projects",
   "projects": {
     "app": {
+      "i18n": {
+        "sourceLocale": "sl",
+        "locales": {
+          "en": "src/locale/messages.en.xlf"
+        }
+      },
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -18,6 +24,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "localize": [
+              "en"
+            ],
             "allowedCommonJsDependencies": [
               "iso8601-duration",
               "moment",
@@ -63,7 +72,13 @@
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"

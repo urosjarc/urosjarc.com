@@ -10,7 +10,9 @@ import {PrikaziAlertComponent} from "../ui/windows/prikazi-alert/prikazi-alert.c
   selector: 'app',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  imports: [RouterOutlet],
+  imports: [
+    RouterOutlet,
+  ],
   standalone: true
 })
 export class AppComponent implements OnInit {

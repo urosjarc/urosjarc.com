@@ -35,8 +35,8 @@ export class PublicIndexComponent {
   ]
   infos: { naslov: string, vsebina: string }[] = [
     {
-      naslov: "Kvalitetne inštrukcije programiranja, fizike, matematike.",
-      vsebina: `
+      naslov: $localize`Kvalitetne inštrukcije programiranja, fizike, matematike.`,
+      vsebina: $localize`
         Inštrukcije gimnazijske matematike in fizike, ter programiranja na univerzitetnem nivoju.
         Priprava učencev na popravni izpit matematike in fizike. Dolgotrajna pomoč pri učenju programiranja za potrebe
         strokovnih srednjih šol pri programskih jezikih (C, C++, Java, Javascript, Node, Python, Bash, Linux).
