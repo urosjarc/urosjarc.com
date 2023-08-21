@@ -3,12 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "serve": "npx http-server dist/app",
+    "serve": "npx http-server -c-1 -p 8080 dist/app",
     "start": "ng serve",
     "build": "ng build --localize",
     "watch": "ng build --localize --watch --configuration development",
     "test": "ng test",
-    "localize": "ng extract-i18n --output-path src/locale",
+    "localize": "ng extract-i18n --format=json --output-path src/locale",
+    "localize-fix": "meld src/locale/messages.json src/locale/messages.en.json",
     "openapi-fix": "ts-node ./scripts/fix-ng-openapi-gen.ts",
     "openapi": "ng-openapi-gen"
   },
@@ -27,6 +28,7 @@
     "@swimlane/ngx-charts": "^20.4.1",
     "bootstrap": "^5.3.1",
     "dexie": "^3.2.4",
+    "inquirer": "^9.2.10",
     "iso8601-duration": "^2.1.1",
     "moment": "^2.29.4",
     "ngx-logger": "^5.0.12",
