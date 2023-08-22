@@ -7,6 +7,7 @@ import {RouterOutlet} from "@angular/router";
 import {ButtonToolbarModel} from "../../ui/parts/buttons/button-toolbar/button-toolbar.model";
 import {appUrls} from "../../app.urls";
 import {trace} from "../../utils/trace";
+import {CardNavigacijaComponent} from "../../ui/parts/cards/card-navigacija/card-navigacija.component";
 
 @Component({
   selector: 'app-ucenec',
@@ -14,7 +15,8 @@ import {trace} from "../../utils/trace";
   styleUrls: ['./ucenec.component.scss'],
   imports: [
     ToolbarNavigacijaComponent,
-    RouterOutlet
+    RouterOutlet,
+    CardNavigacijaComponent
   ],
   standalone: true
 })

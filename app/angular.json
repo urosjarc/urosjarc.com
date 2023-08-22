@@ -67,6 +67,7 @@
               "outputHashing": "all"
             },
             "development": {
+              "localize": ["sl"],
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
@@ -80,13 +81,20 @@
                 }
               ]
             },
-            "sl": {
-              "localize": ["sl"],
-              "baseHref": "/sl/"
-            },
-            "en": {
+            "development-en": {
               "localize": ["en"],
-              "baseHref": "/en/"
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -100,11 +108,8 @@
             "development": {
               "browserTarget": "app:build:development"
             },
-            "en": {
-              "browserTarget": "app:build:en"
-            },
-            "sl": {
-              "browserTarget": "app:build:sl"
+            "development-en": {
+              "browserTarget": "app:build:development-en"
             }
           },
           "defaultConfiguration": "development"

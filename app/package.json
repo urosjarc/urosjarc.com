@@ -5,11 +5,10 @@
     "ng": "ng",
     "test": "ng test",
 
-    "start": "ng serve --configuration=sl",
-    "start-en": "ng serve --configuration=en",
+    "start": "ng serve",
+    "start-en": "ng serve --port=4201 --configuration=development-en",
 
-    "serve": "npx http-server -c-1 -p 8080 dist/app",
-    "build": "ng build --localize",
+    "build": "ng build --localize && npx http-server -c-1 -p 8080 dist/app",
     "watch": "ng build --localize --watch --configuration development",
 
     "localize": "ng extract-i18n --format=json --output-path src/locale",
