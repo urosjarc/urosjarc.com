@@ -1,10 +1,10 @@
 <div class="row">
-  <div *ngFor="let navGumb of buttonToolbarModels" class="col">
+  <div *ngFor="let buttonToolbarModel of buttonToolbarModels" class="col">
     <app-button-toolbar
-      [onClick]="navGumb.onClick || onClick"
-      [style]="navGumb.style"
-      [route]="navGumb.route || ''"
-      [ikona]="navGumb.ikona"
-      [tekst]="navGumb.tekst"/>
+      [onClick]="buttonToolbarModel.onClick || onClick"
+      [style]="buttonToolbarModel.style || ''"
+      [route]="buttonToolbarModel.route || undefined"
+      [ikona]="buttonToolbarModel.ikona"
+      [tekst]="buttonToolbarModel.tekst"/>
   </div>
 </div>

@@ -10,6 +10,9 @@ import {
 } from "../../../ui/parts/progress-bars/progress-bar-loading/progress-bar-loading.component";
 import {FormFieldGesloComponent} from "../../../ui/parts/form-fields/form-field-geslo/form-field-geslo.component";
 import {MatButtonModule} from "@angular/material/button";
+import {
+  PosljiPublicKontaktniObrazecService
+} from "../../../core/use_cases/poslji-public-kontaktni-obrazec/poslji-public-kontaktni-obrazec.service";
 
 @Component({
   selector: 'app-public-kontakt',
@@ -29,29 +32,37 @@ import {MatButtonModule} from "@angular/material/button";
 })
 export class PublicKontaktComponent implements AfterViewInit {
   loading: boolean = false;
-  @ViewChild(FormFieldTelefonComponent) input_telefon?: FormFieldTelefonComponent;
-  @ViewChild(FormFieldOsebaComponent) input_oseba?: FormFieldOsebaComponent;
-  @ViewChild(FormFieldMsgComponent) input_msg?: FormFieldMsgComponent;
-  @ViewChild(FormFieldEmailComponent) input_email?: FormFieldEmailComponent;
+  @ViewChild(FormFieldTelefonComponent) formFieldTelefonComponent?: FormFieldTelefonComponent;
+  @ViewChild(FormFieldOsebaComponent) formFieldOsebaComponent?: FormFieldOsebaComponent;
+  @ViewChild(FormFieldMsgComponent) formFieldMsgComponent?: FormFieldMsgComponent;
+  @ViewChild(FormFieldEmailComponent) formFieldEmailComponent?: FormFieldEmailComponent;
   formGroup: FormGroup = new FormGroup({});
+
+  constructor(private posljiPublicKontaktniObrazecService: PosljiPublicKontaktniObrazecService) {
+  }
 
   @trace()
   ngAfterViewInit(): void {
     this.formGroup = new FormGroup({//@ts-ignore
-      oseba: this.input_oseba?.formControl, //@ts-ignore
-      msg: this.input_msg?.formControl,//@ts-ignore
-      telefon: this.input_telefon?.formControl,//@ts-ignore
-      email: this.input_email?.formControl
+      oseba: this.formFieldOsebaComponent?.formControl, //@ts-ignore
+      msg: this.formFieldMsgComponent?.formControl,//@ts-ignore
+      telefon: this.formFieldTelefonComponent?.formControl,//@ts-ignore
+      email: this.formFieldEmailComponent?.formControl
     });
   }
 
   @trace()
-  poslji() {
+  async poslji() {
     if (this.formGroup?.invalid) return;
 
-    if (this.loading) return
-    this.loading = true
+    await this.posljiPublicKontaktniObrazecService.zdaj({
+      email: this.formFieldEmailComponent?.formControl.value || "",
+      ime_priimek: this.formFieldOsebaComponent?.formControl.value || "",
+      telefon: this.formFieldTelefonComponent?.formControl.value || "",
+      vsebina: this.formFieldMsgComponent?.formControl.value || ""
+    })
 
+    this.loading = true
   }
 
 

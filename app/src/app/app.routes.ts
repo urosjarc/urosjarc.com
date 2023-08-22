@@ -4,7 +4,7 @@ import {Route} from "@angular/router";
 
 const public_import = () => import('./routes/public/public.component').then(c => c.PublicComponent)
 
-const routes: Route[] = [
+const appRoutes: Route[] = [
   {
     path: appUrls.public.template,
     loadComponent: public_import,
@@ -115,6 +115,6 @@ const routes: Route[] = [
   },
 ];
 
-for (const route of routes) route.path = (route.path || "").replaceAll("/", "")
+for (const route of appRoutes) route.path = (route.path || "").replaceAll("/", "")
 
-export default routes
+export default appRoutes

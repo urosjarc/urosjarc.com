@@ -2,9 +2,10 @@
   <h1 mat-dialog-title>
     Izberite svojo vlogo
     <mat-divider/>
+    <app-progress-bar-loading [loading]="loading"/>
   </h1>
   <div mat-dialog-content>
-    <app-toolbar-navigacija [buttonToolbarModels]="navGumbi"/>
+    <app-toolbar-navigacija [buttonToolbarModels]="buttonToolbarModels"/>
   </div>
   <div mat-dialog-actions>
     <button class="w-100" mat-raised-button mat-dialog-close>Zapri</button>

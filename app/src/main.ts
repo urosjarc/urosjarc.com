@@ -10,11 +10,15 @@ import {
   core_providers,
   locale
 } from "./app/app.providers";
+import {LoggerModule, NgxLoggerLevel} from "ngx-logger";
 
 moment.locale(locale);
 
+const logger_providers = LoggerModule.forRoot({level: NgxLoggerLevel.DEBUG}).providers || []
+
 bootstrapApplication(AppComponent, {
   providers: [
+    ...logger_providers,
     ...angular_providers,
     ...core_providers,
     ...angular_configuration,

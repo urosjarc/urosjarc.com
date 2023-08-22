@@ -3,23 +3,18 @@ import {
   HttpErrorResponse,
   HttpEvent,
   HttpHandler,
+  HttpInterceptor,
   HttpRequest,
   HttpResponse
 } from "@angular/common/http";
-import {forwardRef, Injectable, Provider} from "@angular/core";
+import {Injectable, Provider} from "@angular/core";
 import {Observable, tap} from "rxjs";
 import {DbService} from "../../core/services/db/db.service";
 import {AlertService} from "../../core/services/alert/alert.service";
 import {ApiService} from "../../core/services/api/services";
 
-export const HTTP_INTERCEPTOR_PROVIDER: Provider = {
-  provide: HTTP_INTERCEPTORS,
-  useExisting: forwardRef(() => HttpInterceptor),
-  multi: true
-};
-
 @Injectable()
-export class HttpInterceptor implements HttpInterceptor {
+export class HttpApiInterceptor implements HttpInterceptor {
   static count: number = 0
 
   constructor(
@@ -35,7 +30,7 @@ export class HttpInterceptor implements HttpInterceptor {
         Authorization: `Bearer ${this.dbService.get_token()}`
       }
     });
-    const count = ++HttpInterceptor.count
+    const count = ++HttpApiInterceptor.count
     console.log(`${count} REQ `, req)
     return next.handle(req).pipe(
       tap({
@@ -56,3 +51,9 @@ export class HttpInterceptor implements HttpInterceptor {
   }
 
 }
+
+export const HTTP_API_INTERCEPTOR_PROVIDER: Provider = {
+  provide: HTTP_INTERCEPTORS,
+  useClass: HttpApiInterceptor,
+  multi: true
+};

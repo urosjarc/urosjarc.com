@@ -15,10 +15,11 @@ import {MatButtonModule} from "@angular/material/button";
   standalone: true
 })
 export class ButtonToolbarComponent {
-  @Input() tekst: string = ""
-  @Input() ikona: string = ""
-  @Input() route: string = ""
-  @Input() style: string | undefined = ""
+  @Input() tekst!: string
+  @Input() ikona!: string
+  @Input() route?: string
+  @Input() style?: string
   @Input() onClick: () => void = () => {
   }
+  protected readonly JSON = JSON;
 }

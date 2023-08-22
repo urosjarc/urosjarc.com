@@ -20,7 +20,7 @@ export function autoLoginGuard(args: { routeFn: (profil: Profil) => { $: string 
         console.log("GUARD", autoLoginGuard.name, urlTree)
 
       } catch (e) {
-        alert()
+        alert("PublicPrijava")
         throw e
         console.groupEnd()
         console.log("GUARD", autoLoginGuard.name, true)

@@ -8,21 +8,17 @@ import {Router} from "@angular/router";
 import {ArrayTypes, exe} from "../../../utils/types";
 import {Oseba} from "../../services/api/models/oseba";
 import {appUrls} from "../../../app.urls";
-import {Observable, Subject} from "rxjs";
+import {Observable} from "rxjs";
 import {AlertService} from "../../services/alert/alert.service";
 import {OsebaData} from "../../services/api/models/oseba-data";
-import {PrijavaRes} from "../../services/api/models/prijava-res";
 import {IzberiTipOsebeComponent} from "../../../ui/windows/izberi-tip-osebe/izberi-tip-osebe.component";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {DbService} from "../../services/db/db.service";
+import {trace} from "../../../utils/trace";
 
 @Injectable()
 export class PrijaviUporabnikaService {
-  private cakam_redirect: Subject<PrijavaRes> = new Subject();
-
-  get cakam_redirect_event() {
-    return this.cakam_redirect.asObservable();
-  }
+  private dialogRef?: MatDialogRef<IzberiTipOsebeComponent>
 
   constructor(
     private alert: AlertService,
@@ -33,6 +29,7 @@ export class PrijaviUporabnikaService {
     private api: ApiService) {
   }
 
+  @trace()
   async zdaj(prijavaReq: PrijavaReq) {
 
     // Ustvari prijavo
@@ -41,21 +38,26 @@ export class PrijaviUporabnikaService {
     // Shrani token da bo lahko uporabnik klical server z autorizacijo
     this.db.set_token(prijavaRes.token || "")
 
+    // Ce ima uporabnik samo en tip potem takoj sprozi redirect.
+    if(prijavaRes.tip.length == 1){
+      return await this.redirect(prijavaRes.tip[0], true)
+    }
+
     // Sprozi event za redirect
-    this.dialog.open(IzberiTipOsebeComponent, {
+    this.dialogRef = this.dialog.open(IzberiTipOsebeComponent, {
       enterAnimationDuration: 250,
       exitAnimationDuration: 500,
       data: {
-        callback: (tip: ArrayTypes<Oseba['tip']>) => {
-          this.redirect(tip, false)
+        callback: async (tip: ArrayTypes<Oseba['tip']>) => {
+          await this.redirect(tip, true)
         },
         tipi: prijavaRes.tip
       }
     });
   }
 
+  @trace()
   async redirect(tip: ArrayTypes<Oseba['tip']>, sinhroniziraj: boolean) {
-
     // Izberi primeren route za redirect
     let clientRoute: { $: string } | null = null
     let serverRoute: Observable<OsebaData> | null = null
@@ -75,15 +77,25 @@ export class PrijaviUporabnikaService {
     }
 
     // Ce ima neprimerno ali manjkajoco avtorizacijo prikazi alert.
-    if (!clientRoute || !serverRoute)
+    if (!clientRoute || !serverRoute){
+      this.dialogRef?.close()
       return this.alert.warnManjkajocaAvtorizacija()
+    }
 
-    if (!sinhroniziraj) return
 
-    // Dobi vse uporabniske podatke
-    const osebaData = await exe(serverRoute)
+    if (sinhroniziraj) {
+      // Dobi vse uporabniske podatke
+      const osebaData = await exe(serverRoute)
 
-    // Sinhroniziraj uporabniske podatke
-    this.sinhroniziraj_uporabniske_podatke.zdaj(osebaData)
+      // Sinhroniziraj uporabniske podatke
+      await this.sinhroniziraj_uporabniske_podatke.zdaj(osebaData)
+    }
+
+    //Zapri dialog ki si ga odprl
+    this.dialogRef?.close()
+
+    //Ustvari koncni redirect uporabnika na izbrano lokacijo
+    return this.router.navigate([clientRoute.$])
+
   }
 }
