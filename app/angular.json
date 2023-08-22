@@ -79,6 +79,14 @@
                   "with": "src/environments/environment.development.ts"
                 }
               ]
+            },
+            "sl": {
+              "localize": ["sl"],
+              "baseHref": "/sl/"
+            },
+            "en": {
+              "localize": ["en"],
+              "baseHref": "/en/"
             }
           },
           "defaultConfiguration": "production"
@@ -91,6 +99,12 @@
             },
             "development": {
               "browserTarget": "app:build:development"
+            },
+            "en": {
+              "browserTarget": "app:build:en"
+            },
+            "sl": {
+              "browserTarget": "app:build:sl"
             }
           },
           "defaultConfiguration": "development"

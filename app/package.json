@@ -3,13 +3,18 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "test": "ng test",
+
+    "start": "ng serve --configuration=sl",
+    "start-en": "ng serve --configuration=en",
+
     "serve": "npx http-server -c-1 -p 8080 dist/app",
-    "start": "ng serve",
     "build": "ng build --localize",
     "watch": "ng build --localize --watch --configuration development",
-    "test": "ng test",
+
     "localize": "ng extract-i18n --format=json --output-path src/locale",
     "localize-fix": "meld src/locale/messages.json src/locale/messages.en.json",
+
     "openapi-fix": "ts-node ./scripts/fix-ng-openapi-gen.ts",
     "openapi": "ng-openapi-gen"
   },
