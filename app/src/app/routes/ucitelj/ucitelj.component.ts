@@ -44,12 +44,12 @@ export class UciteljComponent {
       route: appUrls.ucitelj({}).ucenci({}).$,
       style: this.navStyle
     },
-    {
-      tekst: "Sporocila",
-      ikona: "sms",
-      route: appUrls.ucitelj({}).sporocila({}).$,
-      style: this.navStyle
-    },
+    // {
+    //   tekst: "Sporocila",
+    //   ikona: "sms",
+    //   route: appUrls.ucitelj({}).sporocila({}).$,
+    //   style: this.navStyle
+    // },
     {
       tekst: "Delo",
       ikona: "work",

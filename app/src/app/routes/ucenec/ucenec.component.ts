@@ -32,12 +32,12 @@ export class UcenecComponent {
       route: appUrls.ucenec({}).testi({}).$,
       style: this.navStyle
     },
-    {
-      tekst: "Sporocila",
-      ikona: "sms",
-      route: appUrls.ucenec({}).sporocila({}).$,
-      style: this.navStyle
-    },
+    // {
+    //   tekst: "Sporocila",
+    //   ikona: "sms",
+    //   route: appUrls.ucenec({}).sporocila({}).$,
+    //   style: this.navStyle
+    // },
     {
       tekst: "Delo",
       ikona: "work",
