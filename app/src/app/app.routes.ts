@@ -1,6 +1,7 @@
 import {appUrls, paths} from "./app.urls"
 import {authCheckGuard} from "./middleware/guards/auth-check/auth-check.guard";
 import {Route} from "@angular/router";
+import {autoLoginGuard} from "./middleware/guards/auto-login/auto-login";
 
 const public_import = () => import('./routes/public/public.component').then(c => c.PublicComponent)
 
@@ -23,8 +24,8 @@ const appRoutes: Route[] = [
       },
       {
         path: paths.prijava.template,
-        loadComponent: () => import('./routes/public/prijava/public-prijava.component').then(c => c.PublicPrijavaComponent)
-        // canActivate: [autoLoginGuard({routeFn: route.profil_tip})],
+        canActivate: [autoLoginGuard],
+        loadComponent: () => import('./routes/public/prijava/public-prijava.component').then(c => c.PublicPrijavaComponent),
       },
     ]
   },

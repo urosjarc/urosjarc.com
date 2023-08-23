@@ -4,6 +4,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {NgStyle} from "@angular/common";
 import {MatListModule} from "@angular/material/list";
 import {AlertServiceModel} from "../../../core/services/alert/alert.service.model";
+import {WindowModel} from "../../../utils/WindowModel";
 
 @Component({
   selector: 'app-prikazi-alert',
@@ -12,7 +13,4 @@ import {AlertServiceModel} from "../../../core/services/alert/alert.service.mode
   standalone: true,
   imports: [MatDialogModule, MatButtonModule, NgStyle, MatListModule],
 })
-export class PrikaziAlertComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: AlertServiceModel) {
-  }
-}
+export class PrikaziAlertComponent extends WindowModel<AlertServiceModel> {}

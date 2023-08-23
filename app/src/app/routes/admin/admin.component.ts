@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import {appUrls} from "../../app.urls";
 import {trace} from "../../utils/trace";
 import {
-  IzbrisiUporabniskePodatkeService
-} from "../../core/use_cases/izbrisi-uporabniske-podatke/izbrisi-uporabniske-podatke.service";
+  OdjaviOseboService
+} from "../../core/use_cases/odjavi-osebo/odjavi-osebo.service";
 import {ButtonToolbarModel} from "../../ui/parts/buttons/button-toolbar/button-toolbar.model";
 import {CardNavigacijaComponent} from "../../ui/parts/cards/card-navigacija/card-navigacija.component";
 import {RouterOutlet} from "@angular/router";
@@ -41,7 +41,7 @@ export class AdminComponent {
     },
   ];
 
-  constructor(private izbrisi_uporabniske_podatke: IzbrisiUporabniskePodatkeService) {
+  constructor(private izbrisi_uporabniske_podatke: OdjaviOseboService) {
   }
 
   @trace()

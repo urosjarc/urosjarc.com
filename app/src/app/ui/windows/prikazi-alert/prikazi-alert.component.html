@@ -1,10 +1,10 @@
 <div class="text-center">
   <h1 mat-dialog-title>
-    {{data.naslov}}
+    {{model.naslov}}
     <mat-divider/>
   </h1>
-  <div mat-dialog-content [innerHTML]="data.vsebina"></div>
+  <div mat-dialog-content [innerHTML]="model.vsebina"></div>
   <div mat-dialog-actions>
-    <button apperence="fill" [color]="data.color" class="w-100" mat-raised-button mat-dialog-close>Zapri</button>
+    <button apperence="fill" [color]="model.color" class="w-100" mat-raised-button mat-dialog-close>Zapri</button>
   </div>
 </div>

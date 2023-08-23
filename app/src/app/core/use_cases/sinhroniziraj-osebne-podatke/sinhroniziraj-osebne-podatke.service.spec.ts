@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SinhronizirajUporabniskePodatkeService } from './sinhroniziraj-uporabniske-podatke.service';
+import { SinhronizirajOsebnePodatkeService } from './sinhroniziraj-osebne-podatke.service';
 
 describe('SinhronizirajUporabniskePodatkeService', () => {
-  let service: SinhronizirajUporabniskePodatkeService;
+  let service: SinhronizirajOsebnePodatkeService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(SinhronizirajUporabniskePodatkeService);
+    service = TestBed.inject(SinhronizirajOsebnePodatkeService);
   });
 
   it('should be created', () => {

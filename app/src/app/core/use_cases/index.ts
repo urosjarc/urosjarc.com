@@ -1,15 +1,18 @@
-import {IzbrisiUporabniskePodatkeService} from "./izbrisi-uporabniske-podatke/izbrisi-uporabniske-podatke.service";
+import {OdjaviOseboService} from "./odjavi-osebo/odjavi-osebo.service";
 import {
   PosljiPublicKontaktniObrazecService
 } from "./poslji-public-kontaktni-obrazec/poslji-public-kontaktni-obrazec.service";
-import {PrijaviUporabnikaService} from "./prijavi-uporabnika/prijavi-uporabnika.service";
-import {
-  SinhronizirajUporabniskePodatkeService
-} from "./sinhroniziraj-uporabniske-podatke/sinhroniziraj-uporabniske-podatke.service";
+import {PrijaviOseboService} from "./prijavi-osebo/prijavi-osebo.service";
+import {SinhronizirajOsebnePodatkeService} from "./sinhroniziraj-osebne-podatke/sinhroniziraj-osebne-podatke.service";
+import {DobiNastavitveProfilaService} from "./dobi-nastavitve-profila/dobi-nastavitve-profila.service";
+import {IzberiTipOsebeService} from "./izberi-tip-osebe/izberi-tip-osebe.service";
+import {UseCase} from "../../utils/types";
 
-export const core_useCases = [
-  IzbrisiUporabniskePodatkeService,
+export const core_useCases: UseCase[] = [
+  DobiNastavitveProfilaService,
+  IzberiTipOsebeService,
+  OdjaviOseboService,
   PosljiPublicKontaktniObrazecService,
-  PrijaviUporabnikaService,
-  SinhronizirajUporabniskePodatkeService
+  PrijaviOseboService,
+  SinhronizirajOsebnePodatkeService
 ]

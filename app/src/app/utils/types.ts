@@ -1,4 +1,5 @@
 import {firstValueFrom, Observable} from "rxjs";
+import {Oseba} from "../core/services/api/models/oseba";
 
 export function isObject(o: any) {
   return o instanceof Object && o.constructor === Object;
@@ -13,3 +14,11 @@ export type ArrayTypes<T extends Array<any> | undefined> = T extends Array<infer
 export async function exe<T>(observable: Observable<T>): Promise<T> {
   return await firstValueFrom(observable)
 }
+
+export type AppUrl = { $: string }
+
+export class UseCase {
+}
+
+export type OsebaTip = ArrayTypes<Oseba['tip']>
+export type OsebaTipi = Oseba['tip']

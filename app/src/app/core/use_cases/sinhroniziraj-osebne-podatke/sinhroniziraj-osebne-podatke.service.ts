@@ -2,17 +2,16 @@ import {Injectable} from '@angular/core';
 import {OsebaData} from "../../services/api/models/oseba-data";
 import {DbService} from "../../services/db/db.service";
 import {trace} from "../../../utils/trace";
+import {UseCase} from "../../../utils/types";
 
 @Injectable()
-export class SinhronizirajUporabniskePodatkeService {
+export class SinhronizirajOsebnePodatkeService implements UseCase {
 
-  constructor(
-    private db: DbService
-  ) {
+  constructor(private db: DbService) {
   }
 
   @trace()
   async zdaj(osebaData: OsebaData) {
-    await this.db.reset(osebaData)
+    return await this.db.reset(osebaData)
   }
 }

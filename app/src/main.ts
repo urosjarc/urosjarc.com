@@ -10,6 +10,7 @@ import {
   core_providers,
 } from "./app/app.providers";
 import {LoggerModule, NgxLoggerLevel} from "ngx-logger";
+import {Provider} from "@angular/core";
 
 moment.locale($localize.locale);
 
@@ -22,5 +23,5 @@ bootstrapApplication(AppComponent, {
     ...core_providers,
     ...angular_configuration,
     ...angular_material_configuration
-  ]
+  ] as Provider[]
 })

@@ -1,4 +1,4 @@
-import {Component, Inject, Input} from "@angular/core";
+import {Component, Inject} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
 import {NgStyle} from "@angular/common";
@@ -9,6 +9,8 @@ import {ToolbarNavigacijaComponent} from "../../parts/toolbars/toolbar-navigacij
 import {
   ProgressBarLoadingComponent
 } from "../../parts/progress-bars/progress-bar-loading/progress-bar-loading.component";
+import {WindowModel} from "../../../utils/WindowModel";
+
 
 @Component({
   selector: 'app-izberi-tip-osebe',
@@ -17,12 +19,12 @@ import {
   standalone: true,
   imports: [MatDialogModule, MatButtonModule, NgStyle, MatListModule, ToolbarNavigacijaComponent, ProgressBarLoadingComponent],
 })
-export class IzberiTipOsebeComponent {
+export class IzberiTipOsebeComponent extends WindowModel<IzberiTipOsebeModel> {
   buttonToolbarModels: ButtonToolbarModel[] = []
   loading: boolean = false;
 
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public model: IzberiTipOsebeModel) {
+  constructor(@Inject(MAT_DIALOG_DATA) model: IzberiTipOsebeModel) {
+    super(model);
 
     model.tipi.forEach(tip => {
       this.buttonToolbarModels.push({

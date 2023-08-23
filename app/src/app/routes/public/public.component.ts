@@ -19,7 +19,7 @@ export class PublicComponent {
     {
       tekst: "Domov",
       ikona: "home",
-      route: appUrls.public({}).index({}).$
+      route: appUrls.public({}).$
     },
     {
       tekst: "Koledar",

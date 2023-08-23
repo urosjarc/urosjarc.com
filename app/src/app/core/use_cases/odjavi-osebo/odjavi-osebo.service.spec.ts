@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { IzbrisiUporabniskePodatkeService } from './izbrisi-uporabniske-podatke.service';
+import { OdjaviOseboService } from './odjavi-osebo.service';
 
 describe('IzbrisiUporabniskePodatkeService', () => {
-  let service: IzbrisiUporabniskePodatkeService;
+  let service: OdjaviOseboService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(IzbrisiUporabniskePodatkeService);
+    service = TestBed.inject(OdjaviOseboService);
   });
 
   it('should be created', () => {

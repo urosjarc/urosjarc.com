@@ -1,6 +1,5 @@
 import {route, stringParser} from "typesafe-routes";
 
-
 const index = route('', {}, {})
 
 const koledar = route('koledar', {}, {})

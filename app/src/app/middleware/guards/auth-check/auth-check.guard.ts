@@ -1,13 +1,12 @@
 import {CanActivateFn, Router} from '@angular/router';
 import {inject} from "@angular/core";
-import {Oseba} from "../../../core/services/api/models/oseba";
-import {ArrayTypes, exe} from "../../../utils/types";
+import {AppUrl, exe, OsebaTip} from "../../../utils/types";
 import {ApiService} from "../../../core/services/api/services";
 import {HttpErrorResponse} from "@angular/common/http";
 
 export function authCheckGuard(args: {
-  tip: ArrayTypes<Oseba['tip']>,
-  error_redirect: { $: string }
+  tip: OsebaTip,
+  error_redirect: AppUrl,
 }): CanActivateFn {
   return () => {
 

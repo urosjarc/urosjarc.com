@@ -1,10 +1,11 @@
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogModule} from "@angular/material/dialog";
+import {Component} from '@angular/core';
+import {MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
 import {DatePipe, NgStyle} from "@angular/common";
 import {MatListModule} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
 import {SporociloModel} from "../../../../assets/models/SporociloModel";
+import {WindowModel} from "../../../utils/WindowModel";
 
 @Component({
   selector: 'app-prikazi-poslano-sporocilo',
@@ -13,8 +14,5 @@ import {SporociloModel} from "../../../../assets/models/SporociloModel";
   standalone: true,
   imports: [MatDialogModule, MatButtonModule, NgStyle, MatListModule, DatePipe, MatIconModule],
 })
-export class PrikaziPoslanoSporociloComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public sporociloInfo: SporociloModel) {
-  }
-
+export class PrikaziPoslanoSporociloComponent extends WindowModel<SporociloModel> {
 }
