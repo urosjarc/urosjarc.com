@@ -8,11 +8,10 @@ import {
   angular_material_configuration,
   angular_providers,
   core_providers,
-  locale
 } from "./app/app.providers";
 import {LoggerModule, NgxLoggerLevel} from "ngx-logger";
 
-moment.locale(locale);
+moment.locale($localize.locale);
 
 const logger_providers = LoggerModule.forRoot({level: NgxLoggerLevel.DEBUG}).providers || []
 

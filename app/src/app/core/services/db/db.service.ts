@@ -18,6 +18,9 @@ import {Napaka} from "../api/models/napaka";
 import {OsebaData} from "../api/models/oseba-data";
 import {Id} from "../api/models/id";
 
+// @ts-ignore
+Dexie.debug = false
+
 @Injectable()
 export class DbService extends Dexie {
 

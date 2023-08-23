@@ -9,18 +9,19 @@ import {MAT_DIALOG_SCROLL_STRATEGY_PROVIDER, MatDialog} from "@angular/material/
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
 import {STEPPER_GLOBAL_OPTIONS} from "@angular/cdk/stepper";
 import {DATE_PIPE_DEFAULT_OPTIONS} from "@angular/common";
-import {LOCALE_ID} from "@angular/core";
 import {provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
 import {middleware_interceptors} from "./middleware";
+import {MatNativeDateModule} from "@angular/material/core";
+import {importProvidersFrom} from "@angular/core";
 
-export const locale = 'sl'
 
 export const angular_providers = [
   Dialog,
   MatDialog,
-  provideHttpClient(withInterceptorsFromDi()),
   provideAnimations(),
   provideRouter(appRoutes),
+  importProvidersFrom(MatNativeDateModule),
+  provideHttpClient(withInterceptorsFromDi()),
 ]
 
 export const core_providers = [
