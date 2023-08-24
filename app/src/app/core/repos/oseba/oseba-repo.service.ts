@@ -1,15 +1,15 @@
 import {Injectable} from '@angular/core';
-import {SporociloModel} from "../../../../assets/models/SporociloModel";
-import {ZvezekModel} from "../../../../assets/models/ZvezekModel";
 import {ime} from "../../../utils/types";
 import {Oseba} from "../../services/api/models/oseba";
 import {Kontakt} from "../../services/api/models/kontakt";
 import {Tematika} from "../../services/api/models/tematika";
-import {TematikaModel} from "../../../../assets/models/TematikaModel";
 import {DbService} from "../../services/db/db.service";
 import {Sporocilo} from "../../services/api/models/sporocilo";
 import {String_vDate} from "../../../utils/String";
 import {Naloga} from "../../services/api/models/naloga";
+import {SporociloModel} from "../../domain/SporociloModel";
+import {ZvezekModel} from "../../domain/ZvezekModel";
+import {TematikaModel} from "../../domain/TematikaModel";
 
 @Injectable()
 export class OsebaRepoService {
@@ -41,9 +41,9 @@ export class OsebaRepoService {
         if (!posiljatelj) continue
 
         vsa_sporocila.push({
+          sporocilo,
           smer: je_posiljatelj ? "POSLANO" : "PREJETO",
-          vsebina: sporocilo.vsebina || "",
-          datum: String_vDate(sporocilo?.poslano?.toString() || ""),
+          poslano: String_vDate(sporocilo?.poslano?.toString() || ""),
           posiljatelj: je_posiljatelj ? posiljatelj : oseba,
           prejemnik: je_posiljatelj ? oseba : posiljatelj,
           posiljatelj_kontakt: je_posiljatelj ? posiljatelj_kontakt : kontakt,
@@ -58,37 +58,19 @@ export class OsebaRepoService {
   async zvezki(): Promise<ZvezekModel[]> {
     const zvezkiInfos: ZvezekModel[] = []
     for (const zvezek of await this.db.zvezek.toArray()) {
-      const zvezekInfo: ZvezekModel = {
-        id: zvezek._id.toString(),
-        naslov: zvezek.naslov || "",
-        tematike: [],
-        izbran: false,
-        tip: zvezek.tip
-      }
+      const zvezekInfo: ZvezekModel = {zvezek, tematike: []}
       const tematike = await this.db.tematika
         .where(ime<Tematika>("zvezek_id"))
         .equals(zvezek._id.toString())
         .toArray()
       for (const tematika of tematike) {
-        const tematikaInfo: TematikaModel = {
-          id: tematika._id.toString(),
-          naslov: tematika.naslov || '',
-          naloge: [],
-          izbran: false
-        }
+        const tematikaInfo: TematikaModel = {tematika, naloge: []}
         const naloge = await this.db.naloga
           .where(ime<Naloga>("tematika_id"))
           .equals(tematika._id.toString())
           .toArray()
         for (const naloga of naloge) {
-          tematikaInfo.naloge.push({
-            id: naloga._id || '',
-            vsebina: naloga.vsebina || '',
-            resitev: naloga.resitev || '',
-            stevilka: 1,
-            status: undefined,
-            izbran: false
-          })
+          tematikaInfo.naloge.push({naloga, status: undefined})
         }
         zvezekInfo.tematike.push(tematikaInfo)
       }

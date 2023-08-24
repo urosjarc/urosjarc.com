@@ -1,15 +1,13 @@
 import {Injectable} from '@angular/core';
 import {DbService} from "../../services/db/db.service";
-import {ApiService} from "../../services/api/services/api.service";
 import {ime} from "../../../utils/types";
 import {Test} from "../../services/api/models/test";
-import {TestModel} from "../../../../assets/models/TestModel";
 import {Status} from "../../services/api/models/status";
 import {String_vDate} from "../../../utils/String";
-import {appUrls} from "../../../app.urls";
 import {Naloga} from "../../services/api/models/naloga";
 import {Audit} from "../../services/api/models/audit";
 import {Id} from "../../services/api/models/id";
+import {TestModel} from "../../domain/TestModel";
 
 @Injectable()
 export class UcenecRepoService {
@@ -34,19 +32,14 @@ export class UcenecRepoService {
       }).count()
 
       tableTests.push({
-        naslov: test.naslov || "",
+        test,
         opravljeno: opravljeni_statusi / st_nalog,
-        datum: String_vDate(test.deadline as string),
-        link: appUrls.ucenec({}).test({test_id: test._id.toString()}).$
+        deadline: String_vDate(test.deadline as string)
       })
 
     }
 
     return tableTests
-  }
-
-  async test(test_id: string) {
-
   }
 
   async naloga(naloga_id: string) {
@@ -64,7 +57,7 @@ export class UcenecRepoService {
     }).first()
   }
 
-  async audits(status_id: Id<Status>){
+  async audits(status_id: Id<Status>) {
     return this.db.audit
       .where(ime<Audit>("entitete_id"))
       .equals(status_id.toString()).toArray();

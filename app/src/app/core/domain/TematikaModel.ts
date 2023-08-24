@@ -1,8 +1,7 @@
 import {NalogaModel} from "./NalogaModel";
+import {Tematika} from "../services/api/models/tematika";
 
 export interface TematikaModel {
-  id: string,
-  naslov: string,
-  izbran: boolean | undefined,
+  tematika: Tematika,
   naloge: NalogaModel[]
 }
