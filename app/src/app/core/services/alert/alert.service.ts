@@ -47,17 +47,6 @@ export class AlertService {
     `)
   }
 
-  errorSinhronizacijskaNapaka(err: Error) {
-    const msg = err.message
-    this.error("KRITICNA SINHRONIZACIJSKA NAPAKA", `
-      Zgodila se je kriticna sinhronizacijska napaka! Incident se je registriral!<br>
-      Če želite da se Vas obvesti, ko bo napaka rešena, mi posredujte vašo željo preko email-a ali sms-a.<br>
-      Za vse nevšečnosti se Vam iskreno opravičujem!<br>
-      <br>
-      ${msg}
-    `)
-  }
-
   errorServerNapaka(err: HttpErrorResponse) {
     const msg = err.message
     this.error("KRITIČNA NAPAKA", `

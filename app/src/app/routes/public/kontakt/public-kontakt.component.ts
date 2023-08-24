@@ -13,6 +13,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {
   PosljiPublicKontaktniObrazecService
 } from "../../../core/use_cases/poslji-public-kontaktni-obrazec/poslji-public-kontaktni-obrazec.service";
+import {AlertService} from "../../../core/services/alert/alert.service";
 
 @Component({
   selector: 'app-public-kontakt',
@@ -38,7 +39,9 @@ export class PublicKontaktComponent implements AfterViewInit {
   @ViewChild(FormFieldEmailComponent) formFieldEmailComponent?: FormFieldEmailComponent;
   formGroup: FormGroup = new FormGroup({});
 
-  constructor(private posljiPublicKontaktniObrazecService: PosljiPublicKontaktniObrazecService) {
+  constructor(
+    private alert: AlertService,
+    private posljiPublicKontaktniObrazecService: PosljiPublicKontaktniObrazecService) {
   }
 
   @trace()
@@ -55,14 +58,18 @@ export class PublicKontaktComponent implements AfterViewInit {
   async poslji() {
     if (this.formGroup?.invalid) return;
 
-    await this.posljiPublicKontaktniObrazecService.zdaj({
+    this.loading = true
+
+    const kontaktObrazecRes = await this.posljiPublicKontaktniObrazecService.zdaj({
       email: this.formFieldEmailComponent?.formControl.value || "",
       ime_priimek: this.formFieldOsebaComponent?.formControl.value || "",
       telefon: this.formFieldTelefonComponent?.formControl.value || "",
       vsebina: this.formFieldMsgComponent?.formControl.value || ""
     })
 
-    this.loading = true
+    if (kontaktObrazecRes) this.alert.infoSprejetnoSporocilo(kontaktObrazecRes)
+
+    this.loading = false
   }
 
 

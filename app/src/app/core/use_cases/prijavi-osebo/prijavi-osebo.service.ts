@@ -18,14 +18,18 @@ export class PrijaviOseboService implements UseCase {
   }
 
   @trace()
-  async zdaj(prijavaReq: PrijavaReq): Promise<PrijavaRes> {
+  async zdaj(prijavaReq: PrijavaReq) {
 
     this.log.info("Ustvari prijavo")
+
     const prijavaRes = await exe(this.api.authPrijavaPost({body: prijavaReq}))
+
+    if (!prijavaRes) return null
 
     this.log.info("Shrani token da bo lahko uporabnik klical server z autorizacijo")
     this.db.set_token(prijavaRes.token || "")
 
     return prijavaRes
+
   }
 }

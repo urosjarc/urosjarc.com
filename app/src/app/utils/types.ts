@@ -11,8 +11,12 @@ export function ime<T>(name: keyof T) {
 
 export type ArrayTypes<T extends Array<any> | undefined> = T extends Array<infer E> ? E : never;
 
-export async function exe<T>(observable: Observable<T>): Promise<T> {
-  return await firstValueFrom(observable)
+export async function exe<T>(observable: Observable<T>): Promise<T | null> {
+  try {
+    return await firstValueFrom(observable)
+  } catch (e) {
+    return null
+  }
 }
 
 export type AppUrl = { $: string }

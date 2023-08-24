@@ -69,21 +69,24 @@ export class PublicPrijavaComponent implements AfterViewInit {
       username: this.input_oseba.formControl.getRawValue() || "",
       geslo: this.input_geslo.formControl.getRawValue() || ""
     }
-    try {
-      const prijavaRes = await this.prijavi_osebo.zdaj(prijavaReq)
-      const oseba_tip = await this.izberi_tip_osebe.zdaj(prijavaRes.tip)
-      const nastavitve_profila = await this.dobi_nastavitve_profila.zdaj(oseba_tip)
-      if (!nastavitve_profila) {
-        this.loading = false
-        return this.alert.warnManjkajocaAvtorizacija()
-      }
-      const osebni_podatki = await exe(nastavitve_profila.osebni_podatki_observable)
-      await this.sinhroniziraj_osebne_podatke.zdaj(osebni_podatki)
-      await this.router.navigate([nastavitve_profila.on_login_url.$])
-    } catch (e) {
+
+    const prijavaRes = await this.prijavi_osebo.zdaj(prijavaReq)
+    if (!prijavaRes) return (this.loading = false)
+
+    const oseba_tip = await this.izberi_tip_osebe.zdaj(prijavaRes.tip)
+    const nastavitve_profila = await this.dobi_nastavitve_profila.zdaj(oseba_tip)
+
+    if (!nastavitve_profila) {
+      this.loading = false
+      return this.alert.warnManjkajocaAvtorizacija()
     }
 
-    this.loading = false
+    const osebni_podatki = await exe(nastavitve_profila.osebni_podatki_observable)
+    if (!osebni_podatki) return (this.loading = false)
 
+    await this.sinhroniziraj_osebne_podatke.zdaj(osebni_podatki)
+    await this.router.navigate([nastavitve_profila.on_login_url.$])
+
+    this.loading = false
   }
 }

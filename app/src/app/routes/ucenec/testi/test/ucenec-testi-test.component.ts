@@ -23,6 +23,7 @@ import {DatePipe, KeyValuePipe, NgForOf} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
 import {DateOddaljenostPipe} from "../../../../ui/pipes/date-oddaljenost/date-oddaljenost.pipe";
 import {appUrls} from "../../../../app.urls";
+import {AlertService} from "../../../../core/services/alert/alert.service";
 
 @Component({
   selector: 'app-ucenec-testi-test',
@@ -62,6 +63,7 @@ export class UcenecTestiTestComponent implements OnInit {
   deadline: Date = new Date();
 
   constructor(
+    private alert: AlertService,
     private dbService: DbService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
@@ -190,13 +192,16 @@ export class UcenecTestiTestComponent implements OnInit {
   @trace()
   async nastaviDatum() {
     const self = this;
-    let matDialogRef = this.dialog.open(IzberiDatumComponent, {
-      data: this.deadline,
-    });
+
+    let matDialogRef =
+      this.dialog.open(IzberiDatumComponent, {data: this.deadline,});
 
     const datum: Date = await exe(matDialogRef.afterClosed())
     const deadline = moment(datum).toISOString(true).split("T")[0]
-    const res = await exe(this.apiService.ucenecTestTestIdPut({test_id: this.test_id, body: {datum: deadline}}))
+    const res =
+      await exe(this.apiService.ucenecTestTestIdPut({test_id: this.test_id, body: {datum: deadline}}))
+
+    if (!res) return
 
     if (res.test) self.dbService.test.put(res.test)
     if (res.audit) self.dbService.audit.put(res.audit)

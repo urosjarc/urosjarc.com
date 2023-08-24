@@ -17,7 +17,8 @@ export class WindowService {
     return this.dialog.open<T, D>(component, {
       enterAnimationDuration: 250,
       exitAnimationDuration: 500,
-      data: data
+      data: data,
+      disableClose: true
     });
   }
 }
