@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TableAuditsComponent } from './table-audits.component';
+import { PrikaziAuditsComponent } from './prikazi-audits.component';
 
 describe('AuditsTabelaComponent', () => {
-  let component: TableAuditsComponent;
-  let fixture: ComponentFixture<TableAuditsComponent>;
+  let component: PrikaziAuditsComponent;
+  let fixture: ComponentFixture<PrikaziAuditsComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TableAuditsComponent]
+      declarations: [PrikaziAuditsComponent]
     });
-    fixture = TestBed.createComponent(TableAuditsComponent);
+    fixture = TestBed.createComponent(PrikaziAuditsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

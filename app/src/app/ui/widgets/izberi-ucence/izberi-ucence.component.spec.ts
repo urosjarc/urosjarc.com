@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TableUcenciComponent } from './table-ucenci.component';
+import { IzberiUcenceComponent } from './izberi-ucence.component';
 
 describe('TableOsebeComponent', () => {
-  let component: TableUcenciComponent;
-  let fixture: ComponentFixture<TableUcenciComponent>;
+  let component: IzberiUcenceComponent;
+  let fixture: ComponentFixture<IzberiUcenceComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TableUcenciComponent]
+      declarations: [IzberiUcenceComponent]
     });
-    fixture = TestBed.createComponent(TableUcenciComponent);
+    fixture = TestBed.createComponent(IzberiUcenceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

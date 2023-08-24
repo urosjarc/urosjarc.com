@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {UciteljRepoService} from "../../../core/repos/ucitelj/ucitelj-repo.service";
 import {TestModel} from "../../../../assets/models/TestModel";
-import {TableTestiComponent} from "../../../ui/widgets/tables/table-testi/table-testi.component";
+import {PrikaziTesteComponent} from "../../../ui/widgets/tables/prikazi-teste/prikazi-teste.component";
 import {trace} from "../../../utils/trace";
 
 @Component({
@@ -10,7 +10,7 @@ import {trace} from "../../../utils/trace";
   templateUrl: './ucitelj-testi.component.html',
   styleUrls: ['./ucitelj-testi.component.scss'],
   imports: [
-    TableTestiComponent
+    PrikaziTesteComponent
   ],
   standalone: true
 })

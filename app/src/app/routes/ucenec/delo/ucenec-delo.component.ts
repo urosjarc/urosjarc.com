@@ -1,12 +1,12 @@
 import {Component} from '@angular/core';
-import {TableAuditsComponent} from "../../../ui/widgets/tables/table-audits/table-audits.component";
+import {PrikaziAuditsComponent} from "../../../ui/widgets/tables/prikazi-audits/prikazi-audits.component";
 
 @Component({
   selector: 'app-ucenec-delo',
   templateUrl: './ucenec-delo.component.html',
   styleUrls: ['./ucenec-delo.component.scss'],
   imports: [
-    TableAuditsComponent
+    PrikaziAuditsComponent
   ],
   standalone: true
 })

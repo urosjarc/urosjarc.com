@@ -10,10 +10,20 @@ import {Naloga} from "../../services/api/models/naloga";
 import {SporociloModel} from "../../domain/SporociloModel";
 import {ZvezekModel} from "../../domain/ZvezekModel";
 import {TematikaModel} from "../../domain/TematikaModel";
+import {Naslov} from "../../services/api/models/naslov";
+import {OsebaModel} from "../../domain/OsebaModel";
 
 @Injectable()
 export class OsebaRepoService {
   constructor(private db: DbService) {
+  }
+
+  async oseba(): Promise<OsebaModel | null> {
+    const profil_id = this.db.get_profil_id().toString()
+    const oseba = await this.db.oseba.where(ime<Oseba>("_id")).equals(profil_id).first()
+    const naslovi = await this.db.naslov.where(ime<Naslov>("oseba_id")).equals(profil_id).toArray()
+    const kontakti = await this.db.kontakt.where(ime<Kontakt>("oseba_id")).equals(profil_id).toArray()
+    return {oseba, naslovi, kontakti}
   }
 
   async sporocila(): Promise<SporociloModel[]> {

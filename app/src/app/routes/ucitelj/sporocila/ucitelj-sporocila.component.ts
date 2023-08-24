@@ -3,14 +3,14 @@ import {MatTableDataSource} from "@angular/material/table";
 import {OsebaRepoService} from "../../../core/repos/oseba/oseba-repo.service";
 import {SporociloModel} from "../../../../assets/models/SporociloModel";
 import {trace} from "../../../utils/trace";
-import {TableSporocilaComponent} from "../../../ui/widgets/tables/table-sporocila/table-sporocila.component";
+import {PrikaziSporocilaComponent} from "../../../ui/widgets/tables/prikazi-sporocila/prikazi-sporocila.component";
 
 @Component({
   selector: 'app-ucitelj-sporocila',
   templateUrl: './ucitelj-sporocila.component.html',
   styleUrls: ['./ucitelj-sporocila.component.scss'],
   imports: [
-    TableSporocilaComponent
+    PrikaziSporocilaComponent
   ],
   standalone: true
 })

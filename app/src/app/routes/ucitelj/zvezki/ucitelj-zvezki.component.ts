@@ -8,10 +8,10 @@ import {OsebaModel} from "../../../../assets/models/OsebaModel";
 import {trace} from "../../../utils/trace";
 import {UciteljRepoService} from "../../../core/repos/ucitelj/ucitelj-repo.service";
 import {MatStepperModule} from "@angular/material/stepper";
-import {TableZvezkiComponent} from "../../../ui/widgets/tables/table-zvezki/table-zvezki.component";
-import {TableTematikeComponent} from "../../../ui/widgets/tables/table-tematike/table-tematike.component";
-import {TableNalogeComponent} from "../../../ui/widgets/tables/table-naloge/table-naloge.component";
-import {TableUcenciComponent} from "../../../ui/widgets/tables/table-ucenci/table-ucenci.component";
+import {IzberiZvezkeComponent} from "../../../ui/widgets/tables/izberi-zvezke/izberi-zvezke.component";
+import {IzberiTematikeComponent} from "../../../ui/widgets/tables/izberi-tematike/izberi-tematike.component";
+import {TableNalogeComponent} from "../../../ui/widgets/tables/izberi-naloge/table-naloge.component";
+import {IzberiUcenceComponent} from "../../../ui/widgets/tables/izberi-ucence/izberi-ucence.component";
 import {MatButtonModule} from "@angular/material/button";
 
 @Component({
@@ -20,10 +20,10 @@ import {MatButtonModule} from "@angular/material/button";
   styleUrls: ['./ucitelj-zvezki.component.scss'],
   imports: [
     MatStepperModule,
-    TableZvezkiComponent,
-    TableTematikeComponent,
+    IzberiZvezkeComponent,
+    IzberiTematikeComponent,
     TableNalogeComponent,
-    TableUcenciComponent,
+    IzberiUcenceComponent,
     MatButtonModule
   ],
   standalone: true

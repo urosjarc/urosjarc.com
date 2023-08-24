@@ -2,16 +2,16 @@ import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {OsebaModel} from "../../../../../assets/models/OsebaModel";
-import {trace} from "../../../../utils/trace";
+import {OsebaModel} from "../../../core/domain/OsebaModel";
+import {trace} from "../../../utils/trace";
 
 @Component({
-  selector: 'app-table-osebe',
-  templateUrl: './table-osebe.component.html',
-  styleUrls: ['./table-osebe.component.scss'],
+  selector: 'app-prikazi-osebe',
+  templateUrl: './prikazi-osebe.component.html',
+  styleUrls: ['./prikazi-osebe.component.scss'],
   standalone: true
 })
-export class TableOsebeComponent implements AfterViewInit {
+export class PrikaziOsebeComponent implements AfterViewInit {
 
   @Input() osebe: MatTableDataSource<OsebaModel> = new MatTableDataSource<OsebaModel>()
   @Input() displayedColumns: any[] = ['naziv', 'datum', 'oddaljenost'];
@@ -32,7 +32,6 @@ export class TableOsebeComponent implements AfterViewInit {
     this.osebe.sort = this.sort;
     this.osebe.filterPredicate = this.filterPredicate
   }
-
 
   filterPredicate(data: OsebaModel, filter: string) {
     return JSON.stringify(data).includes(filter)

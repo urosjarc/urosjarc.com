@@ -1,23 +1,22 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
-import {MatDialog} from "@angular/material/dialog";
-import {SporociloModel} from "../../../../../assets/models/SporociloModel";
-import {trace} from "../../../../utils/trace";
-import {OsebaRepoService} from "../../../../core/repos/oseba/oseba-repo.service";
-import {
-  PrikaziPoslanoSporociloComponent
-} from "../../../windows/prikazi-poslano-sporocilo/prikazi-poslano-sporocilo.component";
 import {MatInputModule} from "@angular/material/input";
 import {MatListModule} from "@angular/material/list";
-import {DateOddaljenostPipe} from "../../../pipes/date-oddaljenost/date-oddaljenost.pipe";
 import {DatePipe} from "@angular/common";
+import {Dialog} from "@angular/cdk/dialog";
+import {DateOddaljenostPipe} from "../../pipes/date-oddaljenost/date-oddaljenost.pipe";
+import {SporociloModel} from "../../../core/domain/SporociloModel";
+import {trace} from "../../../utils/trace";
+import {
+  PrikaziPoslanoSporociloComponent
+} from "../../windows/prikazi-poslano-sporocilo/prikazi-poslano-sporocilo.component";
 
 @Component({
   selector: 'app-table-sporocila',
-  templateUrl: './table-sporocila.component.html',
-  styleUrls: ['./table-sporocila.component.scss'],
+  templateUrl: './prikazi-sporocila.component.html',
+  styleUrls: ['./prikazi-sporocila.component.scss'],
   imports: [
     MatInputModule,
     MatTableModule,
@@ -28,7 +27,7 @@ import {DatePipe} from "@angular/common";
   ],
   standalone: true
 })
-export class TableSporocilaComponent implements OnInit {
+export class PrikaziSporocilaComponent {
 
   @Input() displayedColumns = ["smer", "pred", "posiljatelj", "prejemnik", "datum"]
   @Input() sporocila: MatTableDataSource<SporociloModel> = new MatTableDataSource<SporociloModel>()
@@ -38,14 +37,7 @@ export class TableSporocilaComponent implements OnInit {
   // @ts-ignore
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(
-    private osebaRepo: OsebaRepoService,
-    private dialog: MatDialog) {
-  }
-
-  @trace()
-  async ngOnInit() {
-    this.sporocila.data = await this.osebaRepo.sporocila()
+  constructor(private dialog: Dialog) {
   }
 
   @trace()

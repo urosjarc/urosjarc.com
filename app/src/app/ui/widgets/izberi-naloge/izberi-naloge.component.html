@@ -3,7 +3,7 @@
   <input matInput (keyup)="applyFilter($event)"/>
 </mat-form-field>
 
-<table [dataSource]="naloge" mat-table matSort multiTemplateDataRows>
+<table [dataSource]="dataSource" mat-table matSort multiTemplateDataRows>
 
   <ng-container matColumnDef="naslov">
     <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by naslov"> Naslov</th>

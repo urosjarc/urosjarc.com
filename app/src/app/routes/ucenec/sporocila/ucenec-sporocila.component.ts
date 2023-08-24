@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {TableSporocilaComponent} from "../../../ui/widgets/tables/table-sporocila/table-sporocila.component";
+import {PrikaziSporocilaComponent} from "../../../ui/widgets/tables/prikazi-sporocila/prikazi-sporocila.component";
 
 @Component({
   selector: 'app-ucenec-sporocila',
@@ -7,7 +7,7 @@ import {TableSporocilaComponent} from "../../../ui/widgets/tables/table-sporocil
   styleUrls: ['./ucenec-sporocila.component.scss'],
   standalone: true,
   imports: [
-    TableSporocilaComponent
+    PrikaziSporocilaComponent
   ]
 })
 export class UcenecSporocilaComponent {

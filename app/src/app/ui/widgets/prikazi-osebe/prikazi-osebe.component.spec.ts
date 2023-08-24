@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TableOsebeComponent } from './table-osebe.component';
+import { PrikaziOsebeComponent } from './prikazi-osebe.component';
 
 describe('TableOsebeComponent', () => {
-  let component: TableOsebeComponent;
-  let fixture: ComponentFixture<TableOsebeComponent>;
+  let component: PrikaziOsebeComponent;
+  let fixture: ComponentFixture<PrikaziOsebeComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TableOsebeComponent]
+      declarations: [PrikaziOsebeComponent]
     });
-    fixture = TestBed.createComponent(TableOsebeComponent);
+    fixture = TestBed.createComponent(PrikaziOsebeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

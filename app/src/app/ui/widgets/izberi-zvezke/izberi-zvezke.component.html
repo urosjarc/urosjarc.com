@@ -3,7 +3,7 @@
   <input matInput (keyup)="applyFilter($event)"/>
 </mat-form-field>
 
-<table [dataSource]="zvezki" mat-table matSort multiTemplateDataRows>
+<table [dataSource]="dataSource" mat-table matSort multiTemplateDataRows>
 
   <ng-container matColumnDef="tip">
     <th style="width: 0%" mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by tip">Tip</th>

@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TableTematikeComponent } from './table-tematike.component';
+import { IzberiTematikeComponent } from './izberi-tematike.component';
 
 describe('TableSporocilaComponent', () => {
-  let component: TableTematikeComponent;
-  let fixture: ComponentFixture<TableTematikeComponent>;
+  let component: IzberiTematikeComponent;
+  let fixture: ComponentFixture<IzberiTematikeComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TableTematikeComponent]
+      declarations: [IzberiTematikeComponent]
     });
-    fixture = TestBed.createComponent(TableTematikeComponent);
+    fixture = TestBed.createComponent(IzberiTematikeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

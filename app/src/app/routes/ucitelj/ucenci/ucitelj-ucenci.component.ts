@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {UciteljRepoService} from "../../../core/repos/ucitelj/ucitelj-repo.service";
-import {TableUcenciComponent} from "../../../ui/widgets/tables/table-ucenci/table-ucenci.component";
+import {IzberiUcenceComponent} from "../../../ui/widgets/tables/izberi-ucence/izberi-ucence.component";
 import {OsebaModel} from "../../../../assets/models/OsebaModel";
 import {trace} from "../../../utils/trace";
 
@@ -10,7 +10,7 @@ import {trace} from "../../../utils/trace";
   templateUrl: './ucitelj-ucenci.component.html',
   styleUrls: ['./ucitelj-ucenci.component.scss'],
   imports: [
-    TableUcenciComponent
+    IzberiUcenceComponent
   ],
   standalone: true
 })

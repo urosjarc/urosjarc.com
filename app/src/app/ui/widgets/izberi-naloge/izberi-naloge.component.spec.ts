@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TableNalogeComponent } from './table-naloge.component';
+import { IzberiNalogeComponent } from './izberi-naloge.component';
 
 describe('TableSporocilaComponent', () => {
-  let component: TableNalogeComponent;
-  let fixture: ComponentFixture<TableNalogeComponent>;
+  let component: IzberiNalogeComponent;
+  let fixture: ComponentFixture<IzberiNalogeComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TableNalogeComponent]
+      declarations: [IzberiNalogeComponent]
     });
-    fixture = TestBed.createComponent(TableNalogeComponent);
+    fixture = TestBed.createComponent(IzberiNalogeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,22 +1,22 @@
 <mat-stepper #stepper (selectionChange)="selectionChange($event)">
     <mat-step>
       <ng-template matStepLabel>Zvezki</ng-template>
-      <app-table-zvezki [zvezki]="zvezki"/>
+      <app-table-zvezki [dataSource]="zvezki"/>
     </mat-step>
 
   <mat-step>
     <ng-template matStepLabel>Tematike</ng-template>
-    <app-table-tematike [tematike]="tematike"/>
+    <app-table-tematike [dataSource]="tematike"/>
   </mat-step>
 
   <mat-step>
     <ng-template matStepLabel>Naloge</ng-template>
-    <app-table-naloge [naloge]="naloge"/>
+    <app-table-naloge [dataSource]="naloge"/>
   </mat-step>
 
   <mat-step>
     <ng-template matStepLabel>Učenci</ng-template>
-    <app-table-ucenci [ucenci]="ucenci"/>
+    <app-table-ucenci [dataSource]="ucenci"/>
   </mat-step>
 
   <mat-step>
