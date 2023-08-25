@@ -10,5 +10,4 @@ data class Ucenje(
     var oseba_ucenec_id: Id<Oseba>,
     var oseba_ucitelj_id: Id<Oseba>,
     var ustvarjeno: LocalDate,
-    var razred: String
 ) : Entiteta<Ucenje>

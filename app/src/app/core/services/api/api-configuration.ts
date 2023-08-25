@@ -5,7 +5,9 @@ import { Injectable } from '@angular/core';
 /**
  * Global configuration
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class ApiConfiguration {
   rootUrl: string = '';
 }

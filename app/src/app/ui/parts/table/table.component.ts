@@ -7,13 +7,15 @@ import {SelectionModel} from "@angular/cdk/collections";
 import {trace} from "../../../utils/trace";
 import {MatInputModule} from "@angular/material/input";
 import {MatListModule} from "@angular/material/list";
+import {TableModel} from "./table.model";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-table',
-  standalone: true,
-  imports: [CommonModule, MatInputModule, MatTableModule, MatSortModule, MatListModule, MatPaginatorModule],
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.scss']
+  styleUrls: ['./table.component.scss'],
+  standalone: true,
+  imports: [CommonModule, MatInputModule, MatTableModule, MatSortModule, MatListModule, MatPaginatorModule, RouterLink],
 })
 export class TableComponent implements AfterViewInit {
   // @ts-ignore
@@ -22,7 +24,8 @@ export class TableComponent implements AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   @Input() columns: string[] = []
-  @Input() dataSource: MatTableDataSource<any> = new MatTableDataSource<any>()
+  @Input() dataSource: MatTableDataSource<any & TableModel> = new MatTableDataSource<any & TableModel>()
+
   selectionModel = new SelectionModel<any>(true, []);
 
   @trace()
@@ -39,11 +42,12 @@ export class TableComponent implements AfterViewInit {
   }
 
   @trace()
-  filterPredicate(data: any, filter: string) {
+  filterPredicate(data: TableModel, filter: string) {
     return JSON.stringify(data).includes(filter)
   }
 
-  izberi(data: any) {
+  izberi(data: TableModel) {
+    if(data.on_click) data.on_click()
     this.selectionModel.toggle(data)
   }
 

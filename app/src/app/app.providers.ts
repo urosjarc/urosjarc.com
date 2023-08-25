@@ -13,6 +13,7 @@ import {provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
 import {middleware_interceptors} from "./middleware";
 import {MatNativeDateModule} from "@angular/material/core";
 import {importProvidersFrom} from "@angular/core";
+import {ui_pipes} from "./ui/pipes";
 
 
 export const angular_providers = [
@@ -25,6 +26,7 @@ export const angular_providers = [
 ]
 
 export const core_providers = [
+  ...ui_pipes,
   ...core_repos,
   ...core_services,
   ...core_useCases,

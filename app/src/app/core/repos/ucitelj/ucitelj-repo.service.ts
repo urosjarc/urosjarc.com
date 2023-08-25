@@ -33,7 +33,7 @@ export class UciteljRepoService {
     return newTesti
   }
 
-  async ucenci(): Promise<UcenjeModel[]> {
+  async ucenje(): Promise<UcenjeModel[]> {
     const ucenje_vse: Ucenje[] = await this.db.ucenje
       .where(ime<Ucenje>("oseba_ucitelj_id"))
       .equals(this.db.get_profil_id().toString())

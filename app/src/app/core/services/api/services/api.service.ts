@@ -26,7 +26,7 @@ import { TestUpdateReq } from '../models/test-update-req';
 import { UcenecData } from '../models/ucenec-data';
 import { UciteljData } from '../models/ucitelj-data';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ApiService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);

@@ -1,4 +1,4 @@
-<mat-form-field class="w-100">
+<mat-form-field class="w-100 no-wrapper" subscriptSizing="dynamic">
   <mat-label>Filter</mat-label>
   <input matInput (keyup)="applyFilter($event)"/>
 </mat-form-field>
@@ -6,12 +6,17 @@
 <table [dataSource]="dataSource" mat-table matSort multiTemplateDataRows>
 
   <ng-container *ngFor="let column of columns" matColumnDef="{{column}}">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{column}}</th>
+    <th style="font-size: 1.25em" mat-header-cell *matHeaderCellDef mat-sort-header>{{column}}</th>
     <td mat-cell *matCellDef="let row"> {{row[column]}} </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="columns"></tr>
-  <tr mat-row *matRowDef="let row; columns: columns;" (click)="izberi(row)"></tr>
+  <tr mat-row
+      *matRowDef="let row; columns: columns;"
+      [class]="row.cls"
+      (click)="izberi(row)"
+      [routerLink]="row.routerLink"
+  ></tr>
 
 </table>
 

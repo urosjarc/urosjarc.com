@@ -7,9 +7,11 @@ import {SinhronizirajOsebnePodatkeService} from "./sinhroniziraj-osebne-podatke/
 import {DobiNastavitveProfilaService} from "./dobi-nastavitve-profila/dobi-nastavitve-profila.service";
 import {IzberiTipOsebeService} from "./izberi-tip-osebe/izberi-tip-osebe.service";
 import {UseCase} from "../../utils/types";
+import {DobiProfilService} from "./dobi-profil/dobi-profil.service";
 
 export const core_useCases: UseCase[] = [
   DobiNastavitveProfilaService,
+  DobiProfilService,
   IzberiTipOsebeService,
   OdjaviOseboService,
   PosljiPublicKontaktniObrazecService,

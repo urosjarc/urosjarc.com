@@ -12,6 +12,9 @@ import {ZvezekModel} from "../../domain/ZvezekModel";
 import {TematikaModel} from "../../domain/TematikaModel";
 import {Naslov} from "../../services/api/models/naslov";
 import {OsebaModel} from "../../domain/OsebaModel";
+import {Id} from "../../services/api/models/id";
+import {Status} from "../../services/api/models/status";
+import {Audit} from "../../services/api/models/audit";
 
 @Injectable()
 export class OsebaRepoService {
@@ -87,5 +90,9 @@ export class OsebaRepoService {
       zvezkiInfos.push(zvezekInfo)
     }
     return zvezkiInfos
+  }
+
+  async audits() {
+    return this.db.audit.toArray();
   }
 }

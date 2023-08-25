@@ -24,7 +24,7 @@ const appRoutes: Route[] = [
       },
       {
         path: paths.prijava.template,
-        canActivate: [autoLoginGuard],
+        canActivate: [autoLoginGuard()],
         loadComponent: () => import('./routes/public/prijava/public-prijava.component').then(c => c.PublicPrijavaComponent),
       },
     ]
@@ -75,7 +75,7 @@ const appRoutes: Route[] = [
       },
       {
         path: paths.zvezki.template,
-        loadComponent: () => import('./routes/ucitelj/ucitelj.component').then(c => c.UciteljComponent),
+        loadComponent: () => import('./routes/ucitelj/zvezki/ucitelj-zvezki.component').then(c => c.UciteljZvezkiComponent),
       },
       {
         path: paths.testi.template,

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {IzberiTipOsebeComponent} from "../../../ui/windows/izberi-tip-osebe/izberi-tip-osebe.component";
 import {OsebaTip, UseCase} from "../../../utils/types";
 import {MatDialogRef} from "@angular/material/dialog";
-import {WindowService} from "../../services/dialog/window.service";
+import {WindowService} from "../../services/window/window.service";
 
 @Injectable()
 export class IzberiTipOsebeService implements UseCase {

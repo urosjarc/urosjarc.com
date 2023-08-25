@@ -1,4 +1,4 @@
-import {Router} from '@angular/router';
+import {CanActivateFn, Router} from '@angular/router';
 import {inject} from "@angular/core";
 import {
   DobiNastavitveProfilaService
@@ -6,16 +6,16 @@ import {
 import {DobiProfilService} from "../../../core/use_cases/dobi-profil/dobi-profil.service";
 import {IzberiTipOsebeService} from "../../../core/use_cases/izberi-tip-osebe/izberi-tip-osebe.service";
 
-export function autoLoginGuard() {
-
+export function autoLoginGuard(): CanActivateFn {
   return () => {
+
     const router = inject(Router)
     const dobi_profil = inject(DobiProfilService)
     const dobi_nastavitve_profila = inject(DobiNastavitveProfilaService)
     const izberi_tip_osebe = inject(IzberiTipOsebeService)
 
-
     return new Promise(async resolve => {
+
       function failed() {
         console.groupEnd()
         console.log("GUARD", autoLoginGuard.name, true)

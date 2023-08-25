@@ -1,5 +1,6 @@
 import {firstValueFrom, Observable} from "rxjs";
 import {Oseba} from "../core/services/api/models/oseba";
+import {PipeTransform} from "@angular/core";
 
 export function isObject(o: any) {
   return o instanceof Object && o.constructor === Object;
@@ -22,6 +23,10 @@ export async function exe<T>(observable: Observable<T>): Promise<T | null> {
 export type AppUrl = { $: string }
 
 export class UseCase {
+}
+
+export class UiPipe {
+
 }
 
 export type OsebaTip = ArrayTypes<Oseba['tip']>
