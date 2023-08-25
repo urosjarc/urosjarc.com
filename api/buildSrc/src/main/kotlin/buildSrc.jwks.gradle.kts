@@ -4,7 +4,9 @@ import com.nimbusds.jose.jwk.RSAKey
 import java.security.KeyPairGenerator
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
-import java.util.*
+import java.util.Base64
+import java.util.UUID
+import java.util.Date
 
 
 interface JwksExtension {
@@ -40,6 +42,7 @@ class Jwks : Plugin<Project> {
                     .issueTime(Date())
                     .build()
 
+                outputDir.parentFile.mkdirs()
                 outputDir.writeText("""{
                     "keys": [
                         ${jwk.toPublicJWK().toJSONString()}
