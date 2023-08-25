@@ -4,7 +4,6 @@ import * as moment from "moment";
 import {median, standardDeviation} from "simple-statistics";
 import {MatDialog} from "@angular/material/dialog";
 import {exe, ime} from "../../../../utils/types";
-import {NalogaModel} from "../../../../../assets/models/NalogaModel";
 import {ApiService} from "../../../../core/services/api/services/api.service";
 import {DbService} from "../../../../core/services/db/db.service";
 import {trace} from "../../../../utils/trace";
@@ -24,6 +23,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {DateOddaljenostPipe} from "../../../../ui/pipes/date-oddaljenost/date-oddaljenost.pipe";
 import {appUrls} from "../../../../app.urls";
 import {AlertService} from "../../../../core/services/alert/alert.service";
+import {NalogaModel} from "../../../../core/domain/NalogaModel";
 
 @Component({
   selector: 'app-ucenec-testi-test',
@@ -171,14 +171,7 @@ export class UcenecTestiTestComponent implements OnInit {
       if (!tema) continue
       if (!tema.naslov) continue
 
-      const nalogaInfo: NalogaModel = {
-        id: naloga._id || "",
-        stevilka: i++,
-        resitev: naloga.resitev || '',
-        vsebina: naloga.vsebina || '',
-        izbran: false,
-        status: status
-      }
+      const nalogaInfo: NalogaModel = {naloga, status: status}
 
       if (tema_nalogeInfo.has(tema.naslov)) {
         tema_nalogeInfo.get(tema.naslov)?.push(nalogaInfo)

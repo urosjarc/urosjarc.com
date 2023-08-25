@@ -1,21 +1,19 @@
 import {Component, OnInit} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {UciteljRepoService} from "../../../core/repos/ucitelj/ucitelj-repo.service";
-import {IzberiUcenceComponent} from "../../../ui/widgets/tables/izberi-ucence/izberi-ucence.component";
-import {OsebaModel} from "../../../../assets/models/OsebaModel";
 import {trace} from "../../../utils/trace";
+import {OsebaModel} from "../../../core/domain/OsebaModel";
+import {UcenjeModel} from "../../../core/domain/UcenjeModel";
 
 @Component({
   selector: 'app-ucitelj-ucenci',
   templateUrl: './ucitelj-ucenci.component.html',
   styleUrls: ['./ucitelj-ucenci.component.scss'],
-  imports: [
-    IzberiUcenceComponent
-  ],
+  imports: [],
   standalone: true
 })
 export class UciteljUcenciComponent implements OnInit {
-  ucenci: MatTableDataSource<OsebaModel> = new MatTableDataSource<OsebaModel>()
+  ucenci: MatTableDataSource<UcenjeModel> = new MatTableDataSource<UcenjeModel>()
 
   constructor(private uciteljRepo: UciteljRepoService) {
   }

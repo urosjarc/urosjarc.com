@@ -32,11 +32,11 @@
   <div *ngFor="let item of tema_nalogeInfo | keyvalue">
     <h1 class="text-center mt-3">{{item.key}}</h1>
     <div class="row row-cols-auto g-1 justify-content-center">
-      <div class="col" *ngFor="let naloga of item.value">
+      <div class="col" *ngFor="let naloga of item.value; index as i">
         <button mat-raised-button
                 style="{{(naloga.status?.tip || 'NEZACETO') | statusTip_style}}"
-                [routerLink]="routes.ucenec({}).naloga({test_id, 'naloga_id': naloga.id.toString()}).$">
-          {{naloga.stevilka}}
+                [routerLink]="routes.ucenec({}).naloga({test_id, 'naloga_id': naloga.naloga._id.toString()}).$">
+          {{i}}
         </button>
       </div>
     </div>

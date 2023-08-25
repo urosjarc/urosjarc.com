@@ -16,7 +16,7 @@ import {StatusTipStylePipe} from "../../../../../ui/pipes/statusTip-style/status
 import {SekundeStoparicaPipe} from "../../../../../ui/pipes/sekunde-stoparica/sekunde-stoparica.pipe";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatButtonModule} from "@angular/material/button";
-import {PrikaziAuditsComponent} from "../../../../../ui/widgets/tables/prikazi-audits/prikazi-audits.component";
+import {TableComponent} from "../../../../../ui/parts/table/table.component";
 
 @Component({
   selector: 'app-ucenec-testi-test-naloga',
@@ -29,7 +29,7 @@ import {PrikaziAuditsComponent} from "../../../../../ui/widgets/tables/prikazi-a
     MatTabsModule,
     MatButtonModule,
     NgForOf,
-    PrikaziAuditsComponent
+    TableComponent,
   ],
   standalone: true
 })

@@ -1,0 +1,20 @@
+<mat-form-field class="w-100">
+  <mat-label>Filter</mat-label>
+  <input matInput (keyup)="applyFilter($event)"/>
+</mat-form-field>
+
+<table [dataSource]="dataSource" mat-table matSort multiTemplateDataRows>
+
+  <ng-container *ngFor="let column of columns" matColumnDef="{{column}}">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{column}}</th>
+    <td mat-cell *matCellDef="let row"> {{row[column]}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columns"></tr>
+  <tr mat-row *matRowDef="let row; columns: columns;" (click)="izberi(row)"></tr>
+
+</table>
+
+<mat-divider/>
+
+<mat-paginator [pageSizeOptions]="[10]" showFirstLastButtons/>

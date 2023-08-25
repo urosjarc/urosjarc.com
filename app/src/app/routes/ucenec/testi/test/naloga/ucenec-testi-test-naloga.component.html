@@ -7,13 +7,13 @@
   </mat-tab>
 
   <mat-tab label="Resitev">
-    <img class="col-12" src="{{naloga.resitev}}">
+    <img class="col-12" src="{{naloga.resitev}}" alt="">
     <div id="izbira" class="row">
       <button class="col" style="{{status | statusTip_style}}" mat-raised-button (click)="nastaviStatus(status)" *ngFor="let status of statusi">{{status}}</button>
     </div>
   </mat-tab>
 
   <mat-tab label="Zgodovina">
-    <app-table-audits [dataSource]="audits"/>
+    <app-table [dataSource]="audits"/>
   </mat-tab>
 </mat-tab-group>
