@@ -1,13 +1,14 @@
-<img src="https://awesomespace.nl/wp-content/uploads/sites/14/2015/12/maxresdefault-1.jpg" height="150"></img>
-<img src="https://i.kym-cdn.com/entries/icons/original/000/018/012/this_is_fine.jpeg" height="150"></img>
-
 ---
 name: 
 about: 
-title: 
+title: ''
 labels: 
 assignees: 
 ---
+
+<img src="https://awesomespace.nl/wp-content/uploads/sites/14/2015/12/maxresdefault-1.jpg" height="150"></img>
+<img src="https://i.kym-cdn.com/entries/icons/original/000/018/012/this_is_fine.jpeg" height="150"></img>
+
 
 ### Pred začetkom:
 - [ ] Ustvari github branch preko github interfejca!
