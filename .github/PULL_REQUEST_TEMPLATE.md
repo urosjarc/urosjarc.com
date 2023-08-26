@@ -7,6 +7,7 @@
 - [ ] Da sem ustvaril pull request na **development** branch!
 - [ ] Da sem izbral svojega nadrajenega da pregleda moje spremembe!
 - [ ] Da sem linkal pravi issue z tem pull requestom!
+- [ ] Da sem prestavil issue status v ["In Review"](https://github.com/users/urosjarc/projects/2)!
 - [ ] Da sem psihično trden ter pripravljen da sprejem kritike od svojega nadrajenega!
 - [ ] Da bom ustvaril potrebne spremembe v primeru neuspešnega code review-ja!
 

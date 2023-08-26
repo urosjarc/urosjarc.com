@@ -16,6 +16,7 @@ assignees: ''
 - [ ] Checkouti se na ustvarjen branch v lokalenm okolju!
 - [ ] Preveri če si na pravem branchu!
 - [ ] Pushaj testni commit na github ter preveri ali je vse OK.
+- [ ] Prestavi issue v ["In Progress"](https://github.com/users/urosjarc/projects/2)
 
 ### Specifikacije:
 - [ ] 
