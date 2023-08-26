@@ -18,6 +18,10 @@ assignees: ''
 - [ ] Pushaj testni commit na github ter preveri ali je vse OK.
 
 ### Specifikacije:
+- [ ] 
+- [ ] 
+- [ ] 
+- [ ] 
 
 ### Pred pull requestom:
 - [ ] Nisem uporabil nobene **zunanje knjižnice** ne da bi se pred tem pogovoril z nadrajenim ter svojimi kolegi!
