@@ -1,6 +1,6 @@
 ---
 name: 'Todo'
-about: ''
+about: 'Navodila za development.'
 title: ''
 labels: ''
 assignees: ''
