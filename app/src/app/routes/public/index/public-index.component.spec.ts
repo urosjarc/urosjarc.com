@@ -16,7 +16,6 @@ describe('PublicIndexComponent tests', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        PublicIndexComponent,
         NgForOf,
         MatIconModule,
         MatExpansionModule,
@@ -41,6 +40,7 @@ describe('PublicIndexComponent tests', () => {
   it('mora naložiti komponento PublicIndexComponent', () => {
     expect(component).toBeTruthy()
   });
+  // TODO: PREVEČ STRIKTEN TEST?
   it('mora inicializirati kontakte s pravimi podatki', () => {
     expect(component.kontakti).toEqual([
       {
