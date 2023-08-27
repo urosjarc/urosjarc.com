@@ -25,8 +25,7 @@ export class TableComponent implements AfterViewInit {
 
   @Input() columns: string[] = []
   @Input() dataSource: MatTableDataSource<any & TableModel> = new MatTableDataSource<any & TableModel>()
-
-  selectionModel = new SelectionModel<any>(true, []);
+  @Input() selectionModel = new SelectionModel<any>(true, []);
 
   @trace()
   ngAfterViewInit() {

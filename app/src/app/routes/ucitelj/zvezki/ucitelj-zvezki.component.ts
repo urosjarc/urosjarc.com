@@ -2,13 +2,23 @@ import {Component, Input, OnInit} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {StepperSelectionEvent} from "@angular/cdk/stepper";
 import {trace} from "../../../utils/trace";
-import {UciteljRepoService} from "../../../core/repos/ucitelj/ucitelj-repo.service";
 import {MatStepperModule} from "@angular/material/stepper";
 import {MatButtonModule} from "@angular/material/button";
-import {ZvezekModel} from "../../../core/domain/ZvezekModel";
-import {TematikaModel} from "../../../core/domain/TematikaModel";
-import {NalogaModel} from "../../../core/domain/NalogaModel";
-import {OsebaModel} from "../../../core/domain/OsebaModel";
+import {TableComponent} from "../../../ui/parts/table/table.component";
+import {OsebaRepoService} from "../../../core/repos/oseba/oseba-repo.service";
+import {SelectionModel} from "@angular/cdk/collections";
+import {UciteljRepoService} from "../../../core/repos/ucitelj/ucitelj-repo.service";
+import {UciteljUcenciModel} from "../ucenci/ucitelj-ucenci.model";
+import {
+  UciteljZvezkiModel,
+  uciteljZvezkiModelMap,
+  uciteljZvezkiNalogaModel,
+  UciteljZvezkiNalogaModel,
+  UciteljZvezkiTematikaModel,
+  uciteljZvezkiTematikaModelMap,
+  UciteljZvezkiUcenjeModel,
+  uciteljZvezkiUcenjeModel
+} from "./ucitelj-zvezki.model";
 
 @Component({
   selector: 'app-ucitelj-zvezki',
@@ -16,15 +26,36 @@ import {OsebaModel} from "../../../core/domain/OsebaModel";
   styleUrls: ['./ucitelj-zvezki.component.scss'],
   imports: [
     MatStepperModule,
-    MatButtonModule
+    MatButtonModule,
+    TableComponent
   ],
   standalone: true
 })
-export class UciteljZvezkiComponent {
-  @Input() zvezki: MatTableDataSource<ZvezekModel> = new MatTableDataSource<ZvezekModel>()
-  @Input() tematike: MatTableDataSource<TematikaModel> = new MatTableDataSource<TematikaModel>()
-  @Input() naloge: MatTableDataSource<NalogaModel> = new MatTableDataSource<NalogaModel>()
-  @Input() ucenci: MatTableDataSource<OsebaModel> = new MatTableDataSource<OsebaModel>()
+export class UciteljZvezkiComponent implements OnInit {
+  @Input() zvezki = new MatTableDataSource<UciteljZvezkiModel>()
+  @Input() tematike = new MatTableDataSource<UciteljZvezkiTematikaModel>()
+  @Input() naloge = new MatTableDataSource<UciteljZvezkiNalogaModel>()
+  @Input() ucenje = new MatTableDataSource<UciteljZvezkiUcenjeModel>()
+
+  zvezki_columns: (keyof UciteljZvezkiModel)[] = ["Tip", "Naslov", "Tematik"];
+  tematike_columns: (keyof UciteljZvezkiTematikaModel)[] = ["Zvezek", "Naslov", "Nalog"];
+  naloge_columns: (keyof UciteljZvezkiNalogaModel)[] = ["Zvezek", "Tematka", "Resitev", "Vsebina"];
+  ucenje_columns: (keyof UciteljUcenciModel)[] = ["Začetek", "Učenec", "Letnik"];
+
+  selectedZvezki = new SelectionModel<UciteljZvezkiModel>(true, []);
+  selectedTematike = new SelectionModel<UciteljZvezkiTematikaModel>(true, []);
+  selectedNaloge = new SelectionModel<UciteljZvezkiNalogaModel>(true, []);
+  selectedUcenje = new SelectionModel<UciteljUcenciModel>(true, []);
+
+  constructor(
+    private uciteljRepo: UciteljRepoService,
+    private osebaRepo: OsebaRepoService) {
+  }
+
+  async ngOnInit() {
+    this.zvezki.data = (await this.osebaRepo.zvezki()).map(uciteljZvezkiModelMap)
+    this.ucenje.data = (await this.uciteljRepo.ucenje()).map(uciteljZvezkiUcenjeModel)
+  }
 
   selectionChange($event: StepperSelectionEvent) {
 
@@ -50,10 +81,20 @@ export class UciteljZvezkiComponent {
 
   @trace()
   private pripraviTematike() {
+    const tematike: UciteljZvezkiTematikaModel[] = []
+    for (const zvezekModel of this.selectedZvezki.selected) {
+      tematike.push(...zvezekModel.tematike.map(tematikaModel => uciteljZvezkiTematikaModelMap(tematikaModel, zvezekModel)))
+    }
+    this.tematike.data = tematike
   }
 
   @trace()
   private pripraviNaloge() {
+    const naloge: UciteljZvezkiNalogaModel[] = []
+    for (const tematikaModel of this.selectedTematike.selected) {
+      naloge.push(...tematikaModel.naloge.map(nalogaModel => uciteljZvezkiNalogaModel(nalogaModel, tematikaModel)))
+    }
+    this.naloge.data = naloge
   }
 
   @trace()
@@ -65,4 +106,5 @@ export class UciteljZvezkiComponent {
   private pripraviPotrditev() {
 
   }
+
 }

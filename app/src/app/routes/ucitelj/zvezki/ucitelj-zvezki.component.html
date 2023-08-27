@@ -1,26 +1,32 @@
 <mat-stepper #stepper (selectionChange)="selectionChange($event)">
-    <mat-step>
-      <ng-template matStepLabel>Zvezki</ng-template>
-      <h1>Zvezki</h1>
-    </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Zvezki</ng-template>
+    <app-table [selectionModel]="selectedZvezki" [dataSource]="zvezki" [columns]="zvezki_columns"/>
+  </mat-step>
 
   <mat-step>
     <ng-template matStepLabel>Tematike</ng-template>
-    <h1>Tematike</h1>
+    <app-table [selectionModel]="selectedTematike" [dataSource]="tematike" [columns]="tematike_columns"/>
   </mat-step>
 
   <mat-step>
     <ng-template matStepLabel>Naloge</ng-template>
-    <h1>Naloge</h1>
+    <app-table [selectionModel]="selectedNaloge" [dataSource]="naloge" [columns]="naloge_columns"/>
   </mat-step>
 
   <mat-step>
     <ng-template matStepLabel>Učenci</ng-template>
-    <h1>Ucenci</h1>
+    <app-table [selectionModel]="selectedUcenje" [dataSource]="ucenje" [columns]="ucenje_columns"/>
   </mat-step>
 
   <mat-step>
     <ng-template matStepLabel>Potrditev</ng-template>
+
+    <h1>Zvezki: {{selectedZvezki.selected.length}}</h1>
+    <h1>Tematike: {{selectedTematike.selected.length}}</h1>
+    <h1>Naloge: {{selectedNaloge.selected.length}}</h1>
+    <h1>Ucenci: {{selectedUcenje.selected.length}}</h1>
+
     <button mat-button (click)="stepper.reset()">Preklici</button>
   </mat-step>
 
