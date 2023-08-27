@@ -9,6 +9,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatListModule} from "@angular/material/list";
 import {TableModel} from "./table.model";
 import {RouterLink} from "@angular/router";
+import {Object_plitka_enakost} from "../../../utils/Object";
 
 @Component({
   selector: 'app-table',
@@ -47,7 +48,16 @@ export class TableComponent implements AfterViewInit {
   }
 
   izberi(data: TableModel) {
-    if (this.canSelect) this.selectionModel.toggle(data)
+    for (const selected of this.selectionModel.selected) {
+      if (Object_plitka_enakost(data, selected)) return this.selectionModel.toggle(selected)
+    }
+    this.selectionModel.select(data)
   }
 
+  isSelected(row: any) {
+    for (const selected of this.selectionModel.selected) {
+      if (Object_plitka_enakost(row, selected)) return true
+    }
+    return false
+  }
 }

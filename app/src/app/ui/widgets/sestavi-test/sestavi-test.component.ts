@@ -59,9 +59,16 @@ export class SestaviTestComponent implements OnInit {
 
   selectionChange($event: StepperSelectionEvent) {
 
+    console.log({
+      zvezki: this.selectedZvezki.selected.length,
+      tematike: this.selectedTematike.selected.length,
+      naloge: this.selectedNaloge.selected.length
+    })
+
     switch ($event.selectedIndex) {
       case 0:
         console.log("Zvezki");
+        console.log(this.selectedZvezki.selected)
         break;
       case 1:
         this.pripraviTematike();
@@ -81,20 +88,38 @@ export class SestaviTestComponent implements OnInit {
 
   @trace()
   private pripraviTematike() {
+    console.log(this.selectedTematike.selected)
     const tematike: SestaviTestTematikaModel[] = []
     for (const zvezekModel of this.selectedZvezki.selected) {
       tematike.push(...zvezekModel.tematike.map(tematikaModel => uciteljZvezkiTematikaModelMap(tematikaModel, zvezekModel)))
     }
     this.tematike.data = tematike
+
+    //Odstrani tematike ki niso v izbranih zvezkih?
+    for(const tematika of tematike){
+      if(!this.selectedTematike.isSelected(tematika)){
+        this.selectedTematike.deselect(tematika)
+      }
+    }
+
   }
 
   @trace()
   private pripraviNaloge() {
+    console.log(this.selectedNaloge.selected)
+    const tematike: SestaviTestTematikaModel[] = []
     const naloge: SestaviTestNalogaModel[] = []
     for (const tematikaModel of this.selectedTematike.selected) {
       naloge.push(...tematikaModel.naloge.map(nalogaModel => uciteljZvezkiNalogaModelMap(nalogaModel, tematikaModel)))
     }
     this.naloge.data = naloge
+
+    // Odstrani naloge ki niso v izbranih tematikah?
+    for(const naloga of naloge){
+      if(!this.selectedNaloge.isSelected(naloga)){
+        this.selectedNaloge.deselect(naloga)
+      }
+    }
   }
 
   @trace()
