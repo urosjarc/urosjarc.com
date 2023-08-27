@@ -26,6 +26,7 @@ export class TableComponent implements AfterViewInit {
   @Input() columns: string[] = []
   @Input() dataSource: MatTableDataSource<any & TableModel> = new MatTableDataSource<any & TableModel>()
   @Input() selectionModel = new SelectionModel<any>(true, []);
+  @Input() canSelect: boolean = false
 
   @trace()
   ngAfterViewInit() {
@@ -46,8 +47,7 @@ export class TableComponent implements AfterViewInit {
   }
 
   izberi(data: TableModel) {
-    if(data.on_click) data.on_click()
-    this.selectionModel.toggle(data)
+    if (this.canSelect) this.selectionModel.toggle(data)
   }
 
 }

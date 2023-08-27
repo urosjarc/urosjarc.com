@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
-import {UciteljRepoService} from "../../../core/repos/ucitelj/ucitelj-repo.service";
 import {trace} from "../../../utils/trace";
 import {TableComponent} from "../../../ui/parts/table/table.component";
-import {UciteljUcenciModel} from "./ucitelj-ucenci.model";
 import {DatePipe} from "@angular/common";
+import {UciteljUcenciModel, uciteljUcenciModelMap} from "./ucitelj-ucenci.model";
+import {OsebaRepoService} from "../../../core/repos/oseba/oseba-repo.service";
 
 @Component({
   selector: 'app-ucitelj-ucenci',
@@ -21,23 +21,12 @@ export class UciteljUcenciComponent implements OnInit {
 
   constructor(
     private datePipe: DatePipe,
-    private uciteljRepo: UciteljRepoService) {
+    private osebaRepo: OsebaRepoService
+  ) {
   }
 
   @trace()
   async ngOnInit() {
-    const ucenje = await this.uciteljRepo.ucenje()
-    const uciteljUcenci: UciteljUcenciModel[] = []
-    for (const ucen of ucenje) {
-
-      uciteljUcenci.push({
-        Učenec: `${ucen.oseba.ime} ${ucen.oseba.priimek}`,
-        Letnik: ucen.oseba.letnik,
-        Začetek: this.datePipe.transform(ucen.ustvarjeno) || ""
-      })
-
-    }
-
-    this.ucenci.data = uciteljUcenci
+    this.ucenci.data = (await this.osebaRepo.ucenje()).map(uciteljUcenciModelMap)
   }
 }

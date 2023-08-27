@@ -13,6 +13,7 @@
   <tr mat-header-row *matHeaderRowDef="columns"></tr>
   <tr mat-row
       *matRowDef="let row; columns: columns;"
+      [ngClass]="{'primary': selectionModel.isSelected(row)}"
       [class]="row.cls"
       (click)="izberi(row)"
       [routerLink]="row.routerLink"
