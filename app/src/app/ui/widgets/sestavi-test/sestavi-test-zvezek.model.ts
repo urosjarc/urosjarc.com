@@ -6,23 +6,25 @@ import {DatePipe} from "@angular/common";
 import {inject} from "@angular/core";
 
 export interface SestaviTestUcenjeModel extends UcenjeModel {
-  Začetek: string,
-  Učenec: string,
-  Letnik: number,
+  Začetek: string
+  Učenec: string
+  Letnik: number
 }
 
-export interface SestaviTestModel extends ZvezekModel {
-  Tip: string,
-  Naslov: string,
+export interface SestaviTestZvezekModel extends ZvezekModel {
+  Tip: string
+  Naslov: string
   Tematik: number
+  tematikeModels: SestaviTestTematikaModel[]
 }
 
-export function uciteljZvezkiModelMap(zvezekModel: ZvezekModel): SestaviTestModel {
+export function sestaviTestZvezekModelMap(zvezekModel: ZvezekModel): SestaviTestZvezekModel {
   return {
     ...zvezekModel,
     Tip: zvezekModel.zvezek.tip,
     Naslov: zvezekModel.zvezek.naslov,
-    Tematik: zvezekModel.tematike.length
+    Tematik: zvezekModel.tematike.length,
+    tematikeModels: zvezekModel.tematike.map(tematika => sestaviTestTematikaModelMap(tematika, zvezekModel))
   }
 }
 
@@ -30,14 +32,16 @@ export interface SestaviTestTematikaModel extends TematikaModel {
   Zvezek: string,
   Naslov: string,
   Nalog: number,
+  nalogaModels: SestaviTestNalogaModel[]
 }
 
-export function uciteljZvezkiTematikaModelMap(tematikaModel: TematikaModel, zvezekModel: ZvezekModel): SestaviTestTematikaModel {
+export function sestaviTestTematikaModelMap(tematikaModel: TematikaModel, zvezekModel: ZvezekModel): SestaviTestTematikaModel {
   return {
     ...tematikaModel,
     Zvezek: zvezekModel.zvezek.naslov,
     Naslov: tematikaModel.tematika.naslov,
-    Nalog: tematikaModel.naloge.length
+    Nalog: tematikaModel.naloge.length,
+    nalogaModels: tematikaModel.naloge.map(naloga => sestaviTestNalogaModelMap(naloga, tematikaModel, zvezekModel))
   }
 }
 
@@ -48,10 +52,10 @@ export interface SestaviTestNalogaModel extends NalogaModel {
   Vsebina: string
 }
 
-export function uciteljZvezkiNalogaModelMap(nalogaModel: NalogaModel, tematikaModel: SestaviTestTematikaModel): SestaviTestNalogaModel {
+export function sestaviTestNalogaModelMap(nalogaModel: NalogaModel, tematikaModel: TematikaModel, zvezekModel: ZvezekModel): SestaviTestNalogaModel {
   return {
     ...nalogaModel,
-    Zvezek: tematikaModel.Zvezek,
+    Zvezek: zvezekModel.zvezek.naslov,
     Tematka: tematikaModel.tematika.naslov,
     Resitev: nalogaModel.naloga.resitev,
     Vsebina: nalogaModel.naloga.vsebina
@@ -64,8 +68,7 @@ export interface SestaviTestUcenjeModel extends UcenjeModel {
   Letnik: number,
 }
 
-export function uciteljZvezkiUcenjeModelMap(ucenjeModel: UcenjeModel): SestaviTestUcenjeModel {
-  const datePipe = inject(DatePipe)
+export function sestaviTestUcenjeModelMap(datePipe: DatePipe, ucenjeModel: UcenjeModel): SestaviTestUcenjeModel {
   return {
     ...ucenjeModel,
     Začetek: datePipe.transform(ucenjeModel.ustvarjeno) || "",

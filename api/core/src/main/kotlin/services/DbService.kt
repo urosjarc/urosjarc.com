@@ -1,6 +1,9 @@
 package services
 
-import base.*
+import base.AnyId
+import base.Encrypted
+import base.Hashed
+import base.Id
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
 import com.mongodb.ServerApi
@@ -55,8 +58,13 @@ class Filters {
         fun EQ(prop: KProperty1<*, Encrypted>, value: Encrypted): Bson {
             return com.mongodb.client.model.Filters.eq(prop.name, value.bin)
         }
+
         fun EQ(prop: KProperty1<*, Hashed>, value: Hashed): Bson {
             return com.mongodb.client.model.Filters.eq(prop.name, value.bin)
+        }
+
+        fun <T> IN(prop: String, value: MutableSet<Id<T>>): Bson {
+            return com.mongodb.client.model.Filters.`in`(prop, value.map { it.value })
         }
 
         fun <T> CONTAINS(prop: KProperty1<*, Set<Id<T>>>, value: Id<T>): Bson {
@@ -117,6 +125,10 @@ class DbService(val db_url: String, val db_name: String) {
 
     inline fun <reified T : Entiteta<T>> dobi(_id: Id<T>): T? {
         return db.getCollection<T>(collectionName = ime<T>()).find(Filters.EQ(_id)).firstOrNull()
+    }
+
+    inline fun <reified T : Entiteta<T>> dobi(_id: MutableSet<Id<T>>): List<T> {
+        return db.getCollection<T>(collectionName = ime<T>()).find(Filters.IN(prop = "_id", value = _id)).toList()
     }
 
     inline fun <reified T : Entiteta<T>> posodobi(entiteta: T): T? {
@@ -331,7 +343,6 @@ class DbService(val db_url: String, val db_name: String) {
         )
         return aggregation.first()
     }
-
 
     fun ucitelj(id: Id<Oseba>): UciteljData {
         val aggregation: AggregateIterable<UciteljData> = osebe.aggregate<UciteljData>(

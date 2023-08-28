@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FormFieldMsgComponent } from './form-field-msg.component';
+import { FormFieldSporociloComponent } from './form-field-sporocilo.component';
 
 describe('InputMsgComponent', () => {
-  let component: FormFieldMsgComponent;
-  let fixture: ComponentFixture<FormFieldMsgComponent>;
+  let component: FormFieldSporociloComponent;
+  let fixture: ComponentFixture<FormFieldSporociloComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [FormFieldMsgComponent]
+      declarations: [FormFieldSporociloComponent]
     });
-    fixture = TestBed.createComponent(FormFieldMsgComponent);
+    fixture = TestBed.createComponent(FormFieldSporociloComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

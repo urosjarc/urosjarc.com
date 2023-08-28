@@ -8,8 +8,10 @@ import {DobiNastavitveProfilaService} from "./dobi-nastavitve-profila/dobi-nasta
 import {IzberiTipOsebeService} from "./izberi-tip-osebe/izberi-tip-osebe.service";
 import {UseCase} from "../../utils/types";
 import {DobiProfilService} from "./dobi-profil/dobi-profil.service";
+import {UstvariTestService} from "./ustvari-test/ustvari-test.service";
 
 export const core_useCases: UseCase[] = [
+  UstvariTestService,
   DobiNastavitveProfilaService,
   DobiProfilService,
   IzberiTipOsebeService,

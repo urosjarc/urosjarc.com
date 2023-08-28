@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {SestaviTestComponent} from "../../../ui/widgets/sestavi-test/sestavi-test.component";
+import {appUrls} from "../../../app.urls";
 
 @Component({
   selector: 'app-ucitelj-zvezki',
@@ -11,4 +12,6 @@ import {SestaviTestComponent} from "../../../ui/widgets/sestavi-test/sestavi-tes
   standalone: true
 })
 export class UciteljZvezkiComponent {
+  onFinish: string = appUrls.ucitelj({}).testi({}).$
+
 }
