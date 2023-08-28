@@ -1,9 +1,9 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {PublicKontaktComponent} from "./public-kontakt.component";
 import {
   ProgressBarLoadingComponent
 } from "../../../ui/parts/progress-bars/progress-bar-loading/progress-bar-loading.component";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {FormFieldGesloComponent} from "../../../ui/parts/form-fields/form-field-geslo/form-field-geslo.component";
 import {FormFieldMsgComponent} from "../../../ui/parts/form-fields/form-field-sporocilo/form-field-msg.component";
 import {FormFieldTelefonComponent} from "../../../ui/parts/form-fields/form-field-phone/form-field-telefon.component";
@@ -45,9 +45,9 @@ describe('PublicKoledarComponent testi', () => {
         BrowserAnimationsModule
       ],
       providers: [
-        {provide: AlertService, useValue: mockAlertService},
-        {provide: PosljiPublicKontaktniObrazecService, useValue: mockposljiPublicKontaktniObrazecService}
-      ]
+        { provide: AlertService, useValue: mockAlertService },
+        { provide: PosljiPublicKontaktniObrazecService, useValue: mockposljiPublicKontaktniObrazecService },
+      ],
     }).compileComponents()
 
     // ustvari komponento za testiranje
@@ -57,7 +57,86 @@ describe('PublicKoledarComponent testi', () => {
     fixture.detectChanges();
 
   })
+  // TODO: potrebno še testirati dodatno validatorje (vrnnjene ustrezne errorje) v vsakem inputu in klicanje funkcije pošlji()
   it('mora ustvariti komponento PublicKontaktComponent', () => {
     expect(component).toBeTruthy();
   })
+
+  it('mora initializirati formField z pravimi inputi', () => {
+    if (component.formFieldOsebaComponent) {
+      expect(component.formGroup.controls['oseba']).toBe(component.formFieldOsebaComponent.formControl);
+    } else {
+      fail('formFieldOsebaComponent ni definirana');
+    }
+  });
+  it('mora vrniti error za prazno polje oseba', () => {
+
+  });
+
+
+
+  it('mora uspešno validirati formGroup oseba', () => {
+    if (component.formFieldOsebaComponent) {
+
+      component.formFieldOsebaComponent.formControl.setValue('Janez Hocevar');
+    } else {
+
+      fail('formFieldOsebaComponent ni definirana');
+    }
+
+    expect(component.formGroup.controls['oseba'].status).toBe('VALID');
+  });
+  it('mora uspešno validirati formGroup msg', () => {
+    if (component.formFieldMsgComponent) {
+
+      component.formFieldMsgComponent.formControl.setValue('moje nakjučno sporocilo');
+    } else {
+
+      fail('formFieldMsgComponent ni definirana');
+    }
+    console.log(component.formGroup.controls['msg'])
+    expect(component.formGroup.controls['msg'].status).toBe('VALID');
+  });
+
+  it('mora uspešno validirati formGroup msg', () => {
+    if (component.formFieldMsgComponent) {
+
+      component.formFieldMsgComponent.formControl.setValue('moje nakjučno sporocilo');
+    } else {
+
+      fail('formFieldMsgComponent ni definirana');
+    }
+    console.log(component.formGroup.controls['msg'])
+    expect(component.formGroup.controls['msg'].status).toBe('VALID');
+  });
+
+  it('mora uspešno validirati formGroup telefon', () => {
+    if (component.formFieldTelefonComponent) {
+
+      component.formFieldTelefonComponent.formControl.setValue('040664247');
+    } else {
+
+      fail('formFieldTelefonComponent ni definirana');
+    }
+    console.log(component.formGroup.controls['telefon'])
+    expect(component.formGroup.controls['telefon'].status).toBe('VALID');
+  });
+  it('mora uspešno validirati formGroup email', () => {
+    if (component.formFieldEmailComponent) {
+
+      component.formFieldEmailComponent.formControl.setValue('testniEmail@gmail.com');
+    } else {
+
+      fail('formFieldEmailComponent ni definirana');
+    }
+    console.log(component.formGroup.controls['email'])
+    expect(component.formGroup.controls['email'].status).toBe('VALID');
+  });
+
+  it('ne sme poklicati service, če je form invalid', () => {
+    component.formGroup.setErrors({ invalid: true });
+    component.poslji();
+
+    expect(mockposljiPublicKontaktniObrazecService.zdaj).not.toHaveBeenCalled();
+  });
 })
