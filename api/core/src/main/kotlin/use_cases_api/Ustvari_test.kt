@@ -2,19 +2,21 @@ package use_cases_api
 
 import base.Encrypted
 import base.Id
-import domain.Naloga
-import domain.Oseba
-import domain.Test
+import domain.*
+import extend.encrypted
 import kotlinx.datetime.LocalDate
+import org.apache.logging.log4j.kotlin.logger
 import services.DbService
 import services.EmailService
-import services.TelefonService
+import use_cases.Ustvari_templejt
 
 class Ustvari_test(
-    private val telefon: TelefonService,
+    private val ustvari_template: Ustvari_templejt,
     private val email: EmailService,
     private val db: DbService
 ) {
+
+    val log = this.logger()
 
     sealed interface Rezultat {
         data class PASS(val test: Test) : Rezultat
@@ -49,7 +51,7 @@ class Ustvari_test(
 
         //Izbrani elementi ki so bili najdeni...
         val db_admini = this.db.dobi(test.oseba_admin_id)
-        val db_ucenci = this.db.dobi(test.oseba_ucenec_id)
+        val db_ucenci: List<Oseba> = this.db.dobi(test.oseba_ucenec_id)
         val db_naloge = this.db.dobi(test.naloga_id)
 
         //Elementi ki manjkajo iz originalnih spiskov...
@@ -66,10 +68,47 @@ class Ustvari_test(
             )
         }
 
-        return when (this.db.ustvari(test)) {
-            true -> Rezultat.PASS(test = test)
-            false -> Rezultat.ERROR_TEST_SE_NI_SHRANIL
+        if (!this.db.ustvari(test)) {
+            return Rezultat.ERROR_TEST_SE_NI_SHRANIL
         }
+
+        val kontakti = this.db.vsebuje<Kontakt, Oseba>(Kontakt::oseba_id, test.oseba_ucenec_id)
+        val serverji = db.oseba_najdi(tip = Oseba.Tip.SERVER)
+        val sporocila = mutableListOf<Sporocilo>()
+
+        next_kontakt@ for (kontakt in kontakti.filter { it.tip == Kontakt.Tip.EMAIL }) {
+            val oseba = db_ucenci.filter { kontakt.oseba_id.contains(it._id) }.first()
+
+            for (serverData in serverji) {
+                for (serverKontaktData in serverData.kontakt_refs.filter { it.kontakt.tip == Kontakt.Tip.EMAIL }) {
+
+                    val template = ustvari_template.email_obvestilo_prejema_testa(prejemnik = oseba, test = test)
+
+                    if (this.email.poslji_email(
+                            fromName = template.posiljatelj,
+                            from = serverKontaktData.kontakt.data.decrypt(),
+                            to = kontakt.data.decrypt(),
+                            subject = template.subjekt,
+                            html = template.html
+                        )
+                    ) {
+                        val sporocilo = Sporocilo(
+                            kontakt_posiljatelj_id = serverKontaktData.kontakt._id,
+                            kontakt_prejemnik_id = mutableSetOf(kontakt._id),
+                            vsebina = template.html.encrypted()
+                        )
+                        db.ustvari(sporocilo)
+                        sporocila.add(sporocilo)
+                        continue@next_kontakt
+                    }
+
+                }
+            }
+        }
+
+        this.log.info("Ustvarjenih je bilo: ${sporocila.size}")
+
+        return Rezultat.PASS(test = test)
 
     }
 }

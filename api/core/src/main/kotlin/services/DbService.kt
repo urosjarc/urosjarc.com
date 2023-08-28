@@ -131,6 +131,10 @@ class DbService(val db_url: String, val db_name: String) {
         return db.getCollection<T>(collectionName = ime<T>()).find(Filters.IN(prop = "_id", value = _id)).toList()
     }
 
+    inline fun <reified T : Entiteta<T>, K> vsebuje(prop: KProperty1<*, *>, _id: MutableSet<Id<K>>): List<T> {
+        return db.getCollection<T>(collectionName = ime<T>()).find(Filters.IN(prop = prop.name, value = _id)).toList()
+    }
+
     inline fun <reified T : Entiteta<T>> posodobi(entiteta: T): T? {
         return db.getCollection<T>(collectionName = ime<T>()).findOneAndReplace(Filters.EQ(entiteta._id), entiteta)
     }
