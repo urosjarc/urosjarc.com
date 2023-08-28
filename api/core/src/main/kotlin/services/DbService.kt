@@ -540,7 +540,7 @@ class DbService(val db_url: String, val db_name: String) {
 
         val audit = Audit(
             entiteta = ime<Status>().encrypted(),
-            tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
+            tip = Audit.Tip.POSODOBITEV_STATUSA_NALOGE,
             trajanje = sekund.toDuration(DurationUnit.MINUTES),
             opis = r.tip.name.encrypted(),
             entitete_id = setOf(id.vAnyId(), oseba_id.vAnyId(), test_id.vAnyId(), naloga_id.vAnyId())
@@ -563,7 +563,7 @@ class DbService(val db_url: String, val db_name: String) {
 
         val audit = Audit(
             entiteta = ime<Test>().encrypted(),
-            tip = Audit.Tip.TEST_DATUM_POSODOBITEV,
+            tip = Audit.Tip.POSODOBITEV_DATUMA_TESTA,
             trajanje = Duration.ZERO,
             opis = r.deadline.toString().encrypted(),
             entitete_id = setOf(id.vAnyId(), oseba_id.vAnyId())

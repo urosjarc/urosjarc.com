@@ -20,7 +20,8 @@ data class Audit(
     @Contextual val entiteta: Encrypted,
 ) : Entiteta<Audit> {
     enum class Tip {
-        STATUS_TIP_POSODOBITEV,
-        TEST_DATUM_POSODOBITEV
+        POSODOBITEV_STATUSA_NALOGE,
+        POSODOBITEV_DATUMA_TESTA,
+        USTVARIL_TEST
     }
 }

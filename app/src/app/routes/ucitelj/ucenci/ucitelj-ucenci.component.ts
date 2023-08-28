@@ -27,6 +27,6 @@ export class UciteljUcenciComponent implements OnInit {
 
   @trace()
   async ngOnInit() {
-    this.ucenci.data = (await this.osebaRepo.ucenje()).map(uciteljUcenciModelMap)
+    this.ucenci.data = (await this.osebaRepo.ucenje()).map(ele => uciteljUcenciModelMap(this.datePipe, ele))
   }
 }

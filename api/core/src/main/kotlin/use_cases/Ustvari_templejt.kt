@@ -17,7 +17,7 @@ class Ustvari_templejt {
         vsebina: String
     ) = Email(
         posiljatelj = "Uroš Jarc",
-        subjekt = "Uroš Jarc | Vaše sporočilo je bilo sprejeto!",
+        subjekt = "$ime $priimek | Vaše sporočilo je bilo sprejeto!",
         html = """
             <br><br><br>
             <div style="font-size:15px;text-align:center;font-family:monospace;">
@@ -26,7 +26,7 @@ class Ustvari_templejt {
                 
                 <hr width=700>
                 
-                <p><i>"${ime} ${priimek}", ${telefon}, ${email}<br>"${vsebina}"</i></p>
+                <p><i>"$ime $priimek", $telefon, $email<br>"$vsebina"</i></p>
                 
                 <hr width=800>
                 
@@ -51,25 +51,29 @@ class Ustvari_templejt {
 
     fun email_obvestilo_prejema_testa(prejemnik: Oseba, test: Test) = Email(
         posiljatelj = "Uroš Jarc",
-        subjekt = "Uroš Jarc | Dodeljen Vam je bil nov test!",
+        subjekt = "${prejemnik.ime.decrypt()} ${prejemnik.priimek.decrypt()} | Dodeljen Vam je bil nov test!",
         html = """
             <br><br><br>
             <div style="font-size:15px;text-align:center;font-family:monospace;">
             
-                <h1>Lepo pozdravljeni ${prejemnik.ime.decrypt()} ${prejemnik.priimek.decrypt()}</h1>
+                <h1>📝 Dodeljen Vam je nov test! 📝</h1>
                 
                 <hr width=700>
                 
-                <h2>Dodeljen Vam je nov test!</h2>
+                <div style="font-style: italic">
+                    <p style="font-size: 25px; margin-bottom: 0">${test.naslov.decrypt()}</p>
+                    <p style="font-size: 22px; margin: 5px">${test.podnaslov.decrypt()}</p>
+                    <p style="font-size: 20px; margin-top: 0">
+                        Deadline: ${test.deadline},
+                        Nalog: ${test.naloga_id.size},
+                        Ucencev: ${test.oseba_ucenec_id.size}
+                    </p>
+                </div>
                 
-                <h2>${test.naslov.decrypt()}</h2>
-                <h3>${test.podnaslov.decrypt()}</h3>
-                <h3>${test.deadline}</h3>
-                <h3>Nalog: ${test.naloga_id.size}</h3>
-                <h3>Ucencev: ${test.oseba_ucenec_id.size}</h3>
+                <hr width=800>
                 
                 <p style="font-size: 20px">
-                    Do testa lahko dostopate preko svojega profila v zavihku testi.
+                    Do testa lahko dostopate preko svojega profila na zavihku testi.
                     
                     <pre style="margin-top: 8px; font-size:25px">⭐   ⭐   ⭐   ⭐   ⭐</pre>
                 </p>

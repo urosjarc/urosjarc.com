@@ -9,8 +9,7 @@ export interface UciteljUcenciModel extends TableModel {
   Letnik: number,
 }
 
-export function uciteljUcenciModelMap(ucenjeModel: UcenjeModel): UciteljUcenciModel {
-  const datePipe = inject(DatePipe)
+export function uciteljUcenciModelMap(datePipe: DatePipe, ucenjeModel: UcenjeModel): UciteljUcenciModel {
   return {
     ...ucenjeModel,
     Učenec: `${ucenjeModel.oseba.ime} ${ucenjeModel.oseba.priimek}`,

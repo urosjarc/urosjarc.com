@@ -4,11 +4,13 @@ import base.Encrypted
 import base.Id
 import domain.*
 import extend.encrypted
+import extend.ime
 import kotlinx.datetime.LocalDate
 import org.apache.logging.log4j.kotlin.logger
 import services.DbService
 import services.EmailService
 import use_cases.Ustvari_templejt
+import kotlin.time.Duration
 
 class Ustvari_test(
     private val ustvari_template: Ustvari_templejt,
@@ -106,7 +108,17 @@ class Ustvari_test(
             }
         }
 
-        this.log.info("Ustvarjenih je bilo: ${sporocila.size}")
+        this.log.info("Ustvarjenih je bilo: ${sporocila.size} sporocil")
+
+        val audit = Audit(
+            entitete_id = setOf(avtor.vAnyId()),
+            tip = Audit.Tip.USTVARIL_TEST,
+            trajanje = Duration.ZERO,
+            opis = "Ustvaril test z ${naloge.size}, ${ucenci.size} ucencem".encrypted(),
+            entiteta = ime<Test>().encrypted()
+        )
+
+        this.db.ustvari(audit)
 
         return Rezultat.PASS(test = test)
 
