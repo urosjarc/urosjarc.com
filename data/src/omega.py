@@ -1,35 +1,15 @@
 import time
 import zipfile
-from multiprocessing import Process
 from pathlib import Path
 
 from PIL import Image
-from itertools import islice
 
-
-def parallel(fun, size, args):
-    def batcher(iterable, batch_size):
-        iterator = iter(iterable)
-        while batch := list(islice(iterator, batch_size)):
-            yield batch
-
-    pool = []
-
-    for arg in batcher(args, size):
-        p = Process(target=fun, args=(arg,))
-        p.start()
-        pool.append(p)
-
-    for p in pool:
-        p.join()
+from src import utils
 
 
 def procesiraj_sliko(imgs):
-    a = 0
     for img in imgs:
-        for y in range(img.height):
-            for x in range(img.width):
-                a += 1
+        print(utils.image_to_text(img))
 
 
 def procesiraj_omego():
@@ -42,10 +22,20 @@ def procesiraj_omego():
         zip = zipfile.ZipFile(file)
         zip_slike = zip.infolist()
         for zip_slika in zip_slike:
-            ifile = zip.open(zip_slika)
-            imgs.append(Image.open(ifile))
 
-    parallel(procesiraj_sliko, 5, imgs)
+            ifile = zip.open(zip_slika)
+            fileNum = int(ifile.name.split("_")[-1].split('.')[0])
+
+            if fileNum <= 3:
+                continue
+
+            img = Image.open(ifile)
+            imgs.append(img)
+
+            img.show()
+            break
+
+    utils.parallel(procesiraj_sliko, 5, imgs)
 
 
 start = time.time()
