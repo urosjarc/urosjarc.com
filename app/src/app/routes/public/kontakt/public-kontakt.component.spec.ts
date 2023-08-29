@@ -16,6 +16,7 @@ import {
   PosljiPublicKontaktniObrazecService
 } from "../../../core/use_cases/poslji-public-kontaktni-obrazec/poslji-public-kontaktni-obrazec.service";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {Logger} from "ng-openapi-gen/lib/logger";
 
 describe('PublicKoledarComponent testi', () => {
 
@@ -27,6 +28,7 @@ describe('PublicKoledarComponent testi', () => {
 
   let mockAlertService: jasmine.SpyObj<AlertService>;
   let mockposljiPublicKontaktniObrazecService: jasmine.SpyObj<PosljiPublicKontaktniObrazecService>
+
   beforeEach(async () => {
     // zmokamo servise
     mockAlertService = jasmine.createSpyObj("AlertService", ['infoSprejetnoSporocilo']);
@@ -58,34 +60,86 @@ describe('PublicKoledarComponent testi', () => {
 
   })
   // TODO: potrebno še testirati dodatno validatorje (vrnnjene ustrezne errorje) v vsakem inputu in klicanje funkcije pošlji()
-  it('mora ustvariti komponento PublicKontaktComponent', () => {
-    expect(component).toBeTruthy();
+  // TODO: drugi test pri osebi input (Vnos nima dveh veljavnih besed!) ne pesa, zakaj že!!?
+  it('mora vrniti ustrezen error ob praznem polju na inputu oseba', () => {
+
+    component.formGroup.controls['oseba'].setValue('');
+
+    fixture.detectChanges();
+    const errorMessage = component.formFieldOsebaComponent?.getErrorMessage()
+
+    expect(errorMessage).toEqual('Vnos je obvezen!')
   })
 
-  it('mora initializirati formField z pravimi inputi', () => {
+  it('mora vrniti ustrezen error ob neustreznem številu besed na inputu oseba', () => {
+
+    component.formGroup.controls['oseba'].setValue('John Doe');
+
+    fixture.detectChanges();
+    const errorMessage = component.formFieldOsebaComponent?.getErrorMessage();
+
+    expect(errorMessage).toEqual('Vnos nima dveh veljavnih besed!');
+  })
+
+  it('mora initializirati formGroup oseba', () => {
     if (component.formFieldOsebaComponent) {
-      expect(component.formGroup.controls['oseba']).toBe(component.formFieldOsebaComponent.formControl);
-    } else {
-      fail('formFieldOsebaComponent ni definirana');
-    }
-  });
-  it('mora vrniti error za prazno polje oseba', () => {
-
-  });
-
-
-
-  it('mora uspešno validirati formGroup oseba', () => {
-    if (component.formFieldOsebaComponent) {
-
       component.formFieldOsebaComponent.formControl.setValue('Janez Hocevar');
     } else {
-
       fail('formFieldOsebaComponent ni definirana');
     }
-
     expect(component.formGroup.controls['oseba'].status).toBe('VALID');
   });
+  it('mora vrniti ustrezen error ob praznem sporočilu na inputu msg', () => {
+    if (component.formFieldMsgComponent) {
+
+      component.formFieldMsgComponent.formControl.setValue('');
+    } else {
+
+      fail('formFieldMsgComponent ni definirana');
+    }
+    const errorMessage = component.formFieldMsgComponent?.getErrorMessage();
+    expect(errorMessage).toEqual('Sporočilo je obvezno!');
+  });
+
+  it('mora vrniti ustrezen error ob neustreznem številu besed na inputu msg', () => {
+    if (component.formFieldMsgComponent) {
+
+      component.formFieldMsgComponent.formControl.setValue('moj msg');
+    } else {
+
+      fail('formFieldMsgComponent ni definirana');
+    }
+    const errorMessage = component.formFieldMsgComponent?.getErrorMessage();
+    expect(errorMessage).toEqual('Sporočilo je premajhno!');
+  });
+
+  it('mora vrniti ustrezen error ob neustreznem številu besed na inputu msg', () => {
+    if (component.formFieldMsgComponent) {
+
+      component.formFieldMsgComponent.formControl.setValue('moje sporočilo');
+    } else {
+
+      fail('formFieldMsgComponent ni definirana');
+    }
+    const errorMessage = component.formFieldMsgComponent?.getErrorMessage();
+    expect(errorMessage).toEqual('Sporočilo ima premalo besed!');
+  });
+
+  it('mora vrniti ustrezen error ob neveljavnem sporočilu na inputu msg', () => {
+    if (component.formFieldMsgComponent) {
+
+      component.formFieldMsgComponent.formControl.setValue('12121321 12313 1231');
+    } else {
+
+      fail('formFieldMsgComponent ni definirana');
+    }
+
+    const errorMessage = component.formFieldMsgComponent?.getErrorMessage();
+
+    expect(errorMessage).toEqual('Sporočilo ni veljavno!');
+  });
+
+
   it('mora uspešno validirati formGroup msg', () => {
     if (component.formFieldMsgComponent) {
 
@@ -98,28 +152,79 @@ describe('PublicKoledarComponent testi', () => {
     expect(component.formGroup.controls['msg'].status).toBe('VALID');
   });
 
-  it('mora uspešno validirati formGroup msg', () => {
-    if (component.formFieldMsgComponent) {
+  // TODO: mogoče dodati klicaj na koncu drugega pogoja pri telefonu 'Telefon ni veljaven'?
+  // TODO : dodaten validator za omejitve Validators.maxLength(13)?
+  it('mora vrniti ustrezen error ob praznem polju na inputu telefon', () => {
+    if (component.formFieldTelefonComponent) {
 
-      component.formFieldMsgComponent.formControl.setValue('moje nakjučno sporocilo');
+      component.formFieldTelefonComponent.formControl.setValue('');
     } else {
 
-      fail('formFieldMsgComponent ni definirana');
+      fail('formFieldTelefonComponent ni definirana');
     }
-    console.log(component.formGroup.controls['msg'])
-    expect(component.formGroup.controls['msg'].status).toBe('VALID');
-  });
 
+    const errorMessage = component.formFieldTelefonComponent?.getErrorMessage();
+
+    expect(errorMessage).toEqual('Telefon je obvezen!');
+  });
+  it('mora vrniti ustrezen error ob neustrezni telefonski na inputu telefon', () => {
+    if (component.formFieldTelefonComponent) {
+
+      component.formFieldTelefonComponent.formControl.setValue('abc');
+    } else {
+
+      fail('formFieldTelefonComponent ni definirana');
+    }
+    const errorMessage = component.formFieldTelefonComponent?.getErrorMessage();
+
+    expect(errorMessage).toEqual('Telefon ni veljaven');
+  });
+  it('mora vrniti ustrezen error ob premajhni telofonski na inputu telefon', () => {
+    if (component.formFieldTelefonComponent) {
+
+      component.formFieldTelefonComponent.formControl.setValue('04066214');
+    } else {
+
+      fail('formFieldTelefonComponent ni definirana');
+    }
+    const errorMessage = component.formFieldTelefonComponent?.getErrorMessage();
+
+    expect(errorMessage).toEqual('Telefonska je premajhna!');
+  });
   it('mora uspešno validirati formGroup telefon', () => {
     if (component.formFieldTelefonComponent) {
 
-      component.formFieldTelefonComponent.formControl.setValue('040664247');
+      component.formFieldTelefonComponent.formControl.setValue('+386040111222');
     } else {
 
       fail('formFieldTelefonComponent ni definirana');
     }
     console.log(component.formGroup.controls['telefon'])
     expect(component.formGroup.controls['telefon'].status).toBe('VALID');
+  });
+  it('mora vrniti ustrezen error ob praznem inputu na inputu email', () => {
+    if (component.formFieldEmailComponent) {
+
+      component.formFieldEmailComponent.formControl.setValue('');
+    } else {
+
+      fail('formFieldEmailComponent ni definirana');
+    }
+    const errorMessage = component.formFieldEmailComponent?.getErrorMessage();
+
+    expect(errorMessage).toEqual('Email je obvezen!');
+  });
+  it('mora vrniti ustrezen error ob neustreznem email naslovu na inputu email', () => {
+    if (component.formFieldEmailComponent) {
+
+      component.formFieldEmailComponent.formControl.setValue('abc');
+    } else {
+
+      fail('formFieldEmailComponent ni definirana');
+    }
+    const errorMessage = component.formFieldEmailComponent?.getErrorMessage();
+
+    expect(errorMessage).toEqual('Email ni veljaven!');
   });
   it('mora uspešno validirati formGroup email', () => {
     if (component.formFieldEmailComponent) {
