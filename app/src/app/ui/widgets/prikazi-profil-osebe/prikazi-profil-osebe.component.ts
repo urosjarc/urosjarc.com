@@ -24,6 +24,8 @@ export class PrikaziProfilOsebeComponent {
   naslovi: Naslov[] = []
   kontakti: Kontakt[] = []
 
+  ucenec_src = 'https://img.icons8.com/external-vitaliy-gorbachev-lineal-vitaly-gorbachev/60/external-student-online-learning-vitaliy-gorbachev-lineal-vitaly-gorbachev.png'
+
   constructor(
     private osebaRepo: OsebaRepoService) {
   }

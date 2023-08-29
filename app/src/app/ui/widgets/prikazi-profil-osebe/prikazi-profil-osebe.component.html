@@ -1,44 +1,61 @@
-<div class="row">
-  <div class="col">
-    <mat-list>
-      <!-- OSEBA -->
-      <div mat-subheader>Oseba</div>
+<div class="row p-4 justify-content-center">
+  <div class="col-md-4 text-center">
+    <mat-list
+      class="py-3 text-white shadow-lg position-relative border-black border">
+      <span class="position-absolute top-100 start-50 translate-middle badge p-2 shadow bg-primary">
+        {{oseba?.tip}}
+      </span>
+      <img width="80" height="80" [src]="ucenec_src" class="my-3"/>
       <mat-list-item>
-        <mat-icon matListItemIcon>person</mat-icon>
-        <div matListItemTitle>{{oseba?._id}}</div>
-        <div matListItemLine>Identifikacijska številka</div>
-      </mat-list-item>
-      <mat-list-item>
-        <mat-icon matListItemIcon>person</mat-icon>
-        <div matListItemTitle>{{oseba?.ime}} {{oseba?.priimek}}</div>
-        <div matListItemLine>Uporabniski ime in priimek</div>
-      </mat-list-item>
-      <mat-list-item>
-        <mat-icon matListItemIcon>person</mat-icon>
-        <div matListItemTitle>{{oseba?.username}}</div>
-        <div matListItemLine>Uporabnisko ime</div>
-      </mat-list-item>
-      <mat-list-item>
-        <mat-icon matListItemIcon>key</mat-icon>
-        <div matListItemTitle>{{oseba?.tip}}</div>
-        <div matListItemLine>Tip uporabnika</div>
+        <div matListItemTitle class="text-success">{{oseba?.ime}} {{oseba?.priimek}}</div>
+        <div matListItemLine>Ime in priimek</div>
       </mat-list-item>
     </mat-list>
   </div>
-  <div class="col">
+  <div class="col-md-6">
     <mat-list>
-      <div mat-subheader>Naslovi</div>
-      <mat-list-item *ngFor="let naslov of naslovi">
-        <mat-icon matListItemIcon>map</mat-icon>
-        <div matListItemTitle>{{naslov.ulica}}</div>
-        <div matListItemLine>{{naslov.zip}} {{naslov.mesto}}</div>
-        <div matListItemLine>{{naslov.drzava}}</div>
+      <mat-list-item>
+        <div matListItemTitle class="text-success">{{oseba?.username}}</div>
+        <div matListItemLine>Uporabnisko ime</div>
       </mat-list-item>
-      <div mat-subheader>Kontakti</div>
-      <mat-list-item *ngFor="let kontakt of kontakti">
-        <mat-icon matListItemIcon>phone</mat-icon>
-        <div matListItemTitle>{{kontakt.data}}</div>
-        <div matListItemLine>{{kontakt.tip}}</div>
+    </mat-list>
+    <mat-list>
+      <mat-list-item>
+        <div matListItemTitle>{{oseba?._id}}</div>
+        <div matListItemLine>Identifikacijska številka</div>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12 text-center">
+    <mat-list>
+      <div mat-subheader class="fs-4 pb-4">Naslovi</div>
+      <mat-list-item>
+        <div class="row row-cols-3 g-4">
+          <div class="col" *ngFor="let naslov of naslovi">
+            <mat-icon matListItemIcon>map</mat-icon>
+            <div matListItemTitle class="text-success">{{naslov.ulica}}</div>
+            <div matListItemLine>{{naslov.zip}} {{naslov.mesto}}</div>
+            <div matListItemLine>{{naslov.drzava}}</div>
+          </div>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <hr style="width: 80%; margin: auto;">
+  <div class="col-12 py-5 text-center">
+    <mat-list>
+      <div mat-subheader class="fs-4 pb-4">Kontakti</div>
+      <mat-list-item>
+        <div class="row row-cols-1 g-4">
+          <div class="col" *ngFor="let kontakt of kontakti">
+            <mat-icon matListItemIcon>map</mat-icon>
+            <div matListItemTitle class="text-success">{{kontakt.data}}</div>
+            <div matListItemLine>{{kontakt.tip}}</div>
+          </div>
+        </div>
       </mat-list-item>
     </mat-list>
   </div>
