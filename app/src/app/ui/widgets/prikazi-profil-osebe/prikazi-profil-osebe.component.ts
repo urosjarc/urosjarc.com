@@ -6,7 +6,7 @@ import {Kontakt} from "../../../core/services/api/models/kontakt";
 import {trace} from "../../../utils/trace";
 import {MatListModule} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
-import {NgClass, NgForOf} from "@angular/common";
+import {NgForOf} from "@angular/common";
 
 @Component({
   selector: 'app-prikazi-profil-osebe',
@@ -15,8 +15,7 @@ import {NgClass, NgForOf} from "@angular/common";
   imports: [
     MatListModule,
     MatIconModule,
-    NgForOf,
-    NgClass
+    NgForOf
   ],
   standalone: true
 })
