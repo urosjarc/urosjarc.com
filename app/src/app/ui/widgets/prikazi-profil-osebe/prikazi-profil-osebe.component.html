@@ -13,7 +13,7 @@
       <mat-list>
         <mat-list-item>
           <div matListItemTitle class="text-success">{{oseba?.username}}</div>
-          <div matListItemLine>Uporabnisko ime</div>
+          <div matListItemLine i18n>Uporabnisko ime</div>
         </mat-list-item>
       </mat-list>
 
@@ -27,7 +27,7 @@
       <!-- MESTO IN POZICIJA IMENA IN PRIIMKA -->
       <mat-list-item>
         <div matListItemTitle class="text-success">{{oseba?.ime}} {{oseba?.priimek}}</div>
-        <div matListItemLine>Ime in priimek</div>
+        <div matListItemLine i18n>Ime in priimek</div>
       </mat-list-item>
     </mat-list>
 
@@ -35,7 +35,7 @@
     <mat-list class="mt-3">
       <mat-list-item>
         <div matListItemTitle>{{oseba?._id}}</div>
-        <div matListItemLine>Identifikacijska številka</div>
+        <div matListItemLine i18n>Identifikacijska številka</div>
       </mat-list-item>
     </mat-list>
   </div>
@@ -47,7 +47,7 @@
       <!-- MESTO IN POZICIJA NASLOVOV -->
       <div class="col-md-12">
         <mat-list>
-          <div mat-subheader class="mt-0">Naslovi</div>
+          <div mat-subheader class="mt-0" i18n>Naslovi</div>
           <mat-list-item>
             <div class="row justify-content-center row-cols-2 row-cols-sm-3 g-4">
               <div class="col" *ngFor="let naslov of naslovi">
@@ -63,7 +63,7 @@
       <!-- MESTO IN POZICIJA KONTAKTOV -->
       <div class="col-md-12 text-center">
         <mat-list>
-          <div mat-subheader>Kontakti</div>
+          <div mat-subheader i18n>Kontakti</div>
           <mat-list-item>
             <div class="row justify-content-center g-4 row-cols-2 row-cols-sm-3">
               <div class="col" *ngFor="let kontakt of kontakti">
