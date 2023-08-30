@@ -1,56 +1,80 @@
+import shutil
 import time
 import zipfile
 from pathlib import Path
 
+import numpy as np
 from PIL import Image
 
 from src import utils
 
-def rdeci_pixel(r,g,b):
-    pass
-
-def razrezi_sliko(img: Image.Image):
-    deli_slike = [[]]
-    for y in range(img.height):
-        nova_naloga = False
-        for x in range(img.width / 5):
-            pixel = img.getpixel((x, y))
-            if pixel:
-                pass
+omegaPath = Path("../omega")
+omegaSlikePath = Path("../omega_slike")
 
 
-def slika(img: Image.Image):
-    for del_slike in razrezi_sliko(img):
-        print(utils.image_to_text(img))
+def razrezi_sliko(img_input_rgb: Image.Image, img_input_hsv: Image.Image):
+    naloge = []
+
+    naloga = False
+    red_active = False
+
+    for y in range(img_input_rgb.height):
+        line = []
+
+        is_red_line = False
+
+        for x in range(img_input_rgb.width):
+            rgb_pixel = img_input_rgb.getpixel((x, y))
+            h, s, v = img_input_hsv.getpixel((x, y))
+            line.append(rgb_pixel)
+            if not is_red_line and utils.isRed(h, s, v):
+                is_red_line = True
+
+        if is_red_line and not red_active:
+            naloge.append([])
+            red_active = True
+            naloga = True
+
+        if red_active and not is_red_line:
+            red_active = False
+
+        if naloga:
+            naloge[-1].append(line)
+
+    return naloge
 
 
-def slike(imgs: list[Image.Image]):
-    for img in imgs:
-        slika(img)
+def slike(args):
+    for img in args:
+        naloge = razrezi_sliko(*img)
+        for i, naloga in enumerate(naloge):
+            data = Image.fromarray(np.array(naloga, dtype=np.uint8), mode="RGB")
+            data.save(f"naloga_{i}.png")
 
 
 def zip():
-    omegaPath = Path("../omega")
     files = omegaPath.iterdir()
+    if omegaSlikePath.exists():
+        shutil.rmtree(omegaSlikePath.absolute())
+    omegaSlikePath.mkdir(parents=True, exist_ok=True)
 
     imgs = []
 
-    for file in files:
-        zip = zipfile.ZipFile(file)
+    img_file = None
+    for img_file in files:
+        zip = zipfile.ZipFile(img_file)
         zip_slike = zip.infolist()
         for zip_slika in zip_slike:
 
             ifile = zip.open(zip_slika)
             fileNum = int(ifile.name.split("_")[-1].split('.')[0])
 
-            if fileNum <= 3:
+            if fileNum <= 10:
                 continue
 
-            img = Image.open(ifile)
-            hsv_img = img.convert('HSV')
-            imgs.append(img)
-
-            img.show()
+            img_input_rgb = Image.open(ifile)
+            img_input_hsv = img_input_rgb.convert('HSV')
+            imgs.append((img_input_rgb, img_input_hsv))
             break
 
     utils.parallel(slike, 5, imgs)

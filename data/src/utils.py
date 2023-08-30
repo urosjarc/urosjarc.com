@@ -25,3 +25,14 @@ def parallel(fun, size, args):
 def image_to_text(img):
     gray_image = ImageOps.grayscale(img)
     print(pytesseract.image_to_string(gray_image, 'slv'))
+
+
+def inRange(pxl, mn, mx):
+    for i in range(len(pxl)):
+        if not (mn[i] <= pxl[i] <= mx[i]):
+            return False
+    return True
+
+
+def isRed(h, s, v):
+    return ((220 <= h <= 255) or (0 <= h <= 25)) and 50 < s and 70 < v
