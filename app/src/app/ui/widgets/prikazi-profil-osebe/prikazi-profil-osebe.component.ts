@@ -6,7 +6,7 @@ import {Kontakt} from "../../../core/services/api/models/kontakt";
 import {trace} from "../../../utils/trace";
 import {MatListModule} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
-import {NgForOf} from "@angular/common";
+import {NgClass, NgForOf} from "@angular/common";
 
 @Component({
   selector: 'app-prikazi-profil-osebe',
@@ -15,7 +15,8 @@ import {NgForOf} from "@angular/common";
   imports: [
     MatListModule,
     MatIconModule,
-    NgForOf
+    NgForOf,
+    NgClass
   ],
   standalone: true
 })
@@ -23,8 +24,6 @@ export class PrikaziProfilOsebeComponent {
   oseba: Oseba | undefined
   naslovi: Naslov[] = []
   kontakti: Kontakt[] = []
-
-  ucenec_src = 'https://img.icons8.com/external-vitaliy-gorbachev-lineal-vitaly-gorbachev/60/external-student-online-learning-vitaliy-gorbachev-lineal-vitaly-gorbachev.png'
 
   constructor(
     private osebaRepo: OsebaRepoService) {
