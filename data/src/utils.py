@@ -1,8 +1,12 @@
 from itertools import islice
 from multiprocessing import Process
 
+import cv2
+import numpy as np
 import pytesseract
+from PIL import Image
 from PIL import ImageOps
+from deskew import determine_skew
 
 
 def parallel(fun, size, args):
@@ -34,5 +38,17 @@ def inRange(pxl, mn, mx):
     return True
 
 
+def isWhite(s):
+    return 40 > s
+
+
 def isRed(h, s, v):
-    return ((220 <= h <= 255) or (0 <= h <= 25)) and 50 < s and 70 < v
+    return ((220 <= h <= 255) or (0 <= h <= 25)) and 140 < s and 70 < v
+
+
+def img_skew_correction(image: Image.Image, max_angle: int):
+    image_cv = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2GRAY)
+    angle = determine_skew(image_cv, min_deviation=0.5)
+    if abs(angle) > max_angle:
+        return angle, image
+    return angle, image.rotate(angle)
