@@ -1,0 +1,13 @@
+// ZA SPREMEMBO IKONE -> BADGE <- SO POTREBNI NASLEDNJI PARAMETRI IN VREDNOSTI
+.mat-icon-size {
+  font-size: 100px;
+  height: 100px;
+  width: 100px;
+}
+
+// SPREMEMBE SO SAMO ZA TO KOMPONENTO IN NASTAVLJA VIŠINO KJER SE NAHAJA IKONA -> BADGE <- DA SE LE TA VIDI V CELOTI
+:host {
+  .mdc-list-item.mdc-list-item--with-one-line {
+    height: 95px;
+  }
+}
