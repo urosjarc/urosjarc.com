@@ -24,8 +24,6 @@ describe('PublicKoledarComponent testi', () => {
 
   let component: PublicKontaktComponent;
 
-
-
   let mockAlertService: jasmine.SpyObj<AlertService>;
   let mockposljiPublicKontaktniObrazecService: jasmine.SpyObj<PosljiPublicKontaktniObrazecService>
 
@@ -61,6 +59,7 @@ describe('PublicKoledarComponent testi', () => {
   })
   // TODO: potrebno še testirati dodatno validatorje (vrnnjene ustrezne errorje) v vsakem inputu in klicanje funkcije pošlji()
   // TODO: drugi test pri osebi input (Vnos nima dveh veljavnih besed!) ne pesa, zakaj že!!?
+  // TODO: teste errorjev velidatorjev zastavi tako da testiraš samo začetno veliko črko in klicaj na koncu.
   it('mora vrniti ustrezen error ob praznem polju na inputu oseba', () => {
 
     component.formGroup.controls['oseba'].setValue('');
@@ -148,7 +147,6 @@ describe('PublicKoledarComponent testi', () => {
 
       fail('formFieldMsgComponent ni definirana');
     }
-    console.log(component.formGroup.controls['msg'])
     expect(component.formGroup.controls['msg'].status).toBe('VALID');
   });
 
@@ -199,7 +197,6 @@ describe('PublicKoledarComponent testi', () => {
 
       fail('formFieldTelefonComponent ni definirana');
     }
-    console.log(component.formGroup.controls['telefon'])
     expect(component.formGroup.controls['telefon'].status).toBe('VALID');
   });
   it('mora vrniti ustrezen error ob praznem inputu na inputu email', () => {
@@ -234,7 +231,6 @@ describe('PublicKoledarComponent testi', () => {
 
       fail('formFieldEmailComponent ni definirana');
     }
-    console.log(component.formGroup.controls['email'])
     expect(component.formGroup.controls['email'].status).toBe('VALID');
   });
 
