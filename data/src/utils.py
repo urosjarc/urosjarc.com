@@ -28,7 +28,7 @@ def parallel(fun, size, args):
 
 def image_to_text(img):
     gray_image = ImageOps.grayscale(img)
-    print(pytesseract.image_to_string(gray_image, 'slv'))
+    return pytesseract.image_to_string(gray_image, 'slv')
 
 
 def inRange(pxl, mn, mx):

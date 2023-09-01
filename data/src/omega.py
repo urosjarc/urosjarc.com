@@ -16,12 +16,17 @@ class Naloga:
     def __init__(self, stevilka: int, margin):
         self.stevilka = stevilka
         self.vrstice: list[list[tuple[int]]] = margin
+        self.tekst: str
 
     def shrani(self, base: Path):
         path = base.joinpath(f"naloga_{self.stevilka:03d}.png")
+        textPath = base.joinpath(f"naloga_{self.stevilka:03d}.txt")
+
         np_array = np.array(self.vrstice, dtype=np.uint8)
         data = Image.fromarray(np_array, mode="RGB")
+        meta = utils.image_to_text(data)
         data.save(path.absolute())
+        textPath.write_text(meta)
 
 
 class Stran:
