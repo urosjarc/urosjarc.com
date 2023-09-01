@@ -39,11 +39,14 @@ def inRange(pxl, mn, mx):
 
 
 def isWhite(s):
-    return 40 > s
+    return 10 > s
 
 
 def isRed(h, s, v):
-    return ((220 <= h <= 255) or (0 <= h <= 25)) and 140 < s and 70 < v
+    return ((220 <= h <= 255) or (0 <= h <= 25)) and 120 < s and 70 < v
+
+def isLightRed(h, s, v):
+    return ((220 <= h <= 255) or (0 <= h <= 25)) and 15 < s < 120 and 70 < v
 
 
 def img_skew_correction(image: Image.Image, max_angle: int):

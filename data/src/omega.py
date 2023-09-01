@@ -35,47 +35,59 @@ class Stran:
         self.procesiraj()
 
     def procesiraj(self):
-        naloga = False # Ali se je zacelo parsanje prve naloge
-        red_active = False # Flag ce je vrstica rdece barve
-        margin: list[list[tuple[int]]] = [] # Za dodajanje zgornjega margina
+        naloga = False  # Ali se je zacelo parsanje prve naloge
+        red_active = False  # Flag ce je vrstica rdece barve
+        margin: list[list[tuple[int]]] = []  # Za dodajanje zgornjega margina
 
-        for y in range(self.visina): # Loopanje po vrstici slike
-            line: list[tuple[int]] = [] # Shranjevanje pixlov trenutne vrstice
+        for y in range(self.visina):  # Loopanje po vrstici slike
+            line: list[tuple[int]] = []  # Shranjevanje pixlov trenutne vrstice
 
-            is_red_line = False # Flag ce je trenutna vrstica z rdecim pixlom
-            for x in range(120, self.sirina-120): # Loopanje po stolpcih vrstice brez margina
+            is_red_line = False  # Flag ce je trenutna vrstica z rdecim pixlom
+            for x in range(100, self.sirina - 100):  # Loopanje po stolpcih vrstice brez margina
                 rgb_pixel = self.rgb.getpixel((x, y))
                 line.append(rgb_pixel)
 
-                if x < self.sirina / 5: # Detekcija pixlov samo na prvi osmini slike
-                    h, s, v = self.hsv.getpixel((x, y))
-                    if not is_red_line and utils.isRed(h, s, v):
+                h, s, v = self.hsv.getpixel((x, y))
+                is_pixel_red = utils.isRed(h, s, v)
+                is_pixel_light_red = utils.isLightRed(h, s, v)
+                if 120 < x < 3*120:  # Detekcija rdecih pixlov samo na specificnem pasu
+                    if is_pixel_red and not is_pixel_light_red: # Aktiviraj ce ni light red na tem pasu
                         is_red_line = True
+                elif is_pixel_red or is_pixel_light_red : # Ce je pixel rdec kjer koli drugje v mocni ali light rdeci barvi ni aktivacije rdece vrstice
+                    is_red_line = False
 
-            if len(margin) >= 18: # Omejitev stevila vrstic ki so lahko v marginu.
+            if len(margin) >= 18:  # Omejitev stevila vrstic ki so lahko v marginu.
                 margin.pop(0)
             margin.append(line)
 
-            if is_red_line and not red_active:
+            # END NALOGA
+            is_red_block = utils.isRed(*self.hsv.getpixel((120 + 5, y)))
 
-                if naloga: # Ostranjevanje zadnjih 18 vrstic slike za centralizacijo slike.
+            # START NEW NALOGA
+            if is_red_block or (is_red_line and not red_active): # Prva aktivacija rdece vrstice
+
+                if naloga:  # Ostranjevanje zadnjih 18 vrstic slike za centralizacijo slike.
                     self.naloge[-1].vrstice = self.naloge[-1].vrstice[:-18]
+                    if len(self.naloge[-1].vrstice) < 50:  # Ce je naloga manjsa od 50px potem jo zavrzi!
+                        self.naloge.pop(-1)
 
-                if len(self.naloge[-1].vrstice) < 50: # Ce je naloga manjsa od 50px potem jo zavrzi!
-                    self.naloge.pop(-1)
-
-                self.naloge.append(Naloga(stevilka=len(self.naloge), margin=copy.deepcopy(margin)))
                 red_active = True
-                naloga = True
 
-            if red_active and not is_red_line:
+                if not is_red_block:
+                    self.naloge.append(Naloga(stevilka=len(self.naloge), margin=copy.deepcopy(margin)))
+                    naloga = True
+                else:
+                    naloga = False
+
+            if red_active and not is_red_line: # Deaktivacija rdece vrstice
                 red_active = False
 
             if naloga:
                 self.naloge[-1].vrstice.append(line)
 
-        # Odstrani spodnji nalogi white margin
-        self.naloge[-1].vrstice = self.naloge[-1].vrstice[:-200]
+        if len(self.naloge) > 0:
+            # Odstrani spodnji nalogi white margin
+            self.naloge[-1].vrstice = self.naloge[-1].vrstice[:-200]
 
         return self.naloge
 
