@@ -55,21 +55,29 @@ class Stran:
                 h, s, v = self.hsv.getpixel((x, y))
                 is_pixel_red = utils.isRed(h, s, v)
                 is_pixel_light_red = utils.isLightRed(h, s, v)
-                if 120 < x < 3*120:  # Detekcija rdecih pixlov samo na specificnem pasu
-                    if is_pixel_red and not is_pixel_light_red: # Aktiviraj ce ni light red na tem pasu
+                if 120 < x < 3 * 120:  # Detekcija rdecih pixlov samo na specificnem pasu
+                    if is_pixel_red and not is_pixel_light_red:  # Aktiviraj ce ni light red na tem pasu
                         is_red_line = True
-                elif is_pixel_red or is_pixel_light_red : # Ce je pixel rdec kjer koli drugje v mocni ali light rdeci barvi ni aktivacije rdece vrstice
+                elif is_pixel_red or is_pixel_light_red:  # Ce je pixel rdec kjer koli drugje v mocni ali light rdeci barvi ni aktivacije rdece vrstice
                     is_red_line = False
+
+            # Color the line correctly ==================
+            self.rgb.putpixel((100, y), (0,0,0))
+            self.rgb.putpixel((self.sirina-100, y), (0,0,0))
+            self.rgb.putpixel((120, y), (0,255,0))
+            self.rgb.putpixel((3*120, y), (0,255,0))
+            self.rgb.putpixel((105, y), (255,0,0))
+            # ===========================================
 
             if len(margin) >= 18:  # Omejitev stevila vrstic ki so lahko v marginu.
                 margin.pop(0)
             margin.append(line)
 
             # END NALOGA
-            is_red_block = utils.isRed(*self.hsv.getpixel((120 + 5, y)))
+            is_red_block = utils.isRed(*self.hsv.getpixel((100 + 5, y)))
 
             # START NEW NALOGA
-            if is_red_block or (is_red_line and not red_active): # Prva aktivacija rdece vrstice
+            if is_red_block or (is_red_line and not red_active):  # Prva aktivacija rdece vrstice
 
                 if naloga:  # Ostranjevanje zadnjih 18 vrstic slike za centralizacijo slike.
                     self.naloge[-1].vrstice = self.naloge[-1].vrstice[:-18]
@@ -84,7 +92,7 @@ class Stran:
                 else:
                     naloga = False
 
-            if red_active and not is_red_line: # Deaktivacija rdece vrstice
+            if red_active and not is_red_line:  # Deaktivacija rdece vrstice
                 red_active = False
 
             if naloga:
@@ -92,12 +100,12 @@ class Stran:
 
         if len(self.naloge) > 0:
             # Odstrani spodnji nalogi white margin
-            self.naloge[-1].vrstice = self.naloge[-1].vrstice[:-200]
+            self.naloge[-1].vrstice = self.naloge[-1].vrstice[:-150]
 
         return self.naloge
 
     def shrani(self, base: Path):
-        path = base.joinpath(f"{self.stevilka:03d}")
+        path = base
         path.mkdir(parents=True, exist_ok=True)
         self.rgb.save(path.joinpath(f"_slika.png").absolute())
         for naloga in self.naloge:
@@ -125,8 +133,12 @@ class Zip:
     def shrani(self):
         self.savePath.mkdir(parents=True, exist_ok=True)
         for slika in self.images:
-            print(f"{self.savePath} {slika.stevilka} | {slika.rotacija}")
-            slika.shrani(self.savePath)
+            try:
+                print(f"{self.savePath} {slika.stevilka} | {slika.rotacija}")
+                slika.shrani(self.savePath)
+            except:
+                print(f"FAIL: {self.savePath} {slika.stevilka} | {slika.rotacija}")
+
 
 
 Zip(Path("../omega/Omega11.zip"), Path("../omega11_naloge"))
