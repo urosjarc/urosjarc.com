@@ -13,18 +13,22 @@ omegaSlikePath = Path("../omega_slike")
 
 
 class Naloga:
+    i = 0
+
     def __init__(self, stevilka: int, margin):
         self.stevilka = stevilka
         self.vrstice: list[list[tuple[int]]] = margin
         self.tekst: str
 
     def shrani(self, base: Path):
-        path = base.joinpath(f"naloga_{self.stevilka:03d}.png")
-        textPath = base.joinpath(f"naloga_{self.stevilka:03d}.txt")
+        Naloga.i += 1
+        path = base.joinpath(f"naloga_{Naloga.i:03d}.png")
+        textPath = base.joinpath(f"naloga_{Naloga.i:03d}.txt")
 
         np_array = np.array(self.vrstice, dtype=np.uint8)
         data = Image.fromarray(np_array, mode="RGB")
         meta = utils.image_to_text(data)
+        print(f">{path.absolute()}")
         data.save(path.absolute())
         textPath.write_text(meta)
 
@@ -62,11 +66,11 @@ class Stran:
                     is_red_line = False
 
             # Color the line correctly ==================
-            self.rgb.putpixel((100, y), (0,0,0))
-            self.rgb.putpixel((self.sirina-100, y), (0,0,0))
-            self.rgb.putpixel((120, y), (0,255,0))
-            self.rgb.putpixel((3*120, y), (0,255,0))
-            self.rgb.putpixel((105, y), (255,0,0))
+            self.rgb.putpixel((100, y), (0, 0, 0))
+            self.rgb.putpixel((self.sirina - 100, y), (0, 0, 0))
+            self.rgb.putpixel((120, y), (0, 255, 0))
+            self.rgb.putpixel((3 * 120, y), (0, 255, 0))
+            self.rgb.putpixel((105, y), (255, 0, 0))
             # ===========================================
 
             if len(margin) >= 18:  # Omejitev stevila vrstic ki so lahko v marginu.
@@ -138,7 +142,6 @@ class Zip:
                 slika.shrani(self.savePath)
             except:
                 print(f"FAIL: {self.savePath} {slika.stevilka} | {slika.rotacija}")
-
 
 
 Zip(Path("../omega/Omega11.zip"), Path("../omega11_naloge"))
