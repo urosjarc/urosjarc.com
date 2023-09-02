@@ -1,4 +1,3 @@
-from itertools import islice
 from multiprocessing import Process
 
 import cv2
@@ -9,15 +8,10 @@ from PIL import ImageOps
 from deskew import determine_skew
 
 
-def parallel(fun, size, args):
-    def batcher(iterable, batch_size):
-        iterator = iter(iterable)
-        while batch := list(islice(iterator, batch_size)):
-            yield batch
-
+def parallel(fun, args):
     pool = []
 
-    for arg in batcher(args, size):
+    for arg in args:
         p = Process(target=fun, args=(arg,))
         p.start()
         pool.append(p)
@@ -36,17 +30,6 @@ def inRange(pxl, mn, mx):
         if not (mn[i] <= pxl[i] <= mx[i]):
             return False
     return True
-
-
-def isWhite(s):
-    return 10 > s
-
-
-def isRed(h, s, v):
-    return ((220 <= h <= 255) or (0 <= h <= 25)) and 120 < s and 70 < v
-
-def isLightRed(h, s, v):
-    return ((220 <= h <= 255) or (0 <= h <= 25)) and 15 < s < 120 and 70 < v
 
 
 def img_skew_correction(image: Image.Image, max_angle: int):
