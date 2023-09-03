@@ -1,3 +1,6 @@
+package data
+
+import Zip
 import java.io.File
 
 fun main() {
@@ -6,5 +9,4 @@ fun main() {
 
     val zip11 = Zip()
     zip11.init(file)
-
 }
