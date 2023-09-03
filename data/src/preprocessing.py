@@ -96,6 +96,7 @@ class Stran:
         self.hsv: Image.Image = None
 
     def init(self):
+        print("INIT", self.src)
         self.rotacija, self.rgb = utils.img_skew_correction(self.image, max_angle=9)
         self.hsv: Image = self.rgb.convert('HSV')
 
