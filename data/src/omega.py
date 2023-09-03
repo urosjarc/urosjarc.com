@@ -1,3 +1,4 @@
+import pickle
 from pathlib import Path
 
 from src.preprocessing import Zip, PrepoznavaVrstice, Vrstica
@@ -44,7 +45,9 @@ def init_omega_123():
              Path("../omega/Omega12.zip"),
              Path("../omega/Omega21.zip")]):
         zipObj = Zip(path)
-        zipObj.init(paralel=True)
-
+        path = Path(f'../init/Omega{i}.bin')
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, 'wb') as f:
+            pickle.dump(zipObj, f)
 
 init_omega_123()

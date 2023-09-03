@@ -1,8 +1,8 @@
+import pickle
 import zipfile
 from pathlib import Path
 from typing import List, IO
 
-import numpy as np
 from PIL import Image
 
 from src import utils
@@ -83,9 +83,8 @@ class PrepoznavaVrstice:
 
 
 class Stran:
-    def __init__(self, src: str, image: Image.Image):
+    def __init__(self, image: Image.Image):
         self.image = image
-        self.src = src
         self.vrstice: List[Vrstica] = []
         self.visina = image.height
         self.sirina = image.width
@@ -95,8 +94,9 @@ class Stran:
         self.rgb: Image.Image = None
         self.hsv: Image.Image = None
 
+        self.init()
+
     def init(self):
-        print("INIT", self.src)
         self.rotacija, self.rgb = utils.img_skew_correction(self.image, max_angle=9)
         self.hsv: Image = self.rgb.convert('HSV')
 
@@ -110,40 +110,37 @@ class Stran:
                 vrstica.add_pixel(pixel)
             self.vrstice.append(vrstica)
 
-        self.save()
-
-    def save(self):
-        print("save")
-        matrix = []
-        for vrstica in self.vrstice:
-            line = []
-            for pixel in vrstica.pixels:
-                line.append(pixel.rgb)
-            matrix.append(line)
-
-        np_array = np.array(matrix, dtype=np.uint8)
-        img = Image.fromarray(np_array)
-        img.save(f"{self.__hash__()}.png")
-
 
 class Zip:
     def __init__(self, pot: Path):
-        print("INIT ZIP: ", pot)
         self.pot = pot
         self.strani: List[Stran] = []
 
-    def init(self, paralel: bool):
+        self.init()
+
+    def init(self):
+        print("INIT ZIP:", self.pot)
+
+        # Loopaj po zip file-u
         zip = zipfile.ZipFile(self.pot)
         for i, zipEle in enumerate(zip.infolist()):
+
+            # Odpri zip file
             zipio: IO[bytes] = zip.open(zipEle)
             image: Image.Image = Image.open(zipio).convert('RGB')
-            stran = Stran(image=image, src=zipio.name)
-            if not paralel:
-                stran.init()
-            self.strani.append(stran)
 
-        if paralel:
-            utils.parallel(lambda x: x.init(), self.strani)
+            # Sprocesiraj stran
+            stran = Stran(image=image)
+            stran.init()
+            print("INI STRAN:", zipio)
 
-    def pre_processing(self):
-        pass
+            # Pripravi direktorij za shranjevanje
+            zipName = str(self.pot.absolute()).split('/')[-1].split('.')[0]
+            dir = Path(f"../init/{zipName}")
+
+            # Ustvari direktorij
+            dir.mkdir(parents=True, exist_ok=True)
+
+            # Shrani v direktorij
+            with open(dir.joinpath(f'stran_{i}'), 'wb') as f:
+                pickle.dump(stran, f)
