@@ -26,7 +26,7 @@ describe('PublicKoledarComponent testi', () => {
 
   let mockAlertService: jasmine.SpyObj<AlertService>;
   let mockposljiPublicKontaktniObrazecService: jasmine.SpyObj<PosljiPublicKontaktniObrazecService>
-
+  const formatErrorja = /^[A-Z].*!$/;
   beforeEach(async () => {
     // zmokamo servise
     mockAlertService = jasmine.createSpyObj("AlertService", ['infoSprejetnoSporocilo']);
@@ -60,7 +60,7 @@ describe('PublicKoledarComponent testi', () => {
   // TODO: potrebno še testirati dodatno validatorje (vrnnjene ustrezne errorje) v vsakem inputu in klicanje funkcije pošlji()
   // TODO: drugi test pri osebi input (Vnos nima dveh veljavnih besed!) ne pesa, zakaj že!!?
   // TODO: teste errorjev velidatorjev zastavi tako da testiraš samo začetno veliko črko in klicaj na koncu.
-  it('mora vrniti ustrezen error ob praznem polju na inputu oseba', () => {
+  it('mora vrniti ustrezen format error-ja ob praznem polju na inputu oseba', () => {
 
     component.formGroup.controls['oseba'].setValue('');
 
@@ -68,9 +68,10 @@ describe('PublicKoledarComponent testi', () => {
     const errorMessage = component.formFieldOsebaComponent?.getErrorMessage()
 
     expect(errorMessage).toEqual('Vnos je obvezen!')
+    expect(errorMessage).toMatch(formatErrorja);
   })
 
-  it('mora vrniti ustrezen error ob neustreznem številu besed na inputu oseba', () => {
+  it('mora vrniti ustrezen format error-ja ob neustreznem številu besed na inputu oseba', () => {
 
     component.formGroup.controls['oseba'].setValue('John Doe');
 
@@ -78,6 +79,7 @@ describe('PublicKoledarComponent testi', () => {
     const errorMessage = component.formFieldOsebaComponent?.getErrorMessage();
 
     expect(errorMessage).toEqual('Vnos nima dveh veljavnih besed!');
+    expect(errorMessage).toMatch(formatErrorja);
   })
 
   it('mora initializirati formGroup oseba', () => {
@@ -88,7 +90,7 @@ describe('PublicKoledarComponent testi', () => {
     }
     expect(component.formGroup.controls['oseba'].status).toBe('VALID');
   });
-  it('mora vrniti ustrezen error ob praznem sporočilu na inputu msg', () => {
+  it('mora vrniti ustrezen format error-ja ob praznem sporočilu na inputu msg', () => {
     if (component.formFieldMsgComponent) {
 
       component.formFieldMsgComponent.formControl.setValue('');
@@ -97,10 +99,10 @@ describe('PublicKoledarComponent testi', () => {
       fail('formFieldMsgComponent ni definirana');
     }
     const errorMessage = component.formFieldMsgComponent?.getErrorMessage();
-    expect(errorMessage).toEqual('Sporočilo je obvezno!');
+    expect(errorMessage).toMatch(formatErrorja);
   });
 
-  it('mora vrniti ustrezen error ob neustreznem številu besed na inputu msg', () => {
+  it('mora vrniti ustrezen format error-ja ob neustreznem številu besed na inputu msg', () => {
     if (component.formFieldMsgComponent) {
 
       component.formFieldMsgComponent.formControl.setValue('moj msg');
@@ -109,10 +111,10 @@ describe('PublicKoledarComponent testi', () => {
       fail('formFieldMsgComponent ni definirana');
     }
     const errorMessage = component.formFieldMsgComponent?.getErrorMessage();
-    expect(errorMessage).toEqual('Sporočilo je premajhno!');
+    expect(errorMessage).toMatch(formatErrorja);
   });
 
-  it('mora vrniti ustrezen error ob neustreznem številu besed na inputu msg', () => {
+  it('mora vrniti ustrezen format error-ja ob neustreznem številu besed na inputu msg', () => {
     if (component.formFieldMsgComponent) {
 
       component.formFieldMsgComponent.formControl.setValue('moje sporočilo');
@@ -121,10 +123,10 @@ describe('PublicKoledarComponent testi', () => {
       fail('formFieldMsgComponent ni definirana');
     }
     const errorMessage = component.formFieldMsgComponent?.getErrorMessage();
-    expect(errorMessage).toEqual('Sporočilo ima premalo besed!');
+    expect(errorMessage).toMatch(formatErrorja);
   });
 
-  it('mora vrniti ustrezen error ob neveljavnem sporočilu na inputu msg', () => {
+  it('mora vrniti ustrezen format error-ja ob neveljavnem sporočilu na inputu msg', () => {
     if (component.formFieldMsgComponent) {
 
       component.formFieldMsgComponent.formControl.setValue('12121321 12313 1231');
@@ -135,7 +137,7 @@ describe('PublicKoledarComponent testi', () => {
 
     const errorMessage = component.formFieldMsgComponent?.getErrorMessage();
 
-    expect(errorMessage).toEqual('Sporočilo ni veljavno!');
+    expect(errorMessage).toMatch(formatErrorja);
   });
 
 
@@ -152,7 +154,7 @@ describe('PublicKoledarComponent testi', () => {
 
   // TODO: mogoče dodati klicaj na koncu drugega pogoja pri telefonu 'Telefon ni veljaven'?
   // TODO : dodaten validator za omejitve Validators.maxLength(13)?
-  it('mora vrniti ustrezen error ob praznem polju na inputu telefon', () => {
+  it('mora vrniti ustrezen format error-ja ob praznem polju na inputu telefon', () => {
     if (component.formFieldTelefonComponent) {
 
       component.formFieldTelefonComponent.formControl.setValue('');
@@ -165,7 +167,7 @@ describe('PublicKoledarComponent testi', () => {
 
     expect(errorMessage).toEqual('Telefon je obvezen!');
   });
-  it('mora vrniti ustrezen error ob neustrezni telefonski na inputu telefon', () => {
+  it('mora vrniti ustrezen format error-ja ob neustrezni telefonski na inputu telefon', () => {
     if (component.formFieldTelefonComponent) {
 
       component.formFieldTelefonComponent.formControl.setValue('abc');
@@ -175,9 +177,9 @@ describe('PublicKoledarComponent testi', () => {
     }
     const errorMessage = component.formFieldTelefonComponent?.getErrorMessage();
 
-    expect(errorMessage).toEqual('Telefon ni veljaven');
+    expect(errorMessage).toMatch(formatErrorja);
   });
-  it('mora vrniti ustrezen error ob premajhni telofonski na inputu telefon', () => {
+  it('mora vrniti ustrezen format error-ja ob premajhni telofonski na inputu telefon', () => {
     if (component.formFieldTelefonComponent) {
 
       component.formFieldTelefonComponent.formControl.setValue('04066214');
@@ -187,7 +189,7 @@ describe('PublicKoledarComponent testi', () => {
     }
     const errorMessage = component.formFieldTelefonComponent?.getErrorMessage();
 
-    expect(errorMessage).toEqual('Telefonska je premajhna!');
+    expect(errorMessage).toMatch(formatErrorja);
   });
   it('mora uspešno validirati formGroup telefon', () => {
     if (component.formFieldTelefonComponent) {
@@ -199,7 +201,7 @@ describe('PublicKoledarComponent testi', () => {
     }
     expect(component.formGroup.controls['telefon'].status).toBe('VALID');
   });
-  it('mora vrniti ustrezen error ob praznem inputu na inputu email', () => {
+  it('mora vrniti ustrezen format error-ja ob praznem inputu na inputu email', () => {
     if (component.formFieldEmailComponent) {
 
       component.formFieldEmailComponent.formControl.setValue('');
@@ -209,9 +211,9 @@ describe('PublicKoledarComponent testi', () => {
     }
     const errorMessage = component.formFieldEmailComponent?.getErrorMessage();
 
-    expect(errorMessage).toEqual('Email je obvezen!');
+    expect(errorMessage).toMatch(formatErrorja);
   });
-  it('mora vrniti ustrezen error ob neustreznem email naslovu na inputu email', () => {
+  it('mora vrniti ustrezen format error-ja ob neustreznem email naslovu na inputu email', () => {
     if (component.formFieldEmailComponent) {
 
       component.formFieldEmailComponent.formControl.setValue('abc');
@@ -221,7 +223,7 @@ describe('PublicKoledarComponent testi', () => {
     }
     const errorMessage = component.formFieldEmailComponent?.getErrorMessage();
 
-    expect(errorMessage).toEqual('Email ni veljaven!');
+    expect(errorMessage).toMatch(formatErrorja);
   });
   it('mora uspešno validirati formGroup email', () => {
     if (component.formFieldEmailComponent) {
