@@ -1,4 +1,3 @@
-import pickle
 from pathlib import Path
 
 from src.preprocessing import Zip, PrepoznavaVrstice, Vrstica
@@ -39,14 +38,13 @@ class PrepoznavaOmegaVrstice(PrepoznavaVrstice):
         return False
 
 
-omegaPath = Path("../omega")
-omegaSlikePath = Path("../omega_slike")
+def init_omega_123():
+    for i, path in enumerate(
+            [Path("../omega/Omega11.zip"),
+             Path("../omega/Omega12.zip"),
+             Path("../omega/Omega21.zip")]):
+        zipObj = Zip(path)
+        zipObj.init(paralel=True)
 
-zips = [
-    Zip(Path("../omega/Omega11.zip")),
-    Zip(Path("../omega/Omega12.zip")),
-    Zip(Path("../omega/Omega21.zip"))
-]
 
-with open("omega_init.bin", "wb") as f:
-    pickle.dump(zips, f)
+init_omega_123()

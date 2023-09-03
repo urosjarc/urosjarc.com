@@ -2,6 +2,7 @@ import zipfile
 from pathlib import Path
 from typing import List, IO
 
+import numpy as np
 from PIL import Image
 
 from src import utils
@@ -64,6 +65,8 @@ class Vrstica:
             self.white_pixels += 1
             count += 1
 
+        self.pixels.append(pixel)
+
 
 class PrepoznavaVrstice:
     @classmethod
@@ -93,7 +96,6 @@ class Stran:
         self.hsv: Image.Image = None
 
     def init(self):
-        print("INIT STRAN: ", self.src, self.image)
         self.rotacija, self.rgb = utils.img_skew_correction(self.image, max_angle=9)
         self.hsv: Image = self.rgb.convert('HSV')
 
@@ -107,6 +109,21 @@ class Stran:
                 vrstica.add_pixel(pixel)
             self.vrstice.append(vrstica)
 
+        self.save()
+
+    def save(self):
+        print("save")
+        matrix = []
+        for vrstica in self.vrstice:
+            line = []
+            for pixel in vrstica.pixels:
+                line.append(pixel.rgb)
+            matrix.append(line)
+
+        np_array = np.array(matrix, dtype=np.uint8)
+        img = Image.fromarray(np_array)
+        img.save(f"{self.__hash__()}.png")
+
 
 class Zip:
     def __init__(self, pot: Path):
@@ -114,21 +131,18 @@ class Zip:
         self.pot = pot
         self.strani: List[Stran] = []
 
-        self.init()
-
-    def init(self):
+    def init(self, paralel: bool):
         zip = zipfile.ZipFile(self.pot)
         for i, zipEle in enumerate(zip.infolist()):
             zipio: IO[bytes] = zip.open(zipEle)
             image: Image.Image = Image.open(zipio).convert('RGB')
             stran = Stran(image=image, src=zipio.name)
+            if not paralel:
+                stran.init()
             self.strani.append(stran)
 
-        def init_stran(stran: Stran):
-            print(stran)
-            stran.init()
-
-        utils.parallel(init_stran, self.strani)
+        if paralel:
+            utils.parallel(lambda x: x.init(), self.strani)
 
     def pre_processing(self):
         pass
