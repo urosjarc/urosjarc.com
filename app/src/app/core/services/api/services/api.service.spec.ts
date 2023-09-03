@@ -19,7 +19,7 @@ describe('ApiService', () => {
   //   httpMock.verify();
   // });
 
-  it('mora dobiti uspešno nazaj podatke', () => {
+  it('get$Response mora vrniti podatke', () => {
     // TODO: kako ustvariti IndexRes objekt ?
     const testData: {} = {};
 
