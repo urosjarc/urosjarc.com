@@ -27,18 +27,19 @@ data class Piksel(
         }
 
         fun is_red(p: Piksel): Boolean {
-            return ((p.h in 220..255) || (p.h in 0..25))
-                    && !is_white(p)
-                    && !is_black(p)
+            return ((p.h in 220..255) || (p.h in 0..25)) && !is_white(p) && !is_black(p)
         }
 
         fun is_red_dark(p: Piksel): Boolean {
-            return is_red(p)
-                    && (p.s in 130..255)
+            return is_red(p) && (p.s in 130..255)
         }
 
-        fun is_red_light(p: Piksel): Boolean {
-            return is_red(p) && !is_red_dark(p)
+        fun is_other_light(p: Piksel): Boolean {
+            return !is_red(p) && !is_black(p) && !is_white(p) && p.v in 100..255
+        }
+
+        fun is_other_dark(p: Piksel): Boolean {
+            return !is_red(p) && !is_black(p) && !is_white(p) && !is_other_light(p)
         }
     }
 }
