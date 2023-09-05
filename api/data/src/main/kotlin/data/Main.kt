@@ -8,6 +8,4 @@ fun main() {
     val file = File(url?.toURI() ?: throw Error("$url not exists!"))
     val zip11 = Zip()
     zip11.init(file)
-    zip11.process()
-    zip11.saveParts()
 }
