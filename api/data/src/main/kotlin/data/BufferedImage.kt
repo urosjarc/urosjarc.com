@@ -3,12 +3,14 @@ package data
 import com.recognition.software.jdeskew.ImageDeskew
 import net.sourceforge.tess4j.util.ImageHelper
 import java.awt.BorderLayout
+import java.awt.Color
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 import javax.swing.ImageIcon
 import javax.swing.JFrame
 import javax.swing.JLabel
+
 
 fun BufferedImage.show() {
     val frame = JFrame().apply {
@@ -33,8 +35,40 @@ fun BufferedImage.save(file: File) {
     ImageIO.write(this, "png", file)
 }
 
+fun BufferedImage.gray(): BufferedImage {
+    val image = BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY)
+    val g = image.graphics
+    g.drawImage(this, 0, 0, null)
+    g.dispose()
+    return image
+}
+
+fun BufferedImage.blackWhite(): BufferedImage {
+    val bw = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
+    for (y in 0 until height) {
+        for (x in 0 until width) {
+
+            //Get RGB Value
+            val `val`: Int = this.getRGB(x, y)
+            //Convert to three separate channels
+            val r = 0x00ff0000 and `val` shr 16
+            val g = 0x0000ff00 and `val` shr 8
+            val b = 0x000000ff and `val`
+
+            val value = r + g + b
+
+            if (value > 230 * 3) {
+                bw.setRGB(x, y, Color.WHITE.rgb)
+            } else {
+                bw.setRGB(x, y, Color.BLACK.rgb)
+            }
+        }
+    }
+    return bw
+}
+
+
 fun BufferedImage.deskew(): BufferedImage {
     val imgdeskew = ImageDeskew(this) // BufferedImage img
-    println("Image rotated: ${imgdeskew.skewAngle} deg")
     return ImageHelper.rotateImage(this, -imgdeskew.skewAngle) // rotateImage static method
 }
