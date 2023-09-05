@@ -4,7 +4,7 @@ import data.extends.dobiPrvega
 import data.extends.dobiZadnjega
 import data.extends.save
 import java.awt.image.BufferedImage
-import java.io.*
+import java.io.File
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import javax.imageio.ImageIO
@@ -35,30 +35,13 @@ class Zip {
         zipFile.close()
     }
 
-    companion object {
-        fun loadCheckpoint(file: File): Zip {
-            val fos = FileInputStream(file)
-            val oos = ObjectInputStream(fos)
-            val obj = oos.readObject()
-
-            if (obj is Zip) return obj
-            else throw Error("FAIL")
-        }
-    }
-
-    fun saveCheckpoint(file: File) {
-        val fos = FileOutputStream(file)
-        val oos = ObjectOutputStream(fos)
-        oos.writeObject(this)
-    }
-
     fun process() {
         for (image in this.images) {
             this.parse(image)
         }
     }
 
-    fun saveParts(file: File) {
+    fun saveParts() {
         var i = 0
         val map = mutableMapOf<ZipPart.Tip, Int>()
         for (part in this.parts) {
@@ -74,7 +57,7 @@ class Zip {
         }
     }
 
-    fun parse(slika: BufferedImage) {
+    private fun parse(slika: BufferedImage) {
         var y = 0
         while (y++ < slika.height - 1) {
             y = this.parseNaslov(y, slika)
@@ -83,7 +66,7 @@ class Zip {
         }
     }
 
-    fun parseNaslov(y: Int, slika: BufferedImage): Int {
+    private fun parseNaslov(y: Int, slika: BufferedImage): Int {
 
         var height = 0
 
@@ -105,7 +88,7 @@ class Zip {
         return y + height + 10
     }
 
-    fun parseTeorija(y: Int, slika: BufferedImage): Int {
+    private fun parseTeorija(y: Int, slika: BufferedImage): Int {
 
         var height = 0
 
@@ -127,7 +110,7 @@ class Zip {
         return y + height + 10
     }
 
-    fun parseNaloga(y: Int, slika: BufferedImage): Int {
+    private fun parseNaloga(y: Int, slika: BufferedImage): Int {
 
         var height = 0
 
