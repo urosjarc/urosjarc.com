@@ -8,8 +8,6 @@ application {
     this.mainClass.set("data.MainKt")
 }
 
-
-
 dependencies {
     this.implementation(this.project(":core"))
     this.implementation("org.jsoup:jsoup:1.16.1")
