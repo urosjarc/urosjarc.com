@@ -4,7 +4,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {MatButtonModule} from "@angular/material/button";
 
-describe('Parts button tests', () => {
+describe('Parts / Button-toolbar testi', () => {
   let fixture: ComponentFixture<ButtonToolbarComponent>;
   let component: ButtonToolbarComponent;
   let mockValue = '/nazaj';

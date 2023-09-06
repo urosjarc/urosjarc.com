@@ -19,7 +19,7 @@ describe('Parts button tests', () => {
 
     }).compileComponents()
 
-      // @ts-ignore
+    // @ts-ignore
 
     fixture = TestBed.createComponent(CardNavigacijaComponent);
     component = fixture.componentInstance;
@@ -34,5 +34,6 @@ describe('Parts button tests', () => {
       typeof item.ikona === 'string' &&
       typeof item.route === 'string' &&
       typeof item.style === 'string'
-    )).toBe(true);  });
+    )).toBe(true);
+  });
 })

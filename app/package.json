@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "test": "ng test --code-coverage",
+    "test": "ng test --watch",
     "start": "ng serve",
     "start-en": "ng serve --port=4201 --configuration=development-en",
     "build": "ng build --localize && npx http-server -c-1 -p 8080 dist/app",
