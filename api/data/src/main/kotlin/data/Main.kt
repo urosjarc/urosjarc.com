@@ -31,7 +31,7 @@ fun zip_iterator(file: File): Sequence<BufferedImage> {
             val inputStream = zipFile.getInputStream(zipEntry)
             var bufferedImage = ImageIO.read(inputStream).deskew()
 
-            for(i in 0..5){
+            for (i in 0..5) {
                 bufferedImage = bufferedImage.blur()
             }
 
@@ -45,9 +45,19 @@ fun main() {
     for (image in zip_iterator(File("/home/urosjarc/vcs/urosjarc.com2/api/data/src/main/resources/Omega11.zip"))) {
 
         for (y in 0 until image.height) {
-            for (x in 0 until image.width) {
+
+            var minRed = image.width
+            var maxRed = 0
+            for (x in 50 until image.width/2) {
                 val pixel = image.getHSV(x, y)
                 if (pixel.is_red()) {
+                    if (minRed > x) minRed = x
+                    if (maxRed < x) maxRed = x
+                }
+            }
+
+            if(maxRed - minRed < 150 && maxRed < 300 && minRed < 300){
+                for (x in minRed..maxRed) {
                     image.setRGB(x, y, Color.CYAN.rgb)
                 }
             }
