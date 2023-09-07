@@ -1,6 +1,7 @@
-package data
+package data.extend
 
 import com.recognition.software.jdeskew.ImageDeskew
+import data.app.Pixel
 import net.coobird.thumbnailator.Thumbnails
 import net.sourceforge.tess4j.util.ImageHelper
 import java.awt.BorderLayout

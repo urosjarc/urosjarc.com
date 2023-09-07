@@ -1,4 +1,4 @@
-package data
+package data.extend
 
 fun <T : Any> MutableMap<T, Int>.increment(key: T) {
     this.merge(key, 1, Int::plus)

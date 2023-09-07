@@ -1,4 +1,20 @@
-package data
+package data.app
+
+import java.awt.image.BufferedImage
+
+data class ZipPart(
+    val tip: Tip,
+    var yStart: Int,
+    var yEnd: Int = -1,
+    var image: BufferedImage = BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)
+) {
+    enum class Tip { naloga, naslov, teorija, prazno }
+}
+
+data class ZipSlika(
+    val image: BufferedImage,
+    val parts: MutableList<ZipPart> = mutableListOf()
+)
 
 data class Pixel(
     val r: Int,
