@@ -52,76 +52,71 @@ data class OmegaPart(
     enum class Tip { naloga, naslov, teorija, prazno }
 }
 
-fun omega_zip_iterator(skip: Int) = sequence<List<OmegaPart>> {
+data class OmegaSlika(
+    val image: BufferedImage,
+    val parts: MutableList<OmegaPart> = mutableListOf()
+)
+
+fun omega_zip_iterator(skip: Int) = sequence<OmegaSlika> {
     for (zipImage in zip_iterator(
-        skip = skip,
-        file = File("/home/urosjarc/vcs/urosjarc.com2/api/data/src/main/resources/Omega11.zip")
+        skip = skip, file = File("/home/urosjarc/vcs/urosjarc.com2/api/data/src/main/resources/Omega11.zip")
     )) {
 
-        val omegaParts = mutableListOf<OmegaPart>()
-        val image = zipImage.deskew()
-        val bluredImage = image.blur().blur().blur().blur().blur()
+        val vrstice = mutableMapOf<OmegaPart.Tip, Int>() // Stetje zaznanih aktivnih vrstic
+        val image = zipImage.deskew() //Fix image rotation
+        val bluredImage = image.blur().blur().blur().blur().blur() // Stabilize pixels
+        val omegaSlika = OmegaSlika(image = image)
 
-        var vrstice = mutableMapOf(
-            OmegaPart.Tip.prazno to 0,
-            OmegaPart.Tip.naslov to 0,
-            OmegaPart.Tip.teorija to 0,
-            OmegaPart.Tip.naloga to 0
-        )
-
+        /**
+         * Iskanje zgornjih delov
+         */
         for (y in 50 until image.height - 50) {
 
-            var minRed = image.width
-            var maxRed = 0
-            var minRedFaint = image.width
-            var maxRedFaint = 0
-
-            //Detekcija rdece barve
-            for (x in 50 until image.width - 100) {
-                val pixel = bluredImage.getHSV(x, y)
-                if (pixel.is_red()) {
-                    if (minRed > x) minRed = x
-                    if (maxRed < x) maxRed = x
-                } else if (pixel.is_red_faint()) {
-                    if (minRedFaint > x) minRedFaint = x
-                    if (maxRedFaint < x) maxRedFaint = x
-                }
-            }
+            // Stetje kje se pojavi prvi in zadnji rdec piksel
+            val (minRed, maxRed) = bluredImage.startEndX(50, image.width - 100, y) { it.is_red() }
+            val (minRedFaint, maxRedFaint) = bluredImage.startEndX(50, image.width - 100, y) { it.is_red_faint() }
 
             //Detekcija naloge
             if (maxRed - minRed < 200 && maxRed < 300 && minRed < 300) {
                 image.drawLine(minRed, maxRed, y, Color.CYAN)
-                vrstice.merge(OmegaPart.Tip.naloga, 1, Int::plus)
-                vrstice.set(OmegaPart.Tip.prazno, 0)
+                vrstice.increment(OmegaPart.Tip.naloga)
+                vrstice.reset(OmegaPart.Tip.prazno)
                 continue
             }
 
             //Detekcija naslova
             if (maxRed - minRed > image.width * 8 / 10 && minRed < 300 && image.width - 300 < maxRed) {
                 image.drawLine(minRed, maxRed, y, Color.MAGENTA)
-                vrstice.merge(OmegaPart.Tip.naslov, 1, Int::plus)
-                vrstice.set(OmegaPart.Tip.prazno, 0)
+                vrstice.increment(OmegaPart.Tip.naslov)
+                vrstice.reset(OmegaPart.Tip.prazno)
                 continue
             }
 
             //Detekcija teorije
             if (maxRedFaint - minRedFaint > image.width * 8 / 10 && minRedFaint < 300 && image.width - 300 < maxRedFaint) {
                 image.drawLine(minRedFaint, maxRedFaint, y, Color.ORANGE)
-                vrstice.merge(OmegaPart.Tip.teorija, 1, Int::plus)
-                vrstice.set(OmegaPart.Tip.prazno, 0)
+                vrstice.increment(OmegaPart.Tip.teorija)
+                vrstice.reset(OmegaPart.Tip.prazno)
                 continue
             }
 
             //Detekcija prazne vrstice
-            vrstice.merge(OmegaPart.Tip.prazno, 1, Int::plus)
+            vrstice.increment(OmegaPart.Tip.prazno)
+
+            //Detekcija ali je praznih vrstic dovolj za analizo prestetih vrstic
             val stevilo_praznih_vrstic = vrstice.getOrDefault(OmegaPart.Tip.prazno, 0)
             if (stevilo_praznih_vrstic > 20) {
+
+                //Dobi tip z najvecjim stevilom vrstic
                 val max = vrstice.maxBy { it.value }
 
+                //Ce je najvecje stevilo vrstic nekih elementov potem ustvari del z pripadajocim tipom.
                 when (max.key) {
                     OmegaPart.Tip.prazno -> continue
                     else -> {
-                        omegaParts.add(
+                        image.drawLongLine(y - stevilo_praznih_vrstic, Color.BLACK)
+                        image.drawLongLine(y - stevilo_praznih_vrstic - max.value, Color.BLACK)
+                        omegaSlika.parts.add(
                             OmegaPart(
                                 tip = max.key,
                                 yStart = y - stevilo_praznih_vrstic - max.value,
@@ -131,63 +126,81 @@ fun omega_zip_iterator(skip: Int) = sequence<List<OmegaPart>> {
                     }
                 }
 
-                for ((key: OmegaPart.Tip, value: Int) in vrstice) {
-                    vrstice[key] = 0
-                }
+                //Resetiraj stetje
+                vrstice.resetAll()
             }
         }
 
-        for (i in 0 until omegaParts.size - 1) {
-            val current = omegaParts[i]
-            val next = omegaParts[i + 1]
+        /**
+         * Nastavi konec delov tam kjer se zacne naslednji del
+         */
+        for (i in 0 until omegaSlika.parts.size - 1) {
+            val current = omegaSlika.parts[i]
+            val next = omegaSlika.parts[i + 1]
             if (current.tip == OmegaPart.Tip.naloga) {
                 current.yEnd = next.yStart
             }
         }
 
+        /**
+         * Iskanje kje se zgodi konec samo ce je na koncu naloga
+         */
+        val opLast = omegaSlika.parts.lastOrNull()
+        if (opLast != null && opLast.tip == OmegaPart.Tip.naloga) {
+            var jumped_over_text = 0
+            var y = image.height - 80
+            while (--y >= 0) {
 
-        var jumped_over_footer = false
-        var y = image.height - 50
-        while (--y > 0) {
-            var black_pikslov = 0
-
-            //Detekcija rdece barve
-            for (x in 50 until image.width - 100) {
-                val pixel = bluredImage.getHSV(x, y)
-                if (!pixel.is_white()) {
-                    black_pikslov++
+                //Detekcija ne belih pixlov
+                var not_white_pikslov = 0
+                for (x in 50 until image.width - 100) {
+                    val pixel = bluredImage.getHSV(x, y)
+                    if (!pixel.is_white()) {
+                        not_white_pikslov++
+                    }
                 }
-            }
 
-            if (black_pikslov > 10) {
-                if (jumped_over_footer) {
-                    image.drawLine(0, image.width, y, Color.BLACK)
-                    val lastOmegaPart = omegaParts.last()
-                    if (lastOmegaPart.tip == OmegaPart.Tip.naloga) lastOmegaPart.yEnd = y
+                //Ali je ne belih pixlov dovolj?
+                if (not_white_pikslov > 5) {
+                    image.drawLongLine(y, Color.RED)
+
+                    //Ce se nisi skocil preko teksta
+                    if (jumped_over_text == 0) {
+                        jumped_over_text++ //Povecaj stevec skokov
+                        y -= 50 //Dejansko skoci preko tekst
+                        continue //Isci se naprej
+                    }
+
+                    opLast.yEnd = y //Na koncu nastavi konec zadnje naloge tam kjer si nameraval skociti drugic.
                     break
-                } else {
-                    jumped_over_footer = true
-                    image.drawLine(0, image.width, y, Color.RED)
-                    y -= 50
                 }
             }
         }
 
-        //Correcting image box
-        for (op in omegaParts) {
+        /**
+         * Popravki partsov in ustvarjanje njihovih slik!
+         */
+        for (op in omegaSlika.parts) {
             op.yStart -= 10
             op.image = image.getSubimage(0, op.yStart, image.width, abs(op.yEnd - op.yStart))
         }
 
-        yield(omegaParts)
+        yield(omegaSlika)
     }
 }
 
 fun main() {
-    for (parts in omega_zip_iterator(skip=7)) {
-        for (part in parts) {
-            part.image.resize(part.image.width / 3, part.image.height / 3).show()
+    var i = 0
+    for (slika in omega_zip_iterator(skip = 7)) {
+        var jframe = slika.image.resize(slika.image.width / 3, slika.image.height / 3).show()
+        Thread.sleep(1000)
+        jframe.isVisible = false
+         slika.image.save(File("image${i++}.png"))
+        for (part in slika.parts) {
+            jframe = part.image.resize(part.image.width / 3, part.image.height / 3).show()
             Thread.sleep(1000)
+            jframe.isVisible = false
         }
+
     }
 }

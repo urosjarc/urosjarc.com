@@ -16,7 +16,7 @@ import javax.swing.JFrame
 import javax.swing.JLabel
 
 
-fun BufferedImage.show() {
+fun BufferedImage.show(): JFrame {
     val frame = JFrame().apply {
         this.title = "stained_image"
         this.setSize(this.width / 2, this.height / 2)
@@ -33,6 +33,7 @@ fun BufferedImage.show() {
     }
 
     label.icon = ImageIcon(this)
+    return frame
 }
 
 fun BufferedImage.save(file: File) {
@@ -84,6 +85,19 @@ fun BufferedImage.blackWhite(): BufferedImage {
     return bw
 }
 
+fun BufferedImage.startEndX(x0: Int, x1: Int, y: Int, check: (pixel: Pixel) -> Boolean): Pair<Int, Int> {
+    var m = this.width
+    var M = -1
+    for (x in x0 until x1) {
+        val pixel = this.getHSV(x, y)
+        if (check(pixel)) {
+            if (m > x) m = x
+            if (M < x) M = x
+        }
+    }
+    return Pair(m, M)
+}
+
 fun BufferedImage.blur(): BufferedImage {
     val matrix = FloatArray(9)
     for (i in matrix.indices) {
@@ -101,9 +115,17 @@ fun BufferedImage.resize(width: Int, height: Int): BufferedImage {
 }
 
 fun BufferedImage.drawLine(x0: Int, x1: Int, y: Int, color: Color) {
-//    for (x in x0 until x1) {
-//        this.setRGB(x, y, color.rgb)
-//    }
+    for (x in x0 until x1) {
+        this.setRGB(x, y, color.rgb)
+    }
+}
+
+fun BufferedImage.drawLongLine(y: Int, color: Color) {
+    for (x in 0 until this.width) {
+        this.setRGB(x, y-1, color.rgb)
+        this.setRGB(x, y, color.rgb)
+        this.setRGB(x, y+1, color.rgb)
+    }
 }
 
 fun BufferedImage.deskew(): BufferedImage {
