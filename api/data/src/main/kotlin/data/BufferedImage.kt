@@ -1,6 +1,7 @@
 package data
 
 import com.recognition.software.jdeskew.ImageDeskew
+import net.coobird.thumbnailator.Thumbnails
 import net.sourceforge.tess4j.util.ImageHelper
 import java.awt.BorderLayout
 import java.awt.Color
@@ -95,6 +96,15 @@ fun BufferedImage.blur(): BufferedImage {
     return bufferedImage
 }
 
+fun BufferedImage.resize(width: Int, height: Int): BufferedImage {
+    return Thumbnails.of(this).forceSize(width, height).asBufferedImage()
+}
+
+fun BufferedImage.drawLine(x0: Int, x1: Int, y: Int, color: Color) {
+//    for (x in x0 until x1) {
+//        this.setRGB(x, y, color.rgb)
+//    }
+}
 
 fun BufferedImage.deskew(): BufferedImage {
     val imgdeskew = ImageDeskew(this) // BufferedImage img
