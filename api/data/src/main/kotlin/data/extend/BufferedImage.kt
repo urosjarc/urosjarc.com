@@ -123,13 +123,86 @@ fun BufferedImage.drawLine(x0: Int, x1: Int, y: Int, color: Color) {
 
 fun BufferedImage.drawLongLine(y: Int, color: Color) {
     for (x in 0 until this.width) {
-        this.setRGB(x, y-1, color.rgb)
+        this.setRGB(x, y - 1, color.rgb)
         this.setRGB(x, y, color.rgb)
-        this.setRGB(x, y+1, color.rgb)
+        this.setRGB(x, y + 1, color.rgb)
     }
 }
 
 fun BufferedImage.deskew(): BufferedImage {
     val imgdeskew = ImageDeskew(this) // BufferedImage img
     return ImageHelper.rotateImage(this, -imgdeskew.skewAngle) // rotateImage static method
+}
+
+data class BoundBox(
+    var x0: Int,
+    var x1: Int,
+    var y0: Int,
+    var y1: Int
+) {
+    fun width(): Int {
+        return x1 - x0
+    }
+
+    fun height(): Int {
+        return y1 - y0
+    }
+}
+
+
+fun BufferedImage.boundBox(xStart: Int, xEnd: Int, space: Int): BoundBox {
+    var count = 0
+    val maxCount = 10
+    val boundBox = BoundBox(0, this.width - 1, 0, this.height - 1)
+
+    //up to down
+    start@ for (y in 0 until this.height) {
+        for (x in xStart until this.width - xEnd) {
+            if (!this.getHSV(x, y).is_white()) count++
+            if (count > maxCount) {
+                boundBox.y0 = y
+                break@start
+            }
+        }
+    }
+
+    //down to up
+    count = 0
+    start@ for (y in this.height - 1 downTo 0) {
+        for (x in xStart until this.width - xEnd) {
+            if (!this.getHSV(x, y).is_white()) count++
+            if (count > maxCount) {
+                boundBox.y1 = y
+                if (boundBox.y1 >= this.height) boundBox.y1 = this.height - 1
+                break@start
+            }
+        }
+    }
+
+    //left to right
+    count = 0
+    start@ for (x in xStart until this.width - xEnd) {
+        for (y in 0 until this.height) {
+            if (!this.getHSV(x, y).is_white()) count++
+            if (count > maxCount) {
+                boundBox.x0 = x
+                break@start
+            }
+        }
+    }
+
+    //right to left
+    count = 0
+    start@ for (x in this.width - 1 - xEnd downTo xStart) {
+        for (y in 0 until this.height) {
+            if (!this.getHSV(x, y).is_white()) count++
+            if (count > maxCount) {
+                boundBox.x1 = x
+                if (boundBox.x1 >= this.width) boundBox.x1 = this.width - 1
+                break@start
+            }
+        }
+    }
+
+    return boundBox
 }

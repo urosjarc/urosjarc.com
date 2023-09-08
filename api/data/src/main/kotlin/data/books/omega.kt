@@ -4,7 +4,6 @@ import data.app.ZipPart
 import data.app.ZipSlika
 import data.app.zip_iterator
 import data.extend.*
-import java.awt.Color
 import java.io.File
 import kotlin.math.abs
 
@@ -27,7 +26,7 @@ fun omega_zip_iterator(file: File, skip: Int) = sequence {
 
             //Detekcija naloge
             if (maxRed - minRed < 200 && maxRed < 300 && minRed < 300) {
-                image.drawLine(minRed, maxRed, y, Color.CYAN)
+//                image.drawLine(minRed, maxRed, y, Color.CYAN)
                 vrstice.increment(ZipPart.Tip.naloga)
                 vrstice.reset(ZipPart.Tip.prazno)
                 continue
@@ -35,7 +34,7 @@ fun omega_zip_iterator(file: File, skip: Int) = sequence {
 
             //Detekcija naslova
             if (maxRed - minRed > image.width * 8 / 10 && minRed < 300 && image.width - 300 < maxRed) {
-                image.drawLine(minRed, maxRed, y, Color.MAGENTA)
+//                image.drawLine(minRed, maxRed, y, Color.MAGENTA)
                 vrstice.increment(ZipPart.Tip.naslov)
                 vrstice.reset(ZipPart.Tip.prazno)
                 continue
@@ -43,7 +42,7 @@ fun omega_zip_iterator(file: File, skip: Int) = sequence {
 
             //Detekcija teorije
             if (maxRedFaint - minRedFaint > image.width * 8 / 10 && minRedFaint < 300 && image.width - 300 < maxRedFaint) {
-                image.drawLine(minRedFaint, maxRedFaint, y, Color.ORANGE)
+//                image.drawLine(minRedFaint, maxRedFaint, y, Color.ORANGE)
                 vrstice.increment(ZipPart.Tip.teorija)
                 vrstice.reset(ZipPart.Tip.prazno)
                 continue
@@ -60,20 +59,17 @@ fun omega_zip_iterator(file: File, skip: Int) = sequence {
                 val max = vrstice.maxBy { it.value }
 
                 //Ce je najvecje stevilo vrstic nekih elementov potem ustvari del z pripadajocim tipom.
-                when (max.key) {
-                    ZipPart.Tip.prazno -> continue
-                    else -> {
-                        image.drawLongLine(y - stevilo_praznih_vrstic, Color.BLACK)
-                        image.drawLongLine(y - stevilo_praznih_vrstic - max.value, Color.BLACK)
-                        omegaSlika.parts.add(
-                            ZipPart(
-                                tip = max.key,
-                                yStart = y - stevilo_praznih_vrstic - max.value,
-                                yEnd = y - stevilo_praznih_vrstic
-                            )
-                        )
-                    }
-                }
+                if (max.key == ZipPart.Tip.prazno) continue
+
+                // image.drawLongLine(y - stevilo_praznih_vrstic, Color.BLACK)
+                // image.drawLongLine(y - stevilo_praznih_vrstic - max.value, Color.BLACK)
+                omegaSlika.parts.add(
+                    ZipPart(
+                        tip = max.key,
+                        yStart = y - stevilo_praznih_vrstic - max.value,
+                        yEnd = y - stevilo_praznih_vrstic
+                    )
+                )
 
                 //Resetiraj stetje
                 vrstice.resetAll()
@@ -111,7 +107,7 @@ fun omega_zip_iterator(file: File, skip: Int) = sequence {
 
                 //Ali je ne belih pixlov dovolj?
                 if (not_white_pikslov > 5) {
-                    image.drawLongLine(y, Color.RED)
+//                    image.drawLongLine(y, Color.RED)
 
                     //Ce se nisi skocil preko teksta
                     if (jumped_over_text == 0) {
@@ -130,8 +126,12 @@ fun omega_zip_iterator(file: File, skip: Int) = sequence {
          * Popravki partsov in ustvarjanje njihovih slik!
          */
         for (op in omegaSlika.parts) {
+            val subImage = image.getSubimage(0, op.yStart, image.width, abs(op.yEnd - op.yStart))
+            val subImageBlured = bluredImage.getSubimage(0, op.yStart, image.width, abs(op.yEnd - op.yStart))
+            val bb = subImageBlured.boundBox(30, 150, 50)
+
             op.yStart -= 10
-            op.image = image.getSubimage(0, op.yStart, image.width, abs(op.yEnd - op.yStart))
+            op.image = subImage.getSubimage(bb.x0, bb.y0, bb.width(), bb.height())
         }
 
         yield(omegaSlika)
