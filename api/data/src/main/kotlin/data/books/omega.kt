@@ -12,7 +12,7 @@ fun omega_zip_iterator(file: File, skip: Int) = sequence {
 
         val vrstice = mutableMapOf<ZipPart.Tip, Int>() // Stetje zaznanih aktivnih vrstic
         val image = zipImage.deskew() //Fix image rotation
-        val bluredImage = image.blur().blur().blur().blur().blur() // Stabilize pixels
+        val bluredImage = image.blur(repeat = 5) // Stabilize pixels
         val omegaSlika = ZipSlika(image = image)
 
         /**
@@ -66,8 +66,7 @@ fun omega_zip_iterator(file: File, skip: Int) = sequence {
                 omegaSlika.parts.add(
                     ZipPart(
                         tip = max.key,
-                        yStart = y - stevilo_praznih_vrstic - max.value,
-                        yEnd = y - stevilo_praznih_vrstic
+                        yStart = y - stevilo_praznih_vrstic - max.value - 30,
                     )
                 )
 
@@ -83,7 +82,7 @@ fun omega_zip_iterator(file: File, skip: Int) = sequence {
             val current = omegaSlika.parts[i]
             val next = omegaSlika.parts[i + 1]
             if (current.tip == ZipPart.Tip.naloga) {
-                current.yEnd = next.yStart
+                current.yEnd = next.yStart + 25
             }
         }
 
@@ -116,7 +115,7 @@ fun omega_zip_iterator(file: File, skip: Int) = sequence {
                         continue //Isci se naprej
                     }
 
-                    opLast.yEnd = y //Na koncu nastavi konec zadnje naloge tam kjer si nameraval skociti drugic.
+                    opLast.yEnd = y + 30 //Na koncu nastavi konec zadnje naloge tam kjer si nameraval skociti drugic.
                     break
                 }
             }
@@ -126,12 +125,7 @@ fun omega_zip_iterator(file: File, skip: Int) = sequence {
          * Popravki partsov in ustvarjanje njihovih slik!
          */
         for (op in omegaSlika.parts) {
-            val subImage = image.getSubimage(0, op.yStart, image.width, abs(op.yEnd - op.yStart))
-            val subImageBlured = bluredImage.getSubimage(0, op.yStart, image.width, abs(op.yEnd - op.yStart))
-            val bb = subImageBlured.boundBox(30, 150, 50)
-
-            op.yStart -= 10
-            op.image = subImage.getSubimage(bb.x0, bb.y0, bb.width(), bb.height())
+            op.image = image.getSafeSubimage(0, op.yStart, image.width, abs(op.yEnd - op.yStart))
         }
 
         yield(omegaSlika)

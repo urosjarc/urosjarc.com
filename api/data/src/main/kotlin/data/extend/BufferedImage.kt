@@ -99,16 +99,32 @@ fun BufferedImage.startEndX(x0: Int, x1: Int, y: Int, check: (pixel: Pixel) -> B
     return Pair(m, M)
 }
 
-fun BufferedImage.blur(): BufferedImage {
-    val matrix = FloatArray(9)
-    for (i in matrix.indices) {
-        matrix[i] = 0.111f
-    }
+fun BufferedImage.blur(repeat: Int): BufferedImage {
+    var currentImage = this
+    for (i in 0..repeat) {
+        val matrix = FloatArray(9)
+        for (i in matrix.indices) {
+            matrix[i] = 0.111f
+        }
 
-    val op: BufferedImageOp = ConvolveOp(Kernel(3, 3, matrix))
-    val bufferedImage = BufferedImage(width, height, this.type)
-    op.filter(this, bufferedImage)
-    return bufferedImage
+        val op: BufferedImageOp = ConvolveOp(Kernel(3, 3, matrix))
+        val bufferedImage = BufferedImage(width, height, this.type)
+        op.filter(currentImage, bufferedImage)
+        currentImage = bufferedImage
+    }
+    return currentImage
+}
+
+fun BufferedImage.getSafeSubimage(x: Int, y: Int, w: Int, h: Int): BufferedImage {
+    val x0 = if (x < 0) 0 else x
+    val y0 = if (y < 0) 0 else y
+    var x1 = x0 + w
+    var y1 = y0 + h
+
+    if (x1 > this.width - 1) x1 = this.width - 1
+    if (y1 > this.height - 1) y1 = this.height - 1
+
+    return this.getSubimage(x0, y0, x1 - x0, y1 - y0)
 }
 
 fun BufferedImage.resize(width: Int, height: Int): BufferedImage {
@@ -150,12 +166,12 @@ data class BoundBox(
 }
 
 
-fun BufferedImage.boundBox(xStart: Int, xEnd: Int, space: Int): BoundBox {
-    var count = 0
-    val maxCount = 10
-    val boundBox = BoundBox(0, this.width - 1, 0, this.height - 1)
+fun BufferedImage.boundBox(xStart: Int, xEnd: Int): BoundBox {
+    val maxCount = 5
+    val boundBox = BoundBox(-1, -1, -1, -1)
 
     //up to down
+    var count = 0
     start@ for (y in 0 until this.height) {
         for (x in xStart until this.width - xEnd) {
             if (!this.getHSV(x, y).is_white()) count++
@@ -173,7 +189,6 @@ fun BufferedImage.boundBox(xStart: Int, xEnd: Int, space: Int): BoundBox {
             if (!this.getHSV(x, y).is_white()) count++
             if (count > maxCount) {
                 boundBox.y1 = y
-                if (boundBox.y1 >= this.height) boundBox.y1 = this.height - 1
                 break@start
             }
         }
@@ -198,7 +213,6 @@ fun BufferedImage.boundBox(xStart: Int, xEnd: Int, space: Int): BoundBox {
             if (!this.getHSV(x, y).is_white()) count++
             if (count > maxCount) {
                 boundBox.x1 = x
-                if (boundBox.x1 >= this.width) boundBox.x1 = this.width - 1
                 break@start
             }
         }

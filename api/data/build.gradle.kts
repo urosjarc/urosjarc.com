@@ -1,6 +1,7 @@
 plugins {
     id("application")
     this.id("buildSrc.common")
+    this.id("buildSrc.serialization")
 }
 
 

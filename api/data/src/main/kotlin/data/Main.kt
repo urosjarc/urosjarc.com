@@ -5,8 +5,9 @@ import data.app.init_tessaract
 import data.app.tesseract
 import data.books.omega_zip_iterator
 import data.extend.blackWhite
+import data.extend.boundBox
+import data.extend.getSafeSubimage
 import data.extend.save
-import data.extend.show
 import java.io.File
 
 fun main() {
@@ -23,23 +24,29 @@ fun main() {
     val iterator = omega_zip_iterator(skip = 7, file = File(resourceFile, "Omega11.zip"))
     for ((si, slika) in iterator.withIndex()) {
         for ((pi, part) in slika.parts.withIndex()) {
-            val text = tesseract.doOCR(part.image.blackWhite())
+
+            val bb = part.image.boundBox(70, 80)
+
             when (part.tip) {
                 ZipPart.Tip.naloga -> {
                     val nalogaFile = File(teorijaDir, "naloga_$pi.png")
                     println("Save naloga: $nalogaFile")
+                    part.image = part.image.getSafeSubimage(bb.x0 - 30, bb.y0 - 40, bb.width() + 100, bb.height() + 80)
                     part.image.save(nalogaFile)
                 }
 
                 ZipPart.Tip.naslov -> {
-                    teorijaDir = File(saveDir, text)
                     println("Save teorija dir: $teorijaDir")
+                    var text = tesseract.doOCR(part.image.blackWhite())
+                    text = (text.subSequence(0, minOf(text.length, 30))).toString()
+                    teorijaDir = File(saveDir, text)
                     teorijaDir.mkdir()
                 }
 
                 ZipPart.Tip.teorija -> {
                     val teorijaFile = File(teorijaDir, "_teorija.png")
                     println("Save teorija: $teorijaFile")
+                    part.image = part.image.getSafeSubimage(bb.x0, bb.y0, bb.width(), bb.height())
                     part.image.save(teorijaFile)
                 }
 
