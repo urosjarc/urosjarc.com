@@ -66,15 +66,8 @@ fun BufferedImage.blackWhite(): BufferedImage {
     val bw = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
     for (y in 0 until height) {
         for (x in 0 until width) {
-
-            //Get RGB Value
-            val `val`: Int = this.getRGB(x, y)
-            //Convert to three separate channels
-            val r = 0x00ff0000 and `val` shr 16
-            val g = 0x0000ff00 and `val` shr 8
-            val b = 0x000000ff and `val`
-
-            val value = r + g + b
+            val p = this.getHSV(x, y)
+            val value = p.r + p.g + p.b
 
             if (value > 230 * 3) {
                 bw.setRGB(x, y, Color.WHITE.rgb)
@@ -85,6 +78,24 @@ fun BufferedImage.blackWhite(): BufferedImage {
     }
     return bw
 }
+
+fun BufferedImage.negative(): BufferedImage {
+    val bw = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
+    for (y in 0 until height) {
+        for (x in 0 until width) {
+            val p = this.getHSV(x, y)
+            val value = p.r + p.g + p.b
+
+            if (value > 230 * 3) {
+                bw.setRGB(x, y, Color.BLACK.rgb)
+            } else {
+                bw.setRGB(x, y, Color.WHITE.rgb)
+            }
+        }
+    }
+    return bw
+}
+
 
 fun BufferedImage.startEndX(x0: Int, x1: Int, y: Int, check: (pixel: Pixel) -> Boolean): Pair<Int, Int> {
     var m = this.width

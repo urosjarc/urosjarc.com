@@ -6,3 +6,5 @@ logs
 api/src/main/resources/static/.well-known
 core/src/main/resources/log4j2.xml
 api/src/main/resources/openapi
+*.json
+*.zip

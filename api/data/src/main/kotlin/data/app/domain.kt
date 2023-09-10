@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage
 data class ZipPart(
     val tip: Tip,
     var yStart: Int,
-    var yEnd: Int = -1,
+    var yEnd: Int,
     var image: BufferedImage = BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)
 ) {
     enum class Tip { naloga, naslov, teorija, prazno }
@@ -34,7 +34,7 @@ data class Pixel(
     }
 
     fun is_red_faint(): Boolean {
-        return (h > 300 || h < 60) && (s > 0.001 && s < 0.05) && v > 0.3
+        return (h > 280 || h < 60) && (s > 0.001 && s < 0.1) && v > 0.3
     }
 
 }

@@ -3,6 +3,8 @@ package base
 object Env {
     val PORT: Int = System.getenv("PORT").toInt()
 
+    val VISION_API_KEY: String = System.getenv("VISION_API_KEY")
+
     val ENCRYPTION_SALT: String = System.getenv("ENCRYPTION_SALT")
     val ENCRYPTION_PASSWORD: String = System.getenv("ENCRYPTION_PASSWORD")
 
