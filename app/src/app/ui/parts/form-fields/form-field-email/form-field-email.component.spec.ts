@@ -4,6 +4,7 @@ import {MatInputModule} from "@angular/material/input";
 import {ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatIconModule} from "@angular/material/icon";
 import {NgIf} from "@angular/common";
+import {BrowserAnimationsModule, NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('Parts / Form-field komponenta testi', () => {
   let fixture: ComponentFixture<FormFieldEmailComponent>;
@@ -15,17 +16,19 @@ describe('Parts / Form-field komponenta testi', () => {
         MatInputModule,
         ReactiveFormsModule,
         MatIconModule,
-        NgIf
+        NgIf,
+        NoopAnimationsModule
       ],
       providers: []
     }).compileComponents()
     fixture = TestBed.createComponent(FormFieldEmailComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges()
   })
 
 
   it('mora inicializirati komponento', async () => {
-    expect(component).toBeTruthy();
+    expect(fixture).toBeTruthy();
   });
 
   it('mora inicializirati formControl input z pravimi validatorji', () => {

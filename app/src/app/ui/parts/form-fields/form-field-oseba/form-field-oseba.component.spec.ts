@@ -55,6 +55,11 @@ describe('parts/form-field-oseba testiranje', () => {
     component.formControl.setErrors({'pattern': true});
     expect(component.getErrorMessage()).toMatch(formatErrorja);
   })
+  it('mora vrniti pravi format errorja ob priostnik sumnikih', () => {
+    component.formControl.setErrors({'Validator_besed': true});
+    console.log(component.getErrorMessage(), 'prisotni šumiki ----------------------------------')
+    expect(component.getErrorMessage()).toMatch(formatErrorja);
+  })
   it('mora vrniti validiran formControl ob pravilnem imenu', () => {
     const pravilenFormatImena = 'Janez Hocevar';
     component.formControl.setValue(pravilenFormatImena);

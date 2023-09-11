@@ -17,7 +17,7 @@ describe('AlertService', () => {
   it('mora ustvariti componento AlertService', () => {
     expect(alertService).toBeTruthy();
   });
-
+  // TODO: NEDOKONČAN TEST CASE
   it('mora prikazati error poslan v error objektu', () => {
 
     const errorResponse = new HttpErrorResponse({
@@ -28,6 +28,5 @@ describe('AlertService', () => {
 
     const errorSpy = spyOn<any>(alertService, 'error');
     alertService.errorServerNiDostopen(errorResponse);
-    console.log(errorSpy.calls.mostRecent().args[1], 'spy')
   });
 });

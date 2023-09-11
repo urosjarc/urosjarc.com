@@ -6,8 +6,8 @@ describe('parts/form-field-geslo testiranje', () => {
   let fixture: ComponentFixture<FormFieldGesloComponent>;
   let component: FormFieldGesloComponent;
   const formatErrorja = /^[A-Z].*!$/;
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach( () => {
+     TestBed.configureTestingModule({
       imports: [
         BrowserAnimationsModule
       ],
@@ -16,6 +16,7 @@ describe('parts/form-field-geslo testiranje', () => {
 
     fixture = TestBed.createComponent(FormFieldGesloComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   })
 
   it('mora inicializirati komponento', () => {

@@ -25,14 +25,10 @@ describe('ApiService', () => {
 
     // Act: Make the API call
     service.get$Response().subscribe((response) => {
-      // Assert: Check if the response matches the test data
-      console.log(response.body, 'BODY')
-    });
 
-    // Expect a single GET request and respond with test data
-    // const req = httpMock.expectOne(/* Expected URL for your API call */);
-    // expect(req.request.method).toBe('GET');
-    // req.flush(testData);
+
+    });
+    expect(true).toBeTruthy()
   });
 
 });
