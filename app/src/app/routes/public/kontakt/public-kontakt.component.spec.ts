@@ -52,7 +52,7 @@ describe('PublicKoledarComponent testi', () => {
 
     // ustvari komponento za testiranje
     fixture = TestBed.createComponent(PublicKontaktComponent);
-    // naredimo dostop to komponente njenih metod in podatkov
+    // naredimo dostop to reference ustvarjene komponente, vseh njenih metod in inputov...
     component = fixture.componentInstance;
     fixture.detectChanges();
 
@@ -81,12 +81,19 @@ describe('PublicKoledarComponent testi', () => {
     expect(errorMessage).toMatch(formatErrorja);
   })
 
-  it('mora vrniti ustrezen format error-ja ob neustreznem številu besed na inputu oseba', () => {
+  // it('mora vrniti validiran formGroup če je ime in priimek ustrezen', () => {
+  //
+  //   component.formFieldOsebaComponent?.formControl.setValue('Danijel Korbar')
+  //   fixture.detectChanges();
+  //
+  //   expect(component.formGroup.valid).toBeTrue();
+  // })
 
-    component.formGroup.controls['oseba'].setValue('Danijel Korbar');
+  it('mora vrniti ustrezen format error-ja ob prisotnimi šumniki na inputu oseba', () => {
+
+    component.formFieldOsebaComponent?.formControl.setValue('Danijel Korbarič')
     fixture.detectChanges();
     const errorMessage = component.formFieldOsebaComponent?.getErrorMessage();
-    console.log(errorMessage, '---------------------------------')
     expect(errorMessage).toMatch(formatErrorja);
   })
 
@@ -96,7 +103,7 @@ describe('PublicKoledarComponent testi', () => {
 
       component.formFieldMsgComponent.formControl.setValue('');
     } else {
-
+//
       fail('formFieldMsgComponent ni definirana');
     }
     const errorMessage = component.formFieldMsgComponent?.getErrorMessage();

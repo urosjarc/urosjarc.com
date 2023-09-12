@@ -27,7 +27,7 @@ describe('Parts / Table komponenta testi', () => {
       providers: [
         MatSort,
         MatPaginator,
-        {provide: ChangeDetectorRef, useValue: {}},
+        ChangeDetectorRef,
       ],
     }).compileComponents();
 
@@ -46,7 +46,7 @@ describe('Parts / Table komponenta testi', () => {
     expect(component.dataSource.sort).toBeDefined();
     expect(component.dataSource.filterPredicate).toBeDefined();
   });
-  // TODO: JE POTREBNO TESTIRATI FILTRIRANJE INPUT FIELDA
+  // TODO: JE POTREBNO TESTIRATI FILTRIRANJE INPUT FIELDA, ALI JE TO ŽE FORNTEND TEST
   it('mora filtrirati input polje uporabnika', () => {
     expect(true).toBeTrue()
   });

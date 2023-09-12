@@ -29,9 +29,10 @@ describe('Parts / Button-toolbar testi', () => {
   });
   it('mora vrniti inpute kot undefined ', () => {
     expect(component.tekst).toBeUndefined();
-    expect(component.tekst).toBeUndefined();
-    expect(component.tekst).toBeUndefined();
-    expect(component.tekst).toBeUndefined();
+    expect(component.ikona).toBeUndefined();
+    expect(component.route).toBeUndefined();
+    expect(component.style).toBeUndefined();
+
   });
   it('mora vrniti pravi type function ob onClick() metodi', () => {
 
