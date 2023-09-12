@@ -1,6 +1,5 @@
 package data
 
-import data.app.ftp_indexing
 import data.books.Omega
 
 
@@ -11,5 +10,5 @@ fun process() {
 }
 
 fun main() {
-    ftp_indexing()
+    process()
 }
