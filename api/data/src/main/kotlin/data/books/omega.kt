@@ -160,7 +160,7 @@ data class Omega(val resourceZipPath: String, val startingTeorijaName: String) {
 
         var currentNaloga = 0
         val iterator = omega_zip_iterator(start = start, end = end, file = this.zipFile, debug = debug)
-        for (slika in iterator) {
+        for ((index, slika) in iterator.withIndex()) {
             for (part in slika.parts) {
 
                 val bb = part.image.boundBox(70, 80)
@@ -211,7 +211,8 @@ data class Omega(val resourceZipPath: String, val startingTeorijaName: String) {
                     }
 
                     ZipPart.Tip.prazno -> {
-                        throw Error("Prazen part image!")
+                        println("PRAZNO: $index")
+                        part.image.show()
                     }
                 }
             }
@@ -224,7 +225,7 @@ data class Omega(val resourceZipPath: String, val startingTeorijaName: String) {
         var currentNaloga = 0
         val resitve_iterator = omega_zip_iterator(start = start, end = end, file = this.zipFile, debug = debug)
 
-        for (slika in resitve_iterator) {
+        for ((index, slika) in resitve_iterator.withIndex()) {
             for (part in slika.parts) {
 
                 val bb = part.image.boundBox(70, 80)
@@ -247,6 +248,7 @@ data class Omega(val resourceZipPath: String, val startingTeorijaName: String) {
                 txtFile.writeText(text)
 
                 if (part.tip != ZipPart.Tip.naloga) {
+                    println("PRAZNO: $index")
                     part.image.show()
                 }
             }
