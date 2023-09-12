@@ -29,10 +29,13 @@ fun ftp_walk(ftpClient: FTPClient, path: String = "") = sequence {
     val cakalnica = mutableListOf(path)
     while (cakalnica.isNotEmpty()) {
         val dir = cakalnica.removeAt(0)
+        println(dir)
         for (file in ftpClient.listFiles(dir)) {
             if (file.name == "." || file.name == "..") continue
-            if (file.isDirectory) cakalnica.add("$dir/${file.name}")
-            else yield("$dir/${file.name}")
+
+            val filePath = "$dir/${file.name}".replace(" ", "\\ ");
+            if (file.isDirectory) cakalnica.add(filePath)
+            else yield(filePath)
         }
     }
 }
