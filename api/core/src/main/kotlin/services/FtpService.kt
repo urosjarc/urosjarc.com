@@ -2,6 +2,8 @@ package services
 
 import org.apache.commons.net.ftp.FTPClient
 import org.apache.commons.net.ftp.FTPReply
+import kotlin.system.exitProcess
+
 
 class FtpService(
     private val server: String, private val port: Int, private val username: String, private val password: String
@@ -10,28 +12,34 @@ class FtpService(
     val client = FTPClient()
 
     init {
+
         client.controlEncoding = "UTF-8"
-        client.connect(server, port);
-        client.login(username, password);
-        val reply = client.getReplyCode();
+        client.connect(server, port)
+        client.login(username, password)
+
+        client.enterLocalPassiveMode()
+
+        val reply = client.replyCode
         if (!FTPReply.isPositiveCompletion(reply)) {
             client.disconnect();
             throw Exception("FTP server refused connection.")
         }
-
     }
 
-    fun walk(path: String = "") = sequence {
+    fun walk(path: String = "") = sequence<String> {
         val cakalnica = mutableListOf(path)
         while (cakalnica.isNotEmpty()) {
             val dir = cakalnica.removeAt(0)
-            for (file in client.listFiles(dir)) {
-                if (file.name == "." || file.name == "..") continue
+            val files = client.listFiles(dir)
+            for (file in files) {
+                if (file.name == "." || file.name == ".." || file.name.contains("resitve")) continue
                 val filePath = "$dir/${file.name}".replace(" ", "\\ ");
-                if (file.isDirectory) cakalnica.add(filePath)
-                else yield(filePath)
+                cakalnica.add(filePath)
             }
+            if (files.isEmpty()) yield(dir)
+            if (cakalnica.size % 100 == 0) println("Walk status: ${cakalnica.size}")
         }
+        exitProcess(0)
     }
 
     fun logout() {
