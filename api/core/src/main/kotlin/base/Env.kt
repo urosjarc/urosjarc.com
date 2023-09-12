@@ -3,13 +3,16 @@ package base
 object Env {
     val PORT: Int = System.getenv("PORT").toInt()
 
-    val VISION_API_KEY: String = System.getenv("VISION_API_KEY")
-
     val ENCRYPTION_SALT: String = System.getenv("ENCRYPTION_SALT")
     val ENCRYPTION_PASSWORD: String = System.getenv("ENCRYPTION_PASSWORD")
 
     val DB_URL: String = System.getenv("DB_URL")
     val DB_NAME: String = System.getenv("DB_NAME")
+
+    val FTP_SERVER: String = System.getenv("FTP_SERVER")
+    val FTP_PORT: Int = System.getenv("FTP_PORT").toInt()
+    val FTP_USERNAME: String = System.getenv("FTP_USERNAME")
+    val FTP_PASSWORD: String = System.getenv("FTP_PASSWORD")
 
     val JWT_REALM: String = System.getenv("JWT_REALM")
     val JWT_AUDIENCE: String = System.getenv("JWT_AUDIENCE")
@@ -25,5 +28,4 @@ object Env {
     val SMTP_PASSWORD: String = System.getenv("SMTP_PASSWORD")
     val SMTP_USERNAME: String = System.getenv("SMTP_USERNAME")
     val SMTP_HOST: String = System.getenv("SMTP_HOST")
-
 }
