@@ -1,24 +1,18 @@
 package si.urosjarc.server.app.use_cases
 
 import base.App
-import org.apache.logging.log4j.kotlin.logger
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.koin.test.KoinTest
 import org.koin.test.inject
-import services.DbService
-import services.JsonService
-import use_cases.Ustvari_testne_podatke
+import use_cases.Sinhroniziraj_bazo_zvezkov
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-class Test_Ustvari_testne_podatke : KoinTest {
+class Test_Sinhroniziraj_bazo_zvezkov : KoinTest {
 
-    val log = logger()
-    val use_case: Ustvari_testne_podatke by this.inject()
-    val db: DbService by this.inject()
-    val json: JsonService by this.inject()
+    val use_case: Sinhroniziraj_bazo_zvezkov by this.inject()
 
     @BeforeEach
     fun before_each() {
@@ -32,7 +26,7 @@ class Test_Ustvari_testne_podatke : KoinTest {
 
     @Test
     fun zdaj() {
-        this.use_case.zdaj(vse = true)
+        this.use_case.zdaj()
     }
 
 }

@@ -8,8 +8,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Zvezek(
     override var _id: Id<Zvezek> = Id(),
-    val tip: Tip,
     @Contextual val naslov: Encrypted,
-) : Entiteta<Zvezek> {
-    enum class Tip { DELOVNI, TEORETSKI }
-}
+) : Entiteta<Zvezek>

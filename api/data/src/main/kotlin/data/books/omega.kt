@@ -254,4 +254,5 @@ data class Omega(val resourceZipPath: String, val startingTeorijaName: String) {
             }
         }
     }
+
 }

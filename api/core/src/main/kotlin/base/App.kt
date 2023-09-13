@@ -4,9 +4,12 @@ import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
-import services.*
+import services.DbService
+import services.EmailService
+import services.JsonService
+import services.TelefonService
 import use_cases.Pripravi_kontaktni_obrazec
-import use_cases.Sinhroniziraj_bazo_knjig
+import use_cases.Sinhroniziraj_bazo_zvezkov
 import use_cases.Ustvari_templejt
 import use_cases.Ustvari_testne_podatke
 import use_cases_api.Sprejmi_kontaktni_obrazec
@@ -21,14 +24,6 @@ object App {
                 port = Env.SMTP_PORT,
                 username = Env.SMTP_USERNAME,
                 password = Env.SMTP_PASSWORD
-            )
-        }
-        this.single<FtpService> {
-            FtpService(
-                server = Env.FTP_SERVER,
-                port = Env.FTP_PORT,
-                username = Env.FTP_USERNAME,
-                password = Env.FTP_PASSWORD
             )
         }
         this.single<TelefonService> {
@@ -52,7 +47,7 @@ object App {
         this.factoryOf(::Ustvari_templejt)
         this.factoryOf(::Sprejmi_kontaktni_obrazec)
         this.factoryOf(::Ustvari_testne_podatke)
-        this.factoryOf(::Sinhroniziraj_bazo_knjig)
+        this.factoryOf(::Sinhroniziraj_bazo_zvezkov)
     }
 
     fun pripravi_DI(tip: Tip = Tip.TEST) {

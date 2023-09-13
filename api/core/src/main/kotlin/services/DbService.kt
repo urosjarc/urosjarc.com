@@ -1,6 +1,9 @@
 package services
 
-import base.*
+import base.AnyId
+import base.Encrypted
+import base.Hashed
+import base.Id
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
 import com.mongodb.ServerApi
@@ -55,6 +58,7 @@ class Filters {
         fun EQ(prop: KProperty1<*, Encrypted>, value: Encrypted): Bson {
             return com.mongodb.client.model.Filters.eq(prop.name, value.bin)
         }
+
         fun EQ(prop: KProperty1<*, Hashed>, value: Hashed): Bson {
             return com.mongodb.client.model.Filters.eq(prop.name, value.bin)
         }
@@ -100,6 +104,11 @@ class DbService(val db_url: String, val db_name: String) {
     val napake = db.getCollection<Napaka>(collectionName = ime<Napaka>())
     val kontakti = db.getCollection<Kontakt>(collectionName = ime<Kontakt>())
 
+    val zvezki = db.getCollection<Zvezek>(collectionName = ime<Zvezek>())
+    val tematike = db.getCollection<Tematika>(collectionName = ime<Tematika>())
+    val naloge = db.getCollection<Naloga>(collectionName = ime<Naloga>())
+    val teorije = db.getCollection<Teorija>(collectionName = ime<Teorija>())
+
     fun sprazni() = db.listCollectionNames().forEach { db.getCollection<Any>(collectionName = it).drop() }
 
     inline fun <reified T : Entiteta<T>> ustvari(entiteta: T): Boolean {
@@ -117,14 +126,6 @@ class DbService(val db_url: String, val db_name: String) {
 
     inline fun <reified T : Entiteta<T>> dobi(_id: Id<T>): T? {
         return db.getCollection<T>(collectionName = ime<T>()).find(Filters.EQ(_id)).firstOrNull()
-    }
-
-    inline fun <reified T : Entiteta<T>> posodobi(entiteta: T): T? {
-        return db.getCollection<T>(collectionName = ime<T>()).findOneAndReplace(Filters.EQ(entiteta._id), entiteta)
-    }
-
-    inline fun <reified T : Entiteta<T>> odstrani(_id: Id<T>): Boolean {
-        return db.getCollection<T>(collectionName = ime<T>()).deleteOne(Filters.EQ(_id)).wasAcknowledged()
     }
 
     fun audits(entity_id: Set<AnyId>, stran: Int?): List<Audit> {

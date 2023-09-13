@@ -2,6 +2,8 @@ plugins {
     id("application")
     this.id("buildSrc.common")
     this.id("buildSrc.serialization")
+    this.id("buildSrc.db")
+    this.id("buildSrc.injections")
 }
 
 
