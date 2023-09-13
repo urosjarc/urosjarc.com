@@ -18,6 +18,7 @@ var counters = mutableMapOf<String, Int>()
 
 class Ustvari_testne_podatke(
     private val db: DbService,
+    private val sinhronizirajBazoZvezkov: Sinhroniziraj_bazo_zvezkov,
 ) {
 
     inline fun <reified T : Any> nakljucni(): T {
@@ -46,6 +47,12 @@ class Ustvari_testne_podatke(
     }
 
     fun zdaj(vse: Boolean = false) {
+        this.sinhronizirajBazoZvezkov.zdaj()
+
+        val zvezki = db.zvezki.find().toList().toMutableSet()
+        val tematike = db.tematike.find().toList().toMutableSet()
+        val naloge = db.naloge.find().toList().toMutableSet()
+
         db.sprazni()
 
         /**
@@ -121,23 +128,6 @@ class Ustvari_testne_podatke(
         }
 
         /**
-         * Ustvari zvezek
-         */
-        val zvezki = this.ustvari_zvezek(n = 2)
-
-        /**
-         * Ustvari tematike
-         */
-        val tematike = mutableSetOf<Tematika>()
-        zvezki.forEach { tematike += this.ustvari_tematika(n = 3, zvezek = it) }
-
-        /**
-         * Ustvari naloge
-         */
-        val naloge = mutableSetOf<Naloga>()
-        tematike.forEach { naloge += this.ustvari_naloge(n = Random.nextInt(10, 20), tematika = it) }
-
-        /**
          * Ustvari teste
          */
         val testi =
@@ -202,7 +192,7 @@ class Ustvari_testne_podatke(
         return this.nakljucni<Ucenje>().apply {
             this.oseba_ucenec_id = ucenec._id
             this.oseba_ucitelj_id = ucitelj._id
-            this.ustvarjeno = LocalDate.danes(dDni=Random.nextInt(-365, -20))
+            this.ustvarjeno = LocalDate.danes(dDni = Random.nextInt(-365, -20))
         }
     }
 
