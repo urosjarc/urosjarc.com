@@ -5,8 +5,11 @@ import api.extend.request_info
 import api.request.NapakaReq
 import api.response.IndexRes
 import api.response.KontaktObrazecRes
-import domain.Napaka
-import extend.encrypted
+import core.domain.Napaka
+import core.extend.encrypted
+import core.services.DbService
+import core.use_cases.Ustvari_testne_podatke
+import core.use_cases_api.Sprejmi_kontaktni_obrazec
 import io.ktor.resources.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
@@ -17,10 +20,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
-import services.DbService
 import si.urosjarc.server.api.response.KontaktObrazecReq
-import use_cases.Ustvari_testne_podatke
-import use_cases_api.Sprejmi_kontaktni_obrazec
 
 @Resource("")
 class index {

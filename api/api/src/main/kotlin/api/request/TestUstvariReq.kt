@@ -1,9 +1,9 @@
-package si.urosjarc.server.api.response
+package api.request
 
-import base.Encrypted
-import base.Id
-import domain.Naloga
-import domain.Oseba
+import core.base.Encrypted
+import core.base.Id
+import core.domain.Naloga
+import core.domain.Oseba
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
