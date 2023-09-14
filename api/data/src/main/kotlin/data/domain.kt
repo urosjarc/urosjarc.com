@@ -1,4 +1,4 @@
-package data.app
+package data
 
 import java.awt.image.BufferedImage
 

@@ -3,6 +3,9 @@ package api.routes
 import api.extend.client_error
 import api.extend.profil
 import api.extend.system_error
+import api.request.TestUstvariReq
+import core.services.DbService
+import core.use_cases_api.Ustvari_test
 import io.ktor.resources.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -12,9 +15,6 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
-import services.DbService
-import si.urosjarc.server.api.response.TestUstvariReq
-import use_cases_api.Ustvari_test
 
 @Resource("ucitelj")
 class ucitelj {

@@ -1,4 +1,4 @@
-package data.app
+package data
 
 import com.google.cloud.vision.v1.AnnotateImageRequest
 import com.google.cloud.vision.v1.Feature
@@ -66,9 +66,8 @@ fun zip_iterator(file: File, skip: Int, end: Int): Sequence<BufferedImage> {
             if (i > end) break
 
             val inputStream = zipFile.getInputStream(zipEntry)
-
-
             val bufferedImage = ImageIO.read(inputStream)
+
             yield(bufferedImage)
         }
         zipFile.close()

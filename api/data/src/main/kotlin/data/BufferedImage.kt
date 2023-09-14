@@ -1,15 +1,11 @@
-package data.extend
+package data
 
 import com.recognition.software.jdeskew.ImageDeskew
-import data.app.Pixel
 import net.coobird.thumbnailator.Thumbnails
 import net.sourceforge.tess4j.util.ImageHelper
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.image.BufferedImage
-import java.awt.image.BufferedImageOp
-import java.awt.image.ConvolveOp
-import java.awt.image.Kernel
 import java.io.File
 import javax.imageio.ImageIO
 import javax.swing.ImageIcon
@@ -54,78 +50,6 @@ fun BufferedImage.getHSV(x: Int, y: Int): Pixel {
     return Pixel(r, g, b, hsv[0] * 360, hsv[1], hsv[2])
 }
 
-fun BufferedImage.gray(): BufferedImage {
-    val image = BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY)
-    val g = image.graphics
-    g.drawImage(this, 0, 0, null)
-    g.dispose()
-    return image
-}
-
-fun BufferedImage.blackWhite(): BufferedImage {
-    val bw = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
-    for (y in 0 until height) {
-        for (x in 0 until width) {
-            val p = this.getHSV(x, y)
-            val value = p.r + p.g + p.b
-
-            if (value > 230 * 3) {
-                bw.setRGB(x, y, Color.WHITE.rgb)
-            } else {
-                bw.setRGB(x, y, Color.BLACK.rgb)
-            }
-        }
-    }
-    return bw
-}
-
-fun BufferedImage.negative(): BufferedImage {
-    val bw = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
-    for (y in 0 until height) {
-        for (x in 0 until width) {
-            val p = this.getHSV(x, y)
-            val value = p.r + p.g + p.b
-
-            if (value > 230 * 3) {
-                bw.setRGB(x, y, Color.BLACK.rgb)
-            } else {
-                bw.setRGB(x, y, Color.WHITE.rgb)
-            }
-        }
-    }
-    return bw
-}
-
-
-fun BufferedImage.startEndX(x0: Int, x1: Int, y: Int, check: (pixel: Pixel) -> Boolean): Pair<Int, Int> {
-    var m = this.width
-    var M = -1
-    for (x in x0 until x1) {
-        val pixel = this.getHSV(x, y)
-        if (check(pixel)) {
-            if (m > x) m = x
-            if (M < x) M = x
-        }
-    }
-    return Pair(m, M)
-}
-
-fun BufferedImage.blur(repeat: Int): BufferedImage {
-    var currentImage = this
-    for (i in 0..repeat) {
-        val matrix = FloatArray(9)
-        for (i in matrix.indices) {
-            matrix[i] = 0.111f
-        }
-
-        val op: BufferedImageOp = ConvolveOp(Kernel(3, 3, matrix))
-        val bufferedImage = BufferedImage(width, height, this.type)
-        op.filter(currentImage, bufferedImage)
-        currentImage = bufferedImage
-    }
-    return currentImage
-}
-
 fun BufferedImage.getSafeSubimage(x: Int, y: Int, w: Int, h: Int): BufferedImage {
     val x0 = if (x < 0) 0 else x
     val y0 = if (y < 0) 0 else y
@@ -142,20 +66,6 @@ fun BufferedImage.resize(width: Int, height: Int): BufferedImage {
     return Thumbnails.of(this).forceSize(width, height).asBufferedImage()
 }
 
-fun BufferedImage.drawLine(x0: Int, x1: Int, y: Int, color: Color) {
-    for (x in x0 until x1) {
-        this.setRGB(x, y, color.rgb)
-    }
-}
-
-fun BufferedImage.drawLongLine(y: Int, color: Color) {
-    for (x in 0 until this.width) {
-        this.setRGB(x, y - 1, color.rgb)
-        this.setRGB(x, y, color.rgb)
-        this.setRGB(x, y + 1, color.rgb)
-    }
-}
-
 fun BufferedImage.deskew(): BufferedImage {
     val imgdeskew = ImageDeskew(this) // BufferedImage img
     return ImageHelper.rotateImage(this, -imgdeskew.skewAngle) // rotateImage static method
@@ -165,7 +75,7 @@ data class BoundBox(
     var x0: Int,
     var x1: Int,
     var y0: Int,
-    var y1: Int
+    var y1: Int,
 ) {
     fun width(): Int {
         return x1 - x0
