@@ -1,5 +1,6 @@
 package core.services
 
+import core.base.App
 import org.apache.logging.log4j.kotlin.logger
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -15,12 +16,12 @@ class Test_JsonService : KoinTest {
 
     @BeforeEach
     fun before_each() {
-        core.base.App.pripravi_DI()
+        App.pripravi_DI()
     }
 
     @AfterEach
     fun after_each() {
-        core.base.App.resetiraj_DI()
+        App.resetiraj_DI()
     }
 
 }

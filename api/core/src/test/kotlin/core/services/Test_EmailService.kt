@@ -1,5 +1,6 @@
 package core.services
 
+import core.base.App
 import core.use_cases.Ustvari_templejt
 import org.apache.logging.log4j.kotlin.logger
 import org.junit.jupiter.api.AfterEach
@@ -22,12 +23,12 @@ class Test_EmailService : KoinTest {
 
     @BeforeEach
     fun before_each() {
-        core.base.App.pripravi_DI()
+        App.pripravi_DI()
     }
 
     @AfterEach
     fun after_each() {
-        core.base.App.resetiraj_DI()
+        App.resetiraj_DI()
     }
 
     @Test
