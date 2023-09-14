@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.koin.test.KoinTest
 import org.koin.test.inject
-import services.DbService
-import services.JsonService
 import use_cases.Ustvari_testne_podatke
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
@@ -17,8 +15,6 @@ class Test_Ustvari_testne_podatke : KoinTest {
 
     val log = logger()
     val use_case: Ustvari_testne_podatke by this.inject()
-    val db: DbService by this.inject()
-    val json: JsonService by this.inject()
 
     @BeforeEach
     fun before_each() {

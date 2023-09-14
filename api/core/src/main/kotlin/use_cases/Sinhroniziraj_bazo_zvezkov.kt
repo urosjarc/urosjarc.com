@@ -10,11 +10,40 @@ import extend.encrypted
 import org.bson.types.ObjectId
 import services.DbService
 import java.io.File
+import java.io.FileFilter
 
 
+/**
+ * /zvezek
+ *      /tematika
+ *          /naloga0
+ *              vsebina.txt
+ *              vsebina.{png|webm}
+ *          /naloga1
+ *          ...
+ *          /teorija
+ *              vsebina.txt
+ *              vsebina.{png|webm}
+ *          /teorija_0
+ *              vsebina.txt
+ *              vsebina.{png|webm}
+ *      /resitve
+ *          /naloga0
+ *              resitev.txt
+ *              resitev.png
+ *          /naloga1
+ *          ...
+ */
 class Sinhroniziraj_bazo_zvezkov(
     private val db: DbService,
 ) {
+
+    private val TEORIJA = "teorija"
+    private val META_EXT = "txt"
+    private val META = "vsebina.$META_EXT"
+    private val RESITVE = "resitve"
+    private val RESITEV = "resitev.png"
+
     private fun addId(file: File): ObjectId {
         val idFile = File(file, "_id.txt")
         val id = AnyId().value
@@ -22,6 +51,12 @@ class Sinhroniziraj_bazo_zvezkov(
             idFile.writeText(id.toHexString())
             id
         } else ObjectId(idFile.readText())
+    }
+
+    private fun list(file: File, filter: (file: File) -> Boolean): Array<out File> {
+        val files = file.listFiles(FileFilter(filter))
+        if (files == null || files.isEmpty()) throw Error("Empty directory: $file")
+        return files
     }
 
     fun zdaj() {
@@ -32,50 +67,71 @@ class Sinhroniziraj_bazo_zvezkov(
         val naloge = mutableListOf<Naloga>()
         val teorije = mutableListOf<Teorija>()
 
-        for (zvezek in resourceFile.listFiles()!!) {
+        /**
+         * Zvezki loop
+         * resitve dir mora obstajati
+         */
+        for (zvezek in list(resourceFile) { it.isDirectory }) {
+            if (!File(zvezek, RESITVE).exists()) throw Error("Dir $RESITVE ne obstaja v: $zvezek")
 
-            if (!zvezek.isDirectory) continue
             val zvezek_id = Id<Zvezek>(addId(zvezek))
             zvezki.add(Zvezek(_id = zvezek_id, naslov = zvezek.name.encrypted()))
 
-            for (tematika in zvezek.listFiles()!!) {
+            /**
+             * Tematika loop
+             * teorija dir mora obstajati
+             */
+            for (tematika in list(zvezek) { it.name != RESITVE && it.isDirectory }) {
+                if (!File(tematika, TEORIJA).exists()) throw Error("Dir $TEORIJA ne obstaja v: $tematika")
 
-                if (tematika.name == "resitve") continue
-                if (!tematika.isDirectory) continue
                 val tematika_id = Id<Tematika>(addId(tematika))
                 tematike.add(Tematika(_id = tematika_id, zvezek_id = zvezek_id, naslov = tematika.name.encrypted()))
 
-                println(tematika)
+                /**
+                 * Naloga loop
+                 * meta file mora obstajati
+                 */
+                for (naloga in list(tematika) { it.isDirectory }) {
 
-                for (naloga in tematika.listFiles()!!) {
+                    val metaVsebina = File(naloga, META).readText().encrypted()
 
+                    /**
+                     * Naloga file loop
+                     */
+                    for (nalogaFile in list(naloga) { it.extension != META_EXT }) {
 
-                    if (!naloga.isDirectory) continue
-                    val metaVsebina = File(naloga, "vsebina.txt").readText()
-                    if (naloga.name.startsWith("teorija")) {
-                        val teorija_id = Id<Teorija>(addId(naloga))
-                        teorije.add(
-                            Teorija(
-                                _id = teorija_id,
-                                tip = Teorija.Tip.SLIKA, //Todo: Make this better!
-                                tematika_id = tematika_id,
-                                vsebina = "/${zvezek.name}/${tematika.name}/${naloga.name}/vsebina.png".encrypted(),
-                                meta = metaVsebina.encrypted()
+                        val vsebina = nalogaFile.toRelativeString(resourceFile)
+                        val vsebinaEncrypted = vsebina.encrypted()
+
+                        if (naloga.name.startsWith(TEORIJA)) {
+                            teorije.add(
+                                Teorija(
+                                    _id = Id(addId(naloga)),
+                                    tematika_id = tematika_id,
+                                    vsebina = vsebinaEncrypted,
+                                    meta = metaVsebina
+                                )
                             )
-                        )
-                    } else {
-                        val naloga_id = Id<Naloga>(addId(naloga))
-                        naloge.add(
-                            Naloga(
-                                _id = naloga_id,
-                                tip = Naloga.Tip.SLIKA, //Todo: Make this better!
-                                tematika_id = tematika_id,
-                                vsebina = "/${zvezek.name}/${tematika.name}/${naloga.name}/vsebina.png".encrypted(),
-                                resitev = "/${zvezek.name}/resitve/${naloga.name}/resitev.png".encrypted(),
-                                meta = metaVsebina.encrypted()
+                        } else {
+                            /**
+                             * Resitev mora obstajati
+                             */
+                            val resitevFile = File(zvezek, "$RESITVE/${naloga.name}/$RESITEV")
+                            if (!resitevFile.exists()) throw Exception(resitevFile.toString())
+                            val resitev = resitevFile.toRelativeString(resourceFile)
+
+                            naloge.add(
+                                Naloga(
+                                    _id = Id(addId(naloga)),
+                                    tematika_id = tematika_id,
+                                    vsebina = vsebinaEncrypted,
+                                    resitev = resitev.encrypted(),
+                                    meta = metaVsebina
+                                )
                             )
-                        )
+                        }
                     }
+
                 }
             }
         }
