@@ -1,0 +1,31 @@
+package core.domain
+
+import core.base.AnyId
+import core.base.Id
+import core.extend.zdaj
+import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
+import org.apache.logging.log4j.kotlin.logger
+
+@Serializable
+data class Napaka(
+    override var _id: Id<Napaka> = Id(),
+    var entitete_id: Set<AnyId>,
+    val tip: Tip,
+    val ustvarjeno: LocalDateTime = LocalDateTime.zdaj(),
+    @Contextual val vsebina: core.base.Encrypted,
+    @Contextual val dodatno: core.base.Encrypted,
+) : Entiteta<Napaka> {
+    enum class Tip { ERROR, WARN, FATAL }
+
+    fun logiraj() {
+        val log = this.logger()
+        when (this.tip) {
+            Tip.ERROR -> log.error(this)
+            Tip.WARN -> log.warn(this)
+            Tip.FATAL -> log.fatal(this)
+        }
+    }
+
+}

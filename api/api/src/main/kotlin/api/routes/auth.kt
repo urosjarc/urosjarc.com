@@ -1,14 +1,16 @@
 package api.routes
 
-import api.extend.*
+import api.extend.profil
+import api.extend.zakodiraj
 import api.plugins.Profil
 import api.plugins.profil
-import base.Env
 import com.auth0.jwk.JwkProvider
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.mongodb.client.model.Filters
-import domain.Oseba
+import core.base.Env
+import core.domain.Oseba
+import core.services.DbService
 import io.ktor.resources.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -19,7 +21,6 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.Route
 import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
-import services.DbService
 import si.urosjarc.server.api.response.PrijavaReq
 import si.urosjarc.server.api.response.PrijavaRes
 import java.security.KeyFactory
@@ -60,7 +61,7 @@ fun Route.auth(jwkProvider: JwkProvider) {
             .withExpiresAt(Date(System.currentTimeMillis() + 5 * 60 * 1000))
             .sign(Algorithm.RSA256(publicKey as RSAPublicKey, privateKey as RSAPrivateKey))
 
-        this.call.respond(PrijavaRes(token = token, tip=oseba.tip))
+        this.call.respond(PrijavaRes(token = token, tip = oseba.tip))
     }
 
     this.authenticate {

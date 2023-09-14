@@ -2,7 +2,8 @@ package api.extend
 
 import api.plugins.Profil
 import api.response.ErrorRes
-import extend.encrypted
+import core.extend.encrypted
+import core.services.JsonService
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -10,7 +11,6 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
 import io.ktor.util.*
 import org.koin.ktor.ext.inject
-import services.JsonService
 
 inline fun <reified T> ApplicationCall.dekodiraj(value: String): T {
     val json by this.inject<JsonService>()

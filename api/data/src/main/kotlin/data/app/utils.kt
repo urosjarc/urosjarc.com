@@ -17,14 +17,14 @@ private val tesseract = Tesseract()
 private val vision = ImageAnnotatorClient.create()
 
 fun init_tessaract() {
-    tesseract.setDatapath("/usr/share/tesseract-ocr/4.00/tessdata");
+    tesseract.setDatapath("/usr/share/tesseract-ocr/4.00/tessdata")
 
     tesseract.setLanguage("slv")
     tesseract.setPageSegMode(11)
     tesseract.setOcrEngineMode(1)
 
     tesseract.setVariable("tessedit_create_hocr", "0")
-    tesseract.setVariable("user_defined_dpi", "300");
+    tesseract.setVariable("user_defined_dpi", "300")
 }
 
 fun tessaract_ocr(image: BufferedImage): String {
