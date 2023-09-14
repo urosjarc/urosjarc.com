@@ -1,9 +1,6 @@
 package data
 
-import com.google.cloud.vision.v1.AnnotateImageRequest
-import com.google.cloud.vision.v1.Feature
-import com.google.cloud.vision.v1.Image
-import com.google.cloud.vision.v1.ImageAnnotatorClient
+import com.google.cloud.vision.v1.*
 import com.google.protobuf.ByteString
 import net.sourceforge.tess4j.Tesseract
 import java.awt.image.BufferedImage
@@ -31,7 +28,7 @@ fun tessaract_ocr(image: BufferedImage): String {
     return tesseract.doOCR(image)
 }
 
-fun google_ocr(image: BufferedImage): String {
+fun google_ocr(image: BufferedImage): MutableList<EntityAnnotation> {
     val baos = ByteArrayOutputStream()
     ImageIO.write(image, "png", baos)
 
@@ -50,7 +47,9 @@ fun google_ocr(image: BufferedImage): String {
     val response = vision.batchAnnotateImages(arrayListOf(request))
 
     // Print the label annotations for the first response.
-    return response.responsesList[0].fullTextAnnotation.text
+    val annons = response.responsesList[0].textAnnotationsList.toMutableList()
+    annons.removeAt(0)
+    return annons
 }
 
 fun zip_iterator(file: File, skip: Int, end: Int): Sequence<BufferedImage> {

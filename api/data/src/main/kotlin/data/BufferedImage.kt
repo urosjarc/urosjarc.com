@@ -1,5 +1,6 @@
 package data
 
+import com.google.cloud.vision.v1.BoundingPoly
 import com.recognition.software.jdeskew.ImageDeskew
 import net.coobird.thumbnailator.Thumbnails
 import net.sourceforge.tess4j.util.ImageHelper
@@ -35,6 +36,36 @@ fun BufferedImage.show(): JFrame {
 
 fun BufferedImage.save(file: File) {
     ImageIO.write(this, "png", file)
+}
+
+fun BufferedImage.checkBoundBox(boundingPoly: BoundingPoly, check: (pixel: Pixel) -> Boolean): Boolean {
+
+    val (xMin, xMax) = boundingPoly.xMinMax()
+    val (yMin, yMax) = boundingPoly.yMinMax()
+
+    for (y in yMin..yMax) {
+        for (x in xMin..xMax) {
+            val pixel = this.getHSV(x, y)
+            if (!check(pixel)) {
+                println(pixel)
+                return false
+            }
+        }
+    }
+    return true
+}
+
+fun BufferedImage.drawBoundBox(boundingPoly: BoundingPoly, color: Color) {
+
+    val (xMin, xMax) = boundingPoly.xMinMax()
+    val (yMin, yMax) = boundingPoly.yMinMax()
+
+    for (y in yMin..yMax) {
+        for (x in xMin..xMax) {
+
+            this.setRGB(x, y, color.rgb)
+        }
+    }
 }
 
 fun BufferedImage.getHSV(x: Int, y: Int): Pixel {
