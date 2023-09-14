@@ -20,10 +20,13 @@ describe('Testiranje pipe: date-oddaljenost-class', () => {
     const poljubniDatum = moment().add(2, 'days').toDate();
     const poljubniDatum2 = moment().add(5, 'days').toDate();
     const poljubniDatum3 = moment().add(10, 'days').toDate();
+    const poljubniDatum4 = moment().add(-10, 'days').toDate();
+
 
     expect(pipe.transform(poljubniDatum)).toEqual('danger-pulse');
     expect(pipe.transform(poljubniDatum2)).toEqual('warn-pulse');
     expect(pipe.transform(poljubniDatum3)).toEqual('');
+    expect(pipe.transform(poljubniDatum4)).toEqual('');
   });
 
 })
