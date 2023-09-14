@@ -1,44 +1,80 @@
-<div class="row">
-  <div class="col">
-    <mat-list>
-      <div mat-subheader>Oseba</div>
+<div class="row p-4 justify-content-center">
+
+  <!-- MESTO IN POZICIJA VIZITKE S PARAMETRI OSEBE -->
+  <div class="col-md-5 text-center">
+    <mat-list class="pb-3 text-white mat-elevation-z4 position-relative">
+
+      <!-- ABSOLUTNO MESTO IN POZICIJA TIPA OSEBE (UČENEC) -->
+      <span class="position-absolute top-100 start-50 translate-middle badge p-2 shadow-sm text-black bg-white border border-secondary-subtle mat-elevation-z2">
+        {{oseba?.tip}}
+      </span>
+
+      <!-- MESTO IN POZICIJA UPORABNIŠKEGA IMENA -->
+      <mat-list>
+        <mat-list-item>
+          <div matListItemTitle class="text-success">{{oseba?.username}}</div>
+          <div matListItemLine i18n>Uporabnisko ime</div>
+        </mat-list-item>
+      </mat-list>
+
+      <!-- MESTO IN POZICIJA GENERALNE SLIKE OSEBE -->
+      <mat-list>
+        <mat-list-item>
+          <mat-icon class="mat-icon-size">badge</mat-icon>
+        </mat-list-item>
+      </mat-list>
+
+      <!-- MESTO IN POZICIJA IMENA IN PRIIMKA -->
       <mat-list-item>
-        <mat-icon matListItemIcon>person</mat-icon>
+        <div matListItemTitle class="text-success">{{oseba?.ime}} {{oseba?.priimek}}</div>
+        <div matListItemLine i18n>Ime in priimek</div>
+      </mat-list-item>
+    </mat-list>
+
+    <!-- MESTO IN POZICIJA IDENTIFIKACIJSKE ŠTEVILKE -->
+    <mat-list class="mt-3">
+      <mat-list-item>
         <div matListItemTitle>{{oseba?._id}}</div>
-        <div matListItemLine>Identifikacijska številka</div>
-      </mat-list-item>
-      <mat-list-item>
-        <mat-icon matListItemIcon>person</mat-icon>
-        <div matListItemTitle>{{oseba?.ime}} {{oseba?.priimek}}</div>
-        <div matListItemLine>Uporabniski ime in priimek</div>
-      </mat-list-item>
-      <mat-list-item>
-        <mat-icon matListItemIcon>person</mat-icon>
-        <div matListItemTitle>{{oseba?.username}}</div>
-        <div matListItemLine>Uporabnisko ime</div>
-      </mat-list-item>
-      <mat-list-item>
-        <mat-icon matListItemIcon>key</mat-icon>
-        <div matListItemTitle>{{oseba?.tip}}</div>
-        <div matListItemLine>Tip uporabnika</div>
+        <div matListItemLine i18n>Identifikacijska številka</div>
       </mat-list-item>
     </mat-list>
   </div>
-  <div class="col">
-    <mat-list>
-      <div mat-subheader>Naslovi</div>
-      <mat-list-item *ngFor="let naslov of naslovi">
-        <mat-icon matListItemIcon>map</mat-icon>
-        <div matListItemTitle>{{naslov.ulica}}</div>
-        <div matListItemLine>{{naslov.zip}} {{naslov.mesto}}</div>
-        <div matListItemLine>{{naslov.drzava}}</div>
-      </mat-list-item>
-      <div mat-subheader>Kontakti</div>
-      <mat-list-item *ngFor="let kontakt of kontakti">
-        <mat-icon matListItemIcon>phone</mat-icon>
-        <div matListItemTitle>{{kontakt.data}}</div>
-        <div matListItemLine>{{kontakt.tip}}</div>
-      </mat-list-item>
-    </mat-list>
+
+  <!-- MESTO IN POZICIJA VIZITKE S PARAMETRI KONTAKTOV IN NASLOVOV -->
+  <div class="col-md-7 text-center">
+    <div class="row">
+
+      <!-- MESTO IN POZICIJA NASLOVOV -->
+      <div class="col-md-12">
+        <mat-list>
+          <div mat-subheader class="mt-0" i18n>Naslovi</div>
+          <mat-list-item>
+            <div class="row justify-content-center row-cols-2 row-cols-sm-3 g-4">
+              <div class="col" *ngFor="let naslov of naslovi">
+                <div matListItemTitle class="text-success">{{naslov.ulica}}</div>
+                <div matListItemLine>{{naslov.zip}} {{naslov.mesto}}</div>
+                <div matListItemLine>{{naslov.drzava}}</div>
+              </div>
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+
+      <!-- MESTO IN POZICIJA KONTAKTOV -->
+      <div class="col-md-12 text-center">
+        <mat-list>
+          <div mat-subheader i18n>Kontakti</div>
+          <mat-list-item>
+            <div class="row justify-content-center g-4 row-cols-2 row-cols-sm-3">
+              <div class="col" *ngFor="let kontakt of kontakti">
+                <div matListItemTitle class="text-success">{{kontakt.data}}</div>
+                <div matListItemLine>{{kontakt.tip}}</div>
+              </div>
+            </div>
+          </mat-list-item>
+        </mat-list>
+
+      </div>
+    </div>
   </div>
 </div>
