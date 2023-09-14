@@ -34,7 +34,7 @@ fun Application.configureRouting() {
 
     this.install(Koin) {
         this.slf4jLogger(level = org.koin.core.logger.Level.INFO)
-        this.modules(modules = App.modul(tip = core.base.App.Tip.TEST))
+        this.modules(modules = App.modul(tip = App.Tip.TEST))
     }
 
     this.install(CORS) {
