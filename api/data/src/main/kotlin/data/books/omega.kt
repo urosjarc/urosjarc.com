@@ -18,7 +18,7 @@ data class Omega(val resourceZipPath: String, val startingTeorijaName: String) {
         init_tessaract()
     }
 
-    fun omega_zip_iterator(file: File, start: Int, end: Int, debug: Boolean) = sequence {
+    fun zip_iterator(file: File, start: Int, end: Int, debug: Boolean) = sequence {
         for ((zipImageNum, zipImage) in zip_iterator(skip = start, end = end, file = file).withIndex()) {
 
             val vrstice = mutableMapOf<ZipPart.Tip, Int>() // Stetje zaznanih aktivnih vrstic
@@ -159,7 +159,7 @@ data class Omega(val resourceZipPath: String, val startingTeorijaName: String) {
         saveDir.mkdir()
 
         var currentNaloga = 0
-        val iterator = omega_zip_iterator(start = start, end = end, file = this.zipFile, debug = debug)
+        val iterator = zip_iterator(start = start, end = end, file = zipFile, debug = debug)
         for ((index, slika) in iterator.withIndex()) {
             for (part in slika.parts) {
 
@@ -223,7 +223,7 @@ data class Omega(val resourceZipPath: String, val startingTeorijaName: String) {
         resitveDir.mkdir()
 
         var currentNaloga = 0
-        val resitve_iterator = omega_zip_iterator(start = start, end = end, file = this.zipFile, debug = debug)
+        val resitve_iterator = zip_iterator(start = start, end = end, file = zipFile, debug = debug)
 
         for ((index, slika) in resitve_iterator.withIndex()) {
             for (part in slika.parts) {
