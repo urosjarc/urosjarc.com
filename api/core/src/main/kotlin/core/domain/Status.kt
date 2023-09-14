@@ -1,5 +1,6 @@
 package core.domain
 
+import core.base.Encrypted
 import core.base.Id
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
@@ -11,7 +12,7 @@ data class Status(
     var test_id: Id<Test>,
     var oseba_id: Id<Oseba>,
     var tip: Tip,
-    @Contextual val pojasnilo: core.base.Encrypted
+    @Contextual val pojasnilo: Encrypted
 ) : Entiteta<Status> {
     enum class Tip { NEZACETO, NERESENO, NAPACNO, PRAVILNO }
 }

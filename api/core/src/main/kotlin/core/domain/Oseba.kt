@@ -1,5 +1,6 @@
 package core.domain
 
+import core.base.Encrypted
 import core.base.Hashed
 import core.base.Id
 import kotlinx.serialization.Contextual
@@ -11,9 +12,9 @@ data class Oseba(
     var tip: MutableSet<Tip>,
     val geslo: Hashed,
     var letnik: Int,
-    @Contextual val username: core.base.Encrypted,
-    @Contextual val ime: core.base.Encrypted,
-    @Contextual val priimek: core.base.Encrypted,
+    @Contextual val username: Encrypted,
+    @Contextual val ime: Encrypted,
+    @Contextual val priimek: Encrypted,
 ) : Entiteta<Oseba> {
     enum class Tip { UCENEC, UCITELJ, INSTRUKTOR, ADMIN, KONTAKT, SERVER }
 }

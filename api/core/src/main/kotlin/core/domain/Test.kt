@@ -1,5 +1,6 @@
 package core.domain
 
+import core.base.Encrypted
 import core.base.Id
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Contextual
@@ -13,6 +14,6 @@ data class Test(
     var oseba_admin_id: MutableSet<Id<Oseba>>,
     var oseba_ucenec_id: MutableSet<Id<Oseba>>,
     val deadline: LocalDate,
-    @Contextual val naslov: core.base.Encrypted,
-    @Contextual val podnaslov: core.base.Encrypted,
+    @Contextual val naslov: Encrypted,
+    @Contextual val podnaslov: Encrypted,
 ) : Entiteta<Test>

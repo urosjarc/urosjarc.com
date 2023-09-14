@@ -1,5 +1,6 @@
 package core.domain
 
+import core.base.Encrypted
 import core.base.Id
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
@@ -8,9 +9,9 @@ import kotlinx.serialization.Serializable
 data class Naslov(
     override var _id: Id<Naslov> = Id(),
     var oseba_id: Id<Oseba>,
-    @Contextual val drzava: core.base.Encrypted,
-    @Contextual val mesto: core.base.Encrypted,
-    @Contextual val zip: core.base.Encrypted,
-    @Contextual val ulica: core.base.Encrypted,
-    @Contextual val dodatno: core.base.Encrypted
+    @Contextual val drzava: Encrypted,
+    @Contextual val mesto: Encrypted,
+    @Contextual val zip: Encrypted,
+    @Contextual val ulica: Encrypted,
+    @Contextual val dodatno: Encrypted
 ) : Entiteta<Naslov>

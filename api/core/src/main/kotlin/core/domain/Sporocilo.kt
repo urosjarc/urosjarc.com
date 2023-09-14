@@ -1,5 +1,6 @@
 package core.domain
 
+import core.base.Encrypted
 import core.base.Id
 import core.extend.zdaj
 import kotlinx.datetime.LocalDateTime
@@ -12,5 +13,5 @@ data class Sporocilo(
     var kontakt_posiljatelj_id: Id<Kontakt>,
     var kontakt_prejemnik_id: MutableSet<Id<Kontakt>>,
     var poslano: LocalDateTime = LocalDateTime.zdaj(),
-    @Contextual val vsebina: core.base.Encrypted,
+    @Contextual val vsebina: Encrypted,
 ) : Entiteta<Sporocilo>

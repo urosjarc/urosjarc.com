@@ -1,6 +1,7 @@
 package core.domain
 
 import core.base.AnyId
+import core.base.Encrypted
 import core.base.Id
 import core.extend.zdaj
 import kotlinx.datetime.LocalDateTime
@@ -14,8 +15,8 @@ data class Napaka(
     var entitete_id: Set<AnyId>,
     val tip: Tip,
     val ustvarjeno: LocalDateTime = LocalDateTime.zdaj(),
-    @Contextual val vsebina: core.base.Encrypted,
-    @Contextual val dodatno: core.base.Encrypted,
+    @Contextual val vsebina: Encrypted,
+    @Contextual val dodatno: Encrypted,
 ) : Entiteta<Napaka> {
     enum class Tip { ERROR, WARN, FATAL }
 
