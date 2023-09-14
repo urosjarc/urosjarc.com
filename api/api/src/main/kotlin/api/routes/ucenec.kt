@@ -107,7 +107,7 @@ fun Route.ucenec() {
 
         val audit = Audit(
             entitete_id = setOf(profil.oseba_id.vAnyId(), test_id.vAnyId(), it.naloga_id.vAnyId()),
-            tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
+            tip = Audit.Tip.POSODOBITEV_STATUSA_NALOGE,
             trajanje = body.sekund.toDuration(unit = DurationUnit.SECONDS),
             opis = status.tip.name.encrypted(),
             entiteta = ime<Status>().encrypted()
@@ -130,7 +130,7 @@ fun Route.ucenec() {
 
         val audit = Audit(
             entitete_id = setOf(profil.oseba_id.vAnyId(), it.test_id.vAnyId()),
-            tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
+            tip = Audit.Tip.POSODOBITEV_STATUSA_NALOGE,
             trajanje = 0.toDuration(unit = DurationUnit.SECONDS),
             opis = body.datum.toString().encrypted(),
             entiteta = ime<Test>().encrypted()

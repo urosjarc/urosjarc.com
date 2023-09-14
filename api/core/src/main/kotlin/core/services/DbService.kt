@@ -8,6 +8,7 @@ import com.mongodb.client.model.*
 import com.mongodb.kotlin.client.AggregateIterable
 import com.mongodb.kotlin.client.MongoClient
 import core.base.AnyId
+import core.base.Encrypted
 import core.base.Hashed
 import core.base.Id
 import core.data.AdminData
@@ -54,12 +55,16 @@ class Filters {
             return com.mongodb.client.model.Filters.eq(prop.name, value.value)
         }
 
-        fun EQ(prop: KProperty1<*, core.base.Encrypted>, value: core.base.Encrypted): Bson {
+        fun EQ(prop: KProperty1<*, Encrypted>, value: Encrypted): Bson {
             return com.mongodb.client.model.Filters.eq(prop.name, value.bin)
         }
 
         fun EQ(prop: KProperty1<*, Hashed>, value: Hashed): Bson {
             return com.mongodb.client.model.Filters.eq(prop.name, value.bin)
+        }
+
+        fun <T> IN(prop: String, value: MutableSet<Id<T>>): Bson {
+            return com.mongodb.client.model.Filters.`in`(prop, value.map { it.value })
         }
 
         fun <T> CONTAINS(prop: KProperty1<*, Set<Id<T>>>, value: Id<T>): Bson {
@@ -124,6 +129,22 @@ class DbService(val db_url: String, val db_name: String) {
 
     inline fun <reified T : Entiteta<T>> dobi(_id: Id<T>): T? {
         return db.getCollection<T>(collectionName = ime<T>()).find(Filters.EQ(_id)).firstOrNull()
+    }
+
+    inline fun <reified T : Entiteta<T>> dobi(_id: MutableSet<Id<T>>): List<T> {
+        return db.getCollection<T>(collectionName = ime<T>()).find(Filters.IN(prop = "_id", value = _id)).toList()
+    }
+
+    inline fun <reified T : Entiteta<T>, K> vsebuje(prop: KProperty1<*, *>, _id: MutableSet<Id<K>>): List<T> {
+        return db.getCollection<T>(collectionName = ime<T>()).find(Filters.IN(prop = prop.name, value = _id)).toList()
+    }
+
+    inline fun <reified T : Entiteta<T>> posodobi(entiteta: T): T? {
+        return db.getCollection<T>(collectionName = ime<T>()).findOneAndReplace(Filters.EQ(entiteta._id), entiteta)
+    }
+
+    inline fun <reified T : Entiteta<T>> odstrani(_id: Id<T>): Boolean {
+        return db.getCollection<T>(collectionName = ime<T>()).deleteOne(Filters.EQ(_id)).wasAcknowledged()
     }
 
     fun audits(entity_id: Set<AnyId>, stran: Int?): List<Audit> {
@@ -331,7 +352,6 @@ class DbService(val db_url: String, val db_name: String) {
         return aggregation.first()
     }
 
-
     fun ucitelj(id: Id<Oseba>): UciteljData {
         val aggregation: AggregateIterable<UciteljData> = osebe.aggregate<UciteljData>(
             listOf(
@@ -445,12 +465,7 @@ class DbService(val db_url: String, val db_name: String) {
         return aggregation.first()
     }
 
-    fun oseba_najdi(
-        ime: core.base.Encrypted,
-        priimek: core.base.Encrypted,
-        telefon: core.base.Encrypted,
-        email: core.base.Encrypted,
-    ): OsebaData? {
+    fun oseba_najdi(ime: Encrypted, priimek: Encrypted, telefon: Encrypted, email: Encrypted): OsebaData? {
         val aggregation: AggregateIterable<OsebaData> = osebe.aggregate<OsebaData>(
             listOf(
                 Aggregates.match(
@@ -492,7 +507,7 @@ class DbService(val db_url: String, val db_name: String) {
         return aggregation.toList()
     }
 
-    fun kontakt_najdi(data: core.base.Encrypted): Kontakt? =
+    fun kontakt_najdi(data: Encrypted): Kontakt? =
         kontakti.find(Filters.EQ(Kontakt::data, data)).firstOrNull()
 
     /**
@@ -514,7 +529,7 @@ class DbService(val db_url: String, val db_name: String) {
         test_id: Id<Test>,
         naloga_id: Id<Naloga>,
         tip: Status.Tip,
-        sekund: Int,
+        sekund: Int
     ): Status? {
         val r: Status = statusi.findOneAndUpdate(
             filter = Filters.AND(
@@ -529,7 +544,7 @@ class DbService(val db_url: String, val db_name: String) {
 
         val audit = Audit(
             entiteta = ime<Status>().encrypted(),
-            tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
+            tip = Audit.Tip.POSODOBITEV_STATUSA_NALOGE,
             trajanje = sekund.toDuration(DurationUnit.MINUTES),
             opis = r.tip.name.encrypted(),
             entitete_id = setOf(id.vAnyId(), oseba_id.vAnyId(), test_id.vAnyId(), naloga_id.vAnyId())
@@ -552,7 +567,7 @@ class DbService(val db_url: String, val db_name: String) {
 
         val audit = Audit(
             entiteta = ime<Test>().encrypted(),
-            tip = Audit.Tip.TEST_DATUM_POSODOBITEV,
+            tip = Audit.Tip.POSODOBITEV_DATUMA_TESTA,
             trajanje = Duration.ZERO,
             opis = r.deadline.toString().encrypted(),
             entitete_id = setOf(id.vAnyId(), oseba_id.vAnyId())

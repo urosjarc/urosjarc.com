@@ -9,6 +9,7 @@ import core.use_cases.Sinhroniziraj_bazo_zvezkov
 import core.use_cases.Ustvari_templejt
 import core.use_cases.Ustvari_testne_podatke
 import core.use_cases_api.Sprejmi_kontaktni_obrazec
+import core.use_cases_api.Ustvari_test
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.core.module.dsl.factoryOf
@@ -48,6 +49,7 @@ object App {
         this.factoryOf(::Sprejmi_kontaktni_obrazec)
         this.factoryOf(::Ustvari_testne_podatke)
         this.factoryOf(::Sinhroniziraj_bazo_zvezkov)
+        this.factoryOf(::Ustvari_test)
     }
 
     fun pripravi_DI(tip: Tip = Tip.TEST) {

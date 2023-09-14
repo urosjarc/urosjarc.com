@@ -1,0 +1,6 @@
+<mat-form-field class="w-100">
+  <mat-label>{{label}}</mat-label>
+  <input matInput [formControl]="formControl" required>
+  <mat-icon matPrefix>{{icon}}</mat-icon>
+  <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
+</mat-form-field>

@@ -202,7 +202,7 @@ class Ustvari_testne_podatke(
                 this.oseba_id = osebe.map { it._id }.toMutableSet()
                 this.tip = tip
             }
-            kontakt
+            kontakt.copy(data = if (tip == Kontakt.Tip.EMAIL) "jar.fmf@gmail.com".encrypted() else kontakt.data)
         }.toMutableSet()
     }
 

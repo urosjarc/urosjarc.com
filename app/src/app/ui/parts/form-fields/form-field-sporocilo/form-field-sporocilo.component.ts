@@ -5,9 +5,9 @@ import {MatInputModule} from "@angular/material/input";
 import {NgIf} from "@angular/common";
 
 @Component({
-  selector: 'app-form-field-msg',
-  templateUrl: './form-field-msg.component.html',
-  styleUrls: ['./form-field-msg.component.scss'],
+  selector: 'app-form-field-sporocilo',
+  templateUrl: './form-field-sporocilo.component.html',
+  styleUrls: ['./form-field-sporocilo.component.scss'],
   imports: [
     MatInputModule,
     ReactiveFormsModule,
@@ -15,7 +15,7 @@ import {NgIf} from "@angular/common";
   ],
   standalone: true
 })
-export class FormFieldMsgComponent {
+export class FormFieldSporociloComponent {
   @Input() formControl = new FormControl('', [
     Validators.required,
     Validators.minLength(10),
