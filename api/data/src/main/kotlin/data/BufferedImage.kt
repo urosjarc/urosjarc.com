@@ -1,6 +1,6 @@
 package data
 
-import com.google.cloud.vision.v1.BoundingPoly
+import com.google.cloud.vision.v1.EntityAnnotation
 import com.recognition.software.jdeskew.ImageDeskew
 import net.coobird.thumbnailator.Thumbnails
 import net.sourceforge.tess4j.util.ImageHelper
@@ -14,9 +14,9 @@ import javax.swing.JFrame
 import javax.swing.JLabel
 
 
-fun BufferedImage.show(): JFrame {
+fun BufferedImage.show(title: String): JFrame {
     val frame = JFrame().apply {
-        this.title = "stained_image"
+        this.title = title
         this.setSize(this.width / 2, this.height / 2)
         this.defaultCloseOperation = javax.swing.WindowConstants.EXIT_ON_CLOSE
     }
@@ -38,27 +38,27 @@ fun BufferedImage.save(file: File) {
     ImageIO.write(this, "png", file)
 }
 
-fun BufferedImage.checkBoundBox(boundingPoly: BoundingPoly, check: (pixel: Pixel) -> Boolean): Boolean {
+fun BufferedImage.checkAnnotation(entityAnnotation: EntityAnnotation, check: (pixel: Pixel) -> Boolean): Boolean {
 
-    val (xMin, xMax) = boundingPoly.xMinMax()
-    val (yMin, yMax) = boundingPoly.yMinMax()
+    val (xMin, xMax) = entityAnnotation.xMinMax()
+    val (yMin, yMax) = entityAnnotation.yMinMax()
+    var count = 0
 
     for (y in yMin..yMax) {
         for (x in xMin..xMax) {
             val pixel = this.getHSV(x, y)
             if (!check(pixel)) {
-                println(pixel)
-                return false
+                if (count++ > 10) return false
             }
         }
     }
     return true
 }
 
-fun BufferedImage.drawBoundBox(boundingPoly: BoundingPoly, color: Color) {
+fun BufferedImage.drawAnnotation(entityAnnotation: EntityAnnotation, color: Color) {
 
-    val (xMin, xMax) = boundingPoly.xMinMax()
-    val (yMin, yMax) = boundingPoly.yMinMax()
+    val (xMin, xMax) = entityAnnotation.xMinMax()
+    val (yMin, yMax) = entityAnnotation.yMinMax()
 
     for (y in yMin..yMax) {
         for (x in xMin..xMax) {
@@ -101,22 +101,6 @@ fun BufferedImage.deskew(): BufferedImage {
     val imgdeskew = ImageDeskew(this) // BufferedImage img
     return ImageHelper.rotateImage(this, -imgdeskew.skewAngle) // rotateImage static method
 }
-
-data class BoundBox(
-    var x0: Int,
-    var x1: Int,
-    var y0: Int,
-    var y1: Int,
-) {
-    fun width(): Int {
-        return x1 - x0
-    }
-
-    fun height(): Int {
-        return y1 - y0
-    }
-}
-
 
 fun BufferedImage.boundBox(xStart: Int, xEnd: Int): BoundBox {
     val maxCount = 5
@@ -171,4 +155,46 @@ fun BufferedImage.boundBox(xStart: Int, xEnd: Int): BoundBox {
     }
 
     return boundBox
+}
+
+fun BufferedImage.gray(): BufferedImage {
+    val image = BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY)
+    val g = image.graphics
+    g.drawImage(this, 0, 0, null)
+    g.dispose()
+    return image
+}
+
+fun BufferedImage.blackWhite(): BufferedImage {
+    val bw = BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY)
+    for (y in 0 until height) {
+        for (x in 0 until width) {
+            val p = this.getHSV(x, y)
+            val value = p.r + p.g + p.b
+
+            if (value > 255 / 2 * 3) {
+                bw.setRGB(x, y, Color.WHITE.rgb)
+            } else {
+                bw.setRGB(x, y, Color.BLACK.rgb)
+            }
+        }
+    }
+    return bw
+}
+
+fun BufferedImage.negative(): BufferedImage {
+    val bw = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
+    for (y in 0 until height) {
+        for (x in 0 until width) {
+            val p = this.getHSV(x, y)
+            val value = p.r + p.g + p.b
+
+            if (value > 230 * 3) {
+                bw.setRGB(x, y, Color.BLACK.rgb)
+            } else {
+                bw.setRGB(x, y, Color.WHITE.rgb)
+            }
+        }
+    }
+    return bw
 }
