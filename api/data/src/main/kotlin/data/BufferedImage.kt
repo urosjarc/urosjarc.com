@@ -38,21 +38,30 @@ fun BufferedImage.save(file: File) {
     ImageIO.write(this, "png", file)
 }
 
-fun BufferedImage.checkAnnotation(entityAnnotation: EntityAnnotation, check: (pixel: Pixel) -> Boolean): Boolean {
+fun BufferedImage.append(img: BufferedImage): BufferedImage {
+    val w: Int = Math.max(this.getWidth(), img.getWidth())
+    val h: Int = this.getHeight() + img.getHeight()
+    val combined = BufferedImage(w, h, BufferedImage.TYPE_INT_RGB)
+    val g = combined.graphics
+    g.drawImage(this, 0, 0, null)
+    g.drawImage(img, 0, h, null)
+    g.dispose()
+    return combined
+}
 
+fun BufferedImage.averagePixel(entityAnnotation: EntityAnnotation): Pixel {
     val (xMin, xMax) = entityAnnotation.xMinMax()
     val (yMin, yMax) = entityAnnotation.yMinMax()
-    var count = 0
+
+    val pixels = mutableListOf<Pixel>()
 
     for (y in yMin..yMax) {
         for (x in xMin..xMax) {
             val pixel = this.getHSV(x, y)
-            if (!check(pixel)) {
-                if (count++ > 10) return false
-            }
+            if (!pixel.is_white()) pixels.add(pixel)
         }
     }
-    return true
+    return Pixel.average(pixels)
 }
 
 fun BufferedImage.drawAnnotation(entityAnnotation: EntityAnnotation, color: Color) {
