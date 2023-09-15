@@ -8,20 +8,38 @@ import {Oseba} from "../api/models/oseba";
 import {AlertServiceModel} from "./alert.service.model";
 import {ThemePalette} from "@angular/material/core";
 import {Subject} from "rxjs";
+import SpyObj = jasmine.SpyObj;
 
 describe('AlertService', () => {
   let alertService: AlertService;
-
+  let alertsObserver: any;
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [AlertService],
     });
     alertService = TestBed.inject(AlertService);
+    alertsObserver = new Subject<AlertServiceModel>();
   });
 
   it('mora ustvariti componento AlertService', () => {
     expect(alertService).toBeTruthy();
+  });
+
+  it('testiranje alert metode', () => {
+    const pricakovanNaslov = 'Testni naslov';
+    const pricakovanaVsebina = 'Testna vsebina';
+    const pricakovanaBarvnaPaleta: ThemePalette = 'primary';
+    (alertService as any).alertsObserver = alertsObserver;
+    (alertService as any).alert(pricakovanNaslov, pricakovanaVsebina, pricakovanaBarvnaPaleta);
+
+    alertsObserver.subscribe((emitedVrednost: AlertServiceModel) => {
+      expect(emitedVrednost).toEqual({
+        naslov: pricakovanNaslov,
+        vsebina: pricakovanaVsebina,
+        color: pricakovanaBarvnaPaleta,
+      })
+    })
   });
 
   it('mora prikazati ustrezno sporočilo ob klicu errorServerNiDostopen ', () => {
@@ -96,4 +114,5 @@ describe('AlertService', () => {
     // ko se emita mock alert v mock subject to zazna alerts in dobimo nazaj vrednost, ki jo testiramo
     mockSubject.next(mockAlert);
   });
+
 });

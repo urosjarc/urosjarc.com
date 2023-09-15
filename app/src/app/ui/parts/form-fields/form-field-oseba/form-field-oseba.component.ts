@@ -20,11 +20,11 @@ import {NgIf} from "@angular/common";
 export class FormFieldOsebaComponent {
   @Input() label: string = "Ime in priimek"
   @Input() formControl = new FormControl('', [Validators.required,
-    Validators.pattern(new RegExp('^[\\p{L}]+(\\s+[\\p{L}]+){1,3}(\\s+)?$', 'um'))
+    Validators.pattern(new RegExp('^[\\p{L}]+(\\s+[\\p{L}]+){1,2}(\\s+)?$', 'um'))
 
   ]);
 
-
+  // TODO IMPORTANT: preveri pri UROŠU ČE JE TO OK, POPRAVEK NA 'Vnos nima veljavnih besed'!!!!!!!!!
   getErrorMessage() {
     if (this.formControl.hasError('required')) {
       return 'Vnos je obvezen!';
