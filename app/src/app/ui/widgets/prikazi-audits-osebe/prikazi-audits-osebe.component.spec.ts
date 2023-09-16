@@ -13,19 +13,33 @@ describe('widgets: prikazi-audits-osebe', () => {
   let component: PrikaziAuditsOsebeComponent;
   let spyOnOsebaRepo;
   beforeEach(() => {
+    const mockDurationPipe = jasmine.createSpyObj('DurationPipe', ['transform'], {
+      transform: '1 dan'
+    })
     TestBed.configureTestingModule({
       imports: [
         NoopAnimationsModule
       ],
 
       providers: [
-        DatePipe,
-        DateOddaljenostPipe,
-        DurationPipe,
         OsebaRepoService,
         DbService,
-
-        {provide: ActivatedRoute, useValue:'/'}
+        {
+          provide: DurationPipe, useValue: {
+            transform: () => '1 dan' // Mock the transform method
+          }
+        },
+        {
+          provide: DatePipe, useValue: {
+            transform: () => '23nd september 2023'
+          }
+        },
+        {
+          provide: DateOddaljenostPipe, useValue: {
+            transform: () => '1 dnevom'
+          }
+        },
+        {provide: ActivatedRoute, useValue: '/'}
 
       ]
 
@@ -66,8 +80,15 @@ describe('widgets: prikazi-audits-osebe', () => {
     spyOn((component as any).osebaRepo, 'audits').and.returnValue(Promise.resolve(mockAudits))
     fixture.detectChanges();
     await fixture.whenStable();
-
-    expect(component.audits.data.length).toEqual(2);
+    const models = component.audits.data
+    expect(models.length).toEqual(2);
+    for (const model of models){
+      expect(model.Tip).not.toBeUndefined()
+      expect(model.Opis).not.toBeUndefined()
+      expect(model.Trajanje).not.toBeUndefined()
+      expect(model.Ustvarjeno).not.toBeUndefined()
+      expect(model["Pred..."]).not.toBeUndefined()
+    }
   });
 
 })
