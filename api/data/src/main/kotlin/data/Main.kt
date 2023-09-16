@@ -76,7 +76,8 @@ data class OmegaSlika(val img: BufferedImage, val annos: Collection<EntityAnnota
                     .sortedBy { it.average().x }.toMutableList()
 
                 nalogeAnnos.add(anno)
-                if (nalogeAnnos.map { it.area() }.sum() > 100) {
+                val area = nalogeAnnos.map { it.area() }.sum()
+                if (area in 30 * 30..300 * 50) {
                     this.naloge.add(nalogeAnnos)
                 }
             }
@@ -105,7 +106,8 @@ data class OmegaSlika(val img: BufferedImage, val annos: Collection<EntityAnnota
                     }
                 }
                 deli.sortBy { it.average().x }
-                if (deli.map { it.area() }.sum() > 200) naslovi.add(deli)
+                val area = deli.map { it.area() }.sum()
+                if (area in 150 * 150..1000 * 150) naslovi.add(deli)
             }
         }
 
@@ -175,9 +177,9 @@ data class Omega(val fileName: String, val skip: Int, val end: Int) {
 
             val marks = mutableListOf<Annotation>()
             if (omega.naloge.isNotEmpty())
-                marks += Annotation.map(omega.naloge.map { it.first() }, Annotation.Tip.NALOGA)
+                marks += Annotation.map(omega.naloge.map { it.last() }, Annotation.Tip.NALOGA)
             if (omega.naslov.isNotEmpty())
-                marks.add(Annotation(omega.naslov.first(), tip = Annotation.Tip.NASLOV))
+                marks.add(Annotation(omega.naslov.last(), tip = Annotation.Tip.NASLOV))
 
             marks.sortBy { it.ocr.average().y }
 
@@ -187,9 +189,21 @@ data class Omega(val fileName: String, val skip: Int, val end: Int) {
 
             for (i in 0 until marks.size - 1) {
                 val curr = marks[i]
-                val next = marks[i + 1]
-                val dy = next.ocr.average().y - curr.ocr.average().y
-                curr.img = img.getSubimage(0, curr.ocr.yMin(), img.width, dy)
+
+                val closestRight = marks
+                    .filter { it.ocr.average().y in curr.ocr.yMin()..curr.ocr.yMax() && it.ocr.xMin() > curr.ocr.xMin() }
+                    .minByOrNull { it.ocr.average().x }
+
+                val closestDown = marks
+                    .filter { it.ocr.average().y > curr.ocr.yMax() }
+                    .minByOrNull { it.ocr.average().y }
+
+                val x = curr.ocr.xMin()
+                val y = curr.ocr.yMin()
+                val endX = closestRight?.ocr?.xMin() ?: img.width
+                val endY = closestDown?.ocr?.yMin() ?: omega.footer.first().yMin()
+
+                curr.img = img.getSubimage(x, y, endX - x, endY - y)
                 omegaParts.add(curr)
             }
         }
@@ -198,6 +212,6 @@ data class Omega(val fileName: String, val skip: Int, val end: Int) {
 }
 
 fun main() {
-    val omega = Omega("test.zip", 20, 40)
+    val omega = Omega("test.zip", 3, 40)
     omega.parse()
 }
