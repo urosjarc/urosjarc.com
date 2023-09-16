@@ -166,7 +166,7 @@ data class Omega(val fileName: String, val skip: Int, val end: Int) {
             if (annos.size < 10) break
 
             //Process sliko
-            val omega = OmegaSlika(img = image, annos = annos)
+            val omega = OmegaSlika(img = img, annos = annos)
             omega.parse_footer()
             omega.parse_naloge()
             omega.parse_naslov()
@@ -190,8 +190,6 @@ data class Omega(val fileName: String, val skip: Int, val end: Int) {
                 val next = marks[i + 1]
                 val dy = next.ocr.average().y - curr.ocr.average().y
                 curr.img = img.getSubimage(0, curr.ocr.yMin(), img.width, dy)
-                curr.img.show("Image part: $i")
-                Thread.sleep(3000)
                 omegaParts.add(curr)
             }
         }
@@ -200,6 +198,6 @@ data class Omega(val fileName: String, val skip: Int, val end: Int) {
 }
 
 fun main() {
-    val omega = Omega("Omega11.zip", 7, 14)
+    val omega = Omega("test.zip", 20, 40)
     omega.parse()
 }
