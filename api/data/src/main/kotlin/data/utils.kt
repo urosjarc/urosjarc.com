@@ -48,6 +48,7 @@ fun google_ocr(image: BufferedImage): MutableList<EntityAnnotation> {
 
     // Print the label annotations for the first response.
     val annons = response.responsesList[0].textAnnotationsList.toMutableList()
+    annons.removeAt(0)
     return annons
 }
 
