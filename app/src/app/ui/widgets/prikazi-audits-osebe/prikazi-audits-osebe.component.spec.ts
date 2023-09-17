@@ -83,11 +83,11 @@ describe('widgets: prikazi-audits-osebe', () => {
     const models = component.audits.data
     expect(models.length).toEqual(2);
     for (const model of models){
-      expect(model.Tip).not.toBeUndefined()
-      expect(model.Opis).not.toBeUndefined()
-      expect(model.Trajanje).not.toBeUndefined()
-      expect(model.Ustvarjeno).not.toBeUndefined()
-      expect(model["Pred..."]).not.toBeUndefined()
+      expect(typeof model.Tip).toEqual('string')
+      expect(typeof model.Opis).toEqual('string')
+      expect(typeof model.Trajanje).toEqual('string')
+      expect(typeof model.Ustvarjeno).toEqual('string')
+      expect(typeof model["Pred..."]).toEqual('string')
     }
   });
 

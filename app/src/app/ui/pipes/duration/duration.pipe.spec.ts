@@ -15,7 +15,7 @@ describe('Testiranje pipe: date-oddaljenost-class', () => {
   it('mora ustvariti pipe', () => {
     expect(pipe).toBeTruthy();
   });
-  //TODO: tukaj potrebno bolj eksplicitno testirati transform?
+
   it('mora vrniti string', () => {
     const trajanje= moment.duration(2, 'hours')
     expect(typeof pipe.transform(trajanje)).toEqual('string');

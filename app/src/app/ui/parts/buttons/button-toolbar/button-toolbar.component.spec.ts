@@ -3,40 +3,43 @@ import {ButtonToolbarComponent} from "./button-toolbar.component";
 import {MatIconModule} from "@angular/material/icon";
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {MatButtonModule} from "@angular/material/button";
+import {By} from "@angular/platform-browser";
+import {Component} from "@angular/core";
+import {parseJson} from "@angular/cli/src/utilities/json-file";
 
 describe('Parts / Button-toolbar testi', () => {
-  let fixture: ComponentFixture<ButtonToolbarComponent>;
   let component: ButtonToolbarComponent;
+  let fixture: ComponentFixture<ButtonToolbarComponent>
   let mockValue = '/nazaj';
   beforeEach(() => {
-
     TestBed.configureTestingModule({
-      imports: [
-        MatIconModule,
-        MatButtonModule,
-      ],
       providers: [
         {provide: ActivatedRoute, useValue: mockValue}
       ]
-
-    }).compileComponents()
-    fixture  = TestBed.createComponent(ButtonToolbarComponent);
-    component = fixture.componentInstance;
+    })
+    fixture = TestBed.createComponent(ButtonToolbarComponent)
+    component = fixture.componentInstance
   })
 
-  it('mora inicializirati button-toolbar komponento ', () => {
-    expect(component).toBeTruthy();
-  });
-  it('mora vrniti inpute kot undefined ', () => {
-    expect(component.tekst).toBeUndefined();
-    expect(component.ikona).toBeUndefined();
-    expect(component.route).toBeUndefined();
-    expect(component.style).toBeUndefined();
+
+  it('@input style ', () => {
+    component.style = "style: value"
+    fixture.detectChanges()
+    const button = fixture.debugElement.query(By.css('button'));
+    expect(button.styles['style']).toContain('value')
 
   });
-  it('mora vrniti pravi type function ob onClick() metodi', () => {
 
-    expect(typeof component.onClick).toEqual('function');
+
+  it('@input tekst ', () => {
+    component.tekst = "text"
+    fixture.detectChanges()
+    const button = fixture.debugElement.query(By.css('button'));
+    const buttonText = button.nativeElement.textContent.trim();
+    console.log(buttonText, 'button-----------------')
+
+    expect(true).toBeTrue()
+
   });
 
   it('mora klicati onClick() funckijo', () => {

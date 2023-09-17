@@ -6,7 +6,6 @@ describe('pipes date-oddaljenost testi', () => {
   beforeEach(() => {
     pipe = new DateOddaljenostPipe();
     moment.locale('sl');
-    moment.locale($localize.locale)
 
   })
 
@@ -26,7 +25,7 @@ describe('pipes date-oddaljenost testi', () => {
     expect(pipe.transform(new Date(datumVPrihodnjost))).toEqual('čez 10 dni')
   });
   it('mora vrniti pravo obliko sporočila ', () => {
-    const datumVPrihodnjost = moment().add(-10, 'days').toDate();
-    expect(pipe.transform(new Date(datumVPrihodnjost))).toEqual('pred 10 dnevi')
+    const datumVPreteklost = moment().add(-10, 'days').toDate();
+    expect(pipe.transform(new Date(datumVPreteklost))).toEqual('pred 10 dnevi')
   });
 })

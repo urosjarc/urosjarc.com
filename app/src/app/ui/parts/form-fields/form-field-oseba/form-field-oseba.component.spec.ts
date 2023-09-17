@@ -29,16 +29,6 @@ describe('parts/form-field-oseba testiranje', () => {
   it('mora inicializirati komponento', () => {
     expect(component).toBeTruthy();
   })
-  // TODO: NAREDITI TEST CASE ZA ISKANJE PROPERTY VALIDATORJA ZA pattern
-  // TODO: TEST FAILA PO PRAVEM IMENU
-  // it('mora inicializirati formControl z ustreznimi validatorji', () => {
-  //   expect(component.formControl.hasValidator(Validators.required)).toBeTrue();
-  //   const validators = component.formControl.validator && component.formControl.validator(new FormControl())
-  //   const minLengthValidator = validators?.hasOwnProperty('pattern()');
-  //   console.log(validators, 'validatorji-----------------')
-  //   expect(minLengthValidator).toBeTruthy();
-  //
-  // })
 
   it('mora klicati getErrrorMessage ob nustreznem formControlu', () => {
     const spy = spyOn(component, 'getErrorMessage');
@@ -77,20 +67,24 @@ describe('parts/form-field-oseba testiranje', () => {
     component.formControl.setValue('LǐHuá Wáng');
     expect(component.formControl.valid).toBeTrue();
   })
-    it('mora vrniti validiran formControl ob srednjem imenu ali priimku', () => {
-    component.formControl.setValue('Nina Uršič Šišić');
+  it('mora vrniti validiran formControl ob prositnosti šumnikov v imenu', () => {
+    component.formControl.setValue('Š Uršic');
     expect(component.formControl.valid).toBeTrue();
   })
-  it('mora vrniti nevalidiran formControl', () => {
-    component.formControl.setValue('Nina Uršič1 Šišić');
+    it('mora vrniti validiran formControl ob prositnosti šumnikov v priimku', () => {
+    component.formControl.setValue('Nina Uršič');
+    expect(component.formControl.valid).toBeTrue();
+  })
+  it('mora vrniti nevalidiran formControl ob treh besedah', () => {
+    component.formControl.setValue('Nina Uršič Šišić');
     expect(component.formControl.valid).toBeFalse();
   })
-  it('mora vrniti nevalidiran formControlob prisotni številki', () => {
-    component.formControl.setValue('Nina1 Uršič Šišić');
+  it('mora vrniti nevalidiran formControlob prisotni številki v imenu', () => {
+    component.formControl.setValue('Nina1 Uršič');
     expect(component.formControl.valid).toBeFalse();
   })
-  it('mora vrniti nevalidiran formControl prisotni številki', () => {
-    component.formControl.setValue('Nina Uršič2 Šišić');
+  it('mora vrniti nevalidiran formControl prisotni številki v priimku', () => {
+    component.formControl.setValue('Nina Uršič2');
     expect(component.formControl.valid).toBeFalse();
   })
 

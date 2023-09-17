@@ -16,22 +16,13 @@ describe('parts/form-field-geslo testiranje', () => {
 
     fixture = TestBed.createComponent(FormFieldGesloComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   })
 
   it('mora inicializirati komponento', () => {
     expect(component).toBeTruthy();
 
   })
-  // TODO: NAREDITI TEST CASE ZA ISKANJE PROPERTY VALIDATORJA ZA MINLENGTH !brez omejtive števila!
-  // it('mora inicializirati formControl z ustreznimi validatorji', () => {
-  //   expect(component.formControl.hasValidator(Validators.required)).toBeTrue();
-  //   const validators = component.formControl.validator && component.formControl.validator(new FormControl())
-  //   const minLengthValidator = validators?.hasOwnProperty('minLength()');
-  //   console.log(validators, 'validatorji-----------------')
-  //   expect(minLengthValidator).toBeTruthy();
-  //
-  // })
+
   it('mora klicati getErrrorMessage ob nustreznem formControlu', () => {
     const spy = spyOn(component, 'getErrorMessage');
     component.formControl.invalid;
@@ -52,5 +43,8 @@ describe('parts/form-field-geslo testiranje', () => {
     component.formControl.setValue('ustrezno_geslo!');
     expect(component.formControl.valid).toBeTrue();
   })
+
+
+
 
 })

@@ -7,48 +7,40 @@ import {NgIf} from "@angular/common";
 import {BrowserAnimationsModule, NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('Parts / Form-field komponenta testi', () => {
-  let fixture: ComponentFixture<FormFieldEmailComponent>;
   let component: FormFieldEmailComponent;
   const formatErrorja = /^[A-Z].*!$/;
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatInputModule,
-        ReactiveFormsModule,
-        MatIconModule,
-        NgIf,
-        NoopAnimationsModule
-      ],
-      providers: []
+      imports: [],
+      providers: [
+        FormFieldEmailComponent
+      ]
     }).compileComponents()
-    fixture = TestBed.createComponent(FormFieldEmailComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges()
+    component = TestBed.inject(FormFieldEmailComponent)
+
   })
+    it('mora inicializirati komponento', async () => {
+      expect(component).toBeTruthy();
+    });
 
+    it('mora inicializirati formControl input z pravimi validatorji', () => {
+      expect(component.formControl.hasValidator(Validators.required)).toBe(true);
+      expect(component.formControl.hasValidator(Validators.email)).toBe(true);
+    })
+    it('mora vrniti error ob neustreznem email formatu', async () => {
+      component.formControl.setErrors({'required': true});
+      expect(component.getErrorMessage()).toMatch(formatErrorja);
+    });
 
-  it('mora inicializirati komponento', async () => {
-    expect(fixture).toBeTruthy();
-  });
+    it('mora vrniti error ob praznem email polju', async () => {
+      component.formControl.setErrors({'email': true});
+      expect(component.getErrorMessage()).toMatch(formatErrorja);
+    });
 
-  it('mora inicializirati formControl input z pravimi validatorji', () => {
-    expect(component.formControl.hasValidator(Validators.required)).toBe(true);
-    expect(component.formControl.hasValidator(Validators.email)).toBe(true);
-  })
-  it('mora vrniti error ob neustreznem email formatu', async () => {
-    component.formControl.setErrors({'required': true});
-    expect(component.getErrorMessage()).toMatch(formatErrorja);
-  });
-
-  it('mora vrniti error ob praznem email polju', async () => {
-    component.formControl.setErrors({'email': true});
-    expect(component.getErrorMessage()).toMatch(formatErrorja);
-  });
-
-  it('mora vrniti validiran formControl ob ustreznem email-u', () => {
-    component.formControl.setValue('tesniemail@gmail.com');
-    expect(component.formControl.valid).toBeTrue();
-  })
+    it('mora vrniti validiran formControl ob ustreznem email-u', () => {
+      component.formControl.setValue('testniemail@gmail.com');
+      expect(component.formControl.valid).toBeTrue();
+    })
 
 
 })

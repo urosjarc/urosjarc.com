@@ -2,6 +2,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {FormFieldMsgComponent} from "./form-field-msg.component";
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {Validator_stevilo_besed} from "../../../validators/stevilo-besed/stevilo-besede.validator";
+import {AbstractControl, FormControl, ValidatorFn, Validators} from "@angular/forms";
 
 describe('parts/form-field-geslo testiranje', () => {
   let fixture: ComponentFixture<FormFieldMsgComponent>;
@@ -23,20 +24,17 @@ describe('parts/form-field-geslo testiranje', () => {
     expect(component).toBeTruthy();
 
   })
-  // TODO: NAREDITI TEST CASE ZA ISKANJE PROPERTY VALIDATORJA ZA MINLENGTH in validator_stevilo besed !brez omejtive števila!
-  // it('mora inicializirati formControl z ustreznimi validatorji', () => {
-  //   expect(component.formControl.hasValidator(Validators.required)).toBeTrue();
-  //   const validators = component.formControl.validator && component.formControl.validator(new FormControl())
-  //   const minLengthValidator = validators?.hasOwnProperty('minLength()');
-  //   console.log(validators, 'validatorji-----------------')
-  //   expect(minLengthValidator).toBeTruthy();
-  //
-  // })
+
+  it('mora inicializirati formControl z ustreznimi validatorji', () => {
+
+    expect(component.formControl.hasValidator(Validators.required)).toBeTrue();
+
+  })
   it('mora klicati getErrrorMessage ob nustreznem formControlu', () => {
-    const spy = spyOn(component, 'getErrorMessage');
+    const errorMsgSpy = spyOn(component, 'getErrorMessage');
     component.formControl.invalid;
     fixture.detectChanges();
-    expect(spy).toHaveBeenCalled();
+    expect(errorMsgSpy).toHaveBeenCalled();
 
   })
   it('mora vrniti pravi format errorja ob praznem polju za msg', () => {

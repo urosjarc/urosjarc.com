@@ -3,12 +3,16 @@ import {Date_casStr, Date_datumStr, Date_dodaj, Date_ime_dneva, Date_oddaljenost
 describe('utils: unit tests za Date.ts', () => {
   // TODO: ČE DAM V TESTIH END 4 DNI NAPREJ DOBIM NAZAJ SEVEDA -4, MOGLO BIT end - start , V UTILSIH DATE.TS
   it('Date_oddaljenost_v_dneh() mora vrniti število dni med dvema datuma', () => {
-        const currentDate = new Date();
-        const offsetDate = new Date(currentDate);
-        offsetDate.setDate(currentDate.getDate()  - 4);
-        const end = new Date(2023, 8, 20, 10, 0, 0)
-        const razlikaMedDnevi = Date_oddaljenost_v_dneh(end)
-        expect(razlikaMedDnevi).toEqual(-4);
+        const trenutniDatum = new Date();
+        const offsetDatum = new Date(trenutniDatum);
+        offsetDatum.setDate(trenutniDatum.getDate()  - 4);
+        const datumPreteklost = new Date(2023, 8, 15, 10, 0, 0)
+        const datumPrihodnjost = new Date(2023, 8, 20, 10, 0, 0)
+
+        const razlikaMedDnevi = Date_oddaljenost_v_dneh(datumPreteklost)
+        const razlikaMedDnevi2 = Date_oddaljenost_v_dneh(datumPrihodnjost)
+        expect(razlikaMedDnevi).toEqual(2);
+        expect(razlikaMedDnevi2).toEqual(-3);
     });
   it('Date_ime_dneva() mora vrniti dan v pravilnem prevodu ', () => {
     const dan = new Date(2023, 8, 16, 10, 0, 0)

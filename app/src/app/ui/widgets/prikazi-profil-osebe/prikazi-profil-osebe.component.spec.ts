@@ -41,7 +41,7 @@ describe('widgets: prikazi-profil-osebe testi', () => {
     spyOn((component as any).osebaRepo, 'oseba').and.returnValue(Promise.resolve(mockOsebaModel));
 
     fixture.detectChanges();
-    // zaradi asynca v ngOnInit() počaka da se async koda izvede.
+    // zaradi asynca v ngOnInit() počaka da se async izvede.
     await fixture.whenStable();
     expect(component.oseba).toEqual(mockOsebaModel.oseba);
     expect(component.naslovi).toEqual(mockOsebaModel.naslovi);
