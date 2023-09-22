@@ -1,19 +1,22 @@
 import {Date_casStr, Date_datumStr, Date_dodaj, Date_ime_dneva, Date_oddaljenost_v_dneh} from "./Date";
 
 describe('utils: unit tests za Date.ts', () => {
-  // TODO: ČE DAM V TESTIH END 4 DNI NAPREJ DOBIM NAZAJ SEVEDA -4, MOGLO BIT end - start , V UTILSIH DATE.TS
   it('Date_oddaljenost_v_dneh() mora vrniti število dni med dvema datuma', () => {
-        const trenutniDatum = new Date();
-        const offsetDatum = new Date(trenutniDatum);
-        offsetDatum.setDate(trenutniDatum.getDate()  - 4);
-        const datumPreteklost = new Date(2023, 8, 15, 10, 0, 0)
-        const datumPrihodnjost = new Date(2023, 8, 20, 10, 0, 0)
+    const trenutniDatum = new Date();
 
-        const razlikaMedDnevi = Date_oddaljenost_v_dneh(datumPreteklost)
-        const razlikaMedDnevi2 = Date_oddaljenost_v_dneh(datumPrihodnjost)
-        expect(razlikaMedDnevi).toEqual(2);
-        expect(razlikaMedDnevi2).toEqual(-3);
-    });
+    //želimo preveriti funkcijo za datum, ki je 5 dni v prihodnosti
+    const ciljniDatum = new Date(trenutniDatum);
+    const ciljniDatum2 = new Date(trenutniDatum);
+    ciljniDatum.setDate(trenutniDatum.getDate() + 5);
+    ciljniDatum2.setDate(trenutniDatum.getDate() - 5);
+    const razlikaVDneh = Date_oddaljenost_v_dneh(ciljniDatum);
+    const razlikaVDneh2 = Date_oddaljenost_v_dneh(ciljniDatum2);
+
+
+    // Preverimo, ali je razlika v dneh pravilno izračunana
+    expect(razlikaVDneh).toEqual(5);
+    expect(razlikaVDneh2).toEqual(-5);
+  });
   it('Date_ime_dneva() mora vrniti dan v pravilnem prevodu ', () => {
     const dan = new Date(2023, 8, 16, 10, 0, 0)
     expect(Date_ime_dneva(dan)).toEqual('sobota')
@@ -27,10 +30,10 @@ describe('utils: unit tests za Date.ts', () => {
 
   it('Date_datumStr() mora vrniti pravi format ure glede na boolean parameter ', () => {
     const dan1 = new Date('   2023-09-16   ');
-    const dan2 = new Date('2023-09-16T05:30:00');
-    // TODO: TUKAJ MI FEJLA TEST, ZAMIK DNEVA ZA 1!!
-    expect(Date_datumStr(dan1, true)).toEqual('2023-09-15')
-    expect(Date_datumStr(dan2, false)).toEqual('16.9.2023')
+    const dan2 = new Date('2023-09-16T23:30:00');
+
+    expect(Date_datumStr(dan1)).toEqual('16.9.2023')
+    expect(Date_datumStr(dan2)).toEqual('16.9.2023')
   });
   it('Date_dodaj() mora dodati pravilno število dni ', () => {
     const dan = new Date('2023-09-16');
