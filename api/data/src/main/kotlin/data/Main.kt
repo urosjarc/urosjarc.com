@@ -212,6 +212,6 @@ data class Omega(val fileName: String, val skip: Int, val end: Int) {
 }
 
 fun main() {
-    val omega = Omega("test.zip", 4, 40)
+    val omega = Omega("Omega11.zip", 7, 40)
     omega.parse()
 }
