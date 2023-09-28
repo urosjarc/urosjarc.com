@@ -7,7 +7,7 @@ plugins {
 }
 
 application {
-    this.mainClass.set("data.gui.App")
+    this.mainClass.set("data.gui.Main")
 }
 
 javafx {

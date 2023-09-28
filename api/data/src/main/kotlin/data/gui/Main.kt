@@ -1,20 +1,19 @@
 package data.gui
 
+import core.base.App
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.stage.Stage
+import java.io.File
 
-class App : Application() {
+class Main : Application() {
 
     override fun start(stage: Stage) {
-        val fxmlLoader = FXMLLoader(App::class.java.getResource("/gui/app.fxml"))
+        App.pripravi_DI()
+        val fxmlLoader = FXMLLoader(Main::class.java.getResource("/gui/main.fxml"))
         val scene = Scene(fxmlLoader.load())
         stage.scene = scene
         stage.show()
     }
-}
-
-fun main() {
-    Application.launch(App::class.java)
 }

@@ -1,6 +1,8 @@
-package data
+package data.extend
 
 import com.google.cloud.vision.v1.EntityAnnotation
+import data.domain.MinMax
+import data.domain.Vector
 
 fun EntityAnnotation.xy(): Vector<MutableList<Int>> {
     val xs = mutableListOf<Int>()

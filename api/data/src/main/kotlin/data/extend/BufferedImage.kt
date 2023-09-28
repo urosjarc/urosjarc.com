@@ -1,7 +1,9 @@
-package data
+package data.extend
 
 import com.google.cloud.vision.v1.EntityAnnotation
 import com.recognition.software.jdeskew.ImageDeskew
+import data.domain.BoundBox
+import data.domain.Pixel
 import net.coobird.thumbnailator.Thumbnails
 import net.sourceforge.tess4j.util.ImageHelper
 import java.awt.BorderLayout
