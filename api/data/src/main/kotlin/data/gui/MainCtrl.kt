@@ -6,9 +6,12 @@ import javafx.collections.FXCollections.observableArrayList
 import javafx.fxml.FXML
 import javafx.scene.control.*
 import javafx.scene.control.cell.TreeItemPropertyValueFactory
+import kotlinx.coroutines.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.io.File
+import kotlin.math.absoluteValue
+import kotlin.math.roundToInt
 
 data class Node(
     val name: String,
@@ -22,6 +25,9 @@ class MainCtrl : KoinComponent {
 
     @FXML
     lateinit var zip_files: ListView<File>
+
+    @FXML
+    lateinit var napredek: ProgressBar
 
     @FXML
     lateinit var zvezki: TreeTableView<Node>
@@ -41,13 +47,36 @@ class MainCtrl : KoinComponent {
         this.zip_files.items = observableArrayList(files)
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     @FXML
-    private fun zip_files_clicked() {
-        val zipFile = this.zip_files.selectionModel.selectedItem
-        for(slika in this.najdi_vse_zip_slike.zdaj(zipFile)){
-            println("${slika.width} ${slika.height}")
+    private fun zip_files_clicked() = GlobalScope.launch(Dispatchers.Main) { // launch coroutine in the main thread
+        napredek.progress = 0.0
+
+        val zipFile = zip_files.selectionModel.selectedItem
+        val widths = mutableListOf<Int>()
+        val heights = mutableListOf<Int>()
+
+        for (zipSlika in najdi_vse_zip_slike.zdaj(zipFile)) {
+            widths.add(zipSlika.img.width)
+            heights.add(zipSlika.img.height)
+            if (zipSlika.index % 5 == 0) {
+                napredek.progress = zipSlika.index / zipSlika.size.toDouble()
+                delay(1)
+            }
         }
 
+        val aveWidth = widths.average()
+        val aveHeight = heights.average()
+
+        val aveDiffWidth = widths.map { (it - aveWidth).absoluteValue }.average().roundToInt()
+        val aveDiffHeight = heights.map { (it - aveHeight).absoluteValue }.average().roundToInt()
+
+        info.text = """
+            Width: ${aveWidth} +- ${aveDiffWidth} (${widths.min()}, ${widths.max()})
+            Height: ${aveHeight} +- ${aveDiffHeight} (${heights.min()}, ${heights.max()})
+        """.trimIndent()
+
+        napredek.progress = 0.0
     }
 
     private fun zvezki_update() {
