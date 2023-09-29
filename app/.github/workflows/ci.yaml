@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - development
+  pull_request:
+    branches:
+      - development
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Preveri repozitorij
+        uses: actions/checkout@v2
+
+      - name: Namesti odvisnosti
+        run: npm install
+
+      - name: Zaženi teste
+        run: npm test
