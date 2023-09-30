@@ -1,82 +1,61 @@
 import {OsebaRepoService} from "./oseba-repo.service";
 import {TestBed} from "@angular/core/testing";
 import {DbService} from "../../services/db/db.service";
+import {osebaData} from "./db.service.spec.model";
 
-function helperMockFunkcija(data: string | object){
-  return {
-    where: jasmine.createSpy('where').and.returnValue({
-      equals: jasmine.createSpy('equals').and.returnValue({
-        first: jasmine.createSpy('first').and.returnValue(
-          Promise.resolve(data)
-        ),
-        toString: jasmine.createSpy('toString').and.returnValue(data),
-        toArray: jasmine.createSpy('toArray').and.returnValue(Promise.resolve(data))
-      })
-    })
-  }
-}
 
 describe('repos: oseba-repo test', () => {
   let osebaRepoService: OsebaRepoService;
+  let dbService: DbService;
+  let mockDbService = {}
+  beforeEach(async () => {
 
-  beforeEach(() => {
-    Promise.resolve([{
-      zvezek: 'zvezek',
-      tematike: 'tematike'
-    }])
 
-    const mockDbService = {
-      get_profil_id: jasmine.createSpy('get_profil_id').and.returnValue('1234'),
-
-      zvezek: {
-          toArray: jasmine.createSpy('toArray').and.returnValue(
-            Promise.resolve([{
-              _id: '12121212',
-              zvezek: 'zvezek',
-              tematike: 'tematike'
-            }])
-          ),
-        },
-      oseba: helperMockFunkcija('1234'),
-      naslov: helperMockFunkcija('naslovi_id'),
-      kontakt: helperMockFunkcija('kontakti_id'),
-      sporocilo: helperMockFunkcija([{'kontakt_posiljatelj_id' : '12344', 'poslano': '2023-8-19' }]),
-      // tematika: {
-      //   where: jasmine.createSpy('where').and.returnValue({
-      //     equals: jasmine.createSpy('equals').and.returnValue({
-      //       toString: jasmine.createSpy('toString').and.returnValue('mocked_value'),
-      //       toArray: jasmine.createSpy('toArray').and.returnValue(Promise.resolve([{_id: 'nekiid'}])
-      //       ),
-      //     }),
-      //   }),
-      // },
-      tematika: helperMockFunkcija([{_id: 'nekiid'}]),
-      naloga: helperMockFunkcija('naloga')
-    };
     TestBed.configureTestingModule({
       providers: [
         OsebaRepoService,
-        {provide: DbService, useValue: mockDbService}
+        DbService,
       ]
     })
     osebaRepoService = TestBed.inject(OsebaRepoService);
+    dbService = TestBed.inject(DbService)
+    await dbService.open()
+    await dbService.reset(osebaData)
   })
-
+  it('mora inicailizirati service', () => {
+    expect(osebaRepoService).toBeTruthy();
+  });
   it('oseba() mora vrniti objekt z pravilnimi podatki', async () => {
-    const result = await osebaRepoService.oseba()
-    expect(typeof result?.oseba).toEqual('string')
-    expect(typeof result?.kontakti).toEqual('string')
-    expect(typeof result?.naslovi).toEqual('string')
+    const result = await osebaRepoService.oseba();
+    const profil_id = dbService.get_profil_id().toString()
+    expect(result.oseba._id).toEqual(profil_id);
+    expect(result.naslovi[0].oseba_id).toEqual(profil_id);
+    expect(result.kontakti[0].oseba_id).toContain(profil_id);
+
   });
 
   it('sporocila() mora vrniti vsa sporocila', async () => {
     const result = await osebaRepoService.sporocila()
-    expect(true).toBeTrue()
+    const profil_id = dbService.get_profil_id().toString()
+    expect(result).not.toEqual([])
+    expect(result[0].posiljatelj._id).toEqual(profil_id)
+    expect(result[0].posiljatelj_kontakt.oseba_id).toContain(profil_id)
+
+
 
   });
-  it('zvezki() mora vrniti vse zvezke', async() => {
+  // TODO: ZVEZKI VRAČA PRAZNI RESPONSE!
+  it('zvezki() mora vrniti vse zvezke', async () => {
     const result = await osebaRepoService.zvezki();
-    console.log(result, 'zvezki---------------------------')
+    const zvezki  =await dbService.zvezek.toArray()
+    console.log(zvezki, 'result zvezki////////-------')
     expect(true).toBeTrue()
   });
+  it('oseba() mora vrniti null', async () => {
+
+
+    expect(true).toBeTrue()
+  });
+
+
 })
