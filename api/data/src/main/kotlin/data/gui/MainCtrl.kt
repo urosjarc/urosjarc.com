@@ -1,25 +1,35 @@
 package data.gui
 
+import data.domain.ZipSlika
+import data.extend.deskew
+import data.extend.save
 import data.services.ResouceService
 import data.use_cases.Najdi_vse_zip_slike
 import javafx.collections.FXCollections.observableArrayList
 import javafx.fxml.FXML
 import javafx.scene.control.*
 import javafx.scene.control.cell.TreeItemPropertyValueFactory
+import javafx.scene.image.Image
+import javafx.scene.image.ImageView
 import kotlinx.coroutines.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.io.File
+import java.nio.file.Paths
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
-data class Node(
-    val name: String,
-    val test: String,
-)
 
+data class Node(
+    val file: File,
+) {
+    val name: String get() = this.file.name
+}
+
+@OptIn(DelicateCoroutinesApi::class)
 class MainCtrl : KoinComponent {
 
+    val zip_slike = mutableListOf<ZipSlika>()
     val resouceService: ResouceService by this.inject()
     val najdi_vse_zip_slike: Najdi_vse_zip_slike by this.inject()
 
@@ -36,73 +46,197 @@ class MainCtrl : KoinComponent {
     lateinit var info: TextArea
 
     @FXML
-    fun initialize() {
-        this.zip_files_update()
-        this.zvezki_update()
-        this.info_update()
-    }
+    lateinit var zacni: Button
 
-    private fun zip_files_update() {
+    @FXML
+    lateinit var prekini: Button
+
+    @FXML
+    lateinit var logs: TextArea
+
+    @FXML
+    lateinit var slika: ImageView
+
+    @FXML
+    lateinit var potrdi: Button
+
+    @FXML
+    lateinit var rotacija: Slider
+
+    @FXML
+    fun initialize() {
+        /**
+         * Fill tree
+         */
+        val fileCol: TreeTableColumn<Node, String> = TreeTableColumn("File")
+        fileCol.cellValueFactory = TreeItemPropertyValueFactory("name");
+        this.zvezki.columns.addAll(fileCol)
+
+        /**
+         * Fill zvezki
+         */
         val files = resouceService.najdi_zip_datoteke()
         this.zip_files.items = observableArrayList(files)
+
+        this.rotacija.valueProperty().addListener { observable, oldValue, newValue ->
+            this.rotacija_done()
+        }
+
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     @FXML
     private fun zip_files_clicked() = GlobalScope.launch(Dispatchers.Main) { // launch coroutine in the main thread
         napredek.progress = 0.0
 
+        /**
+         * Getting zip file
+         */
         val zipFile = zip_files.selectionModel.selectedItem
-        val widths = mutableListOf<Int>()
-        val heights = mutableListOf<Int>()
 
+        /**
+         * Getting images
+         */
+        zip_slike.clear()
         for (zipSlika in najdi_vse_zip_slike.zdaj(zipFile)) {
-            widths.add(zipSlika.img.width)
-            heights.add(zipSlika.img.height)
+            zip_slike.add(zipSlika)
             if (zipSlika.index % 5 == 0) {
                 napredek.progress = zipSlika.index / zipSlika.size.toDouble()
                 delay(1)
             }
         }
 
-        val aveWidth = widths.average()
-        val aveHeight = heights.average()
+        /**
+         * Display results
+         */
+        info_update()
+        zvezki_update(zipFile)
 
-        val aveDiffWidth = widths.map { (it - aveWidth).absoluteValue }.average().roundToInt()
-        val aveDiffHeight = heights.map { (it - aveHeight).absoluteValue }.average().roundToInt()
-
-        info.text = """
-            Width: ${aveWidth} +- ${aveDiffWidth} (${widths.min()}, ${widths.max()})
-            Height: ${aveHeight} +- ${aveDiffHeight} (${heights.min()}, ${heights.max()})
-        """.trimIndent()
 
         napredek.progress = 0.0
+        zacni.isDisable = false
+        prekini.isDisable = false
     }
 
-    private fun zvezki_update() {
-        val zvezkiRoot = TreeItem(Node("root", "root"))
-        val child1 = TreeItem(Node("name2", "test2"))
-        val child2 = TreeItem(Node("name3", "test3"))
+    private fun alert(msg: String) {
+        this.logs.text += "!!! $msg\n"
+    }
 
-        zvezkiRoot.isExpanded = true
-        child1.children.setAll(child2)
-        zvezkiRoot.children.setAll(child1)
+    private fun info(msg: String) {
+        this.logs.text += "... $msg\n"
+    }
 
-        val fileNameCol: TreeTableColumn<Node, String> = TreeTableColumn("Name")
-        val lastModifiedCol: TreeTableColumn<Node, String> = TreeTableColumn("Test")
+    @FXML
+    private fun zacni_clicked() = GlobalScope.launch(Dispatchers.Main) {
+        val root = zvezki.root
 
-        fileNameCol.cellValueFactory = TreeItemPropertyValueFactory("name");
-        lastModifiedCol.cellValueFactory = TreeItemPropertyValueFactory("test");
+        /**
+         * Ustvarjanje osnovnega direktorija
+         */
+        if (root.value == null) {
+            return@launch alert("Root je prazen.")
+        } else if (!root.value.file.exists()) {
+            info("Zvezek dir ne obstaja.")
+            if (root.value.file.mkdir()) {
+                info("Zvezek dir se je ustvaril.")
+            } else {
+                return@launch alert("Zvezek dir se ni ustvaril!")
+            }
+        } else {
+            info("Zvezek dir obstaja.")
+        }
 
-        this.zvezki.columns.addAll(fileNameCol, lastModifiedCol)
-        this.zvezki.root = zvezkiRoot
-        this.zvezki.isEditable = true
+        info("Struktura je pripravljena na parsanje")
+        potrdi_clicked()
+    }
 
+    @FXML
+    private fun prekini_clicked() {
+        info("prekini")
+
+    }
+
+    @FXML
+    private fun rotacija_done() {
+        println("rotacija done ${this.rotacija.value}")
+    }
+
+    @FXML
+    private fun potrdi_clicked() {
+        val rootNode = this.zvezki.root.value
+        val lastNode = this.zvezki.root.children.lastOrNull()
+        val index = ((lastNode?.value?.name?.toInt() ?: 0) + 1)
+        val stranDir = File(rootNode.file, "$index")
+        val newNode = Node(stranDir)
+
+        if (stranDir.mkdir()) {
+            info("Stran ${stranDir.name} se je ustvarila.")
+        }
+
+        val image = zip_slike[index - 1]
+        val imageFile = File(stranDir, "stran.png")
+
+        val bufferedImage = image.img.deskew()
+        bufferedImage.save(imageFile)
+        slika.image = Image(imageFile.inputStream())
+
+        this.zvezki.root.children.add(TreeItem(newNode))
+        this.zvezki.root = this.zvezki.root
     }
 
     private fun info_update() {
+        /**
+         * Image statistics
+         */
+        val widths = mutableListOf<Int>()
+        val heights = mutableListOf<Int>()
+        zip_slike.forEach { zipSlika ->
+            widths.add(zipSlika.img.width)
+            heights.add(zipSlika.img.height)
+        }
+        val aveWidth = widths.average()
+        val aveHeight = heights.average()
+        val aveDiffWidth = widths.map { (it - aveWidth).absoluteValue }.average().roundToInt()
+        val aveDiffHeight = heights.map { (it - aveHeight).absoluteValue }.average().roundToInt()
 
-        this.info.text = "asdfasdfsadfsdf"
+        /**
+         * Allready parsed tree
+         */
+
+
+        info.text = """
+            Size: ${zip_slike.size}
+            Width: ${aveWidth} +- ${aveDiffWidth} (${widths.min()}, ${widths.max()})
+            Height: ${aveHeight} +- ${aveDiffHeight} (${heights.min()}, ${heights.max()})
+        """.trimIndent()
+    }
+
+    private fun zvezki_update(zipFile: File) {
+        val zvezekDir = Paths.get(zipFile.absolutePath, "../${zipFile.nameWithoutExtension}").normalize().toFile()
+
+        val root = TreeItem(Node(zvezekDir))
+
+        val cakalnica = mutableListOf<TreeItem<Node>>(root)
+        while (cakalnica.isNotEmpty()) {
+            val pacient = cakalnica.removeAt(0)
+            pacient.isExpanded = true
+
+            val files = pacient.value.file.listFiles()
+
+            if (files != null) {
+                if (files.isEmpty()) continue
+            } else continue
+
+            for (file in files) {
+                val otrok = TreeItem(Node(file))
+                pacient.children.add(otrok)
+                if (file.isDirectory) cakalnica.add(otrok)
+            }
+        }
+
+        root.children.sortBy { it.value.name.padStart(5, '0') }
+
+        this.zvezki.root = root
 
     }
+
 }

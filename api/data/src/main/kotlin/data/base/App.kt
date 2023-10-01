@@ -2,6 +2,7 @@ package core.base
 
 import data.services.ResouceService
 import data.use_cases.Najdi_vse_zip_slike
+import kotlinx.serialization.json.Json
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.core.module.dsl.factoryOf
@@ -17,6 +18,9 @@ object App {
                 rootDir = File("src/main/resources"),
                 zvezkiDir = File("src/main/resources/zvezki")
             )
+        }
+        this.single<Json> {
+            Json { prettyPrint = true }
         }
 
         this.factoryOf(::Najdi_vse_zip_slike)
