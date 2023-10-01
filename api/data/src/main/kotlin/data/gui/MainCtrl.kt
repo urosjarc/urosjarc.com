@@ -12,10 +12,13 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import kotlinx.coroutines.*
+import net.sourceforge.tess4j.util.ImageHelper
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.awt.image.BufferedImage
 import java.io.File
 import java.nio.file.Paths
+import javax.imageio.ImageIO
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
@@ -29,6 +32,7 @@ data class Node(
 @OptIn(DelicateCoroutinesApi::class)
 class MainCtrl : KoinComponent {
 
+    var trenutnaSlika = BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)
     val zip_slike = mutableListOf<ZipSlika>()
     val resouceService: ResouceService by this.inject()
     val najdi_vse_zip_slike: Najdi_vse_zip_slike by this.inject()
@@ -77,10 +81,6 @@ class MainCtrl : KoinComponent {
          */
         val files = resouceService.najdi_zip_datoteke()
         this.zip_files.items = observableArrayList(files)
-
-        this.rotacija.valueProperty().addListener { observable, oldValue, newValue ->
-            this.rotacija_done()
-        }
 
     }
 
@@ -157,7 +157,11 @@ class MainCtrl : KoinComponent {
 
     @FXML
     private fun rotacija_done() {
-        println("rotacija done ${this.rotacija.value}")
+        val lastNode = this.zvezki.root.children.lastOrNull()
+        val newFile = File(lastNode?.value?.file, "popravljena.png")
+        val imgNew = ImageHelper.rotateImage(this.trenutnaSlika, rotacija.value) // rotateImage static method
+        imgNew.save(newFile)
+        slika.image = Image(newFile.inputStream())
     }
 
     @FXML
@@ -173,11 +177,16 @@ class MainCtrl : KoinComponent {
         }
 
         val image = zip_slike[index - 1]
-        val imageFile = File(stranDir, "stran.png")
+        val imageFile = File(stranDir, "original.png")
+        val tmpFile = File(stranDir, "popravljena.png")
 
-        val bufferedImage = image.img.deskew()
-        bufferedImage.save(imageFile)
-        slika.image = Image(imageFile.inputStream())
+        this.trenutnaSlika = image.img
+        this.trenutnaSlika.save(imageFile)
+
+        val popravljena = image.img.deskew()
+        popravljena.save(tmpFile)
+
+        slika.image = Image(tmpFile.inputStream())
 
         this.zvezki.root.children.add(TreeItem(newNode))
         this.zvezki.root = this.zvezki.root
