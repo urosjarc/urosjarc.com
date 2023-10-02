@@ -18,7 +18,6 @@ import org.koin.core.component.inject
 import java.awt.image.BufferedImage
 import java.io.File
 import java.nio.file.Paths
-import javax.imageio.ImageIO
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
@@ -68,6 +67,26 @@ class MainCtrl : KoinComponent {
     lateinit var rotacija: Slider
 
     @FXML
+    lateinit var resetiraj: Button
+
+    @FXML
+    lateinit var rotacijaLabel: Label
+
+    @FXML
+    lateinit var margin: Slider
+
+    @FXML
+    fun resetiraj_clicked() {
+        val lastNode = this.zvezki.root.children.lastOrNull()
+        val newFile = File(lastNode?.value?.file, "popravljena.png")
+        val imgNew = this.trenutnaSlika.deskew()
+        val mar = margin.value.toInt()
+        val marImage = imgNew.getSubimage(mar, mar,imgNew.width - 2*mar, imgNew.height-2*mar)
+        marImage.save(newFile)
+        slika.image = Image(newFile.inputStream())
+    }
+
+    @FXML
     fun initialize() {
         /**
          * Fill tree
@@ -81,6 +100,12 @@ class MainCtrl : KoinComponent {
          */
         val files = resouceService.najdi_zip_datoteke()
         this.zip_files.items = observableArrayList(files)
+
+        this.rotacija.valueProperty().addListener { observable, oldValue, newValue ->
+            val rot = "%.2f°".format(this.rotacija.value)
+            val mar = "%.2fpx".format(this.margin.value)
+            rotacijaLabel.text = "Rotacija: $rot, Margin: $mar"
+        }
 
     }
 
@@ -156,11 +181,21 @@ class MainCtrl : KoinComponent {
     }
 
     @FXML
+    private fun margin_done(){
+        prepare_img()
+    }
+    @FXML
     private fun rotacija_done() {
+        prepare_img()
+    }
+
+    private fun prepare_img() {
         val lastNode = this.zvezki.root.children.lastOrNull()
         val newFile = File(lastNode?.value?.file, "popravljena.png")
-        val imgNew = ImageHelper.rotateImage(this.trenutnaSlika, rotacija.value) // rotateImage static method
-        imgNew.save(newFile)
+        val imgNew = ImageHelper.rotateImage(this.trenutnaSlika, rotacija.value)
+        val mar = margin.value.toInt()
+        val marImage = imgNew.getSubimage(mar, mar,imgNew.width - 2*mar, imgNew.height-2*mar)
+        marImage.save(newFile)
         slika.image = Image(newFile.inputStream())
     }
 
