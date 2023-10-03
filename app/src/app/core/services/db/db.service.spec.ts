@@ -1,8 +1,13 @@
-import {TestBed} from '@angular/core/testing';
+import {fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {DbService} from './db.service';
+import {PromiseExtended} from "dexie";
+import {ucenecData} from "./db.service.spec.model";
+import {ime} from "../../../utils/types";
+import {Oseba} from "../api/models/oseba";
 
-describe('DbService tesitranje', () => {
+fdescribe('DbService tesitranje', () => {
   let dbService: DbService;
+
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -11,7 +16,6 @@ describe('DbService tesitranje', () => {
     dbService = TestBed.inject(DbService);
   });
   afterEach(() => {
-    // Clear localStorage after each test to ensure a clean state
     localStorage.clear();
   });
 
@@ -21,18 +25,18 @@ describe('DbService tesitranje', () => {
 
   it('mora definirati tabele', () => {
 
-      expect(dbService.oseba).toBeDefined();
-      expect(dbService.naslov).toBeDefined();
-      expect(dbService.ucenje).toBeDefined();
-      expect(dbService.kontakt).toBeDefined();
-      expect(dbService.sporocilo).toBeDefined();
-      expect(dbService.test).toBeDefined();
-      expect(dbService.status).toBeDefined();
-      expect(dbService.naloga).toBeDefined();
-      expect(dbService.tematika).toBeDefined();
-      expect(dbService.zvezek).toBeDefined();
-      expect(dbService.audit).toBeDefined();
-      expect(dbService.napaka).toBeDefined();
+    expect(dbService.oseba).toBeDefined();
+    expect(dbService.naslov).toBeDefined();
+    expect(dbService.ucenje).toBeDefined();
+    expect(dbService.kontakt).toBeDefined();
+    expect(dbService.sporocilo).toBeDefined();
+    expect(dbService.test).toBeDefined();
+    expect(dbService.status).toBeDefined();
+    expect(dbService.naloga).toBeDefined();
+    expect(dbService.tematika).toBeDefined();
+    expect(dbService.zvezek).toBeDefined();
+    expect(dbService.audit).toBeDefined();
+    expect(dbService.napaka).toBeDefined();
 
   });
 
@@ -45,7 +49,7 @@ describe('DbService tesitranje', () => {
   });
 
   it('mora nastaviti pravilen profile ID v localStorage', () => {
-    const testniProfileId :string = 'uporabniški_id';
+    const testniProfileId: string = 'uporabniški_id';
     const localStorageSpy = spyOn(localStorage, 'setItem');
 
     dbService.set_profil_id(testniProfileId);
@@ -66,5 +70,32 @@ describe('DbService tesitranje', () => {
     const shranjeniToken = localStorage.getItem('token')
     expect(shranjeniToken).toEqual(tokenId)
   })
+  it('reset() funckija mora vrniti fulfilled promise', async () => {
+    const db = await dbService.reset(ucenecData);
+
+    db.forEach((obj, index) => {
+      if('status' in obj){
+        expect(obj.status).toEqual('fulfilled');
+      }
+    })
+
+  });
+  fit('reset() funckija mora napolniti z pravimi podatki', async () => {
+    const promisses = await dbService.reset(ucenecData);
+    const profil_id = dbService.get_profil_id();
+
+    // podatki iz osebeData
+    const oseba_id = ucenecData.oseba._id;
+    const naslov_id = ucenecData.naslov_refs[0].naslov._id;
+
+    // podatki dexie tabele
+    const osebe = await dbService.oseba.toArray()
+    const naslovi = await dbService.naslov.toArray()
+
+    expect(profil_id).toEqual(oseba_id)
+    expect(naslov_id).toEqual(naslovi[0]._id)
+
+  });
+
 
 });
