@@ -1,5 +1,4 @@
 import {ComponentFixture, TestBed} from "@angular/core/testing";
-import {FormFieldEmailComponent} from "../form-fields/form-field-email/form-field-email.component";
 import {MatInputModule} from "@angular/material/input";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatIconModule} from "@angular/material/icon";
@@ -40,7 +39,6 @@ describe('Parts / Table komponenta testi', () => {
   });
 
   it('mora inicializirati dataSource instance v ngAfterViewInit', () => {
-    // component.ngAfterViewInit();
     fixture.detectChanges()
     expect(component.dataSource.paginator).toBeDefined();
     expect(component.dataSource.sort).toBeDefined();

@@ -1,11 +1,8 @@
-import {fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {DbService} from './db.service';
-import {PromiseExtended} from "dexie";
 import {ucenecData} from "./db.service.spec.model";
-import {ime} from "../../../utils/types";
-import {Oseba} from "../api/models/oseba";
 
-fdescribe('DbService tesitranje', () => {
+describe('DbService tesitranje', () => {
   let dbService: DbService;
 
 
@@ -80,21 +77,17 @@ fdescribe('DbService tesitranje', () => {
     })
 
   });
-  fit('reset() funckija mora napolniti z pravimi podatki', async () => {
-    const promisses = await dbService.reset(ucenecData);
+  it('reset() funckija mora napolniti z pravimi podatki', async () => {
     const profil_id = dbService.get_profil_id();
 
-    // podatki iz osebeData
     const oseba_id = ucenecData.oseba._id;
     const naslov_id = ucenecData.naslov_refs[0].naslov._id;
-
-    // podatki dexie tabele
-    const osebe = await dbService.oseba.toArray()
-    const naslovi = await dbService.naslov.toArray()
+    const naslov_length = ucenecData.naslov_refs.length
+    const naslovi_db = await dbService.naslov.toArray()
 
     expect(profil_id).toEqual(oseba_id)
-    expect(naslov_id).toEqual(naslovi[0]._id)
-
+    expect(naslov_id).toEqual(naslovi_db[0]._id)
+    expect(naslovi_db.length).toEqual(naslov_length)
   });
 
 

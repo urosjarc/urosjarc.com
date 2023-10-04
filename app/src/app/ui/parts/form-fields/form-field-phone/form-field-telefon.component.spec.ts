@@ -29,17 +29,8 @@ describe('parts/form-field-telefon testiranje', () => {
   it('mora inicializirati komponento', () => {
     expect(component).toBeTruthy();
   })
-  // TODO: NAREDITI TEST CASE ZA ISKANJE PROPERTY VALIDATORJA ZA pattern in minLength
-  // it('mora inicializirati formControl z ustreznimi validatorji', () => {
-  //   expect(component.formControl.hasValidator(Validators.required)).toBeTrue();
-  //   const validators = component.formControl.validator && component.formControl.validator(new FormControl())
-  //   const minLengthValidator = validators?.hasOwnProperty('pattern()');
-  //   console.log(validators, 'validatorji-----------------')
-  //   expect(minLengthValidator).toBeTruthy();
-  //
-  // })
 
-  it('mora klicati getErrrorMessage ob nustreznem formControlu', () => {
+  it('mora klicati getErrrorMessage ob neustreznem formControlu', () => {
     const spy = spyOn(component, 'getErrorMessage');
     component.formControl.invalid;
     fixture.detectChanges();
@@ -51,7 +42,7 @@ describe('parts/form-field-telefon testiranje', () => {
     expect(component.getErrorMessage()).toMatch(formatErrorja);
 
   })
-  it('mora vrniti pravi format errorja ob neveljavnem telefnski številki', () => {
+  it('mora vrniti pravi format errorja ob neveljavnem telefonski številki', () => {
     component.formControl.setErrors({'minLength': true});
     expect(component.getErrorMessage()).toMatch(formatErrorja);
   })

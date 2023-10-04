@@ -24,4 +24,9 @@ describe('Parts/ progress-bar-loading komponenta tesitranje', () => {
     expect(component).toBeTruthy();
   })
   // TODO: ALI TESTIRATI TUDI INPUTE CLASS-A?
+
+  it('mora inicializirati @inpute', () => {
+    expect(typeof component.loading).toEqual('boolean');
+    expect(typeof component.value).toEqual('number');
+  });
 })

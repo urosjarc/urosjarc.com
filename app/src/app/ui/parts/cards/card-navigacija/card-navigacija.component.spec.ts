@@ -1,26 +1,19 @@
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {CardNavigacijaComponent} from "./card-navigacija.component";
-import {ButtonToolbarComponent} from "../../buttons/button-toolbar/button-toolbar.component";
-import {ToolbarNavigacijaComponent} from "../../toolbars/toolbar-navigacija/toolbar-navigacija.component";
-import {ButtonToolbarModel} from "../../buttons/button-toolbar/button-toolbar.model";
 
-describe('Parts button tests', () => {
-  let fixture: ComponentFixture<CardNavigacijaComponent>;
+describe('Parts  button tests', () => {
+  let fixture : ComponentFixture<CardNavigacijaComponent>;
   let component: CardNavigacijaComponent;
 
   beforeEach(() => {
 
     TestBed.configureTestingModule({
-      imports: [
-        ButtonToolbarComponent,
-        ToolbarNavigacijaComponent
-      ],
-      providers: []
+      imports: [],
+      providers: [
+        CardNavigacijaComponent
+      ]
 
     }).compileComponents()
-
-    // @ts-ignore
-
     fixture = TestBed.createComponent(CardNavigacijaComponent);
     component = fixture.componentInstance;
   })
