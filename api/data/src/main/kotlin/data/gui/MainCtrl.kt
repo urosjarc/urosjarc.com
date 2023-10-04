@@ -1,8 +1,12 @@
 package data.gui
 
+import data.domain.Annotation
 import data.domain.ZipSlika
 import data.extend.deskew
+import data.extend.drawGrid
+import data.extend.negative
 import data.extend.save
+import data.services.OcrService
 import data.services.ResouceService
 import data.use_cases.Najdi_vse_zip_slike
 import javafx.collections.FXCollections.observableArrayList
@@ -35,6 +39,8 @@ class MainCtrl : KoinComponent {
     val zip_slike = mutableListOf<ZipSlika>()
     val resouceService: ResouceService by this.inject()
     val najdi_vse_zip_slike: Najdi_vse_zip_slike by this.inject()
+    val ocrService: OcrService by this.inject()
+    var annotations = listOf<Annotation>()
 
     @FXML
     lateinit var zip_files: ListView<File>
@@ -46,7 +52,7 @@ class MainCtrl : KoinComponent {
     lateinit var zvezki: TreeTableView<Node>
 
     @FXML
-    lateinit var info: TextArea
+    lateinit var info: ListView<String>
 
     @FXML
     lateinit var zacni: Button
@@ -55,10 +61,13 @@ class MainCtrl : KoinComponent {
     lateinit var prekini: Button
 
     @FXML
-    lateinit var logs: TextArea
+    lateinit var logs: ListView<String>
 
     @FXML
     lateinit var slika: ImageView
+
+    @FXML
+    lateinit var slikaOcr: ImageView
 
     @FXML
     lateinit var potrdi: Button
@@ -76,14 +85,27 @@ class MainCtrl : KoinComponent {
     lateinit var margin: Slider
 
     @FXML
+    lateinit var tabs: TabPane
+
+    @FXML
+    lateinit var prepoznava: Tab
+
+    @FXML
+    lateinit var obdelava: Tab
+
+    @FXML
     fun resetiraj_clicked() {
         val lastNode = this.zvezki.root.children.lastOrNull()
-        val newFile = File(lastNode?.value?.file, "popravljena.png")
-        val imgNew = this.trenutnaSlika.deskew()
+        val newFile = File(lastNode?.value?.file, "tmp.png")
+        val deskew = this.trenutnaSlika.deskew()
         val mar = margin.value.toInt()
-        val marImage = imgNew.getSubimage(mar, mar,imgNew.width - 2*mar, imgNew.height-2*mar)
+        val marImage =
+            deskew.second.getSubimage(mar, mar, deskew.second.width - 2 * mar, deskew.second.height - 2 * mar)
+                .negative()
+        marImage.drawGrid()
         marImage.save(newFile)
         slika.image = Image(newFile.inputStream())
+        this.rotacija.value = deskew.first
     }
 
     @FXML
@@ -143,11 +165,11 @@ class MainCtrl : KoinComponent {
     }
 
     private fun alert(msg: String) {
-        this.logs.text += "!!! $msg\n"
+        this.logs.items.add("!!! $msg\n")
     }
 
     private fun info(msg: String) {
-        this.logs.text += "... $msg\n"
+        this.logs.items.add("... $msg\n")
     }
 
     @FXML
@@ -171,7 +193,7 @@ class MainCtrl : KoinComponent {
         }
 
         info("Struktura je pripravljena na parsanje")
-        potrdi_clicked()
+        opravljeno()
     }
 
     @FXML
@@ -181,9 +203,10 @@ class MainCtrl : KoinComponent {
     }
 
     @FXML
-    private fun margin_done(){
+    private fun margin_done() {
         prepare_img()
     }
+
     @FXML
     private fun rotacija_done() {
         prepare_img()
@@ -191,16 +214,16 @@ class MainCtrl : KoinComponent {
 
     private fun prepare_img() {
         val lastNode = this.zvezki.root.children.lastOrNull()
-        val newFile = File(lastNode?.value?.file, "popravljena.png")
+        val newFile = File(lastNode?.value?.file, "tmp.png")
         val imgNew = ImageHelper.rotateImage(this.trenutnaSlika, rotacija.value)
         val mar = margin.value.toInt()
-        val marImage = imgNew.getSubimage(mar, mar,imgNew.width - 2*mar, imgNew.height-2*mar)
+        val marImage = imgNew.getSubimage(mar, mar, imgNew.width - 2 * mar, imgNew.height - 2 * mar).negative()
+        marImage.drawGrid()
         marImage.save(newFile)
         slika.image = Image(newFile.inputStream())
     }
 
-    @FXML
-    private fun potrdi_clicked() {
+    private fun opravljeno() {
         val rootNode = this.zvezki.root.value
         val lastNode = this.zvezki.root.children.lastOrNull()
         val index = ((lastNode?.value?.name?.toInt() ?: 0) + 1)
@@ -213,18 +236,44 @@ class MainCtrl : KoinComponent {
 
         val image = zip_slike[index - 1]
         val imageFile = File(stranDir, "original.png")
-        val tmpFile = File(stranDir, "popravljena.png")
+        val tmpFile = File(stranDir, "tmp.png")
 
         this.trenutnaSlika = image.img
         this.trenutnaSlika.save(imageFile)
 
-        val popravljena = image.img.deskew()
-        popravljena.save(tmpFile)
+        val deskew = image.img.deskew()
+        val img = deskew.second.negative()
+        img.drawGrid()
+        img.save(tmpFile)
 
         slika.image = Image(tmpFile.inputStream())
 
+        this.rotacija.value = deskew.first
         this.zvezki.root.children.add(TreeItem(newNode))
         this.zvezki.root = this.zvezki.root
+    }
+
+    @FXML
+    private fun potrdi_clicked() = GlobalScope.launch(Dispatchers.Main) {
+        val lastNode = zvezki.root.children.lastOrNull()
+        val index = lastNode?.value?.name?.toInt() ?: 0
+
+        val imgNew = ImageHelper.rotateImage(trenutnaSlika, rotacija.value)
+        val mar = margin.value.toInt()
+        val marImage = imgNew.getSubimage(mar, mar, imgNew.width - 2 * mar, imgNew.height - 2 * mar)
+
+        val rootNode = zvezki.root.value
+        val stranDir = File(rootNode.file, "$index")
+        val tmpFile = File(stranDir, "obdelava.png")
+        marImage.save(tmpFile)
+        info("Obdelana slika je shranjena...")
+
+        annotations = ocrService.google(marImage)
+        info("Ocr je prepoznal ${annotations.size} elementov")
+
+        slikaOcr.image = Image(tmpFile.inputStream())
+
+        tabs.selectionModel.select(prepoznava)
     }
 
     private fun info_update() {
@@ -237,21 +286,17 @@ class MainCtrl : KoinComponent {
             widths.add(zipSlika.img.width)
             heights.add(zipSlika.img.height)
         }
-        val aveWidth = widths.average()
-        val aveHeight = heights.average()
+        val aveWidth = widths.average().toInt()
+        val aveHeight = heights.average().toInt()
         val aveDiffWidth = widths.map { (it - aveWidth).absoluteValue }.average().roundToInt()
         val aveDiffHeight = heights.map { (it - aveHeight).absoluteValue }.average().roundToInt()
 
         /**
          * Allready parsed tree
          */
-
-
-        info.text = """
-            Size: ${zip_slike.size}
-            Width: ${aveWidth} +- ${aveDiffWidth} (${widths.min()}, ${widths.max()})
-            Height: ${aveHeight} +- ${aveDiffHeight} (${heights.min()}, ${heights.max()})
-        """.trimIndent()
+        info.items.add("Size: ${zip_slike.size}")
+        info.items.add("Width: ${aveWidth} +- ${aveDiffWidth} (${widths.min()}, ${widths.max()})")
+        info.items.add("Height: ${aveHeight} +- ${aveDiffHeight} (${heights.min()}, ${heights.max()})")
     }
 
     private fun zvezki_update(zipFile: File) {

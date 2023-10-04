@@ -1,5 +1,6 @@
 package core.base
 
+import data.services.OcrService
 import data.services.ResouceService
 import data.use_cases.Najdi_vse_zip_slike
 import kotlinx.serialization.json.Json
@@ -18,6 +19,9 @@ object App {
                 rootDir = File("src/main/resources"),
                 zvezkiDir = File("src/main/resources/zvezki")
             )
+        }
+        this.single<OcrService> {
+            OcrService()
         }
         this.single<Json> {
             Json { prettyPrint = true }

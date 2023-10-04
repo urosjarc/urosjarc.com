@@ -108,9 +108,9 @@ fun BufferedImage.resize(width: Int, height: Int): BufferedImage {
     return Thumbnails.of(this).forceSize(width, height).asBufferedImage()
 }
 
-fun BufferedImage.deskew(): BufferedImage {
+fun BufferedImage.deskew(): Pair<Double, BufferedImage> {
     val imgdeskew = ImageDeskew(this) // BufferedImage img
-    return ImageHelper.rotateImage(this, -imgdeskew.skewAngle) // rotateImage static method
+    return Pair(-imgdeskew.skewAngle, ImageHelper.rotateImage(this, -imgdeskew.skewAngle)) // rotateImage static method
 }
 
 fun BufferedImage.boundBox(xStart: Int, xEnd: Int): BoundBox {
@@ -193,6 +193,23 @@ fun BufferedImage.blackWhite(): BufferedImage {
     return bw
 }
 
+fun BufferedImage.drawGrid(dx: Int = 100, dy: Int = 100, w: Int = 2, color: Color = Color.DARK_GRAY) {
+    for (x in dx..this.width - dx / 2 step dx) {
+        for (y in dy / 2..this.height - dy / 2) {
+            for (i in 0..w) {
+                this.setRGB(x + i, y, color.rgb)
+            }
+        }
+    }
+    for (y in dy..this.height - dy / 2 step dy) {
+        for (x in dx / 2..this.width - dx / 2) {
+            for (i in 0..w) {
+                this.setRGB(x, y + i, color.rgb)
+            }
+        }
+    }
+}
+
 fun BufferedImage.negative(): BufferedImage {
     val bw = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
     for (y in 0 until height) {
@@ -205,6 +222,23 @@ fun BufferedImage.negative(): BufferedImage {
             } else {
                 bw.setRGB(x, y, Color.WHITE.rgb)
             }
+        }
+    }
+    return bw
+}
+
+fun BufferedImage.invert(): BufferedImage {
+    val bw = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
+    for (y in 0 until height) {
+        for (x in 0 until width) {
+            val p = this.getRGB(x, y)
+            var col = Color(p, true)
+            col = Color(
+                255 - col.red,
+                255 - col.green,
+                255 - col.blue
+            )
+            bw.setRGB(x, y, col.rgb)
         }
     }
     return bw

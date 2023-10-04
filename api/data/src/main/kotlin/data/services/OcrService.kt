@@ -1,7 +1,11 @@
 package data.services
 
-import com.google.cloud.vision.v1.*
+import com.google.cloud.vision.v1.AnnotateImageRequest
+import com.google.cloud.vision.v1.Feature
+import com.google.cloud.vision.v1.Image
+import com.google.cloud.vision.v1.ImageAnnotatorClient
 import com.google.protobuf.ByteString
+import data.domain.Annotation
 import net.sourceforge.tess4j.Tesseract
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
@@ -26,7 +30,7 @@ class OcrService {
         return tesseract.doOCR(image)
     }
 
-    fun google(image: BufferedImage): MutableList<EntityAnnotation> {
+    fun google(image: BufferedImage): List<Annotation> {
         val baos = ByteArrayOutputStream()
         ImageIO.write(image, "png", baos)
 
@@ -47,6 +51,30 @@ class OcrService {
         // Print the label annotations for the first response.
         val annons = response.responsesList[0].textAnnotationsList.toMutableList()
         annons.removeAt(0)
-        return annons
+
+        //Mapiraj v domenski objekt
+        return annons.map {
+            val xs = mutableListOf<Int>()
+            val ys = mutableListOf<Int>()
+
+            for (vertex in it.boundingPoly.verticesList) {
+                xs.add(vertex.x)
+                ys.add(vertex.y)
+            }
+
+            val x = xs.min()
+            val X = xs.max()
+            val y = ys.min()
+            val Y = ys.max()
+
+            Annotation(
+                x = x,
+                y = y,
+                width = X - x,
+                height = Y - y,
+                text = it.description,
+                tip = Annotation.Tip.NEZNANO
+            )
+        }
     }
 }
