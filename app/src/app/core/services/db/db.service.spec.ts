@@ -77,9 +77,9 @@ describe('DbService tesitranje', () => {
     })
 
   });
-  it('reset() funckija mora napolniti z pravimi podatki', async () => {
+  it('reset() funckija mora napolniti podatkovo bazo z pravimi podatki', async () => {
+    await dbService.reset(ucenecData);
     const profil_id = dbService.get_profil_id();
-
     const oseba_id = ucenecData.oseba._id;
     const naslov_id = ucenecData.naslov_refs[0].naslov._id;
     const naslov_length = ucenecData.naslov_refs.length

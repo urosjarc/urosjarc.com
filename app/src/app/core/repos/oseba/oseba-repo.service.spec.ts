@@ -3,8 +3,8 @@ import {TestBed} from "@angular/core/testing";
 import {DbService} from "../../services/db/db.service";
 import {ucenecData} from "../../services/db/db.service.spec.model";
 import Ajv from 'ajv';
-import {ucenecOsebaSchema} from "./ucenecSchema";
-import {ucenecSporocilaSchema} from "./ucenecSchema";
+import {ucenecOsebaSchema} from "../scheme/ucenecSchema";
+import {ucenecSporocilaSchema} from "../scheme/ucenecSchema";
 
 describe('repos: oseba-repo test', () => {
   let osebaRepoService: OsebaRepoService;

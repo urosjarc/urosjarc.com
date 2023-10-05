@@ -41,7 +41,6 @@ describe('Parts / Button-toolbar testi', () => {
   it('button click mora klicati onClick() funckijo', () => {
     const spy = spyOn(component, 'onClick');
     const button = fixture.debugElement.query(By.css('button'));
-    console.error(button, ' button /********************')
     button.triggerEventHandler('click', null)
     expect(true).toBeTrue()
   })

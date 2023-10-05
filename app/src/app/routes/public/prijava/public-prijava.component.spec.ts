@@ -18,7 +18,7 @@ import {LoggerTestingModule} from "ngx-logger/testing";
 import {DbService} from "../../../core/services/db/db.service";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
-fdescribe('PublicPrijavaComponent testi', () => {
+describe('PublicPrijavaComponent testi', () => {
     let fixture: ComponentFixture<PublicPrijavaComponent>;
     let component: PublicPrijavaComponent;
     beforeEach(async () => {
@@ -48,7 +48,7 @@ fdescribe('PublicPrijavaComponent testi', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
     })
-    fit('should create', () => {
+    it('should create', () => {
         expect(component).toBeTruthy();
     });
 

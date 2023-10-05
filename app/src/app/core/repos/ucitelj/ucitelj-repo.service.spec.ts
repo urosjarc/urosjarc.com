@@ -3,7 +3,7 @@ import {UciteljRepoService} from "./ucitelj-repo.service";
 import {DbService} from "../../services/db/db.service";
 import {uciteljData} from "../../services/db/db.service.spec.model";
 import Ajv from "ajv";
-import {uciteljTest, uciteljUcenje} from "../oseba/uciteljSchema";
+import {uciteljTest, uciteljUcenje} from "../scheme/uciteljSchema";
 
 
 describe('repos: ucitelj-repo.service testi', () => {

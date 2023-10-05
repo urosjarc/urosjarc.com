@@ -2,7 +2,7 @@ import {UcenecRepoService} from "./ucenec-repo.service";
 import {TestBed} from "@angular/core/testing";
 import {DbService} from "../../services/db/db.service";
 import {ucenecData} from "../../services/db/db.service.spec.model";
-import {ucenecNalogaSchema, ucenecStatusSchema, ucenecTestiSchema} from "../oseba/ucenecSchema";
+import {ucenecNalogaSchema, ucenecStatusSchema, ucenecTestiSchema} from "../scheme/ucenecSchema";
 import Ajv from "ajv";
 
 describe('repos: ucenec-repo test', () => {
