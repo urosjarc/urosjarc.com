@@ -1,8 +1,8 @@
 package data.domain
 
-import com.google.cloud.vision.v1.EntityAnnotation
-import data.extend.xy
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Annotation(
     val x: Int,
     val y: Int,

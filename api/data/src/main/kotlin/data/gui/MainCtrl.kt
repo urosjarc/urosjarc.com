@@ -16,6 +16,8 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import kotlinx.coroutines.*
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import net.sourceforge.tess4j.util.ImageHelper
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -41,6 +43,7 @@ class MainCtrl : KoinComponent {
     val najdi_vse_zip_slike: Najdi_vse_zip_slike by this.inject()
     val ocrService: OcrService by this.inject()
     var annotations = listOf<Annotation>()
+    val json: Json by this.inject()
 
     @FXML
     lateinit var zip_files: ListView<File>
@@ -265,11 +268,14 @@ class MainCtrl : KoinComponent {
         val rootNode = zvezki.root.value
         val stranDir = File(rootNode.file, "$index")
         val tmpFile = File(stranDir, "obdelava.png")
+        val annoFile = File(stranDir, "anotacije.json")
         marImage.save(tmpFile)
         info("Obdelana slika je shranjena...")
 
         annotations = ocrService.google(marImage)
         info("Ocr je prepoznal ${annotations.size} elementov")
+        annoFile.writeText(json.encodeToString(annotations))
+        info("Ocr anotacije so se shranile v $annoFile")
 
         slikaOcr.image = Image(tmpFile.inputStream())
 
