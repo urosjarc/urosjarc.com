@@ -59,7 +59,7 @@ class Sinhroniziraj_bazo_zvezkov(
         return files
     }
 
-    fun zdaj() {
+    fun zdaj(): Boolean {
         val resourceFile = File("../data/src/main/resources")
 
         val zvezki = mutableListOf<Zvezek>()
@@ -72,7 +72,7 @@ class Sinhroniziraj_bazo_zvezkov(
          * resitve dir mora obstajati
          */
         for (zvezek in list(resourceFile) { it.isDirectory }) {
-            if (!File(zvezek, RESITVE).exists()) throw Error("Dir $RESITVE ne obstaja v: $zvezek")
+            if (!File(zvezek, RESITVE).exists()) return false
 
             val zvezek_id = Id<Zvezek>(addId(zvezek))
             zvezki.add(Zvezek(_id = zvezek_id, naslov = zvezek.name.encrypted()))
@@ -145,5 +145,7 @@ class Sinhroniziraj_bazo_zvezkov(
         db.ustvari(tematike)
         db.ustvari(naloge)
         db.ustvari(teorije)
+
+        return true
     }
 }

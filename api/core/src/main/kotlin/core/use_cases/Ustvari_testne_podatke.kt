@@ -47,11 +47,17 @@ class Ustvari_testne_podatke(
     }
 
     fun zdaj(vse: Boolean = false) {
-        this.sinhronizirajBazoZvezkov.zdaj()
+        val bazaZvezekov = this.sinhronizirajBazoZvezkov.zdaj()
 
-        val zvezki = db.zvezki.find().toList().toMutableSet()
-        val tematike = db.tematike.find().toList().toMutableSet()
-        val naloge = db.naloge.find().toList().toMutableSet()
+        var zvezki = mutableSetOf<Zvezek>()
+        var tematike = mutableSetOf<Tematika>()
+        var naloge = mutableSetOf<Naloga>()
+
+        if(bazaZvezekov){
+            zvezki = db.zvezki.find().toList().toMutableSet()
+            tematike = db.tematike.find().toList().toMutableSet()
+            naloge = db.naloge.find().toList().toMutableSet()
+        }
 
         db.sprazni()
 
@@ -125,6 +131,12 @@ class Ustvari_testne_podatke(
             val prejemniki = kontakti.nakljucni(n = 3)
             sporocila += this.ustvari_sporocila(n = 5, posiljatelj = it, prejemniki = prejemniki)
             sporocila += this.ustvari_sporocila(n = 5, posiljatelj = prejemniki.first(), prejemniki = mutableSetOf(it))
+        }
+
+        if(!bazaZvezekov){
+            zvezki = this.ustvari_zvezek(n = 2)
+            zvezki.forEach { tematike += this.ustvari_tematika(n = 3, zvezek = it) }
+            tematike.forEach { naloge += this.ustvari_naloge(n = Random.nextInt(10, 20), tematika = it) }
         }
 
         /**
