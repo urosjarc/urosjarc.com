@@ -12,6 +12,7 @@ import javafx.scene.control.*
 import javafx.scene.control.cell.TreeItemPropertyValueFactory
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
+import javafx.scene.input.MouseEvent
 import kotlinx.coroutines.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -41,6 +42,7 @@ class MainCtrl : KoinComponent {
     val ocrService: OcrService by this.inject()
     val json: Json by this.inject()
     val procesirajSliko: Procesiraj_omego_sliko by this.inject()
+    var obdelanaSlika: BufferedImage = BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)
 
     @FXML
     lateinit var zip_files: ListView<File>
@@ -116,6 +118,8 @@ class MainCtrl : KoinComponent {
         val fileCol: TreeTableColumn<Node, String> = TreeTableColumn("File")
         fileCol.cellValueFactory = TreeItemPropertyValueFactory("name");
         this.zvezki.columns.addAll(fileCol)
+
+        this.slikaOcr.setOnMouseClicked { this.slikaOcr_clicked(event = it) }
 
         /**
          * Fill zvezki
@@ -260,27 +264,31 @@ class MainCtrl : KoinComponent {
 
         val imgNew = ImageHelper.rotateImage(trenutnaSlika, rotacija.value)
         val mar = margin.value.toInt()
-        val marImage = imgNew.getSubimage(mar, mar, imgNew.width - 2 * mar, imgNew.height - 2 * mar)
+        obdelanaSlika = imgNew.getSubimage(mar, mar, imgNew.width - 2 * mar, imgNew.height - 2 * mar)
 
         val rootNode = zvezki.root.value
         val stranDir = File(rootNode.file, "$index")
         val tmpFile = File(stranDir, "obdelava.png")
         val annoFile = File(stranDir, "anotacije.json")
 
-        val annos = ocrService.google(image = marImage).toMutableList()
+        val annos = ocrService.google(image = obdelanaSlika).toMutableList()
         info("Ocr je prepoznal ${annos.size} elementov")
         annoFile.writeText(json.encodeToString(annos))
         info("Ocr anotacije so se shranile v $annoFile")
 
-        val slika = procesirajSliko.zdaj(img=marImage,annos=annos)
-        marImage.drawSlikaAnnotations(slika)
+        val slika = procesirajSliko.zdaj(img = obdelanaSlika, annos = annos)
+        obdelanaSlika.drawSlikaAnnotations(slika)
 
-        marImage.save(tmpFile)
+        obdelanaSlika.save(tmpFile)
         info("Obdelana slika je shranjena...")
 
         slikaOcr.image = Image(tmpFile.inputStream())
 
         tabs.selectionModel.select(prepoznava)
+    }
+
+    fun slikaOcr_clicked(event: MouseEvent) {
+        println(event)
     }
 
     private fun info_update() {
