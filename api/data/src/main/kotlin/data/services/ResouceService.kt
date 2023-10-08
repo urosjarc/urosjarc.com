@@ -10,8 +10,4 @@ class ResouceService(
     fun najdi_zip_datoteke(): List<File> {
         return rootDir.walk().filter { it.isFile && it.extension == "zip" }.toList()
     }
-
-    fun najdi_zvezek(): List<File> {
-        return rootDir.walk().filter { it.isFile && it.extension == "zip" }.toList()
-    }
 }

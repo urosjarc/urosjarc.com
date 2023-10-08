@@ -26,7 +26,7 @@ class OcrService {
         tesseract.setVariable("user_defined_dpi", "300")
     }
 
-    fun tessaract_ocr(image: BufferedImage): String {
+    fun tessaract(image: BufferedImage): String {
         return tesseract.doOCR(image)
     }
 

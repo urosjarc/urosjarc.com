@@ -1,11 +1,13 @@
 package data.extend
 
-import com.google.cloud.vision.v1.EntityAnnotation
 import com.recognition.software.jdeskew.ImageDeskew
+import data.domain.Annotation
 import data.domain.BoundBox
 import data.domain.Pixel
+import data.domain.SlikaAnotations
 import net.coobird.thumbnailator.Thumbnails
 import net.sourceforge.tess4j.util.ImageHelper
+import java.awt.BasicStroke
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.image.BufferedImage
@@ -40,6 +42,24 @@ fun BufferedImage.save(file: File) {
     ImageIO.write(this, "png", file)
 }
 
+fun BufferedImage.drawAnnotations(annotations: Collection<Annotation>, color: Color = Color.CYAN, width: Float = 5.0f) {
+    val g = this.createGraphics()
+    g.color = color
+    g.stroke = BasicStroke(width)
+    for (a in annotations) {
+        g.drawRect(a.x, a.y, a.width, a.height)
+    }
+    g.dispose()
+}
+
+fun BufferedImage.drawSlikaAnnotations(slika: SlikaAnotations) {
+    this.drawAnnotations(slika.footer, Color.BLACK)
+    slika.naloge.forEach { this.drawAnnotations(it, Color.GREEN) }
+    this.drawAnnotations(slika.naslov, Color.BLUE)
+    this.drawAnnotations(slika.head, Color.BLACK)
+    this.drawAnnotations(slika.teorija, Color.RED)
+}
+
 fun BufferedImage.append(img: BufferedImage): BufferedImage {
     val w: Int = Math.max(this.getWidth(), img.getWidth())
     val h: Int = this.getHeight() + img.getHeight()
@@ -51,32 +71,16 @@ fun BufferedImage.append(img: BufferedImage): BufferedImage {
     return combined
 }
 
-fun BufferedImage.averagePixel(entityAnnotation: EntityAnnotation): Pixel {
-    val (xMin, xMax) = entityAnnotation.xMinMax()
-    val (yMin, yMax) = entityAnnotation.yMinMax()
-
+fun BufferedImage.averagePixel(a: Annotation): Pixel {
     val pixels = mutableListOf<Pixel>()
 
-    for (y in yMin..yMax) {
-        for (x in xMin..xMax) {
+    for (y in a.y..a.y_max) {
+        for (x in a.x..a.x_max) {
             val pixel = this.getHSV(x, y)
             if (!pixel.is_white()) pixels.add(pixel)
         }
     }
     return Pixel.average(pixels)
-}
-
-fun BufferedImage.drawAnnotation(entityAnnotation: EntityAnnotation, color: Color) {
-
-    val (xMin, xMax) = entityAnnotation.xMinMax()
-    val (yMin, yMax) = entityAnnotation.yMinMax()
-
-    for (y in yMin..yMax) {
-        for (x in xMin..xMax) {
-
-            this.setRGB(x, y, color.rgb)
-        }
-    }
 }
 
 fun BufferedImage.getHSV(x: Int, y: Int): Pixel {

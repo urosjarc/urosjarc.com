@@ -1,14 +1,11 @@
 package data.gui
 
-import data.domain.Annotation
 import data.domain.ZipSlika
-import data.extend.deskew
-import data.extend.drawGrid
-import data.extend.negative
-import data.extend.save
+import data.extend.*
 import data.services.OcrService
 import data.services.ResouceService
 import data.use_cases.Najdi_vse_zip_slike
+import data.use_cases.Procesiraj_omego_sliko
 import javafx.collections.FXCollections.observableArrayList
 import javafx.fxml.FXML
 import javafx.scene.control.*
@@ -42,8 +39,8 @@ class MainCtrl : KoinComponent {
     val resouceService: ResouceService by this.inject()
     val najdi_vse_zip_slike: Najdi_vse_zip_slike by this.inject()
     val ocrService: OcrService by this.inject()
-    var annotations = listOf<Annotation>()
     val json: Json by this.inject()
+    val procesirajSliko: Procesiraj_omego_sliko by this.inject()
 
     @FXML
     lateinit var zip_files: ListView<File>
@@ -269,13 +266,17 @@ class MainCtrl : KoinComponent {
         val stranDir = File(rootNode.file, "$index")
         val tmpFile = File(stranDir, "obdelava.png")
         val annoFile = File(stranDir, "anotacije.json")
+
+        val annos = ocrService.google(image = marImage).toMutableList()
+        info("Ocr je prepoznal ${annos.size} elementov")
+        annoFile.writeText(json.encodeToString(annos))
+        info("Ocr anotacije so se shranile v $annoFile")
+
+        val slika = procesirajSliko.zdaj(img=marImage,annos=annos)
+        marImage.drawSlikaAnnotations(slika)
+
         marImage.save(tmpFile)
         info("Obdelana slika je shranjena...")
-
-        annotations = ocrService.google(marImage)
-        info("Ocr je prepoznal ${annotations.size} elementov")
-        annoFile.writeText(json.encodeToString(annotations))
-        info("Ocr anotacije so se shranile v $annoFile")
 
         slikaOcr.image = Image(tmpFile.inputStream())
 

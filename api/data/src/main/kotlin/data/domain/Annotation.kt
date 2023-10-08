@@ -9,8 +9,17 @@ data class Annotation(
     val height: Int,
     val width: Int,
     val text: String,
-    val tip: Tip,
+    var tip: Tip,
 ) {
+    enum class Tip { FOOTER, NALOGA, NASLOV, HEAD, NEZNANO, TEORIJA }
 
-    enum class Tip { FOOTER, NALOGA, NASLOV, HEAD, NEZNANO }
+    val x_max: Int get() = this.x + this.width
+
+    val y_max: Int get() = this.y + this.height
+
+    val area: Int get() = this.width * this.height
+
+    val average: Vector<Int> get() = Vector(x = this.x + this.width / 2, y = this.y + this.height / 2)
+
+
 }
