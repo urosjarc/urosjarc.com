@@ -1,7 +1,7 @@
 import {TestBed} from '@angular/core/testing';
 import {DbService} from './db.service';
 import {ucenecData} from "./db.service.spec.model";
-// initial commit
+// initial commit2
 describe('DbService tesitranje', () => {
   let dbService: DbService;
 
