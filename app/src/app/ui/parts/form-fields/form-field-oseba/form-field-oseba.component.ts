@@ -16,13 +16,19 @@ import {NgIf} from "@angular/common";
   ],
   standalone: true
 })
+
 export class FormFieldOsebaComponent {
   @Input() label: string = "Ime in priimek"
-  @Input() formControl = new FormControl('', [Validators.required, Validators.pattern("[a-zA-Z]+\\s+[a-zA-Z]+")]);
+  @Input() formControl = new FormControl('', [Validators.required,
+    Validators.pattern(new RegExp('^\\s*\\p{L}+\\s+\\p{L}+\\s*$', 'u'))
+  ])
+
+
   getErrorMessage() {
     if (this.formControl.hasError('required')) {
       return 'Vnos je obvezen!';
     }
-    return 'Vnos nima dveh veljavnih besed!';
+
+    return 'Vnos nima dveh veljavnih  besed!';
   }
 }

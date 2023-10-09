@@ -28,7 +28,7 @@ export class FormFieldTelefonComponent {
       return 'Telefon je obvezen!';
 
     if (this.formControl.hasError("pattern"))
-      return 'Telefon ni veljaven'
+      return 'Telefon ni veljaven!'
 
     return 'Telefonska je premajhna!'
   }

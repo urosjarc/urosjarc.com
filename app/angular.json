@@ -123,6 +123,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
+            "codeCoverage": true,
             "polyfills": [
               "zone.js",
               "zone.js/testing"
@@ -142,5 +143,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "e01c6c17-369d-480f-8668-3277c89094b1"
   }
 }

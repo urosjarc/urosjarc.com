@@ -4,7 +4,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {DatePipe, NgStyle} from "@angular/common";
 import {MatListModule} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
-import {SporociloModel} from "../../../../assets/models/SporociloModel";
+import {SporociloModel} from "../../../core/domain/SporociloModel";
 import {WindowModel} from "../../../utils/WindowModel";
 
 @Component({
