@@ -20,3 +20,7 @@ Spletna aplikacija za učence, učitelje in inštruktorje.
 # Developerji
 
 @urosjarc @ethernal12 @danilojezernik
+
+# Testerji
+
+@ethernal12
