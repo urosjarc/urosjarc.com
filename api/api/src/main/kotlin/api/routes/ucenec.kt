@@ -5,10 +5,12 @@ import api.extend.profil
 import api.extend.request_info
 import api.request.NapakaReq
 import api.response.AuditRes
-import base.Id
-import domain.*
-import extend.encrypted
-import extend.ime
+import core.base.Id
+import core.domain.*
+import core.extend.encrypted
+import core.extend.ime
+import core.serialization.IdSerializer
+import core.services.DbService
 import io.ktor.resources.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -20,8 +22,6 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
-import serialization.IdSerializer
-import services.DbService
 import si.urosjarc.server.api.response.StatusUpdateReq
 import si.urosjarc.server.api.response.TestUpdateReq
 import kotlin.time.DurationUnit
@@ -41,7 +41,7 @@ class ucenec {
     class test(val parent: ucenec) {
 
         @Resource("{test_id}")
-        class test_id(val parent: test, @Serializable(with=IdSerializer::class) val test_id: Id<Test>) {
+        class test_id(val parent: test, @Serializable(with = IdSerializer::class) val test_id: Id<Test>) {
 
             @Resource("audit")
             class audit(val parent: test_id)
@@ -50,7 +50,7 @@ class ucenec {
             class naloga(val parent: test_id) {
 
                 @Resource("{naloga_id}")
-                class naloga_id(val parent: naloga, @Serializable(with= IdSerializer::class) val naloga_id: Id<Naloga>) {
+                class naloga_id(val parent: naloga, @Serializable(with = IdSerializer::class) val naloga_id: Id<Naloga>) {
 
                     @Resource("audit")
                     class audit(val parent: naloga_id)
@@ -107,7 +107,7 @@ fun Route.ucenec() {
 
         val audit = Audit(
             entitete_id = setOf(profil.oseba_id.vAnyId(), test_id.vAnyId(), it.naloga_id.vAnyId()),
-            tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
+            tip = Audit.Tip.POSODOBITEV_STATUSA_NALOGE,
             trajanje = body.sekund.toDuration(unit = DurationUnit.SECONDS),
             opis = status.tip.name.encrypted(),
             entiteta = ime<Status>().encrypted()
@@ -130,7 +130,7 @@ fun Route.ucenec() {
 
         val audit = Audit(
             entitete_id = setOf(profil.oseba_id.vAnyId(), it.test_id.vAnyId()),
-            tip = Audit.Tip.STATUS_TIP_POSODOBITEV,
+            tip = Audit.Tip.POSODOBITEV_STATUSA_NALOGE,
             trajanje = 0.toDuration(unit = DurationUnit.SECONDS),
             opis = body.datum.toString().encrypted(),
             entiteta = ime<Test>().encrypted()

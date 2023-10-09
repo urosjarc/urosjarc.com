@@ -1,0 +1,7 @@
+<mat-form-field class="w-100" (click)="picker.open()">
+  <mat-label>{{label}}</mat-label>
+  <mat-icon matPrefix>calendar_month</mat-icon>
+  <input matInput [matDatepicker]="picker" [formControl]="formControl" required>
+  <mat-datepicker #picker></mat-datepicker>
+  <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
+</mat-form-field>

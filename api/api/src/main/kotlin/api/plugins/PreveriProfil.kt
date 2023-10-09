@@ -2,9 +2,9 @@ package api.plugins
 
 import api.extend.client_unauthorized
 import api.extend.profil
-import base.Id
-import domain.Oseba
-import extend.ime
+import core.base.Id
+import core.domain.Oseba
+import core.extend.ime
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import kotlinx.serialization.Serializable

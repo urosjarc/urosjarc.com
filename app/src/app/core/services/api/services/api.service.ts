@@ -22,7 +22,9 @@ import { PrijavaReq } from '../models/prijava-req';
 import { PrijavaRes } from '../models/prijava-res';
 import { Profil } from '../models/profil';
 import { StatusUpdateReq } from '../models/status-update-req';
+import { Test } from '../models/test';
 import { TestUpdateReq } from '../models/test-update-req';
+import { TestUstvariReq } from '../models/test-ustvari-req';
 import { UcenecData } from '../models/ucenec-data';
 import { UciteljData } from '../models/ucitelj-data';
 
@@ -746,6 +748,53 @@ export class ApiService extends BaseService {
   ): Observable<UciteljData> {
     return this.uciteljGet$Response(params, context).pipe(
       map((r: StrictHttpResponse<UciteljData>): UciteljData => r.body)
+    );
+  }
+
+  /** Path part for operation `uciteljTestPost()` */
+  static readonly UciteljTestPostPath = '/ucitelj/test';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `uciteljTestPost()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  uciteljTestPost$Response(
+    params: {
+      body: TestUstvariReq
+    },
+    context?: HttpContext
+  ): Observable<StrictHttpResponse<Test>> {
+    const rb = new RequestBuilder(this.rootUrl, ApiService.UciteljTestPostPath, 'post');
+    if (params) {
+      rb.body(params.body, 'application/json');
+    }
+
+    return this.http.request(
+      rb.build({ responseType: 'json', accept: 'application/json', context })
+    ).pipe(
+      filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Test>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `uciteljTestPost$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  uciteljTestPost(
+    params: {
+      body: TestUstvariReq
+    },
+    context?: HttpContext
+  ): Observable<Test> {
+    return this.uciteljTestPost$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Test>): Test => r.body)
     );
   }
 

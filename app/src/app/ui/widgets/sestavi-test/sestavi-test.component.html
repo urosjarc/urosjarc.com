@@ -1,0 +1,67 @@
+<app-progress-bar-loading *ngIf="loading" [loading]="loading"/>
+<mat-stepper #stepper (selectionChange)="selectionChange($event)" linear>
+  <mat-step>
+    <ng-template matStepLabel>Zvezki</ng-template>
+    <app-table [canSelect]="true" [selectionModel]="selectedZvezki" [dataSource]="zvezki" [columns]="zvezki_columns"/>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Tematike</ng-template>
+    <app-table [canSelect]="true" [selectionModel]="selectedTematike" [dataSource]="tematike"
+               [columns]="tematike_columns"/>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Naloge</ng-template>
+    <app-table [canSelect]="true" [selectionModel]="selectedNaloge" [dataSource]="naloge" [columns]="naloge_columns"/>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Učenci</ng-template>
+    <app-table [canSelect]="true" [selectionModel]="selectedUcenje" [dataSource]="ucenje" [columns]="ucenje_columns"/>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Potrditev</ng-template>
+
+    <div class="text-center">
+      <mat-divider/>
+      <br>
+      <div class="row">
+        <div class="col"><h2 class="m-0 p-0">Zvezkov: {{selectedZvezki.selected.length}}</h2></div>
+        <div class="col"><h2 class="m-0 p-0">Tematik: {{selectedTematike.selected.length}}</h2></div>
+        <div class="col"><h2 class="m-0 p-0">Nalog: {{selectedNaloge.selected.length}}</h2></div>
+        <div class="col"><h2 class="m-0 p-0">Ucencev: {{selectedUcenje.selected.length}}</h2></div>
+      </div>
+
+      <br>
+      <mat-divider/>
+
+      <form [formGroup]="formGroup" (ngSubmit)="potrdi()">
+        <div class="row p-4 pb-0">
+          <div class="col-sm-8">
+            <app-form-field-besede icon="edit_document" label="Naslov testa" #naslov/>
+          </div>
+          <div class="col-sm-4">
+            <app-form-field-datum label="Deadline" #deadline/>
+          </div>
+          <div class="col-sm-12">
+            <app-form-field-besede icon="info" label="Podnaslov testa" #podnaslov/>
+          </div>
+
+        </div>
+
+        <div class="row">
+          <button [disabled]="loading" type="submit" class="col rounded-0" color="warn" mat-raised-button>
+            Potrdi
+          </button>
+          <button [disabled]="loading" class="col rounded-0" color="accent" mat-raised-button (click)="reset(stepper)">Preklici
+          </button>
+        </div>
+      </form>
+
+    </div>
+
+  </mat-step>
+
+</mat-stepper>

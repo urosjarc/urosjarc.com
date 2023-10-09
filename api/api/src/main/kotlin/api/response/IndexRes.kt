@@ -1,8 +1,8 @@
 package api.response
 
 import api.request.NapakaReq
-import data.*
-import domain.*
+import core.data.*
+import core.domain.*
 import kotlinx.serialization.Serializable
 import si.urosjarc.server.api.response.*
 
@@ -39,5 +39,5 @@ data class IndexRes(
     val d1: Tematika,
     val d2: Test,
     val d3: Ucenje,
-    val d4: Zvezek
+    val d4: Zvezek,
 )

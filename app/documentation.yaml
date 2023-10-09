@@ -269,6 +269,34 @@ paths:
             'application/json':
               schema:
                 $ref: "#/components/schemas/UciteljData"
+  /ucitelj/test:
+    post:
+      description: ""
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: "#/components/schemas/TestUstvariReq"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/ErrorRes"
+        "500":
+          description: "Internal Server Error"
+          content:
+            'application/json':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/Test"
 components:
   schemas:
     BsonBinary:
@@ -855,3 +883,24 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/AuditData"
+    TestUstvariReq:
+      type: "object"
+      properties:
+        naslov:
+          $ref: "#/components/schemas/BsonBinary"
+        podnaslov:
+          $ref: "#/components/schemas/BsonBinary"
+        deadline:
+          $ref: "#/components/schemas/LocalDate"
+        oseba_ucenci_id:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Id"
+        oseba_admini_id:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Id"
+        naloga_id:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Id"

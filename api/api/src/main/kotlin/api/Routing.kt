@@ -4,10 +4,11 @@ import api.extend.client_unauthorized
 import api.plugins.PreveriProfil
 import api.plugins.Profil
 import api.routes.*
-import base.App
-import base.Env
 import com.auth0.jwk.JwkProviderBuilder
-import domain.Oseba
+import core.base.App
+import core.base.Env
+import core.domain.Oseba
+import core.services.JsonService
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -21,7 +22,6 @@ import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
-import services.JsonService
 import java.util.concurrent.TimeUnit
 
 

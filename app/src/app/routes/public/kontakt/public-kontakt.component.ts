@@ -2,7 +2,7 @@ import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {FormFieldTelefonComponent} from "../../../ui/parts/form-fields/form-field-phone/form-field-telefon.component";
 import {FormFieldOsebaComponent} from "../../../ui/parts/form-fields/form-field-oseba/form-field-oseba.component";
-import {FormFieldMsgComponent} from "../../../ui/parts/form-fields/form-field-sporocilo/form-field-msg.component";
+import {FormFieldSporociloComponent} from "../../../ui/parts/form-fields/form-field-sporocilo/form-field-sporocilo.component";
 import {FormFieldEmailComponent} from "../../../ui/parts/form-fields/form-field-email/form-field-email.component";
 import {trace} from "../../../utils/trace";
 import {
@@ -23,7 +23,7 @@ import {AlertService} from "../../../core/services/alert/alert.service";
     ProgressBarLoadingComponent,
     ReactiveFormsModule,
     FormFieldGesloComponent,
-    FormFieldMsgComponent,
+    FormFieldSporociloComponent,
     FormFieldTelefonComponent,
     FormFieldEmailComponent,
     FormFieldOsebaComponent,
@@ -35,7 +35,7 @@ export class PublicKontaktComponent implements AfterViewInit {
   loading: boolean = false;
   @ViewChild(FormFieldTelefonComponent) formFieldTelefonComponent?: FormFieldTelefonComponent;
   @ViewChild(FormFieldOsebaComponent) formFieldOsebaComponent?: FormFieldOsebaComponent;
-  @ViewChild(FormFieldMsgComponent) formFieldMsgComponent?: FormFieldMsgComponent;
+  @ViewChild(FormFieldSporociloComponent) formFieldMsgComponent?: FormFieldSporociloComponent;
   @ViewChild(FormFieldEmailComponent) formFieldEmailComponent?: FormFieldEmailComponent;
   formGroup: FormGroup = new FormGroup({});
 
