@@ -29,7 +29,7 @@
                     <bottom>
                         <VBox alignment="BOTTOM_CENTER" BorderPane.alignment="BOTTOM_CENTER">
                             <children>
-                                <Label fx:id="rotacijaLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" minWidth="100.0" />
+                                <Label fx:id="obdelavaLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" minWidth="100.0" />
                                   <Slider fx:id="rotacija" blockIncrement="0.5" majorTickUnit="1.0" max="15.0" maxWidth="1.7976931348623157E308" min="-15.0" minorTickCount="1" onMouseReleased="#rotacija_done" showTickLabels="true" showTickMarks="true" />
                         <Slider fx:id="margin" max="300.0" onMouseReleased="#margin_done" showTickLabels="true" showTickMarks="true" />
                                 <HBox>
@@ -42,14 +42,14 @@
                         </VBox>
                     </bottom>
                     <center>
-                        <ImageView fx:id="slika" fitHeight="1000.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+                        <ImageView fx:id="slika" fitHeight="900.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
                     </center>
                 </BorderPane>
             </Tab>
             <Tab fx:id="prepoznava" text="Prepoznava">
                 <BorderPane>
                <center>
-                  <ImageView fx:id="slikaOcr" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+                  <ImageView fx:id="slikaOcr" fitHeight="900.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
                </center></BorderPane>
             </Tab>
         </tabs>

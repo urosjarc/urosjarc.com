@@ -21,5 +21,9 @@ data class Annotation(
 
     val average: Vector<Int> get() = Vector(x = this.x + this.width / 2, y = this.y + this.height / 2)
 
+    fun contains(x: Int, y: Int): Boolean {
+        return x in this.x..this.x_max && y in this.y..this.y_max
+    }
+
 
 }

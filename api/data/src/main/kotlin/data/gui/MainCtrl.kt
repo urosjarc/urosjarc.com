@@ -1,5 +1,7 @@
 package data.gui
 
+import data.domain.Annotation
+import data.domain.SlikaAnotations
 import data.domain.ZipSlika
 import data.extend.*
 import data.services.OcrService
@@ -14,14 +16,17 @@ import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.input.MouseEvent
 import kotlinx.coroutines.*
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
 import net.sourceforge.tess4j.util.ImageHelper
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.awt.image.BufferedImage
 import java.io.File
 import java.nio.file.Paths
+import javax.imageio.ImageIO
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
@@ -34,16 +39,40 @@ data class Node(
 
 @OptIn(DelicateCoroutinesApi::class)
 class MainCtrl : KoinComponent {
+    /**
+     * Const
+     */
+    companion object {
+        val TMP_SLIKA = "tmp.png"
+        val ORIGINAL_SLIKA = "original.png"
+        val POPRAVLJENA_SLIKA = "popravljena.png"
+        val OCR_ANNOTACIJE = "ocr.json"
+        val OCR_FINAL_ANNOTACIJE = "ocr_final.json"
+        val OCR_SLIKA = "ocr.png"
+    }
 
-    var trenutnaSlika = BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)
-    val zip_slike = mutableListOf<ZipSlika>()
+    /**
+     * Services
+     */
     val resouceService: ResouceService by this.inject()
-    val najdi_vse_zip_slike: Najdi_vse_zip_slike by this.inject()
     val ocrService: OcrService by this.inject()
     val json: Json by this.inject()
-    val procesirajSliko: Procesiraj_omego_sliko by this.inject()
-    var obdelanaSlika: BufferedImage = BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)
 
+    /**
+     * Usecases
+     */
+    val najdi_vse_zip_slike: Najdi_vse_zip_slike by this.inject()
+    val procesirajSliko: Procesiraj_omego_sliko by this.inject()
+
+    /**
+     * State
+     */
+    val zip_slike = mutableListOf<ZipSlika>()
+    var trenutnaSlika = BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)
+
+    /**
+     * leva stran
+     */
     @FXML
     lateinit var zip_files: ListView<File>
 
@@ -51,62 +80,100 @@ class MainCtrl : KoinComponent {
     lateinit var napredek: ProgressBar
 
     @FXML
+    lateinit var zacni: Button
+
+    @FXML
     lateinit var zvezki: TreeTableView<Node>
 
     @FXML
     lateinit var info: ListView<String>
 
+
+    /**
+     * Desna stran
+     */
     @FXML
-    lateinit var zacni: Button
+    lateinit var logs: ListView<String>
 
     @FXML
     lateinit var prekini: Button
 
+
     @FXML
-    lateinit var logs: ListView<String>
+    lateinit var slikaOcr: ImageView
+
+
+    /**
+     * Sredina
+     */
+    @FXML
+    lateinit var tabs: TabPane
+
+    /**
+     * Controls for obdelano sliko
+     */
+    @FXML
+    lateinit var obdelava: Tab
 
     @FXML
     lateinit var slika: ImageView
 
     @FXML
-    lateinit var slikaOcr: ImageView
-
-    @FXML
-    lateinit var potrdi: Button
+    lateinit var obdelavaLabel: Label
 
     @FXML
     lateinit var rotacija: Slider
 
     @FXML
-    lateinit var resetiraj: Button
-
-    @FXML
-    lateinit var rotacijaLabel: Label
-
-    @FXML
     lateinit var margin: Slider
 
     @FXML
-    lateinit var tabs: TabPane
+    lateinit var resetiraj: Button
+
+
+    @FXML
+    lateinit var potrdi: Button
+
+
+    /**
+     * Plosca z slikami
+     */
 
     @FXML
     lateinit var prepoznava: Tab
 
-    @FXML
-    lateinit var obdelava: Tab
+
+    private fun alert(msg: String) {
+        this.logs.items.add("!!! $msg\n")
+    }
+
+    private fun info(msg: String) {
+        this.logs.items.add("... $msg\n")
+    }
+
+    private fun trenutniIndex(): Int {
+        val lastNode = this.zvezki.root.children.lastOrNull()
+        return lastNode?.value?.name?.toInt() ?: 0
+    }
+
+    private fun trenutniDir(name: String = "", di: Int = 0): File {
+        val node = this.zvezki.root.value
+        val i = this.trenutniIndex()
+        val file = File(node.file, "${i + di}")
+        return File(file, name)
+    }
 
     @FXML
     fun resetiraj_clicked() {
-        val lastNode = this.zvezki.root.children.lastOrNull()
-        val newFile = File(lastNode?.value?.file, "tmp.png")
+        val file = this.trenutniDir(TMP_SLIKA)
         val deskew = this.trenutnaSlika.deskew()
-        val mar = margin.value.toInt()
-        val marImage =
-            deskew.second.getSubimage(mar, mar, deskew.second.width - 2 * mar, deskew.second.height - 2 * mar)
-                .negative()
-        marImage.drawGrid()
-        marImage.save(newFile)
-        slika.image = Image(newFile.inputStream())
+        val m = margin.value.toInt()
+        val img = deskew.second.getSubimage(m, m, deskew.second.width - 2 * m, deskew.second.height - 2 * m).negative()
+
+        img.drawGrid()
+        img.save(file)
+
+        slika.image = Image(file.inputStream())
         this.rotacija.value = deskew.first
     }
 
@@ -115,9 +182,9 @@ class MainCtrl : KoinComponent {
         /**
          * Fill tree
          */
-        val fileCol: TreeTableColumn<Node, String> = TreeTableColumn("File")
-        fileCol.cellValueFactory = TreeItemPropertyValueFactory("name");
-        this.zvezki.columns.addAll(fileCol)
+        val col_file: TreeTableColumn<Node, String> = TreeTableColumn("File")
+        col_file.cellValueFactory = TreeItemPropertyValueFactory("name");
+        this.zvezki.columns.addAll(col_file)
 
         this.slikaOcr.setOnMouseClicked { this.slikaOcr_clicked(event = it) }
 
@@ -127,12 +194,16 @@ class MainCtrl : KoinComponent {
         val files = resouceService.najdi_zip_datoteke()
         this.zip_files.items = observableArrayList(files)
 
-        this.rotacija.valueProperty().addListener { observable, oldValue, newValue ->
-            val rot = "%.2f°".format(this.rotacija.value)
-            val mar = "%.2fpx".format(this.margin.value)
-            rotacijaLabel.text = "Rotacija: $rot, Margin: $mar"
+        /**
+         * On rotacija in margin change
+         */
+        fun update() {
+            val r = "%.2f°".format(this.rotacija.value)
+            val m = "%.2fpx".format(this.margin.value)
+            obdelavaLabel.text = "Rotacija: $r, Margin: $m"
         }
-
+        this.rotacija.valueProperty().addListener { _, _, _ -> update() }
+        this.margin.valueProperty().addListener { _, _, _ -> update() }
     }
 
     @FXML
@@ -166,14 +237,6 @@ class MainCtrl : KoinComponent {
         napredek.progress = 0.0
         zacni.isDisable = false
         prekini.isDisable = false
-    }
-
-    private fun alert(msg: String) {
-        this.logs.items.add("!!! $msg\n")
-    }
-
-    private fun info(msg: String) {
-        this.logs.items.add("... $msg\n")
     }
 
     @FXML
@@ -217,35 +280,32 @@ class MainCtrl : KoinComponent {
     }
 
     private fun prepare_img() {
-        val lastNode = this.zvezki.root.children.lastOrNull()
-        val newFile = File(lastNode?.value?.file, "tmp.png")
-        val imgNew = ImageHelper.rotateImage(this.trenutnaSlika, rotacija.value)
-        val mar = margin.value.toInt()
-        val marImage = imgNew.getSubimage(mar, mar, imgNew.width - 2 * mar, imgNew.height - 2 * mar).negative()
-        marImage.drawGrid()
-        marImage.save(newFile)
-        slika.image = Image(newFile.inputStream())
+        val file = this.trenutniDir(TMP_SLIKA)
+        var img = ImageHelper.rotateImage(this.trenutnaSlika, rotacija.value)
+        val m = margin.value.toInt()
+        img = img.getSubimage(m, m, img.width - 2 * m, img.height - 2 * m).negative()
+        img.drawGrid()
+        img.save(file)
+        slika.image = Image(file.inputStream())
     }
 
     private fun opravljeno() {
-        val rootNode = this.zvezki.root.value
-        val lastNode = this.zvezki.root.children.lastOrNull()
-        val index = ((lastNode?.value?.name?.toInt() ?: 0) + 1)
-        val stranDir = File(rootNode.file, "$index")
-        val newNode = Node(stranDir)
+        val index = this.trenutniIndex()
+        val dir = this.trenutniDir(di = 1)
+        val node = Node(dir)
 
-        if (stranDir.mkdir()) {
-            info("Stran ${stranDir.name} se je ustvarila.")
+        if (dir.mkdir()) {
+            info("Stran ${dir.name} se je ustvarila.")
         }
 
-        val image = zip_slike[index - 1]
-        val imageFile = File(stranDir, "original.png")
-        val tmpFile = File(stranDir, "tmp.png")
+        val zipSlika = zip_slike[if (index > 0) index - 1 else 0]
+        val originalFile = File(dir, ORIGINAL_SLIKA)
+        val tmpFile = File(dir, TMP_SLIKA)
 
-        this.trenutnaSlika = image.img
-        this.trenutnaSlika.save(imageFile)
+        this.trenutnaSlika = zipSlika.img
+        this.trenutnaSlika.save(originalFile)
 
-        val deskew = image.img.deskew()
+        val deskew = zipSlika.img.deskew()
         val img = deskew.second.negative()
         img.drawGrid()
         img.save(tmpFile)
@@ -253,42 +313,78 @@ class MainCtrl : KoinComponent {
         slika.image = Image(tmpFile.inputStream())
 
         this.rotacija.value = deskew.first
-        this.zvezki.root.children.add(TreeItem(newNode))
+        this.zvezki.root.children.add(TreeItem(node))
         this.zvezki.root = this.zvezki.root
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     @FXML
     private fun potrdi_clicked() = GlobalScope.launch(Dispatchers.Main) {
-        val lastNode = zvezki.root.children.lastOrNull()
-        val index = lastNode?.value?.name?.toInt() ?: 0
 
-        val imgNew = ImageHelper.rotateImage(trenutnaSlika, rotacija.value)
-        val mar = margin.value.toInt()
-        obdelanaSlika = imgNew.getSubimage(mar, mar, imgNew.width - 2 * mar, imgNew.height - 2 * mar)
+        var img = ImageHelper.rotateImage(trenutnaSlika, rotacija.value)
+        val m = margin.value.toInt()
+        img = img.getSubimage(m, m, img.width - 2 * m, img.height - 2 * m)
 
-        val rootNode = zvezki.root.value
-        val stranDir = File(rootNode.file, "$index")
-        val tmpFile = File(stranDir, "obdelava.png")
-        val annoFile = File(stranDir, "anotacije.json")
+        /**
+         * Shrani popravljeno sliko
+         */
+        val popravljenaFile = trenutniDir(POPRAVLJENA_SLIKA)
+        img.save(popravljenaFile)
 
-        val annos = ocrService.google(image = obdelanaSlika).toMutableList()
+        /**
+         * Ustvari ocr json in shrani
+         */
+        val annoFile = trenutniDir(OCR_ANNOTACIJE)
+        var annos: List<Annotation>
+        annos = ocrService.google(image = img).toMutableList()
         info("Ocr je prepoznal ${annos.size} elementov")
         annoFile.writeText(json.encodeToString(annos))
-        info("Ocr anotacije so se shranile v $annoFile")
+        info("Ocr annotation so se shranile v $annoFile")
 
-        val slika = procesirajSliko.zdaj(img = obdelanaSlika, annos = annos)
-        obdelanaSlika.drawSlikaAnnotations(slika)
+        /**
+         * Ustvari ocr sliko
+         */
+        val finalAnnoFile = trenutniDir(OCR_FINAL_ANNOTACIJE)
+        val ocrSlikaFile = trenutniDir(OCR_SLIKA)
+        val slikaAnno = procesirajSliko.zdaj(img = img, annos = annos)
+        finalAnnoFile.writeText(json.encodeToString(slikaAnno))
+        img.drawSlikaAnnotations(slikaAnno)
+        img.save(ocrSlikaFile)
+        slikaOcr.image = Image(ocrSlikaFile.inputStream())
 
-        obdelanaSlika.save(tmpFile)
-        info("Obdelana slika je shranjena...")
-
-        slikaOcr.image = Image(tmpFile.inputStream())
-
+        /**
+         * Pripravi gui
+         */
         tabs.selectionModel.select(prepoznava)
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     fun slikaOcr_clicked(event: MouseEvent) {
-        println(event)
+        val popravljenaFile = trenutniDir(POPRAVLJENA_SLIKA)
+        val img: BufferedImage = ImageIO.read(popravljenaFile)
+
+        val r = img.height.toDouble() / img.width
+        val h = this.slikaOcr.fitHeight
+        val w = h / r
+
+        val xPercent: Double = event.x / w
+        val yPercent: Double = event.y / h
+        val xReal = (xPercent * img.width).toInt()
+        val yReal = (yPercent * img.height).toInt()
+
+        val annos = json.decodeFromStream<List<Annotation>>(trenutniDir(OCR_ANNOTACIJE).inputStream())
+        val annosFinal = json.decodeFromStream<SlikaAnotations>(trenutniDir(OCR_FINAL_ANNOTACIJE).inputStream())
+
+        annos.forEach {
+            if (it.contains(x = xReal, y = yReal)) {
+                it.tip = Annotation.Tip.NEZNANO
+                annosFinal.head.add(it)
+            }
+        }
+        val ocrSlikaFile = trenutniDir(OCR_SLIKA)
+        img.drawSlikaAnnotations(annosFinal)
+        img.save(ocrSlikaFile)
+        slikaOcr.image = Image(ocrSlikaFile.inputStream())
     }
 
     private fun info_update() {
