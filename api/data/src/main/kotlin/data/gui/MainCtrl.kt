@@ -15,6 +15,7 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.input.MouseEvent
+import javafx.scene.layout.TilePane
 import kotlinx.coroutines.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
@@ -101,6 +102,8 @@ class MainCtrl : KoinComponent {
 
     @FXML
     lateinit var slikaOcr: ImageView
+
+    val slikaOcrMenu: ContextMenu = ContextMenu()
 
 
     /**
@@ -204,6 +207,17 @@ class MainCtrl : KoinComponent {
         }
         this.rotacija.valueProperty().addListener { _, _, _ -> update() }
         this.margin.valueProperty().addListener { _, _, _ -> update() }
+
+        /**
+         * Context menu for ocr vindow
+         */
+        Annotation.Tip.values().forEach {
+            val menuItem1 = MenuItem(it.name)
+            this.slikaOcrMenu.items.add(menuItem1)
+        }
+        this.slikaOcr.setOnContextMenuRequested {
+            this.slikaOcrMenu.show(this.slikaOcr, it.screenX, it.screenY)
+        }
     }
 
     @FXML
@@ -357,6 +371,8 @@ class MainCtrl : KoinComponent {
          */
         tabs.selectionModel.select(prepoznava)
     }
+
+
 
     @OptIn(ExperimentalSerializationApi::class)
     fun slikaOcr_clicked(event: MouseEvent) {
