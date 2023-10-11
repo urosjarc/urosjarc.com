@@ -1,6 +1,6 @@
 package data.domain
 
-data class Pixel(
+data class Piksel(
     val r: Int,
     val g: Int,
     val b: Int,
@@ -10,8 +10,8 @@ data class Pixel(
     val v: Float,
 ) {
     companion object {
-        fun average(pixels: Collection<Pixel>): Pixel {
-            return Pixel(
+        fun average(pixels: Collection<Piksel>): Piksel {
+            return Piksel(
                 r = pixels.map { it.r }.average().toInt(),
                 g = pixels.map { it.g }.average().toInt(),
                 b = pixels.map { it.b }.average().toInt(),

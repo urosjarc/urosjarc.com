@@ -1,14 +1,14 @@
 package data.use_cases
 
-import data.domain.Annotation
-import data.domain.SlikaAnotations
+import data.domain.Anotacija
+import data.domain.AnotacijeStrani
 import data.extend.averagePixel
 import java.awt.image.BufferedImage
 
 class Procesiraj_omego_sliko {
 
-    fun zdaj(img: BufferedImage, annos: List<Annotation>): SlikaAnotations {
-        val slika = SlikaAnotations()
+    fun zdaj(img: BufferedImage, annos: List<Anotacija>): AnotacijeStrani {
+        val slika = AnotacijeStrani()
 
         this.parse_footer(slika, annos)
         this.parse_naloge(img, slika, annos)
@@ -21,7 +21,7 @@ class Procesiraj_omego_sliko {
     }
 
 
-    fun parse_teorija(slika: SlikaAnotations, annos: List<Annotation>) {
+    fun parse_teorija(slika: AnotacijeStrani, annos: List<Anotacija>) {
         /**
          * Parsanje teorije
          */
@@ -39,7 +39,7 @@ class Procesiraj_omego_sliko {
             } else { //Najblizja naloga ni bila najdena
                 for (anno in annos) {
                     val annoAve = anno.average
-                    if (naslov_maxY < annoAve.y && !slika.footer.contains(anno)) {
+                    if (naslov_maxY < annoAve.y && !slika.noga.contains(anno)) {
                         slika.teorija.add(anno)
                     }
                 }
@@ -47,18 +47,18 @@ class Procesiraj_omego_sliko {
         }
     }
 
-    fun parse_footer(slika: SlikaAnotations, annos: List<Annotation>) {
+    fun parse_footer(slika: AnotacijeStrani, annos: List<Anotacija>) {
         val lowestY = annos.maxBy { it.y_max }
         for (anno in annos) {
             val annoAve = anno.average
             val dy = lowestY.height / 2
             if (annoAve.y in lowestY.y - dy..lowestY.y_max + dy) {
-                slika.footer.add(anno)
+                slika.noga.add(anno)
             }
         }
     }
 
-    fun parse_naloge(img: BufferedImage, slika: SlikaAnotations, annos: List<Annotation>) {
+    fun parse_naloge(img: BufferedImage, slika: AnotacijeStrani, annos: List<Anotacija>) {
         for (anno in annos) {
             val pass = img.averagePixel(anno).is_red()
             val hasEndDot = anno.text.endsWith(".")
@@ -81,11 +81,11 @@ class Procesiraj_omego_sliko {
         }
     }
 
-    fun parse_naslov(img: BufferedImage, slika: SlikaAnotations, annos: List<Annotation>) {
+    fun parse_naslov(img: BufferedImage, slika: AnotacijeStrani, annos: List<Anotacija>) {
         /**
          * Parsanje naslovov
          */
-        val naslovi = mutableListOf<MutableList<Annotation>>()
+        val naslovi = mutableListOf<MutableList<Anotacija>>()
         for (anno in annos) {
             val nums = anno.text.split(".").map { it.toIntOrNull() }
             if (!nums.contains(null) && img.averagePixel(anno).is_red()) {
@@ -111,12 +111,12 @@ class Procesiraj_omego_sliko {
         }
     }
 
-    fun parse_head(slika: SlikaAnotations, annos: List<Annotation>) {
+    fun parse_head(slika: AnotacijeStrani, annos: List<Anotacija>) {
         val highestY = (slika.naloge.map { it.first() } + slika.naslov).minBy { it.y }.y
         for (annotation in annos) {
             val annoAve = annotation.average
             if (annoAve.y < highestY) {
-                slika.head.add(annotation)
+                slika.glava.add(annotation)
             }
         }
     }

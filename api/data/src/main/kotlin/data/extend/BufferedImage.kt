@@ -1,10 +1,10 @@
 package data.extend
 
 import com.recognition.software.jdeskew.ImageDeskew
-import data.domain.Annotation
-import data.domain.BoundBox
-import data.domain.Pixel
-import data.domain.SlikaAnotations
+import data.domain.Anotacija
+import data.domain.Okvir
+import data.domain.Piksel
+import data.domain.AnotacijeStrani
 import net.coobird.thumbnailator.Thumbnails
 import net.sourceforge.tess4j.util.ImageHelper
 import java.awt.BasicStroke
@@ -42,7 +42,7 @@ fun BufferedImage.save(file: File) {
     ImageIO.write(this, "png", file)
 }
 
-fun BufferedImage.drawAnnotations(annotations: Collection<Annotation>, color: Color = Color.CYAN, width: Float = 5.0f) {
+fun BufferedImage.drawAnnotations(annotations: Collection<Anotacija>, color: Color = Color.CYAN, width: Float = 5.0f) {
     val g = this.createGraphics()
     g.color = color
     g.stroke = BasicStroke(width)
@@ -52,11 +52,11 @@ fun BufferedImage.drawAnnotations(annotations: Collection<Annotation>, color: Co
     g.dispose()
 }
 
-fun BufferedImage.drawSlikaAnnotations(slika: SlikaAnotations) {
-    this.drawAnnotations(slika.footer, Color.BLACK)
+fun BufferedImage.drawSlikaAnnotations(slika: AnotacijeStrani) {
+    this.drawAnnotations(slika.noga, Color.BLACK)
     slika.naloge.forEach { this.drawAnnotations(it, Color.GREEN) }
     this.drawAnnotations(slika.naslov, Color.BLUE)
-    this.drawAnnotations(slika.head, Color.BLACK)
+    this.drawAnnotations(slika.glava, Color.BLACK)
     this.drawAnnotations(slika.teorija, Color.RED)
 }
 
@@ -71,8 +71,8 @@ fun BufferedImage.append(img: BufferedImage): BufferedImage {
     return combined
 }
 
-fun BufferedImage.averagePixel(a: Annotation): Pixel {
-    val pixels = mutableListOf<Pixel>()
+fun BufferedImage.averagePixel(a: Anotacija): Piksel {
+    val pixels = mutableListOf<Piksel>()
 
     for (y in a.y..a.y_max) {
         for (x in a.x..a.x_max) {
@@ -80,10 +80,10 @@ fun BufferedImage.averagePixel(a: Annotation): Pixel {
             if (!pixel.is_white()) pixels.add(pixel)
         }
     }
-    return Pixel.average(pixels)
+    return Piksel.average(pixels)
 }
 
-fun BufferedImage.getHSV(x: Int, y: Int): Pixel {
+fun BufferedImage.getHSV(x: Int, y: Int): Piksel {
     //Get RGB Value
     val rgb: Int = this.getRGB(x, y)
     //Convert to three separate channels
@@ -93,7 +93,7 @@ fun BufferedImage.getHSV(x: Int, y: Int): Pixel {
     val hsv = FloatArray(3)
     Color.RGBtoHSB(r, g, b, hsv)
 
-    return Pixel(r, g, b, hsv[0] * 360, hsv[1], hsv[2])
+    return Piksel(r, g, b, hsv[0] * 360, hsv[1], hsv[2])
 }
 
 fun BufferedImage.getSafeSubimage(x: Int, y: Int, w: Int, h: Int): BufferedImage {
@@ -117,9 +117,9 @@ fun BufferedImage.deskew(): Pair<Double, BufferedImage> {
     return Pair(-imgdeskew.skewAngle, ImageHelper.rotateImage(this, -imgdeskew.skewAngle)) // rotateImage static method
 }
 
-fun BufferedImage.boundBox(xStart: Int, xEnd: Int): BoundBox {
+fun BufferedImage.boundBox(xStart: Int, xEnd: Int): Okvir {
     val maxCount = 5
-    val boundBox = BoundBox(-1, -1, -1, -1)
+    val boundBox = Okvir(-1, -1, -1, -1)
 
     //up to down
     var count = 0

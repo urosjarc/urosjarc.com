@@ -1,6 +1,6 @@
 package data.domain
 
-data class Vector<T>(
+data class Vektor<T>(
     val x: T,
     val y: T,
 )

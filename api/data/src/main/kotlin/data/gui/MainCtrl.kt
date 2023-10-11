@@ -1,7 +1,7 @@
 package data.gui
 
-import data.domain.Annotation
-import data.domain.SlikaAnotations
+import data.domain.Anotacija
+import data.domain.AnotacijeStrani
 import data.domain.ZipSlika
 import data.extend.*
 import data.services.OcrService
@@ -15,7 +15,6 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.input.MouseEvent
-import javafx.scene.layout.TilePane
 import kotlinx.coroutines.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
@@ -70,6 +69,8 @@ class MainCtrl : KoinComponent {
      */
     val zip_slike = mutableListOf<ZipSlika>()
     var trenutnaSlika = BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)
+    var popravljenaSlika = BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)
+    var ocrSlika = BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)
 
     /**
      * leva stran
@@ -145,6 +146,8 @@ class MainCtrl : KoinComponent {
     @FXML
     lateinit var prepoznava: Tab
 
+    var ocrDragEvents = mutableListOf<MouseEvent>()
+
 
     private fun alert(msg: String) {
         this.logs.items.add("!!! $msg\n")
@@ -189,7 +192,7 @@ class MainCtrl : KoinComponent {
         col_file.cellValueFactory = TreeItemPropertyValueFactory("name");
         this.zvezki.columns.addAll(col_file)
 
-        this.slikaOcr.setOnMouseClicked { this.slikaOcr_clicked(event = it) }
+        this.slikaOcr.setOnMouseDragged { this.slikaOcr_clicked(event = it) }
 
         /**
          * Fill zvezki
@@ -211,7 +214,7 @@ class MainCtrl : KoinComponent {
         /**
          * Context menu for ocr vindow
          */
-        Annotation.Tip.values().forEach {
+        Anotacija.Tip.values().forEach {
             val menuItem1 = MenuItem(it.name)
             this.slikaOcrMenu.items.add(menuItem1)
         }
@@ -349,7 +352,7 @@ class MainCtrl : KoinComponent {
          * Ustvari ocr json in shrani
          */
         val annoFile = trenutniDir(OCR_ANNOTACIJE)
-        var annos: List<Annotation>
+        var annos: List<Anotacija>
         annos = ocrService.google(image = img).toMutableList()
         info("Ocr je prepoznal ${annos.size} elementov")
         annoFile.writeText(json.encodeToString(annos))
@@ -372,9 +375,14 @@ class MainCtrl : KoinComponent {
         tabs.selectionModel.select(prepoznava)
     }
 
+    fun slikaOcr_draged(event: MouseEvent) {
+        this.ocrDragEvents.add(event)
+    }
 
 
-    @OptIn(ExperimentalSerializationApi::class)
+
+
+        @OptIn(ExperimentalSerializationApi::class)
     fun slikaOcr_clicked(event: MouseEvent) {
         val popravljenaFile = trenutniDir(POPRAVLJENA_SLIKA)
         val img: BufferedImage = ImageIO.read(popravljenaFile)
@@ -388,13 +396,13 @@ class MainCtrl : KoinComponent {
         val xReal = (xPercent * img.width).toInt()
         val yReal = (yPercent * img.height).toInt()
 
-        val annos = json.decodeFromStream<List<Annotation>>(trenutniDir(OCR_ANNOTACIJE).inputStream())
-        val annosFinal = json.decodeFromStream<SlikaAnotations>(trenutniDir(OCR_FINAL_ANNOTACIJE).inputStream())
+        val annos = json.decodeFromStream<List<Anotacija>>(trenutniDir(OCR_ANNOTACIJE).inputStream())
+        val annosFinal = json.decodeFromStream<AnotacijeStrani>(trenutniDir(OCR_FINAL_ANNOTACIJE).inputStream())
 
         annos.forEach {
             if (it.contains(x = xReal, y = yReal)) {
-                it.tip = Annotation.Tip.NEZNANO
-                annosFinal.head.add(it)
+                it.tip = Anotacija.Tip.NEZNANO
+                annosFinal.glava.add(it)
             }
         }
         val ocrSlikaFile = trenutniDir(OCR_SLIKA)

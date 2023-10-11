@@ -5,7 +5,7 @@ import com.google.cloud.vision.v1.Feature
 import com.google.cloud.vision.v1.Image
 import com.google.cloud.vision.v1.ImageAnnotatorClient
 import com.google.protobuf.ByteString
-import data.domain.Annotation
+import data.domain.Anotacija
 import net.sourceforge.tess4j.Tesseract
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
@@ -30,7 +30,7 @@ class OcrService {
         return tesseract.doOCR(image)
     }
 
-    fun google(image: BufferedImage): List<Annotation> {
+    fun google(image: BufferedImage): List<Anotacija> {
         val baos = ByteArrayOutputStream()
         ImageIO.write(image, "png", baos)
 
@@ -67,13 +67,13 @@ class OcrService {
             val y = ys.min()
             val Y = ys.max()
 
-            Annotation(
+            Anotacija(
                 x = x,
                 y = y,
                 width = X - x,
                 height = Y - y,
                 text = it.description,
-                tip = Annotation.Tip.NEZNANO
+                tip = Anotacija.Tip.NEZNANO
             )
         }
     }
