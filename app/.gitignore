@@ -4,3 +4,4 @@
 *.iml
 .angular
 ./documentation.yaml
+/coverage

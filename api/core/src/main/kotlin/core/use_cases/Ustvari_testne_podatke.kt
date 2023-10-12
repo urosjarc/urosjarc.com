@@ -47,11 +47,16 @@ class Ustvari_testne_podatke(
     }
 
     fun zdaj(vse: Boolean = false) {
-        this.sinhronizirajBazoZvezkov.zdaj()
+        val bazaZvezekov = this.sinhronizirajBazoZvezkov.zdaj()
 
-        val zvezki = db.zvezki.find().toList().toMutableSet()
-        val tematike = db.tematike.find().toList().toMutableSet()
-        val naloge = db.naloge.find().toList().toMutableSet()
+        var zvezki = mutableSetOf<Zvezek>()
+        var tematike = mutableSetOf<Tematika>()
+        var naloge = mutableSetOf<Naloga>()
+        if (bazaZvezekov) {
+            zvezki = db.zvezki.find().toList().toMutableSet()
+            tematike = db.tematike.find().toList().toMutableSet()
+            naloge = db.naloge.find().toList().toMutableSet()
+        }
 
         db.sprazni()
 

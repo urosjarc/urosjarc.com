@@ -12,9 +12,9 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.apache.logging.log4j.kotlin.logger
 import org.koin.ktor.ext.inject
-import services.DbService
-import si.urosjarc.server.api.response.TestUstvariReq
-import use_cases_api.Ustvari_test
+import api.request.TestUstvariReq
+import core.services.DbService
+import core.use_cases_api.Ustvari_test
 
 @Resource("ucitelj")
 class ucitelj {
