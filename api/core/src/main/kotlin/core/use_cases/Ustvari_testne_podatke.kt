@@ -1,6 +1,7 @@
 package core.use_cases
 
 import core.base.Encrypted
+import core.base.Env
 import core.base.Hashed
 import core.base.Id
 import core.domain.*
@@ -74,7 +75,7 @@ class Ustvari_testne_podatke(
         )
         val admin_telefon = Kontakt(
             oseba_id = mutableSetOf(admin._id),
-            data = "Uros Jarc".encrypted(),
+            data = Env.TWILIO_PHONE.encrypted(),
             tip = Kontakt.Tip.TELEFON
         )
         val admin_email = Kontakt(
