@@ -7,7 +7,7 @@ plugins {
 }
 
 application {
-    this.mainClass.set("data.gui2.Main")
+    this.mainClass.set("data.gui2.windows.Procesiranje_zip_zvezkov")
 }
 
 javafx {
@@ -16,6 +16,7 @@ javafx {
 }
 
 dependencies {
+    this.implementation(this.project(":core"))
     this.implementation("org.jfxtras:jmetro:11.6.14")
     this.implementation("org.jetbrains.kotlinx:kotlinx-coroutines-javafx:1.7.3")
     this.implementation("org.jsoup:jsoup:1.16.1")

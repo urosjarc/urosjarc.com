@@ -198,7 +198,7 @@ class MainCtrl : KoinComponent {
          * Fill zvezki
          */
         val files = resouceService.najdi_zip_datoteke()
-        this.zip_files.items = observableArrayList(files)
+//        this.zip_files.items = observableArrayList(files)
 
         /**
          * On rotacija in margin change

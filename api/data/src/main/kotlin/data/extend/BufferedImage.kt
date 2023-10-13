@@ -18,7 +18,7 @@ import javax.swing.JFrame
 import javax.swing.JLabel
 
 
-fun BufferedImage.show(title: String): JFrame {
+fun BufferedImage.show(title: String = ""): JFrame {
     val frame = JFrame().apply {
         this.title = title
         this.setSize(this.width / 2, this.height / 2)

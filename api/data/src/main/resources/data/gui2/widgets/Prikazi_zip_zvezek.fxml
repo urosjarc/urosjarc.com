@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+
+<SplitPane fx:controller="data.gui2.widgets.Prikazi_zip_zvezek" dividerPositions="50.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <items>
+        <fx:include fx:id="listView_datoteka_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../parts/ListView_Datoteka.fxml" />
+        <fx:include fx:id="treeTableView_datoteka_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../parts/TreeTableView_Datoteka.fxml" />
+    </items>
+</SplitPane>
