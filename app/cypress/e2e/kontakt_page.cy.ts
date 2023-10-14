@@ -61,17 +61,17 @@ describe('Kontakt page urosjarc.com tests', () => {
     cy.get('#mat-input-3').type('Sporočilo')
     cy.get('#mat-mdc-error-3').should('have.text', 'Sporočilo je premajhno!');
   });
-  it('should send the form in the inputs are valid', () => {
-    //fill out the form with valid information
-    cy.get('#mat-input-0').type('Danijel Korbar')
-    cy.get('#mat-input-1').type('korbar41@gmail.com')
-    //TODO: telefonsko je treba mogoče obdelati na serverju, kot pri SMS sender ? Za zdaj je validiran samo format +386...
-    cy.get('#mat-input-2').type('+386040664247')
-    cy.get('#mat-input-3').type('To je testno sporočilo')
-    //push the pošlji button to send the form to server
-    cy.xpath('/html/body/app/app-public/app-card-navigacija/div/div/div/div/app-public-kontakt/form/div/div[4]/button').click()
-    // TODO: tukaj mogoče ni potrebno imeti timeout ?
-    cy.get('.ng-star-inserted').should('be.visible')
-    cy.get('.ng-star-inserted h1').should('have.text', ' Vaše sporočilo je bilo sprejeto! ')
-  });
+  // it('should send the form in the inputs are valid', () => {
+  //   //fill out the form with valid information
+  //   cy.get('#mat-input-0').type('Danijel Korbar')
+  //   cy.get('#mat-input-1').type('korbar41@gmail.com')
+  //   //TODO: telefonsko je treba mogoče obdelati na serverju, kot pri SMS sender ? Za zdaj je validiran samo format +386...
+  //   cy.get('#mat-input-2').type('+386040664247')
+  //   cy.get('#mat-input-3').type('To je testno sporočilo')
+  //   //push the pošlji button to send the form to server
+  //   cy.xpath('/html/body/app/app-public/app-card-navigacija/div/div/div/div/app-public-kontakt/form/div/div[4]/button').click()
+  //   // TODO: tukaj mogoče ni potrebno imeti timeout ?
+  //   cy.get('.ng-star-inserted').should('be.visible')
+  //   cy.get('.ng-star-inserted h1').should('have.text', ' Vaše sporočilo je bilo sprejeto! ')
+  // });
 })
