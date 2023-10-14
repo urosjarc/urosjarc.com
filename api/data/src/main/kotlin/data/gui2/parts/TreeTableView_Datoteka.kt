@@ -11,8 +11,6 @@ import java.nio.file.Paths
 
 class TreeTableView_Datoteka : KoinComponent {
 
-    @FXML
-    lateinit var imeTTC: TreeTableColumn<Datoteka, String>
 
     fun init(datoteka: Datoteka) {
         val zvezekDir = Paths.get(datoteka.file.absolutePath, "../${datoteka.file.nameWithoutExtension}").normalize().toFile()
@@ -42,6 +40,9 @@ class TreeTableView_Datoteka : KoinComponent {
         root.isExpanded = true
         this.self.root = root
     }
+
+    @FXML
+    lateinit var imeTTC: TreeTableColumn<Datoteka, String>
 
     @FXML
     lateinit var self: TreeTableView<Datoteka>

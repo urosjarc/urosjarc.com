@@ -1,7 +1,8 @@
 package data.gui2.windows
 
 import core.base.App
-import data.gui2.widgets.Prikazi_zip_zvezek
+import data.gui2.widgets.Izberi_zip_zvezek
+import data.gui2.widgets.Prikazi_log_dnevnik
 import javafx.application.Application
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -14,7 +15,11 @@ import jfxtras.styles.jmetro.Style
 class Procesiranje_zip_zvezkov : Application() {
 
     @FXML
-    lateinit var prikazi_zip_zvezek_Controller: Prikazi_zip_zvezek
+    lateinit var izberi_zip_zvezek_Controller: Izberi_zip_zvezek
+    @FXML
+    lateinit var prikazi_log_dnevnik_Controller: Prikazi_log_dnevnik
+    @FXML
+    lateinit var procesiranje_zip_zvezkov_Controller: Procesiranje_zip_zvezkov
 
     @FXML
     fun initialize() {

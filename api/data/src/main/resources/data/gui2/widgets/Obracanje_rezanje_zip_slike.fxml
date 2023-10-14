@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<BorderPane fx:controller="data.gui2.widgets.Obracanje_rezanje_zip_slike" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+       <fx:include fx:id="imageView_zipSlika_" source="../parts/ImageView_ZipSlika.fxml"/>
+   </center>
+   <bottom>
+      <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="infoL" alignment="CENTER" contentDisplay="CENTER" text="Label" />
+            <Slider fx:id="rotacijaS" blockIncrement="0.0" majorTickUnit="1.0" max="10.0" min="-10.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" />
+            <Slider fx:id="paddingS" blockIncrement="0.0" majorTickUnit="10.0" max="150.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" />
+         </children>
+      </VBox>
+   </bottom>
+</BorderPane>

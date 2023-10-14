@@ -1,7 +1,6 @@
 package data.gui2.widgets
 
 import data.domain.Datoteka
-import data.domain.ZipSlika
 import data.extend.show
 import data.gui2.parts.ListView_Datoteka
 import data.gui2.parts.TreeTableView_Datoteka
@@ -12,7 +11,7 @@ import org.koin.core.component.inject
 import java.util.zip.ZipFile
 import javax.imageio.ImageIO
 
-class Prikazi_zip_zvezek : KoinComponent {
+class Izberi_zip_zvezek : KoinComponent {
 
     val resourseService by this.inject<ResouceService>()
 
@@ -21,7 +20,7 @@ class Prikazi_zip_zvezek : KoinComponent {
 
     @FXML
     fun initialize() {
-        println("init Prikazi_zip_zvezek")
+        println("init Izberi_zip_zvezek")
         this.listView_datoteka_Controller.self.selectionModel.selectedItemProperty().addListener { observable, oldValue, newValue ->
             this.init(datoteka = newValue)
         }

@@ -4,6 +4,7 @@ plugins {
     this.id("buildSrc.common")
     this.id("buildSrc.serialization")
     this.id("buildSrc.injections")
+    this.id("buildSrc.datetime")
 }
 
 application {
