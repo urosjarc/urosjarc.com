@@ -1,4 +1,4 @@
-package data.gui2.parts;
+package data.gui2.elements;
 
 import data.domain.Datoteka
 import data.domain.Log

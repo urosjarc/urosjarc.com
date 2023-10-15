@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 
 
-<ListView fx:controller="data.gui2.parts.ListView_Datoteka"
+<ListView fx:controller="data.gui2.elements.ListView_Datoteka"
           fx:id="self"
           prefHeight="340.0"
           prefWidth="369.0"

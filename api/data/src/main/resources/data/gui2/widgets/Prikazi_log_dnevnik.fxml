@@ -4,6 +4,6 @@
 
 <VBox prefHeight="200.0" prefWidth="100.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="data.gui2.widgets.Prikazi_log_dnevnik">
     <children>
-        <fx:include fx:id="listView_log_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../parts/ListView_Log.fxml" VBox.vgrow="ALWAYS" />
+        <fx:include fx:id="listView_log_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../elements/ListView_Log.fxml" VBox.vgrow="ALWAYS" />
     </children>
 </VBox>

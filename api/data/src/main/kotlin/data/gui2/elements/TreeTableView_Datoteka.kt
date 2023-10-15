@@ -1,4 +1,4 @@
-package data.gui2.parts;
+package data.gui2.elements;
 
 import data.domain.Datoteka
 import javafx.fxml.FXML
@@ -11,13 +11,11 @@ import java.nio.file.Paths
 
 class TreeTableView_Datoteka : KoinComponent {
 
-
     fun init(datoteka: Datoteka) {
         val zvezekDir = Paths.get(datoteka.file.absolutePath, "../${datoteka.file.nameWithoutExtension}").normalize().toFile()
-
         val root = TreeItem(Datoteka(zvezekDir))
-
         val cakalnica = mutableListOf<TreeItem<Datoteka>>(root)
+
         while (cakalnica.isNotEmpty()) {
             val pacient = cakalnica.removeAt(0)
             pacient.isExpanded = false

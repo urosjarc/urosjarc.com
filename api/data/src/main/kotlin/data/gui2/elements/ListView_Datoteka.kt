@@ -1,5 +1,6 @@
-package data.gui2.parts;
+package data.gui2.elements;
 
+import data.base.Opazovan
 import data.domain.Datoteka
 import javafx.collections.FXCollections
 import javafx.fxml.FXML

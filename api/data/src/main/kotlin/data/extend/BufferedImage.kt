@@ -2,16 +2,19 @@ package data.extend
 
 import com.recognition.software.jdeskew.ImageDeskew
 import data.domain.Anotacija
+import data.domain.AnotacijeStrani
 import data.domain.Okvir
 import data.domain.Piksel
-import data.domain.AnotacijeStrani
 import net.coobird.thumbnailator.Thumbnails
 import net.sourceforge.tess4j.util.ImageHelper
 import java.awt.BasicStroke
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.image.BufferedImage
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.InputStream
 import javax.imageio.ImageIO
 import javax.swing.ImageIcon
 import javax.swing.JFrame
@@ -246,4 +249,10 @@ fun BufferedImage.invert(): BufferedImage {
         }
     }
     return bw
+}
+
+fun BufferedImage.inputStream(): ByteArrayInputStream {
+    val os = ByteArrayOutputStream()
+    ImageIO.write(this, "png", os)
+    return ByteArrayInputStream(os.toByteArray())
 }

@@ -2,8 +2,11 @@
 
 <?import javafx.scene.control.*?>
 
-<SplitPane dividerPositions="0.39986737400530503, 0.8017241379310345" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="872.0" prefWidth="1527.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="data.gui2.windows.Procesiranje_zip_zvezkov">
-    <fx:include fx:id="izberi_zip_zvezek_" source="../widgets/Izberi_zip_zvezek.fxml" />
-    <fx:include fx:id="procesiranje_zip_slike_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../widgets/Procesiranje_zip_slike.fxml" />
-    <fx:include fx:id="prikazi_log_dnevnik_" source="../widgets/Prikazi_log_dnevnik.fxml" />
+<SplitPane dividerPositions="0.39986737400530503, 0.8017241379310345" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+           minHeight="-Infinity" minWidth="-Infinity" prefHeight="872.0" prefWidth="1527.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="data.gui2.windows.Procesiranje_zip_zvezkov">
+    <fx:include fx:id="izberi_zip_zvezek_" source="../widgets/Izberi_zip_zvezek.fxml"/>
+    <fx:include fx:id="procesiranje_zip_slike_" source="../widgets/Procesiranje_zip_slike.fxml" maxHeight="1.7976931348623157E308"
+                maxWidth="1.7976931348623157E308"/>
+    <fx:include fx:id="prikazi_log_dnevnik_" source="../widgets/Prikazi_log_dnevnik.fxml"/>
 </SplitPane>
