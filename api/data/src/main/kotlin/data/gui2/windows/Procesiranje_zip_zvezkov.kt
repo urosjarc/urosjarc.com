@@ -1,6 +1,7 @@
 package data.gui2.windows
 
 import core.base.App
+import core.base.Env
 import data.gui2.widgets.Izberi_zip_zvezek
 import data.gui2.widgets.Prikazi_log_dnevnik
 import data.gui2.widgets.Procesiranje_zip_slike
@@ -17,8 +18,10 @@ class Procesiranje_zip_zvezkov : Application() {
 
     @FXML
     lateinit var izberi_zip_zvezek_Controller: Izberi_zip_zvezek
+
     @FXML
     lateinit var procesiranje_zip_slike_Controller: Procesiranje_zip_slike
+
     @FXML
     lateinit var prikazi_log_dnevnik_Controller: Prikazi_log_dnevnik
 
@@ -33,6 +36,7 @@ class Procesiranje_zip_zvezkov : Application() {
     }
 
     override fun start(stage: Stage) {
+        println(Env.TIME_ZONE)
         App.pripravi_DI()
         val fxmlLoader = FXMLLoader(this.javaClass.getResource("Procesiranje_zip_zvezkov.fxml"))
         val scene = Scene(fxmlLoader.load())

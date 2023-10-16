@@ -1,5 +1,6 @@
 package core.base
 
+import data.services.LogService
 import data.services.OcrService
 import data.services.ResouceService
 import data.use_cases.Najdi_vse_zip_slike
@@ -23,6 +24,9 @@ object App {
         }
         this.single<OcrService> {
             OcrService()
+        }
+        this.single<LogService> {
+            LogService()
         }
         this.single<Json> {
             Json { prettyPrint = true }

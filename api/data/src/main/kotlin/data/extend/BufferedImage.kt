@@ -10,11 +10,11 @@ import net.sourceforge.tess4j.util.ImageHelper
 import java.awt.BasicStroke
 import java.awt.BorderLayout
 import java.awt.Color
+import java.awt.Graphics
 import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.InputStream
 import javax.imageio.ImageIO
 import javax.swing.ImageIcon
 import javax.swing.JFrame
@@ -53,6 +53,13 @@ fun BufferedImage.drawAnnotations(annotations: Collection<Anotacija>, color: Col
         g.drawRect(a.x, a.y, a.width, a.height)
     }
     g.dispose()
+}
+fun BufferedImage.copy(): BufferedImage {
+    val b = BufferedImage(this.getWidth(), this.getHeight(), this.getType())
+    val g: Graphics = b.graphics
+    g.drawImage(this, 0, 0, null)
+    g.dispose()
+    return b
 }
 
 fun BufferedImage.drawSlikaAnnotations(slika: AnotacijeStrani) {
@@ -117,7 +124,44 @@ fun BufferedImage.resize(width: Int, height: Int): BufferedImage {
 
 fun BufferedImage.deskew(): Pair<Double, BufferedImage> {
     val imgdeskew = ImageDeskew(this) // BufferedImage img
-    return Pair(-imgdeskew.skewAngle, ImageHelper.rotateImage(this, -imgdeskew.skewAngle)) // rotateImage static method
+    return Pair(-imgdeskew.skewAngle, this.rotate(-imgdeskew.skewAngle)) // rotateImage static method
+}
+
+fun BufferedImage.removeBorder(maxWidth: Int): Pair<Int, BufferedImage> {
+    for (i in 1..maxWidth) {
+        val xStart = i
+        val yStart = i
+        val xEnd = this.width - 2 * i
+        val yEnd = this.height - 2 * i
+        var counter = 0
+
+        //Up down
+        for (y in yStart until yEnd) {
+            val left = this.getHSV(x = xStart, y = y)
+            val right = this.getHSV(x = xEnd, y = y)
+            if (!left.is_black() || !right.is_black()) {
+                counter++
+            }
+        }
+
+        //Left right
+        for (x in xStart until xEnd) {
+            val up = this.getHSV(y = yStart, x = x)
+            val down = this.getHSV(y = yEnd, x = x)
+            if (!up.is_black() || !down.is_black()) {
+                counter++
+            }
+        }
+
+        if (counter == 0) {
+            return Pair(i, this.getSubimage(xStart, yStart, xEnd - xStart, yEnd - yStart))
+        }
+    }
+    return Pair(0, this.getSubimage(0, 0, this.width, this.height))
+}
+
+fun BufferedImage.rotate(angle: Double): BufferedImage {
+    return ImageHelper.rotateImage(this, angle)
 }
 
 fun BufferedImage.boundBox(xStart: Int, xEnd: Int): Okvir {

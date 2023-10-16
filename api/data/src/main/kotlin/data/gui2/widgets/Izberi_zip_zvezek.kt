@@ -3,9 +3,9 @@ package data.gui2.widgets
 import data.base.Opazovan
 import data.domain.Datoteka
 import data.domain.ZipSlika
-import data.extend.show
 import data.gui2.elements.ListView_Datoteka
 import data.gui2.elements.TreeTableView_Datoteka
+import data.services.LogService
 import data.services.ResouceService
 import javafx.fxml.FXML
 import org.koin.core.component.KoinComponent
@@ -17,6 +17,7 @@ class Izberi_zip_zvezek : KoinComponent {
 
     var zip_zvezek = Opazovan<Datoteka?>(null)
     val resourseService by this.inject<ResouceService>()
+    val log by this.inject<LogService>()
 
     @FXML
     lateinit var listView_datoteka_Controller: ListView_Datoteka
@@ -33,19 +34,21 @@ class Izberi_zip_zvezek : KoinComponent {
         }
 
         this.listView_datoteka_Controller.init(this.resourseService.najdi_zip_datoteke())
-
     }
 
     private fun init(datoteka: Datoteka) {
+        this.log.info("init: $datoteka")
+
         //Posodobi tree table.
         this.treeTableView_datoteka_Controller.init(datoteka)
 
+        //Shrani zip zvezek
         this.zip_zvezek.value = datoteka
     }
 
     fun naslednja_zip_slika(): ZipSlika {
         //Dobi zip datoteko
-        val datoteka = this.zip_zvezek.value ?: throw Error("Nobena datoteka ni bila se izbrana!")
+        val datoteka = this.zip_zvezek.value ?: throw this.log.error("Nobena datoteka ni bila se izbrana!")
 
         //Dobi zip entries.
         val zipFile = ZipFile(datoteka.file.absolutePath)

@@ -2,14 +2,14 @@
 
 <?import javafx.scene.control.*?>
 
-<TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="data.gui2.widgets.Procesiranje_zip_slike">
+<TabPane fx:id="tabPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="data.gui2.widgets.Procesiranje_zip_slike">
   <tabs>
-    <Tab text="Obracanje, rezanje">
+    <Tab fx:id="obracanjeRezanjeT" text="Obracanje, rezanje">
       <content>
           <fx:include fx:id="obracanje_rezanje_zip_slike_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../parts/Obracanje_rezanje_zip_slike.fxml" />
       </content>
     </Tab>
-    <Tab text="Anotiranje">
+    <Tab fx:id="anotiranjeT" text="Anotiranje">
       <content>
           <fx:include fx:id="anotiranje_zip_slike_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../parts/Anotiranje_zip_slike.fxml" />
       </content>

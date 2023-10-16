@@ -11,4 +11,9 @@ data class Log(
     val ustvarjeno: LocalDateTime = LocalDateTime.zdaj(),
 ) {
     enum class Tip { INFO, WARN, ERROR, DEBUG }
+
+    override fun toString(): String {
+        val t = ustvarjeno.time
+        return "${ustvarjeno.date} ${t.hour}.${t.minute} | $tip: $data"
+    }
 }

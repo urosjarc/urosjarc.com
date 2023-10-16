@@ -1,5 +1,7 @@
 package data.domain
 
+import java.awt.Color
+
 data class Piksel(
     val r: Int,
     val g: Int,
@@ -34,9 +36,7 @@ data class Piksel(
         return (s < 0.1) && (v > 0.5)
     }
 
-    fun is_black(): Boolean {
-        return (v < 0.15)
-    }
+    fun is_black(): Boolean = this.r + this.g + this.b > 230 * 3
 
     fun is_red_faint(): Boolean {
         return (h > 150 || h < 60) && (s > 0.001 && s < 0.1) && v > 0.3
