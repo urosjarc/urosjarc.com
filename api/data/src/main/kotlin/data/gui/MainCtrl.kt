@@ -214,7 +214,7 @@ class MainCtrl : KoinComponent {
         /**
          * Context menu for ocr vindow
          */
-        Anotacija.Tip.values().forEach {
+        Anotacija.Tip.entries.forEach {
             val menuItem1 = MenuItem(it.name)
             this.slikaOcrMenu.items.add(menuItem1)
         }

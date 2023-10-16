@@ -3,6 +3,7 @@ package data.use_cases
 import data.domain.Anotacija
 import data.domain.AnotacijeStrani
 import data.extend.averagePixel
+import data.extend.vmes
 import java.awt.image.BufferedImage
 
 class Procesiraj_omego_sliko {
@@ -32,7 +33,7 @@ class Procesiraj_omego_sliko {
                 val naloga_minY = closestNaloga.y
                 for (annotation in annos) {
                     val ave = annotation.average
-                    if (ave.y in naslov_maxY until naloga_minY) {
+                    if (ave.y.vmes(naslov_maxY, naloga_minY)) {
                         slika.teorija.add(annotation)
                     }
                 }
@@ -52,7 +53,7 @@ class Procesiraj_omego_sliko {
         for (anno in annos) {
             val annoAve = anno.average
             val dy = lowestY.height / 2
-            if (annoAve.y in lowestY.y - dy..lowestY.y_max + dy) {
+            if (annoAve.y.vmes(lowestY.y - dy, lowestY.y_max + dy)) {
                 slika.noga.add(anno)
             }
         }
@@ -64,7 +65,7 @@ class Procesiraj_omego_sliko {
             val hasEndDot = anno.text.endsWith(".")
             if (hasEndDot && pass) {
                 val nalogeAnnos = annos  //Pridobivanje annotationov ki so rdeci in pripadajo isti vrstici in so levo od pike ter dovolj blizu
-                    .filter { anno.average.y in it.y..it.y_max }
+                    .filter { anno.average.y.vmes(it.y, it.y_max) }
                     .filter { it.average.x < anno.average.x && it.x_max - anno.x < 20 }
                     .filter { img.averagePixel(it).is_red() }
                     .sortedBy { it.average.x }.toMutableList()
@@ -92,7 +93,7 @@ class Procesiraj_omego_sliko {
                 val deli = mutableListOf(anno)
                 for (del in annos) {
                     val delAve = del.average
-                    if (delAve.y in anno.y..anno.y_max && delAve.x > anno.x_max) {
+                    if (delAve.y.vmes(anno.y, anno.y_max) && delAve.x > anno.x_max) {
                         deli.add(del)
                     }
                 }

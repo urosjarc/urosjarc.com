@@ -3,16 +3,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="data.gui2.parts.Anotiranje_zip_slike">
-   <center>
-       <fx:include fx:id="imageView_bufferedImage_" source="../elements/ImageView_BufferedImage.fxml" />
-   </center>
+<BorderPane fx:id="centralBP" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="data.gui2.parts.Anotiranje_zip_slike">
    <bottom>
       <HBox BorderPane.alignment="CENTER">
          <children>
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Resetiraj" HBox.hgrow="ALWAYS" />
+            <Button fx:id="resetirajB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Resetiraj" HBox.hgrow="ALWAYS" />
             <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Potrdi" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
    </bottom>
+   <center>
+       <fx:include fx:id="imageView_bufferedImage_" maxHeight="900.0" maxWidth="636.447204589843" minHeight="900.0" minWidth="636.447204589843" prefHeight="900.0" prefWidth="636.447204589843" source="../elements/ImageView_BufferedImage.fxml" BorderPane.alignment="CENTER" />
+   </center>
 </BorderPane>

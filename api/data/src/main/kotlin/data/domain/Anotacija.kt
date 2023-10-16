@@ -26,7 +26,7 @@ data class Anotacija(
 
     val area: Int get() = this.width * this.height
 
-    val average: Vektor<Int> get() = Vektor(x = this.x + this.width / 2, y = this.y + this.height / 2)
+    val average: Vektor get() = Vektor(x = this.x + this.width / 2.0, y = this.y + this.height / 2.0)
 
     fun contains(x: Int, y: Int): Boolean {
         return x in this.x..this.x_max && y in this.y..this.y_max
