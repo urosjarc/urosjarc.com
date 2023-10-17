@@ -55,7 +55,7 @@ class Obracanje_rezanje_zip_slike : KoinComponent {
     }
 
     private fun potrdi() {
-        this.finishedData.value = this.data!!.copy(img=this.process_data())
+        this.finishedData.value = this.data!!.copy(img = this.process_data())
         this.log.info("potrdi sliko: ${this.finishedData.value}")
     }
 
@@ -69,7 +69,7 @@ class Obracanje_rezanje_zip_slike : KoinComponent {
         this.log.info("init: ${this.infoL.text}")
         val img = this.process_data()!!.negative()
         img.drawGrid()
-        this.imageView_bufferedImage_Controller.init(img)
+        this.imageView_bufferedImage_Controller.init(img = img)
     }
 
     private fun init_infoL() {

@@ -18,7 +18,6 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import javax.swing.ImageIcon
 
 class Anotiranje_zip_slike : KoinComponent {
 
@@ -54,36 +53,32 @@ class Anotiranje_zip_slike : KoinComponent {
     fun initialize() {
         println("init Anotiranje_zip_slike")
 
-        /**
-         * Dodajanje tipov anotacij v context menu slike
-         */
+        // Dodajanje tipov anotacij v context menu slike
         Anotacija.Tip.entries.forEach {
             val menuItem1 = MenuItem(it.name)
             menuItem1.userData = it
             this.contextMenu.items.add(menuItem1)
         }
 
+        // Popravi anotacije ce se slika zoomira
+        ImageView_BufferedImage.visina.opazuj {
+            this.redraw_imageView()
+        }
 
         this.imageView_bufferedImage_Controller.let { ctrl ->
 
-            /**
-             * Shrani informacijo kje se je drag zacel
-             */
+            // Shrani informacijo kje se je drag zacel
             ctrl.self.setOnMousePressed {
                 this.dragStart = this.eventPosition(it)
             }
 
-            /**
-             * Shrani kje se je drag koncal...
-             */
+            // Shrani kje se je drag koncal...
             ctrl.self.setOnMouseReleased {
                 this.dragEnd = this.eventPosition(it)
                 contextMenu.show(ctrl.self, it.screenX, it.screenY)
             }
 
-            /**
-             * Procesiraj ko se drag dogaja
-             */
+            // Procesiraj ko se drag dogaja
             ctrl.self.setOnMouseDragged {
                 ctrl.backgroundP.children.remove(this.dragRectangle)
 
@@ -102,14 +97,10 @@ class Anotiranje_zip_slike : KoinComponent {
                 ctrl.backgroundP.children.add(this.dragRectangle)
             }
 
-            /**
-             * Ce uporabnik klikne reset pobrisi vse anotacije ustvarjene od uporabnika
-             */
+            // Ce uporabnik klikne reset pobrisi vse anotacije ustvarjene od uporabnika
             this.resetirajB.setOnAction { this.redraw_imageView() }
 
-            /**
-             * Ko se izbere context menu shrani izbrane anotacije in jih prikazi na strani.
-             */
+            // Ko se izbere context menu shrani izbrane anotacije in jih prikazi na strani.
             this.contextMenu.setOnAction {
                 this.redraw_imageView()
                 val tip = (it.target as MenuItem).userData as Anotacija.Tip
