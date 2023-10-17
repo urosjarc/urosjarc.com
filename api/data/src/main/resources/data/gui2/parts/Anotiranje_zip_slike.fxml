@@ -13,6 +13,6 @@
       </HBox>
    </bottom>
    <center>
-       <fx:include fx:id="imageView_bufferedImage_" maxHeight="900.0" maxWidth="636.447204589843" minHeight="900.0" minWidth="636.447204589843" prefHeight="900.0" prefWidth="636.447204589843" source="../elements/ImageView_BufferedImage.fxml" BorderPane.alignment="CENTER" />
+       <fx:include fx:id="imageView_bufferedImage_" source="../elements/ImageView_BufferedImage.fxml" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>

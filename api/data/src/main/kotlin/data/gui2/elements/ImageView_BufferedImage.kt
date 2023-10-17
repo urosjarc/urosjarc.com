@@ -11,7 +11,15 @@ import java.awt.image.BufferedImage
 
 class ImageView_BufferedImage : KoinComponent {
     fun init(img: BufferedImage) {
+        val ratio = img.height / img.width.toDouble()
         this.self.image = Image(img.inputStream())
+
+        this.backgroundP.maxWidth = this.backgroundP.prefHeight / ratio
+        this.backgroundP.minWidth = this.backgroundP.prefHeight / ratio
+        this.backgroundP.prefWidth = this.backgroundP.prefHeight / ratio
+        this.self.fitWidth = this.self.fitHeight / ratio
+
+        println(this.backgroundP.prefWidth)
     }
 
     @FXML

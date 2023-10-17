@@ -39,6 +39,9 @@ fun BufferedImage.show(title: String = ""): JFrame {
     return frame
 }
 
+fun BufferedImage.thumbnail(w: Int, h: Int): BufferedImage = Thumbnails.of(this)
+    .size(w, h).keepAspectRatio(false).asBufferedImage()
+
 fun BufferedImage.save(file: File) {
     ImageIO.write(this, "png", file)
 }
