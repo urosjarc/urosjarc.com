@@ -363,8 +363,8 @@ class MainCtrl : KoinComponent {
          */
         val finalAnnoFile = trenutniDir(OCR_FINAL_ANNOTACIJE)
         val ocrSlikaFile = trenutniDir(OCR_SLIKA)
-        val slikaAnno = procesirajSliko.zdaj(img = img, annos = annos)
-        finalAnnoFile.writeText(json.encodeToString(slikaAnno))
+//        val slikaAnno = procesirajSliko.zdaj(img = img, annos = annos)
+//        finalAnnoFile.writeText(json.encodeToString(slikaAnno))
 //        img.drawSlikaAnnotations(slikaAnno)
         img.save(ocrSlikaFile)
         slikaOcr.image = Image(ocrSlikaFile.inputStream())

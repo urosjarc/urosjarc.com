@@ -2,18 +2,19 @@ package data.use_cases
 
 import data.domain.Anotacija
 import data.domain.AnotacijeStrani
+import data.domain.ZipSlika
 import data.extend.averagePixel
 import data.extend.vmes
 import java.awt.image.BufferedImage
 
 class Procesiraj_omego_sliko {
 
-    fun zdaj(img: BufferedImage, annos: List<Anotacija>): AnotacijeStrani {
-        val slika = AnotacijeStrani()
+    fun zdaj(zipSlika: ZipSlika, annos: List<Anotacija>): AnotacijeStrani {
+        val slika = AnotacijeStrani(zipSlika=zipSlika)
 
         this.parse_footer(slika, annos)
-        this.parse_naloge(img, slika, annos)
-        this.parse_naslov(img, slika, annos)
+        this.parse_naloge(zipSlika.img, slika, annos)
+        this.parse_naslov(zipSlika.img, slika, annos)
         this.parse_head(slika, annos)
         this.parse_teorija(slika, annos)
 

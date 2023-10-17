@@ -13,7 +13,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.awt.image.BufferedImage
 
-class Obracanje_rezanje_zip_slike : KoinComponent {
+class Popravljanje_zip_slike : KoinComponent {
 
     val log by this.inject<LogService>()
     var data: ZipSlika? = null

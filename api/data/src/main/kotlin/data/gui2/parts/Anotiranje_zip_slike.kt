@@ -28,11 +28,24 @@ class Anotiranje_zip_slike : KoinComponent {
     @FXML
     lateinit var resetirajB: Button
 
+    @FXML
+    lateinit var potrdiB: Button
+
     val contextMenu = ContextMenu()
+
+    var data: ZipSlika? = null
+
+    /**
+     * Anotacije
+     */
     var userAnotacije = mutableSetOf<Anotacija>()
     var vseAnotacije = listOf<Anotacija>()
     var anotacijeStrani: AnotacijeStrani? = null
-    var data: ZipSlika? = null
+    var anotacijeBackup: AnotacijeStrani? = null
+
+    /**
+     * Drag
+     */
     var dragStart: Vektor? = null
     var dragEnd: Vektor? = null
     var dragRectangle: Rectangle? = null
@@ -67,7 +80,7 @@ class Anotiranje_zip_slike : KoinComponent {
         this.CTRL.self.setOnMousePressed { this.dragStart = this.eventPosition(it) }
         this.CTRL.self.setOnMouseReleased { this.self_onMouseReleased(me = it) }
         this.CTRL.self.setOnMouseDragged { this.self_onMouseDragg(me = it) }
-        this.resetirajB.setOnAction { this.redraw_imageView() }
+        this.resetirajB.setOnAction { this.init_imageView() }
 
         // Dodajanje tipov anotacij v context menu slike
         Anotacija.Tip.entries.forEach {
@@ -149,17 +162,14 @@ class Anotiranje_zip_slike : KoinComponent {
 
     fun init(zipSlika: ZipSlika) {
         this.data = zipSlika
+        this.vseAnotacije = this.ocrService.google(image = zipSlika.img)
         this.init_imageView()
     }
 
     private fun init_imageView() {
         this.log.info("init: ${this.data}")
-        val img = this.data!!.img.copy()
-        this.vseAnotacije = this.ocrService.google(image = img)
-        this.anotacijeStrani = this.procesirajOmegoSliko.zdaj(img = img, annos = this.vseAnotacije)
-
-        this.log.info("init anotacije: $anotacijeStrani")
-        this.CTRL.init(img = img)
+        this.anotacijeStrani = this.procesirajOmegoSliko.zdaj(zipSlika = this.data!!, annos = this.vseAnotacije)
+        this.CTRL.init(img = this.data!!.img)
         this.redraw_imageView()
     }
 }

@@ -1,9 +1,7 @@
 package data.domain
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class AnotacijeStrani(
+    val zipSlika: ZipSlika,
     val glava: MutableList<Anotacija> = mutableListOf(),
     var naslov: MutableList<Anotacija> = mutableListOf(),
     val teorija: MutableList<Anotacija> = mutableListOf(),
