@@ -17,4 +17,8 @@ data class AnotacijeStrani(
         this.glava.forEach { it.tip = Anotacija.Tip.HEAD }
         this.teorija.forEach { it.tip = Anotacija.Tip.TEORIJA }
     }
+
+    override fun toString(): String {
+        return "AnotacijeStrani(naloge=${this.naloge.size}, noga=${this.noga.size}, naslov=${this.naslov.size}, glava=${this.glava.size}, teorija=${this.teorija.size})"
+    }
 }

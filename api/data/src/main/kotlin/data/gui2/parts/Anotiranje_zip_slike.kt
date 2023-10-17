@@ -34,6 +34,7 @@ class Anotiranje_zip_slike : KoinComponent {
     var data: ZipSlika? = null
     var dragStart: Vektor? = null
     var dragEnd: Vektor? = null
+    var dragRectangle: Rectangle? = null
 
     @FXML
     lateinit var imageView_bufferedImage_Controller: ImageView_BufferedImage
@@ -50,6 +51,9 @@ class Anotiranje_zip_slike : KoinComponent {
     fun initialize() {
         println("init Anotiranje_zip_slike")
 
+        /**
+         * Dodajanje tipov anotacij v context menu slike
+         */
         Anotacija.Tip.entries.forEach {
             val menuItem1 = MenuItem(it.name)
             menuItem1.userData = it
@@ -58,33 +62,74 @@ class Anotiranje_zip_slike : KoinComponent {
 
 
         this.imageView_bufferedImage_Controller.let { ctrl ->
+
+            /**
+             * Shrani informacijo kje se je drag zacel
+             */
             ctrl.self.setOnMousePressed {
                 this.dragStart = this.vektor(it)
             }
 
+            /**
+             * Shrani kje se je drag koncal...
+             */
             ctrl.self.setOnMouseReleased {
                 this.dragEnd = this.vektor(it)
                 contextMenu.show(ctrl.self, it.screenX, it.screenY)
             }
 
+            /**
+             * Procesiraj ko se drag dogaja
+             */
             ctrl.self.setOnMouseDragged {
+                ctrl.backgroundP.children.remove(this.dragRectangle)
+
                 val v = this.vektor(it)
-                val rec = Rectangle(this.dragStart!!.x, this.dragStart!!.y, v.x - this.dragStart!!.x, v.y - this.dragStart!!.y)
-                rec.fill = null
-                rec.stroke = Color.RED
-                rec.strokeWidth = 2.0
-                if (ctrl.backgroundP.children.size > 1) ctrl.backgroundP.children.remove(2, ctrl.backgroundP.children.size)
-                ctrl.backgroundP.children.add(rec)
+                this.dragRectangle = Rectangle(
+                    this.dragStart!!.x,
+                    this.dragStart!!.y,
+                    v.x - this.dragStart!!.x,
+                    v.y - this.dragStart!!.y
+                ).apply {
+                    this.fill = null
+                    this.stroke = Color.RED
+                    this.strokeWidth = 2.0
+                }
+
+                ctrl.backgroundP.children.add(this.dragRectangle)
             }
 
-            this.resetirajB.setOnAction {
-                ctrl.backgroundP.children.remove(2, ctrl.backgroundP.children.size)
-            }
+            /**
+             * Ce uporabnik klikne reset pobrisi vse anotacije ustvarjene od uporabnika
+             */
+            this.resetirajB.setOnAction { this.redraw_imageView() }
 
+            /**
+             * Ko se izbere context menu shrani izbrane anotacije in jih prikazi na strani.
+             */
             this.contextMenu.setOnAction {
-                ctrl.backgroundP.children.remove(2, ctrl.backgroundP.children.size)
+                this.redraw_imageView()
                 val tip = (it.target as MenuItem).userData as Anotacija.Tip
                 println(tip)
+            }
+        }
+    }
+
+    private fun narisi_rectangle(rec: Rectangle) {
+        this.imageView_bufferedImage_Controller.backgroundP.children.add(rec)
+    }
+
+    private fun redraw_imageView() {
+        this.imageView_bufferedImage_Controller.let { ctrl ->
+            if (ctrl.backgroundP.children.size > 1) {
+                ctrl.backgroundP.children.remove(1, ctrl.backgroundP.children.size)
+            }
+            this.anotacijeStrani.let { stran ->
+                stran!!.noga.forEach { this.narisi_rectangle(it.rectangle(color = Color.BLACK)) }
+                stran.naloge.forEach { it -> it.forEach { this.narisi_rectangle(it.rectangle(Color.GREEN)) } }
+                stran.naslov.forEach { this.narisi_rectangle(it.rectangle(Color.BLUE)) }
+                stran.glava.forEach { this.narisi_rectangle(it.rectangle(Color.BLACK)) }
+                stran.teorija.forEach { this.narisi_rectangle(it.rectangle(Color.RED)) }
             }
         }
     }
@@ -101,10 +146,9 @@ class Anotiranje_zip_slike : KoinComponent {
 
         this.dodaneAnotacije.clear()
         this.anotacijeStrani = this.procesirajOmegoSliko.zdaj(img = img, annos = anotacije)
+        this.log.info("init anotacije: $anotacijeStrani")
 
-        img.drawSlikaAnnotations(this.anotacijeStrani!!)
-
+        this.redraw_imageView()
         this.imageView_bufferedImage_Controller.init(img = img)
     }
-
 }

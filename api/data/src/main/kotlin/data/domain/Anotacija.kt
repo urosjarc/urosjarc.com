@@ -4,10 +4,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Anotacija(
-    val x: Int,
-    val y: Int,
-    val height: Int,
-    val width: Int,
+    val x: Double,
+    val y: Double,
+    val height: Double,
+    val width: Double,
     val text: String,
     var tip: Tip,
 ) {
@@ -20,15 +20,15 @@ data class Anotacija(
         FOOTER,
     }
 
-    val x_max: Int get() = this.x + this.width
+    val x_max: Double get() = this.x + this.width
 
-    val y_max: Int get() = this.y + this.height
+    val y_max: Double get() = this.y + this.height
 
-    val area: Int get() = this.width * this.height
+    val area: Double get() = this.width * this.height
 
     val average: Vektor get() = Vektor(x = this.x + this.width / 2.0, y = this.y + this.height / 2.0)
 
-    fun contains(x: Int, y: Int): Boolean {
+    fun contains(x: Double, y: Double): Boolean {
         return x in this.x..this.x_max && y in this.y..this.y_max
     }
 

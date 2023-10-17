@@ -2,12 +2,10 @@ package data.extend
 
 import com.recognition.software.jdeskew.ImageDeskew
 import data.domain.Anotacija
-import data.domain.AnotacijeStrani
 import data.domain.Okvir
 import data.domain.Piksel
 import net.coobird.thumbnailator.Thumbnails
 import net.sourceforge.tess4j.util.ImageHelper
-import java.awt.BasicStroke
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Graphics
@@ -45,29 +43,13 @@ fun BufferedImage.save(file: File) {
     ImageIO.write(this, "png", file)
 }
 
-fun BufferedImage.drawAnnotations(annotations: Collection<Anotacija>, color: Color = Color.CYAN, width: Float = 5.0f) {
-    val g = this.createGraphics()
-    g.color = color
-    g.stroke = BasicStroke(width)
-    for (a in annotations) {
-        g.drawRect(a.x, a.y, a.width, a.height)
-    }
-    g.dispose()
-}
+
 fun BufferedImage.copy(): BufferedImage {
     val b = BufferedImage(this.getWidth(), this.getHeight(), this.getType())
     val g: Graphics = b.graphics
     g.drawImage(this, 0, 0, null)
     g.dispose()
     return b
-}
-
-fun BufferedImage.drawSlikaAnnotations(slika: AnotacijeStrani) {
-    this.drawAnnotations(slika.noga, Color.BLACK)
-    slika.naloge.forEach { this.drawAnnotations(it, Color.GREEN) }
-    this.drawAnnotations(slika.naslov, Color.BLUE)
-    this.drawAnnotations(slika.glava, Color.BLACK)
-    this.drawAnnotations(slika.teorija, Color.RED)
 }
 
 fun BufferedImage.append(img: BufferedImage): BufferedImage {
@@ -84,8 +66,8 @@ fun BufferedImage.append(img: BufferedImage): BufferedImage {
 fun BufferedImage.averagePixel(a: Anotacija): Piksel {
     val pixels = mutableListOf<Piksel>()
 
-    for (y in a.y..a.y_max) {
-        for (x in a.x..a.x_max) {
+    for (y in a.y.toInt()..a.y_max.toInt()) {
+        for (x in a.x.toInt()..a.x_max.toInt()) {
             val pixel = this.getHSV(x, y)
             if (!pixel.is_white()) pixels.add(pixel)
         }

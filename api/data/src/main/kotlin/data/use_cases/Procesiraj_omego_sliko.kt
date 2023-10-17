@@ -72,7 +72,7 @@ class Procesiraj_omego_sliko {
 
                 nalogeAnnos.add(anno)
                 val area = nalogeAnnos.map { it.area }.sum()
-                if (area in 30 * 30..300 * 50) {
+                if (area.vmes(30 * 30, 300 * 50)) {
                     slika.naloge.add(nalogeAnnos)
                 }
             }
@@ -99,7 +99,7 @@ class Procesiraj_omego_sliko {
                 }
                 deli.sortBy { it.average.x }
                 val area = deli.map { it.area }.sum()
-                if (area in 150 * 150..1000 * 150) naslovi.add(deli)
+                if (area.vmes(150 * 150, 1000 * 150)) naslovi.add(deli)
             }
         }
 
@@ -113,7 +113,9 @@ class Procesiraj_omego_sliko {
     }
 
     fun parse_head(slika: AnotacijeStrani, annos: List<Anotacija>) {
-        val highestY = (slika.naloge.map { it.first() } + slika.naslov).minBy { it.y }.y
+        val highest = slika.naloge.map { it.first() } + slika.naslov
+        if (highest.isEmpty()) return
+        val highestY = highest.minBy { it.y }.y
         for (annotation in annos) {
             val annoAve = annotation.average
             if (annoAve.y < highestY) {

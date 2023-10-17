@@ -62,10 +62,10 @@ class OcrService {
                 ys.add(vertex.y)
             }
 
-            val x = xs.min()
-            val X = xs.max()
-            val y = ys.min()
-            val Y = ys.max()
+            val x = xs.min().toDouble()
+            val X = xs.max().toDouble()
+            val y = ys.min().toDouble()
+            val Y = ys.max().toDouble()
 
             Anotacija(
                 x = x,
