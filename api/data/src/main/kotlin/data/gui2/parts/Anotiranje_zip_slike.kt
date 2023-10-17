@@ -29,6 +29,7 @@ class Anotiranje_zip_slike : KoinComponent {
     lateinit var resetirajB: Button
 
     val contextMenu = ContextMenu()
+    var queueAnotacije = mutableSetOf<Anotacija>()
     var dodaneAnotacije = mutableListOf<Anotacija>()
     var anotacijeStrani: AnotacijeStrani? = null
     var data: ZipSlika? = null
@@ -80,21 +81,7 @@ class Anotiranje_zip_slike : KoinComponent {
 
             // Procesiraj ko se drag dogaja
             ctrl.self.setOnMouseDragged {
-                ctrl.backgroundP.children.remove(this.dragRectangle)
-
-                val v = this.eventPosition(it)
-                this.dragRectangle = Rectangle(
-                    this.dragStart!!.x,
-                    this.dragStart!!.y,
-                    v.x - this.dragStart!!.x,
-                    v.y - this.dragStart!!.y
-                ).apply {
-                    this.fill = null
-                    this.stroke = Color.RED
-                    this.strokeWidth = 2.0
-                }
-
-                ctrl.backgroundP.children.add(this.dragRectangle)
+                this.self_onMouseDragg(me = it)
             }
 
             // Ce uporabnik klikne reset pobrisi vse anotacije ustvarjene od uporabnika
@@ -106,6 +93,37 @@ class Anotiranje_zip_slike : KoinComponent {
                 val tip = (it.target as MenuItem).userData as Anotacija.Tip
                 println(tip)
             }
+        }
+    }
+
+    fun self_onMouseDragg(me: MouseEvent) {
+        this.imageView_bufferedImage_Controller.let { ctrl ->
+            ctrl.backgroundP.children.remove(this.dragRectangle)
+
+            val v = this.eventPosition(me)
+            this.dragRectangle = Rectangle(
+                this.dragStart!!.x,
+                this.dragStart!!.y,
+                v.x - this.dragStart!!.x,
+                v.y - this.dragStart!!.y
+            ).apply {
+                this.fill = null
+                this.stroke = Color.RED
+                this.strokeWidth = 2.0
+            }
+
+            this.dodaneAnotacije.forEach {
+
+                throw Error("Mapiranje je problem!!!")
+
+                if (it.average.x.vmes(this.dragStart!!.x, this.dragEnd!!.x) &&
+                    it.average.y.vmes(this.dragStart!!.y, this.dragEnd!!.y)
+                ) {
+                    this.queueAnotacije.add(it)
+                }
+            }
+            this.redraw_imageView()
+            ctrl.backgroundP.children.add(this.dragRectangle)
         }
     }
 
@@ -146,6 +164,7 @@ class Anotiranje_zip_slike : KoinComponent {
                 stran.glava.forEach { this.narisi_rectangle(it, Color.BLACK) }
                 stran.teorija.forEach { this.narisi_rectangle(it, Color.RED) }
             }
+            this.queueAnotacije.forEach { this.narisi_rectangle(it, Color.CYAN) }
         }
     }
 
