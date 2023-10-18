@@ -7,7 +7,7 @@ import gui.extend.averagePixel
 import gui.extend.vmes
 import java.awt.image.BufferedImage
 
-class Anotiraj_omego_sliko {
+class Anotiraj_omego_stran {
 
     fun zdaj(slika: Slika, annos: List<Anotacija>): Stran {
         val stran = Stran(slika = slika, anotacije = annos)

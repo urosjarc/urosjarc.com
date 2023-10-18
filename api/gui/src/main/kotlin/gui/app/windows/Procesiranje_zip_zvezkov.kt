@@ -28,7 +28,7 @@ class Procesiranje_zip_zvezkov : Application() {
         println("init Procesiranje_zip_zvezkov")
         this.izberi_zip_zvezek_Controller.zip_zvezek.opazuj {
             this.procesiranje_slike_Controller.init(
-                this.izberi_zip_zvezek_Controller.naslednja_zip_slika()
+                this.izberi_zip_zvezek_Controller.naslednja_slika()
             )
         }
     }

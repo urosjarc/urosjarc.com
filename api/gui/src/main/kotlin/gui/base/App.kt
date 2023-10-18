@@ -4,7 +4,8 @@ import gui.services.LogService
 import gui.services.OcrService
 import gui.services.ResouceService
 import gui.use_cases.Najdi_vse_slike
-import gui.use_cases.Anotiraj_omego_sliko
+import gui.use_cases.Anotiraj_omego_stran
+import gui.use_cases.Razrezi_stran
 import kotlinx.serialization.json.Json
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
@@ -32,8 +33,9 @@ object App {
             Json { prettyPrint = true }
         }
 
+        this.factoryOf(::Razrezi_stran)
         this.factoryOf(::Najdi_vse_slike)
-        this.factoryOf(::Anotiraj_omego_sliko)
+        this.factoryOf(::Anotiraj_omego_stran)
     }
 
     fun pripravi_DI() {

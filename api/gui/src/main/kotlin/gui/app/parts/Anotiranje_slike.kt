@@ -8,7 +8,7 @@ import gui.extend.*
 import gui.app.elements.ImageView_BufferedImage
 import gui.services.LogService
 import gui.services.OcrService
-import gui.use_cases.Anotiraj_omego_sliko
+import gui.use_cases.Anotiraj_omego_stran
 import javafx.fxml.FXML
 import javafx.scene.control.Button
 import javafx.scene.control.ContextMenu
@@ -22,7 +22,7 @@ import org.koin.core.component.inject
 class Anotiranje_slike : KoinComponent {
 
     private val log by this.inject<LogService>()
-    private val procesirajOmegoSliko by this.inject<Anotiraj_omego_sliko>()
+    private val procesirajOmegoSliko by this.inject<Anotiraj_omego_stran>()
     private val ocrService by this.inject<OcrService>()
 
     @FXML
@@ -33,14 +33,14 @@ class Anotiranje_slike : KoinComponent {
 
     val contextMenu = ContextMenu()
 
-    var data: Slika? = null
+    var slika: Slika? = null
 
     /**
      * Anotacije
      */
     var userAnotacije = mutableSetOf<Anotacija>()
-    var vseAnotacije = listOf<Anotacija>()
-    var anotacijeStrani: Stran? = null
+    var anotacije = listOf<Anotacija>()
+    var stran: Stran? = null
 
     /**
      * Drag
@@ -56,7 +56,7 @@ class Anotiranje_slike : KoinComponent {
     private fun eventPosition(mouseEvent: MouseEvent): Vektor = this.imagePosition(x = mouseEvent.x, y = mouseEvent.y)
 
     private fun imagePosition(x: Double, y: Double): Vektor {
-        val img = this.data!!.img
+        val img = this.slika!!.img
         val widthR = img.width / this.CTRL.self.image.width
         val heightR = img.height / this.CTRL.self.image.height
         return Vektor(x = x * widthR, y = y * heightR)
@@ -64,7 +64,7 @@ class Anotiranje_slike : KoinComponent {
 
     private fun anotacijaPosition(ano: Anotacija): Rectangle {
         val v = this.imagePosition(x = ano.x, y = ano.y)
-        val img = this.data!!.img
+        val img = this.slika!!.img
         val rx = img.width / this.CTRL.self.fitWidth
         val ry = img.height / this.CTRL.self.fitHeight
         return Rectangle(v.x / rx, v.y / ry, ano.width / rx, ano.height / ry)
@@ -92,8 +92,8 @@ class Anotiranje_slike : KoinComponent {
         this.contextMenu.setOnAction {
 
             val tip = (it.target as MenuItem).userData as Anotacija.Tip
-            if (tip == Anotacija.Tip.NEZNANO) this.anotacijeStrani!!.odstrani(this.userAnotacije.toList())
-            else this.anotacijeStrani!!.dodaj(ano = this.userAnotacije.toList(), tip = tip)
+            if (tip == Anotacija.Tip.NEZNANO) this.stran!!.odstrani(this.userAnotacije.toList())
+            else this.stran!!.dodaj(ano = this.userAnotacije.toList(), tip = tip)
 
             this.userAnotacije.clear()
             this.redraw_imageView()
@@ -106,7 +106,7 @@ class Anotiranje_slike : KoinComponent {
 
         //Posodobi user anotacije
         this.userAnotacije.clear()
-        this.vseAnotacije.forEach {
+        this.anotacije.forEach {
             val rec = this.anotacijaPosition(ano = it)
             val a = Vektor(x = rec.x + rec.width / 2.0, y = rec.y + rec.height / 2.0)
             if (a.x.vmes(this.dragStart!!.x, this.dragEnd!!.x) && a.y.vmes(this.dragStart!!.y, this.dragEnd!!.y)) {
@@ -149,7 +149,7 @@ class Anotiranje_slike : KoinComponent {
 
     private fun redraw_imageView() {
         if (this.CTRL.backgroundP.children.size > 1) this.CTRL.backgroundP.children.remove(1, this.CTRL.backgroundP.children.size)
-        this.anotacijeStrani.let { stran ->
+        this.stran.let { stran ->
             if(stran == null) return@let
             stran.noga.forEach { this.narisi_rectangle(it, Color.BLACK) }
             stran.naloge.forEach { it -> it.forEach { this.narisi_rectangle(it, Color.GREEN) } }
@@ -161,15 +161,15 @@ class Anotiranje_slike : KoinComponent {
     }
 
     fun init(zipSlika: Slika) {
-        this.data = zipSlika
-        this.vseAnotacije = this.ocrService.google(image = zipSlika.img)
+        this.slika = zipSlika
+        this.anotacije = this.ocrService.google(image = zipSlika.img)
         this.init_imageView()
     }
 
     private fun init_imageView() {
-        this.log.info("init: ${this.data}")
-        this.anotacijeStrani = this.procesirajOmegoSliko.zdaj(slika = this.data!!, annos = this.vseAnotacije)
-        this.CTRL.init(img = this.data!!.img)
+        this.log.info("init: ${this.slika}")
+        this.stran = this.procesirajOmegoSliko.zdaj(slika = this.slika!!, annos = this.anotacije)
+        this.CTRL.init(img = this.slika!!.img)
         this.redraw_imageView()
     }
 }

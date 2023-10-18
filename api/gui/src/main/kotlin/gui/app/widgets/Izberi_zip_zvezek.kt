@@ -45,7 +45,7 @@ class Izberi_zip_zvezek : KoinComponent {
         this.zip_zvezek.value = datoteka
     }
 
-    fun naslednja_zip_slika(): Slika {
+    fun naslednja_slika(): Slika {
         //Dobi zip datoteko
         val datoteka = this.zip_zvezek.value ?: throw this.log.error("Nobena datoteka ni bila se izbrana!")
 

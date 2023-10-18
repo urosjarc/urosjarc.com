@@ -3,6 +3,7 @@ package gui.app.parts
 import gui.domain.Slika
 import gui.extend.*
 import gui.app.elements.ImageView_BufferedImage
+import gui.base.Opazovan
 import gui.services.LogService
 import javafx.fxml.FXML
 import javafx.scene.control.Button
@@ -15,8 +16,8 @@ import java.awt.image.BufferedImage
 class Popravljanje_slike : KoinComponent {
 
     val log by this.inject<LogService>()
-    var data: Slika? = null
-    var finishedData = gui.base.Opazovan<Slika?>(null)
+    var slika: Slika? = null
+    var koncnaSlika = Opazovan<Slika?>(null)
 
     @FXML
     lateinit var imageView_bufferedImage_Controller: ImageView_BufferedImage
@@ -36,14 +37,14 @@ class Popravljanje_slike : KoinComponent {
     @FXML
     lateinit var infoL: Label
 
-    fun init(zipSlika: Slika) {
-        this.data = zipSlika
+    fun init(slika: Slika) {
+        this.slika = slika
         this.resetiraj()
     }
 
     private fun resetiraj() {
         this.log.info("resetiraj sliko")
-        val deskew = this.data!!.img.deskew()
+        val deskew = this.slika!!.img.deskew()
         val removeBorder = deskew.second.removeBorder(maxWidth = 300)
 
         this.rotacijaS.value = deskew.first
@@ -54,13 +55,13 @@ class Popravljanje_slike : KoinComponent {
     }
 
     private fun potrdi() {
-        this.finishedData.value = this.data!!.copy(img = this.process_data())
-        this.log.info("potrdi sliko: ${this.finishedData.value}")
+        this.koncnaSlika.value = this.slika!!.copy(img = this.process_data())
+        this.log.info("potrdi sliko: ${this.koncnaSlika.value}")
     }
 
     private fun process_data(): BufferedImage {
         val m = this.paddingS.value.toInt()
-        var img = this.data!!.img.rotate(this.rotacijaS.value)
+        var img = this.slika!!.img.rotate(this.rotacijaS.value)
         return img.getSubimage(m, m, img.width - 2 * m, img.height - 2 * m)
     }
 

@@ -1,8 +1,5 @@
 package gui.domain
 
-import java.awt.image.BufferedImage
-import kotlin.math.abs
-
 data class Stran(
     val slika: Slika,
     val anotacije: List<Anotacija>,
@@ -44,48 +41,6 @@ data class Stran(
             }
         }
         this.init()
-    }
-
-
-    fun razrezi(): MutableList<BufferedImage> {
-        val deli = mutableListOf<BufferedImage>()
-        /**
-         * Glava
-         */
-        if (this.glava.size > 0) {
-            val maxGlava = this.glava.maxBy { it.y_max }
-            val img = this.slika.img.getSubimage(0, 0, slika.img.width, maxGlava.y_max.toInt())
-            deli.add(img)
-        }
-
-        /**
-         * Teorija
-         */
-        if (this.teorija.size > 0) {
-            val minGlava = this.teorija.minBy { it.y }
-            val maxGlava = this.teorija.maxBy { it.y_max }
-            val img = this.slika.img.getSubimage(0, minGlava.y.toInt(), slika.img.width, abs(maxGlava.y_max - minGlava.y).toInt())
-            deli.add(img)
-        }
-
-        /**
-         * Find footer
-         */
-        val nalogaY = this.naloge.map { it.first().y }.toMutableList()
-        nalogaY.add(this.noga[0].y)
-
-        /**
-         * Naloge
-         */
-        for (i in 0 until nalogaY.size - 1) {
-            val yStart = nalogaY[i].toInt()
-            val yEnd = nalogaY[i + 1]
-            val zgornjaMeja = this.anotacije.filter { it.average.y < yStart }.maxBy { it.average.y }.y_max.toInt()
-            val img = this.slika.img.getSubimage(0, zgornjaMeja, slika.img.width, abs(yStart - zgornjaMeja))
-            deli.add(img)
-        }
-
-        return deli
     }
 
     override fun toString(): String {

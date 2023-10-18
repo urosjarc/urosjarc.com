@@ -13,7 +13,7 @@ import org.koin.core.component.inject
 
 class Procesiranje_slike : KoinComponent {
 
-    var zip_slika: Slika? = null
+    var slika: Slika? = null
     val log by this.inject<LogService>()
 
     @FXML
@@ -38,22 +38,22 @@ class Procesiranje_slike : KoinComponent {
     lateinit var rezanje_slike_Controller: Rezanje_slike
 
 
-    fun init(zipSlika: Slika) {
-        this.log.info("init: $zipSlika")
-        this.zip_slika = zipSlika
-        this.popravljanje_slike_Controller.init(zipSlika)
+    fun init(slika: Slika) {
+        this.log.info("init: $slika")
+        this.slika = slika
+        this.popravljanje_slike_Controller.init(slika)
     }
 
     @FXML
     fun initialize() {
         println("init Procesiranje_zip_slike")
-        this.popravljanje_slike_Controller.finishedData.opazuj {
+        this.popravljanje_slike_Controller.koncnaSlika.opazuj {
             this.anotiranje_slike_Controller.init(it!!)
             this.tabPane.selectionModel.select(this.anotiranjeT)
         }
         this.anotiranje_slike_Controller.potrdiB.setOnAction {
             this.rezanje_slike_Controller.init(
-                this.anotiranje_slike_Controller.anotacijeStrani!!
+                this.anotiranje_slike_Controller.stran!!
             )
             this.tabPane.selectionModel.select(this.rezanjeT)
         }
