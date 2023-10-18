@@ -4,7 +4,7 @@ import core.base.App
 import core.base.Env
 import data.gui2.widgets.Izberi_zip_zvezek
 import data.gui2.widgets.Prikazi_log_dnevnik
-import data.gui2.widgets.Procesiranje_zip_slike
+import data.gui2.widgets.Procesiranje_slike
 import javafx.application.Application
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -20,7 +20,7 @@ class Procesiranje_zip_zvezkov : Application() {
     lateinit var izberi_zip_zvezek_Controller: Izberi_zip_zvezek
 
     @FXML
-    lateinit var procesiranje_zip_slike_Controller: Procesiranje_zip_slike
+    lateinit var procesiranje_slike_Controller: Procesiranje_slike
 
     @FXML
     lateinit var prikazi_log_dnevnik_Controller: Prikazi_log_dnevnik
@@ -29,7 +29,7 @@ class Procesiranje_zip_zvezkov : Application() {
     fun initialize() {
         println("init Procesiranje_zip_zvezkov")
         this.izberi_zip_zvezek_Controller.zip_zvezek.opazuj {
-            this.procesiranje_zip_slike_Controller.init(
+            this.procesiranje_slike_Controller.init(
                 this.izberi_zip_zvezek_Controller.naslednja_zip_slika()
             )
         }

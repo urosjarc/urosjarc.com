@@ -2,7 +2,7 @@ package data.domain
 
 import java.awt.image.BufferedImage
 
-data class ZipSlika(
+data class Slika(
     val img: BufferedImage,
     val index: Int,
     val size: Int

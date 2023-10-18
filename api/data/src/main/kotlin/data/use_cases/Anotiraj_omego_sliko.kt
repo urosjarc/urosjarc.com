@@ -1,29 +1,29 @@
 package data.use_cases
 
 import data.domain.Anotacija
-import data.domain.AnotacijeStrani
-import data.domain.ZipSlika
+import data.domain.Stran
+import data.domain.Slika
 import data.extend.averagePixel
 import data.extend.vmes
 import java.awt.image.BufferedImage
 
-class Procesiraj_omego_sliko {
+class Anotiraj_omego_sliko {
 
-    fun zdaj(zipSlika: ZipSlika, annos: List<Anotacija>): AnotacijeStrani {
-        val slika = AnotacijeStrani(zipSlika=zipSlika)
+    fun zdaj(slika: Slika, annos: List<Anotacija>): Stran {
+        val stran = Stran(slika = slika, anotacije = annos)
 
-        this.parse_footer(slika, annos)
-        this.parse_naloge(zipSlika.img, slika, annos)
-        this.parse_naslov(zipSlika.img, slika, annos)
-        this.parse_head(slika, annos)
-        this.parse_teorija(slika, annos)
+        this.parse_footer(stran, annos)
+        this.parse_naloge(slika.img, stran, annos)
+        this.parse_naslov(slika.img, stran, annos)
+        this.parse_head(stran, annos)
+        this.parse_teorija(stran, annos)
 
-        slika.init()
-        return slika
+        stran.init()
+        return stran
     }
 
 
-    fun parse_teorija(slika: AnotacijeStrani, annos: List<Anotacija>) {
+    fun parse_teorija(slika: Stran, annos: List<Anotacija>) {
         /**
          * Parsanje teorije
          */
@@ -49,7 +49,7 @@ class Procesiraj_omego_sliko {
         }
     }
 
-    fun parse_footer(slika: AnotacijeStrani, annos: List<Anotacija>) {
+    fun parse_footer(slika: Stran, annos: List<Anotacija>) {
         val lowestY = annos.maxBy { it.y_max }
         for (anno in annos) {
             val annoAve = anno.average
@@ -60,7 +60,7 @@ class Procesiraj_omego_sliko {
         }
     }
 
-    fun parse_naloge(img: BufferedImage, slika: AnotacijeStrani, annos: List<Anotacija>) {
+    fun parse_naloge(img: BufferedImage, slika: Stran, annos: List<Anotacija>) {
         for (anno in annos) {
             val pass = img.averagePixel(anno).is_red()
             val hasEndDot = anno.text.endsWith(".")
@@ -83,7 +83,7 @@ class Procesiraj_omego_sliko {
         }
     }
 
-    fun parse_naslov(img: BufferedImage, slika: AnotacijeStrani, annos: List<Anotacija>) {
+    fun parse_naslov(img: BufferedImage, slika: Stran, annos: List<Anotacija>) {
         /**
          * Parsanje naslovov
          */
@@ -113,7 +113,7 @@ class Procesiraj_omego_sliko {
         }
     }
 
-    fun parse_head(slika: AnotacijeStrani, annos: List<Anotacija>) {
+    fun parse_head(slika: Stran, annos: List<Anotacija>) {
         val highest = slika.naloge.map { it.first() } + slika.naslov
         if (highest.isEmpty()) return
         val highestY = highest.minBy { it.y }.y

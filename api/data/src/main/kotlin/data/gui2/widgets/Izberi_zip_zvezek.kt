@@ -2,7 +2,7 @@ package data.gui2.widgets
 
 import data.base.Opazovan
 import data.domain.Datoteka
-import data.domain.ZipSlika
+import data.domain.Slika
 import data.gui2.elements.ListView_Datoteka
 import data.gui2.elements.TreeTableView_Datoteka
 import data.services.LogService
@@ -46,7 +46,7 @@ class Izberi_zip_zvezek : KoinComponent {
         this.zip_zvezek.value = datoteka
     }
 
-    fun naslednja_zip_slika(): ZipSlika {
+    fun naslednja_zip_slika(): Slika {
         //Dobi zip datoteko
         val datoteka = this.zip_zvezek.value ?: throw this.log.error("Nobena datoteka ni bila se izbrana!")
 
@@ -67,7 +67,7 @@ class Izberi_zip_zvezek : KoinComponent {
         //Zapri zip file
         zipFile.close()
 
-        return ZipSlika(img = bufferedImage, index = steviloOpravljenihDatotek, size = entries.size)
+        return Slika(img = bufferedImage, index = steviloOpravljenihDatotek, size = entries.size)
     }
 
 }

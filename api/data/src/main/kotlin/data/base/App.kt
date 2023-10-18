@@ -3,8 +3,8 @@ package core.base
 import data.services.LogService
 import data.services.OcrService
 import data.services.ResouceService
-import data.use_cases.Najdi_vse_zip_slike
-import data.use_cases.Procesiraj_omego_sliko
+import data.use_cases.Najdi_vse_slike
+import data.use_cases.Anotiraj_omego_sliko
 import kotlinx.serialization.json.Json
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
@@ -32,8 +32,8 @@ object App {
             Json { prettyPrint = true }
         }
 
-        this.factoryOf(::Najdi_vse_zip_slike)
-        this.factoryOf(::Procesiraj_omego_sliko)
+        this.factoryOf(::Najdi_vse_slike)
+        this.factoryOf(::Anotiraj_omego_sliko)
     }
 
     fun pripravi_DI() {

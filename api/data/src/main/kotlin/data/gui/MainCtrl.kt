@@ -1,14 +1,13 @@
 package data.gui
 
 import data.domain.Anotacija
-import data.domain.AnotacijeStrani
-import data.domain.ZipSlika
+import data.domain.Stran
+import data.domain.Slika
 import data.extend.*
 import data.services.OcrService
 import data.services.ResouceService
-import data.use_cases.Najdi_vse_zip_slike
-import data.use_cases.Procesiraj_omego_sliko
-import javafx.collections.FXCollections.observableArrayList
+import data.use_cases.Najdi_vse_slike
+import data.use_cases.Anotiraj_omego_sliko
 import javafx.fxml.FXML
 import javafx.scene.control.*
 import javafx.scene.control.cell.TreeItemPropertyValueFactory
@@ -61,13 +60,13 @@ class MainCtrl : KoinComponent {
     /**
      * Usecases
      */
-    val najdi_vse_zip_slike: Najdi_vse_zip_slike by this.inject()
-    val procesirajSliko: Procesiraj_omego_sliko by this.inject()
+    val najdi_vse_zip_slike: Najdi_vse_slike by this.inject()
+    val procesirajSliko: Anotiraj_omego_sliko by this.inject()
 
     /**
      * State
      */
-    val zip_slike = mutableListOf<ZipSlika>()
+    val zip_slike = mutableListOf<Slika>()
     var trenutnaSlika = BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)
     var popravljenaSlika = BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)
     var ocrSlika = BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB)
@@ -397,7 +396,7 @@ class MainCtrl : KoinComponent {
         val yReal = (yPercent * img.height).toInt()
 
         val annos = json.decodeFromStream<List<Anotacija>>(trenutniDir(OCR_ANNOTACIJE).inputStream())
-        val annosFinal = json.decodeFromStream<AnotacijeStrani>(trenutniDir(OCR_FINAL_ANNOTACIJE).inputStream())
+        val annosFinal = json.decodeFromStream<Stran>(trenutniDir(OCR_FINAL_ANNOTACIJE).inputStream())
 
 //        annos.forEach {
 //            if (it.contains(x = xReal, y = yReal)) {

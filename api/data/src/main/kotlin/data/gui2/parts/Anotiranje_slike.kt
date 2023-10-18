@@ -1,14 +1,14 @@
 package data.gui2.parts
 
 import data.domain.Anotacija
-import data.domain.AnotacijeStrani
+import data.domain.Stran
 import data.domain.Vektor
-import data.domain.ZipSlika
+import data.domain.Slika
 import data.extend.*
 import data.gui2.elements.ImageView_BufferedImage
 import data.services.LogService
 import data.services.OcrService
-import data.use_cases.Procesiraj_omego_sliko
+import data.use_cases.Anotiraj_omego_sliko
 import javafx.fxml.FXML
 import javafx.scene.control.Button
 import javafx.scene.control.ContextMenu
@@ -19,10 +19,10 @@ import javafx.scene.shape.Rectangle
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class Anotiranje_zip_slike : KoinComponent {
+class Anotiranje_slike : KoinComponent {
 
     private val log by this.inject<LogService>()
-    private val procesirajOmegoSliko by this.inject<Procesiraj_omego_sliko>()
+    private val procesirajOmegoSliko by this.inject<Anotiraj_omego_sliko>()
     private val ocrService by this.inject<OcrService>()
 
     @FXML
@@ -33,15 +33,14 @@ class Anotiranje_zip_slike : KoinComponent {
 
     val contextMenu = ContextMenu()
 
-    var data: ZipSlika? = null
+    var data: Slika? = null
 
     /**
      * Anotacije
      */
     var userAnotacije = mutableSetOf<Anotacija>()
     var vseAnotacije = listOf<Anotacija>()
-    var anotacijeStrani: AnotacijeStrani? = null
-    var anotacijeBackup: AnotacijeStrani? = null
+    var anotacijeStrani: Stran? = null
 
     /**
      * Drag
@@ -160,7 +159,7 @@ class Anotiranje_zip_slike : KoinComponent {
         this.userAnotacije.forEach { this.narisi_rectangle(it, Color.MAGENTA) }
     }
 
-    fun init(zipSlika: ZipSlika) {
+    fun init(zipSlika: Slika) {
         this.data = zipSlika
         this.vseAnotacije = this.ocrService.google(image = zipSlika.img)
         this.init_imageView()
@@ -168,7 +167,7 @@ class Anotiranje_zip_slike : KoinComponent {
 
     private fun init_imageView() {
         this.log.info("init: ${this.data}")
-        this.anotacijeStrani = this.procesirajOmegoSliko.zdaj(zipSlika = this.data!!, annos = this.vseAnotacije)
+        this.anotacijeStrani = this.procesirajOmegoSliko.zdaj(slika = this.data!!, annos = this.vseAnotacije)
         this.CTRL.init(img = this.data!!.img)
         this.redraw_imageView()
     }

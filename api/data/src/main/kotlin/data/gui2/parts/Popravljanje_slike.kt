@@ -1,7 +1,7 @@
 package data.gui2.parts
 
 import data.base.Opazovan
-import data.domain.ZipSlika
+import data.domain.Slika
 import data.extend.*
 import data.gui2.elements.ImageView_BufferedImage
 import data.services.LogService
@@ -13,11 +13,11 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.awt.image.BufferedImage
 
-class Popravljanje_zip_slike : KoinComponent {
+class Popravljanje_slike : KoinComponent {
 
     val log by this.inject<LogService>()
-    var data: ZipSlika? = null
-    var finishedData = Opazovan<ZipSlika?>(null)
+    var data: Slika? = null
+    var finishedData = Opazovan<Slika?>(null)
 
     @FXML
     lateinit var imageView_bufferedImage_Controller: ImageView_BufferedImage
@@ -37,7 +37,7 @@ class Popravljanje_zip_slike : KoinComponent {
     @FXML
     lateinit var infoL: Label
 
-    fun init(zipSlika: ZipSlika) {
+    fun init(zipSlika: Slika) {
         this.data = zipSlika
         this.resetiraj()
     }
