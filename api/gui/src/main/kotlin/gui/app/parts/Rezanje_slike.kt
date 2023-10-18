@@ -2,12 +2,12 @@ package gui.app.parts
 
 import gui.domain.Stran
 import gui.app.elements.ImageView_BufferedImage
+import gui.domain.Odsek
 import gui.use_cases.Razrezi_stran
 import javafx.fxml.FXML
 import javafx.scene.control.Button
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import java.awt.image.BufferedImage
 
 class Rezanje_slike : KoinComponent {
 
@@ -22,19 +22,19 @@ class Rezanje_slike : KoinComponent {
 
     val razrezi_stran by this.inject<Razrezi_stran>()
     var stran: Stran? = null
-    var imgs = listOf<BufferedImage>()
-    var imgIndex = 0
+    var odseki = listOf<Odsek>()
+    var index = 0
 
     fun init(stran: Stran) {
         this.stran = stran
-        this.imgs = this.razrezi_stran.zdaj(stran = stran)
+        this.odseki = this.razrezi_stran.zdaj(stran = stran)
 
         this.potrdiB.setOnAction {
-            this.imgIndex++
+            this.index++
             this.init_imageView()
         }
         this.resetirajB.setOnAction {
-            this.imgIndex--
+            this.index--
             this.init_imageView()
         }
 
@@ -42,12 +42,12 @@ class Rezanje_slike : KoinComponent {
     }
 
     fun init_imageView() {
-        if (this.imgIndex >= this.imgs.size)
-            this.imgIndex = this.imgs.size - 1
-        else if (this.imgIndex < 0)
-            this.imgIndex = 0
+        if (this.index >= this.odseki.size)
+            this.index = this.odseki.size - 1
+        else if (this.index < 0)
+            this.index = 0
 
-        this.imageView_bufferedImage_Controller.init(this.imgs[this.imgIndex])
+        this.imageView_bufferedImage_Controller.init(this.odseki[this.index].img)
     }
 
     @FXML

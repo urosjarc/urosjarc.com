@@ -151,7 +151,7 @@ fun BufferedImage.rotate(angle: Double): BufferedImage {
 
 fun BufferedImage.boundBox(xStart: Int, xEnd: Int): Okvir {
     val maxCount = 5
-    val boundBox = Okvir(-1.0, -1.0, -1.0, -1.0)
+    val boundBox = Okvir(-1, -1, -1, -1)
 
     //up to down
     var count = 0
@@ -159,7 +159,7 @@ fun BufferedImage.boundBox(xStart: Int, xEnd: Int): Okvir {
         for (x in xStart until this.width - xEnd) {
             if (!this.getHSV(x, y).is_white()) count++
             if (count > maxCount) {
-                boundBox.y0 = y.toDouble()
+                boundBox.y0 = y
                 break@start
             }
         }
@@ -171,7 +171,7 @@ fun BufferedImage.boundBox(xStart: Int, xEnd: Int): Okvir {
         for (x in xStart until this.width - xEnd) {
             if (!this.getHSV(x, y).is_white()) count++
             if (count > maxCount) {
-                boundBox.y1 = y.toDouble()
+                boundBox.y1 = y
                 break@start
             }
         }
@@ -183,7 +183,7 @@ fun BufferedImage.boundBox(xStart: Int, xEnd: Int): Okvir {
         for (y in 0 until this.height) {
             if (!this.getHSV(x, y).is_white()) count++
             if (count > maxCount) {
-                boundBox.x0 = x.toDouble()
+                boundBox.x0 = x
                 break@start
             }
         }
@@ -195,7 +195,7 @@ fun BufferedImage.boundBox(xStart: Int, xEnd: Int): Okvir {
         for (y in 0 until this.height) {
             if (!this.getHSV(x, y).is_white()) count++
             if (count > maxCount) {
-                boundBox.x1 = x.toDouble()
+                boundBox.x1 = x
                 break@start
             }
         }

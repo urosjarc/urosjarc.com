@@ -8,10 +8,10 @@ data class Vektor(
     val y: Double,
 ) {
     fun okvir(v: Vektor): Okvir {
-        val minX = min(v.x, this.x)
-        val minY = min(v.y, this.y)
-        val width = abs(v.x - this.x)
-        val height = abs(v.y - this.y)
+        val minX = min(v.x, this.x).toInt()
+        val minY = min(v.y, this.y).toInt()
+        val width = abs(v.x - this.x).toInt()
+        val height = abs(v.y - this.y).toInt()
         return Okvir(
             x0 = minX,
             x1 = minX + width,
