@@ -60,7 +60,7 @@ class Sinhroniziraj_bazo_zvezkov(
     }
 
     fun zdaj(): Boolean {
-        val resourceFile = File("../data/src/main/resources")
+        val resourceFile = File("../gui/src/main/resources")
 
         val zvezki = mutableListOf<Zvezek>()
         val tematike = mutableListOf<Tematika>()
