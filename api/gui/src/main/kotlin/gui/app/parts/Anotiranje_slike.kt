@@ -53,30 +53,14 @@ class Anotiranje_slike : KoinComponent {
     lateinit var imageView_bufferedImage_Controller: ImageView_BufferedImage
     val CTRL: ImageView_BufferedImage get() = this.imageView_bufferedImage_Controller
 
-    private fun eventPosition(mouseEvent: MouseEvent): Vektor = this.imagePosition(x = mouseEvent.x, y = mouseEvent.y)
-
-    private fun imagePosition(x: Double, y: Double): Vektor {
-        val img = this.slika!!.img
-        val widthR = img.width / this.CTRL.self.image.width
-        val heightR = img.height / this.CTRL.self.image.height
-        return Vektor(x = x * widthR, y = y * heightR)
-    }
-
-    private fun anotacijaPosition(ano: Anotacija): Rectangle {
-        val v = this.imagePosition(x = ano.x, y = ano.y)
-        val img = this.slika!!.img
-        val rx = img.width / this.CTRL.self.fitWidth
-        val ry = img.height / this.CTRL.self.fitHeight
-        return Rectangle(v.x / rx, v.y / ry, ano.width / rx, ano.height / ry)
-    }
 
     @FXML
     fun initialize() {
         println("init Anotiranje_zip_slike")
 
         // Popravi anotacije ce se slika zoomira
-        ImageView_BufferedImage.visina.opazuj { this.redraw_imageView() }
-        this.CTRL.self.setOnMousePressed { this.dragStart = this.eventPosition(it) }
+        ImageView_BufferedImage.zoom.opazuj { this.redraw_imageView() }
+        this.CTRL.self.setOnMousePressed { this.dragStart = Vektor(x = it.x, y = it.y) }
         this.CTRL.self.setOnMouseReleased { this.self_onMouseReleased(me = it) }
         this.CTRL.self.setOnMouseDragged { this.self_onMouseDragg(me = it) }
         this.resetirajB.setOnAction { this.init_imageView() }
@@ -101,13 +85,13 @@ class Anotiranje_slike : KoinComponent {
     }
 
     fun self_onMouseReleased(me: MouseEvent) {
-        this.dragEnd = this.eventPosition(me)
+        this.dragEnd = Vektor(x = me.x, y = me.y)
         contextMenu.show(this.CTRL.self, me.screenX, me.screenY)
 
         //Posodobi user anotacije
         this.userAnotacije.clear()
         this.anotacije.forEach {
-            val rec = this.anotacijaPosition(ano = it)
+            val rec = this.CTRL.kvadratAnotacije(ano = it)
             val a = Vektor(x = rec.x + rec.width / 2.0, y = rec.y + rec.height / 2.0)
             if (a.x.vmes(this.dragStart!!.x, this.dragEnd!!.x) && a.y.vmes(this.dragStart!!.y, this.dragEnd!!.y)) {
                 this.userAnotacije.add(it)
@@ -123,7 +107,7 @@ class Anotiranje_slike : KoinComponent {
         this.CTRL.backgroundP.children.remove(this.dragRectangle)
 
         //Ustvari drag rectangle
-        val v = this.eventPosition(me)
+        val v = Vektor(x = me.x, y = me.y)
         this.dragRectangle = Rectangle(
             this.dragStart!!.x,
             this.dragStart!!.y,
@@ -140,17 +124,14 @@ class Anotiranje_slike : KoinComponent {
     }
 
     private fun narisi_rectangle(ano: Anotacija, color: Color) {
-        val rec = this.anotacijaPosition(ano)
-        rec.fill = null
-        rec.stroke = color
-        rec.strokeWidth = 2.0
+        val rec = this.CTRL.kvadratAnotacije(ano = ano, color = color)
         this.CTRL.backgroundP.children.add(rec)
     }
 
     private fun redraw_imageView() {
-        if (this.CTRL.backgroundP.children.size > 1) this.CTRL.backgroundP.children.remove(1, this.CTRL.backgroundP.children.size)
+        this.CTRL.pobrisiOzadje()
         this.stran.let { stran ->
-            if(stran == null) return@let
+            if (stran == null) return@let
             stran.noga.forEach { this.narisi_rectangle(it, Color.BLACK) }
             stran.naloge.forEach { it -> it.forEach { this.narisi_rectangle(it, Color.GREEN) } }
             stran.naslov.forEach { this.narisi_rectangle(it, Color.BLUE) }

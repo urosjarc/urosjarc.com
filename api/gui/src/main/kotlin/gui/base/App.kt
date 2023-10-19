@@ -3,6 +3,7 @@ package gui.base
 import gui.services.LogService
 import gui.services.OcrService
 import gui.services.ResouceService
+import gui.use_cases.Anotiraj_omego_nalogo
 import gui.use_cases.Najdi_vse_slike
 import gui.use_cases.Anotiraj_omego_stran
 import gui.use_cases.Razrezi_stran
@@ -36,6 +37,7 @@ object App {
         this.factoryOf(::Razrezi_stran)
         this.factoryOf(::Najdi_vse_slike)
         this.factoryOf(::Anotiraj_omego_stran)
+        this.factoryOf(::Anotiraj_omego_nalogo)
     }
 
     fun pripravi_DI() {
