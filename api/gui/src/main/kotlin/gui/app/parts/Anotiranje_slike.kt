@@ -59,7 +59,7 @@ class Anotiranje_slike : KoinComponent {
         println("init Anotiranje_zip_slike")
 
         // Popravi anotacije ce se slika zoomira
-        ImageView_BufferedImage.zoom.opazuj { this.redraw_imageView() }
+        this.CTRL.zoom.opazuj { this.redraw_imageView() }
         this.CTRL.self.setOnMousePressed { this.dragStart = Vektor(x = it.x, y = it.y) }
         this.CTRL.self.setOnMouseReleased { this.self_onMouseReleased(me = it) }
         this.CTRL.self.setOnMouseDragged { this.self_onMouseDragg(me = it) }

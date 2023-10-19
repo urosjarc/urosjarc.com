@@ -1,10 +1,7 @@
 package gui.app.parts
 
-import gui.domain.Stran
 import gui.app.elements.ImageView_BufferedImage
-import gui.domain.Anotacija
-import gui.domain.Naloga
-import gui.domain.Odsek
+import gui.domain.*
 import gui.use_cases.Anotiraj_omego_nalogo
 import gui.use_cases.Razrezi_stran
 import javafx.fxml.FXML
@@ -15,85 +12,116 @@ import org.koin.core.component.inject
 
 class Rezanje_slike : KoinComponent {
 
-    @FXML
-    lateinit var imageView_bufferedImage_Controller: ImageView_BufferedImage
-
-    val CTRL get() = this.imageView_bufferedImage_Controller
-
-    @FXML
-    lateinit var resetirajB: Button
-
-    @FXML
-    lateinit var potrdiB: Button
-
-    val anotiraj_omego_nalogo by this.inject<Anotiraj_omego_nalogo>()
     val razrezi_stran by this.inject<Razrezi_stran>()
 
+    val anotiraj_omego_nalogo by this.inject<Anotiraj_omego_nalogo>()
+
+    @FXML
+    lateinit var top_imageView_bufferedImage_Controller: ImageView_BufferedImage
+
+    @FXML
+    lateinit var down_imageView_bufferedImage_Controller: ImageView_BufferedImage
+    val TOP_CTRL get() = this.top_imageView_bufferedImage_Controller
+    val DOWN_CTRL get() = this.down_imageView_bufferedImage_Controller
+
+    @FXML
+    lateinit var resetirajNalogoB: Button
+
+    @FXML
+    lateinit var potrdiNalogoB: Button
+
+    @FXML
+    lateinit var resetirajDelNalogeB: Button
+
+    @FXML
+    lateinit var potrdiDelNalogeB: Button
+
     var stran: Stran? = null
-    var naloga: Naloga? = null
     var odseki = listOf<Odsek>()
-    var naloge = mutableListOf<Naloga>()
-    val odsek: Odsek
-        get() {
+    var indexOdseka = 0
+    var indexAno = 0
+    var naloga: Naloga? = null
+
+    val odsek
+        get(): Odsek {
             //Popravi indeks ce je izven meje
-            if (this.index >= this.odseki.size)
-                this.index = this.odseki.size - 1
-            else if (this.index < 0)
-                this.index = 0
+            if (this.indexOdseka >= this.odseki.size) {
+                this.indexOdseka = this.odseki.size - 1
+            } else if (this.indexOdseka < 0)
+                this.indexOdseka = 0
 
             //Dobi odsek
-            return this.odseki[this.index]
+            return this.odseki[this.indexOdseka]
         }
 
-    var index = 0
+    val anotacija
+        get(): Anotacija? {
+            if (naloga == null) return null
+            val anos = mutableListOf<Anotacija>()
+            if (naloga!!.glava.isNotEmpty()) anos.add(naloga!!.glava.first())
+            anos.addAll(naloga!!.podnaloge)
+
+            //Popravi indeks ce je izven meje
+            if (this.indexAno >= anos.size) {
+                this.indexAno = anos.size - 1
+            } else if (this.indexAno < 0)
+                this.indexAno = 0
+
+            //Dobi odsek
+            return anos[this.indexAno]
+        }
 
     fun init(stran: Stran) {
+        this.indexOdseka = 0
         this.stran = stran
         this.odseki = this.razrezi_stran.zdaj(stran = stran)
-
-        this.potrdiB.setOnAction {
-            this.index++
-            this.init_imageView()
-        }
-        this.resetirajB.setOnAction {
-            this.index--
-            this.init_imageView()
-        }
-
-        this.init_imageView()
+        this.init_odsek()
     }
 
-    fun init_imageView() {
-        //Ce je naloga za ta odsek ze bila ustvarjena potem uzemi njo!
-        val obstojeceNaloge = this.naloge.filter { it.odsek == this.odsek }
-        if (obstojeceNaloge.isEmpty()) {
-            val naloga = this.anotiraj_omego_nalogo.zdaj(this.odsek)
-            this.naloge.add(naloga)
-            this.naloga = naloga
-        } else {
-            this.naloga = obstojeceNaloge.first()
-        }
-
-        //Narisi sliko
-        this.CTRL.init(this.odsek.img, sirokaSlika = true)
+    fun init_odsek() {
+        this.indexAno = 0
+        this.naloga = this.anotiraj_omego_nalogo.zdaj(odsek = this.odsek)
+        this.init_down_imageView()
+        this.init_top_imageView()
     }
 
     @FXML
     fun initialize() {
         println("init Rezanje_zip_slike")
-        ImageView_BufferedImage.zoom.opazuj { this.redraw_imageView() }
+        this.DOWN_CTRL.zoom.opazuj { this.redraw_down_imageView() }
+        this.potrdiDelNalogeB.setOnAction {
+            this.indexAno++
+            this.init_top_imageView()
+        }
+        this.resetirajDelNalogeB.setOnAction {
+            this.indexAno--
+            this.init_top_imageView()
+        }
+        this.potrdiNalogoB.setOnAction {
+            this.indexOdseka++
+            this.init_odsek()
+        }
+        this.resetirajNalogoB.setOnAction {
+            this.indexOdseka--
+            this.init_odsek()
+        }
     }
 
-    private fun redraw_imageView() {
-        this.CTRL.pobrisiOzadje()
-        if(this.odseki.isEmpty()) return
+    fun init_down_imageView() {
+        this.DOWN_CTRL.init(this.odsek!!.img, sirokaSlika = true)
+    }
 
-        val ano = Anotacija(0.0, 0.0, this.odsek.img.height.toDouble(), this.odsek.img.width.toDouble(), text = "", tip = Anotacija.Tip.NALOGA)
-        val rec = this.CTRL.kvadratAnotacije(ano, Color.RED)
-        this.CTRL.backgroundP.children.add(rec)
-        this.naloga!!.podnaloge.forEach {
-            val rec = this.CTRL.kvadratAnotacije(it, Color.BLUE)
-            this.CTRL.backgroundP.children.add(rec)
-        }
+    fun init_top_imageView() {
+        val a = this.anotacija ?: return
+        val img = this.odsek!!.img.getSubimage(a.x.toInt(), a.y.toInt(), a.width.toInt(), a.height.toInt())
+        this.TOP_CTRL.init(img, sirokaSlika = true)
+        this.redraw_down_imageView()
+    }
+
+    private fun redraw_down_imageView() {
+        val a = this.anotacija ?: return
+        this.DOWN_CTRL.pobrisiOzadje()
+        val rec = this.DOWN_CTRL.kvadratAnotacije(ano = a, color = Color.RED)
+        this.DOWN_CTRL.backgroundP.children.add(rec)
     }
 }

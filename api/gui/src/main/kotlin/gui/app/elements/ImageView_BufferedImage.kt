@@ -22,11 +22,9 @@ class ImageView_BufferedImage : KoinComponent {
 
     var sirokaSlika = false
 
-    companion object {
-        var zoom = Opazovan(0.0)
-        var visina = 900.0
-        var sirina = 300.0
-    }
+    var zoom = Opazovan(0.0)
+    var visina = 900.0
+    var sirina = 300.0
 
     fun init(img: BufferedImage, sirokaSlika: Boolean = false) {
         this.sirokaSlika = sirokaSlika
