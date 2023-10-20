@@ -26,7 +26,7 @@ class Anotiraj_omego_stran {
             val zgornja_meja = stran.naslov.najnizjaMeja(default = stran.visina)
             val najnizja_spodnja_meja = stran.noga.najvisjaMeja(default = stran.visina)
             val spodnja_meja = stran.naloge.map { it.first() }.najblizjaSpodnjaMeja(meja = zgornja_meja, default = najnizja_spodnja_meja)
-            stran.teorija.addAll(anos.vmesY(zgornja_meja = zgornja_meja, spodnja_meja = spodnja_meja))
+            stran.teorija.addAll(anos.medY(zgornja_meja = zgornja_meja, spodnja_meja = spodnja_meja))
         }
     }
 
@@ -35,7 +35,7 @@ class Anotiraj_omego_stran {
         if (najnizji != null) {
             val y = najnizji.average.y
             val dy = najnizji.height / 2
-            stran.noga.addAll(anos.vmesY(zgornja_meja = y - dy, spodnja_meja = y + dy))
+            stran.noga.addAll(anos.medY(zgornja_meja = y - dy, spodnja_meja = y + dy))
         }
     }
 

@@ -4,28 +4,8 @@ import gui.domain.Anotacija
 import gui.domain.Naloga
 import gui.domain.Odsek
 import gui.extend.*
-import kotlin.math.abs
 
 class Anotiraj_omego_nalogo {
-
-    private fun slKoda(crka: Char): Int {
-        var c = crka
-        if (c == '1') c = 'l' //Google prepozna l kot 1 :(
-        return "abcdefghijklmnoprstuvz".indexOf(c)
-    }
-
-    private fun vseCrkeZOklepajem(anotacije: List<Anotacija>): MutableList<Anotacija> {
-        val oklepaji = anotacije.filter { it.text == ")" }
-
-        val returned = mutableListOf<Anotacija>()
-        for (oklepaj in oklepaji) {
-            val i = anotacije.indexOf(oklepaj)
-            val prejsnji = anotacije[i - 1]
-            if (prejsnji.text.length == 1) returned.add(prejsnji)
-        }
-
-        return returned
-    }
 
     fun zdaj(odsek: Odsek): Naloga {
         val naloga = Naloga(odsek = odsek)
@@ -83,24 +63,22 @@ class Anotiraj_omego_nalogo {
         /**
          * Ustvari pravilne anotacije ki vsebuje celotno nalogo
          */
+        val spodnja_meja_glave = anotacijeGlave.najnizjaMeja(default = 0.0)
         for (y in 0 until grupe.size) {
             for (x in 0 until grupe[y].size) {
                 val curr = grupe[y][x]
-
-                val spodnja_meja_glave = anotacijeGlave.najnizjaMeja(default = 0.0)
                 val spodnja_meja_slike = odsek.visina
-
                 val zgoraj = grupe.getOrNull(y - 1).najnizjaMeja(default = spodnja_meja_glave)
                 val spodaj = grupe.getOrNull(y + 1).najvisjaMeja(default = spodnja_meja_slike)
-                val levo = odsek.anotacije.vzporedne(ano = curr).najblizjaLevaMeja(ano = curr, default = 0.0)
-                val desno = grupe[y].najblizjaDesnaMeja(ano=curr, default=odsek.sirina)
+                val levo = odsek.anotacije.medY(zgornja_meja = zgoraj, spodnja_meja = spodaj).najblizjaLevaMeja(ano = curr, default = 0.0)
+                val desno = grupe[y].najblizjaDesnaMeja(ano = curr, default = odsek.sirina)
 
                 naloga.podnaloge.add(
                     curr.copy(
-                        x = desno,
+                        x = levo,
                         y = zgoraj,
-                        height = abs(spodaj - zgoraj),
-                        width = abs(desno - desno),
+                        height = spodaj - zgoraj,
+                        width = desno - levo,
                     )
                 )
             }
@@ -108,4 +86,23 @@ class Anotiraj_omego_nalogo {
 
         return naloga
     }
+
+    private fun vseCrkeZOklepajem(anotacije: List<Anotacija>): MutableList<Anotacija> {
+        val oklepaji = anotacije.filter { it.text == ")" }
+
+        val returned = mutableListOf<Anotacija>()
+        for (oklepaj in oklepaji) {
+            val i = anotacije.indexOf(oklepaj)
+            val prejsnji = anotacije[i - 1]
+            if (prejsnji.text.length == 1) returned.add(prejsnji)
+        }
+        return returned
+    }
+
+    private fun slKoda(crka: Char): Int {
+        var c = crka
+        if (c == '1') c = 'l' //Google prepozna l kot 1 :(
+        return "abcdefghijklmnoprstuvz".indexOf(c)
+    }
+
 }

@@ -13,9 +13,9 @@ class Razrezi_stran() {
          * Glava
          */
         if (stran.glava.size > 0) {
-            val zgornja_meja = stran.glava.najvisjaMeja(default = 0.0)
-            val najvisja_zgornja_meja = stran.anotacije.najblizjaZgornjaMeja(meja=zgornja_meja, default = zgornja_meja)
-            val subImg = stran.slika.img.getSubimage(0, 0, stran.slika.img.width, najvisja_zgornja_meja.toInt())
+            val spodnja_meja = stran.glava.najnizjaMeja(default = stran.visina)
+            val najnizja_spodnja_meja = stran.anotacije.najblizjaSpodnjaMeja(meja = spodnja_meja, default = spodnja_meja)
+            val subImg = stran.slika.img.getSubimage(0, 0, stran.sirina.toInt(), najnizja_spodnja_meja.toInt())
             val border = subImg.removeBorder(50)
             val slika = stran.slika.copy(img = border.second)
             deli.add(Odsek(x = border.first, y = 0 + border.first, slika = slika, anotacije = stran.glava))
@@ -27,9 +27,9 @@ class Razrezi_stran() {
         if (stran.teorija.size > 0) {
             val zgornja_meja = stran.teorija.najvisjaMeja(default = 0.0)
             val spodnja_meja = stran.teorija.najnizjaMeja(default = stran.visina)
-            val najvisja_zgornja_meja = stran.anotacije.najblizjaZgornjaMeja(meja=zgornja_meja, default = zgornja_meja).toInt()
-            val najnizja_spodnja_meja = stran.anotacije.najblizjaSpodnjaMeja(meja=spodnja_meja, default = spodnja_meja).toInt()
-            val subImg = stran.slika.img.getSubimage(0, najvisja_zgornja_meja, stran.slika.img.width, najnizja_spodnja_meja)
+            val najvisja_zgornja_meja = stran.anotacije.najblizjaZgornjaMeja(meja = zgornja_meja, default = zgornja_meja).toInt()
+            val najnizja_spodnja_meja = stran.anotacije.najblizjaSpodnjaMeja(meja = spodnja_meja, default = spodnja_meja).toInt()
+            val subImg = stran.slika.img.getSubimage(0, najvisja_zgornja_meja, stran.sirina.toInt(), najnizja_spodnja_meja)
             val slika = stran.slika.copy(img = subImg)
             deli.add(Odsek(x = 0, y = najvisja_zgornja_meja, slika = slika, anotacije = stran.teorija))
         }
@@ -47,13 +47,16 @@ class Razrezi_stran() {
             val zgornja_meja = stran.anotacije.najblizjaZgornjaMeja(meja = nalogaY[i], default = 0.0)
             val spodnja_meja = nalogaY[i + 1]
             val visina = abs(spodnja_meja - zgornja_meja)
-            val subImg = stran.slika.img.getSubimage(0, zgornja_meja.toInt(), stran.slika.img.width, visina.toInt())
-            val anos = stran.anotacije.vmesY(zgornja_meja = zgornja_meja, spodnja_meja = spodnja_meja)
+            val subImg = stran.slika.img.getSubimage(0, zgornja_meja.toInt(), stran.sirina.toInt(), visina.toInt())
+            val anos = stran.anotacije.medY(zgornja_meja = zgornja_meja, spodnja_meja = spodnja_meja)
             val border = subImg.removeBorder(50)
             val slika = stran.slika.copy(img = border.second)
             deli.add(Odsek(x = border.first, y = zgornja_meja.toInt() + border.first, slika = slika, anotacije = anos))
         }
 
+        /**
+         * Ustvari kopije za vsak primer da ne bi bilo kaj narobe.
+         */
         deli.sortBy { it.anotacije.first().y }
         deli.forEach { odsek ->
             odsek.anotacije = odsek.anotacije.map {
