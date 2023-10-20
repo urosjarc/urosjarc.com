@@ -166,7 +166,7 @@ export class SestaviTestComponent implements OnInit {
     if (this.formFieldDeadlineComponent?.formControl.value == null) return
 
     const test = await this.ustvariTest.zdaj({
-      deadline: Date_datumStr(this.formFieldDeadlineComponent?.formControl.value),
+      deadline: Date_datumStr(this.formFieldDeadlineComponent?.formControl.value, true),
       naslov: this.formFieldNaslovComponent?.formControl.value || "",
       podnaslov: this.formFieldPodnaslovComponent?.formControl.value || "",
       oseba_admini_id: [],

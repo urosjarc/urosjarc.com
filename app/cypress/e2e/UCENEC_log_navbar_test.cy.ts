@@ -3,6 +3,7 @@ describe('Log in as UCENEC and test navbar links', () => {
   beforeEach(() => {
     cy.visit('http://localhost:4200/prijava')
   })
+  // TODO: preveri root id is response z local storage!
   it('should log in as UCENEC and all navbar links must work', () => {
       let oseba_id = '';
       let TIP = '';
@@ -13,10 +14,11 @@ describe('Log in as UCENEC and test navbar links', () => {
       cy.intercept('GET', 'http://127.0.0.1:8080/auth/profil').as('interceptedRequest');
       //wait for response and intercept, then test the body id and tip
       cy.wait('@interceptedRequest', { timeout: 10000 }).then(({ response }) => {
-        oseba_id = response!.body.oseba_id.trim();
-        TIP = response!.body.tip[0].trim();
+
         expect(response!.body.tip[0]).equal('UCENEC');
-        expect(response!.body.oseba_id).not.be.undefined;
+        expect(response!.body.oseba_id).not.be.empty;
+          oseba_id = response!.body.oseba_id.trim();
+          TIP = response!.body.tip[0].trim();
       });
       //click the testi navbar button------------------------------------
       cy.xpath('/html/body/app/app-ucenec/app-card-navigacija/div/div/div/app-toolbar-navigacija/div/div[2]/app-button-toolbar/div/div[1]/button').click()

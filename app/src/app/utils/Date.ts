@@ -1,10 +1,9 @@
-//TODO: POVLEČI IZ ANGLUAR-JA!
 export const locale = "sl"
 
 export function Date_oddaljenost_v_dneh(end: Date) {
   let start: Date = new Date()
   // @ts-ignore
-  const diffTime = end - start;
+  const diffTime = start - end;
   return Math.round(diffTime / (1000 * 60 * 60 * 24));
 }
 
@@ -16,8 +15,8 @@ export function Date_casStr(date: Date): string {
   return date.toLocaleTimeString(locale).replaceAll(" ", "")
 }
 
-export function Date_datumStr(date: Date): string {
-
+export function Date_datumStr(date: Date, iso?: boolean): string {
+  if (iso) return date.toISOString().split("T")[0]
   return date.toLocaleDateString(locale).replaceAll(" ", "")
 }
 
