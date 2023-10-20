@@ -1,4 +1,4 @@
-package gui.app.elements;
+package gui.app.elements
 
 import gui.base.Opazovan
 import gui.domain.Anotacija
@@ -13,18 +13,28 @@ import javafx.scene.shape.Rectangle
 import org.koin.core.component.KoinComponent
 import java.awt.image.BufferedImage
 
-class ImageView_BufferedImage : KoinComponent {
-    @FXML
-    lateinit var backgroundP: Pane
+abstract class ImageView_BufferedImage_UI : KoinComponent {
 
     @FXML
     lateinit var self: ImageView
 
-    var sirokaSlika = false
+    @FXML
+    lateinit var backgroundP: Pane
+}
 
-    var zoom = Opazovan(0.0)
+class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
+    var sirokaSlika = false
     var visina = 900.0
     var sirina = 300.0
+    var zoom = Opazovan(0.0)
+
+    @FXML
+    fun initialize() {
+        println("init ImageView_ZipSlika")
+        this.self.setOnScroll {
+            this.popraviVelikost(dy = it.deltaY)
+        }
+    }
 
     fun init(img: BufferedImage, sirokaSlika: Boolean = false) {
         this.sirokaSlika = sirokaSlika
@@ -33,7 +43,11 @@ class ImageView_BufferedImage : KoinComponent {
         this.popraviVelikost(0.0)
     }
 
-    fun popraviVelikost(dy: Double) {
+    fun pobrisiOzadje() {
+        if (this.backgroundP.children.size > 1) this.backgroundP.children.remove(1, this.backgroundP.children.size)
+    }
+
+    private fun popraviVelikost(dy: Double) {
         val img = this.self.image
         val ratio = img.height / img.width
         val v = (if (sirokaSlika) sirina else visina) + dy
@@ -76,23 +90,5 @@ class ImageView_BufferedImage : KoinComponent {
         rec.stroke = color
         rec.strokeWidth = 2.0
         return rec
-    }
-
-    fun pobrisiOzadje() {
-        if (this.backgroundP.children.size > 1) this.backgroundP.children.remove(1, this.backgroundP.children.size)
-    }
-
-    @FXML
-    fun initialize() {
-        println("init ImageView_ZipSlika")
-        this.self.setOnScroll {
-            this.popraviVelikost(dy = it.deltaY)
-        }
-
-    }
-
-    @FXML
-    fun clicked() {
-        println("clicked")
     }
 }

@@ -1,4 +1,4 @@
-package gui.app.elements;
+package gui.app.elements
 
 import gui.domain.Datoteka
 import javafx.fxml.FXML
@@ -9,7 +9,20 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory
 import org.koin.core.component.KoinComponent
 import java.nio.file.Paths
 
-class TreeTableView_Datoteka : KoinComponent {
+abstract class TreeTableView_Datoteka_Ui : KoinComponent {
+    @FXML
+    lateinit var self: TreeTableView<Datoteka>
+
+    @FXML
+    lateinit var imeTTC: TreeTableColumn<Datoteka, String>
+}
+
+class TreeTableView_Datoteka : TreeTableView_Datoteka_Ui() {
+    @FXML
+    fun initialize() {
+        println("init TreeTableView_Datoteka")
+        this.imeTTC.cellValueFactory = TreeItemPropertyValueFactory(Datoteka::ime.name)
+    }
 
     fun init(datoteka: Datoteka) {
         val zvezekDir = Paths.get(datoteka.file.absolutePath, "../${datoteka.file.nameWithoutExtension}").normalize().toFile()
@@ -37,22 +50,5 @@ class TreeTableView_Datoteka : KoinComponent {
 
         root.isExpanded = true
         this.self.root = root
-    }
-
-    @FXML
-    lateinit var imeTTC: TreeTableColumn<Datoteka, String>
-
-    @FXML
-    lateinit var self: TreeTableView<Datoteka>
-
-    @FXML
-    fun initialize() {
-        println("init TreeTableView_Datoteka")
-        this.imeTTC.cellValueFactory = TreeItemPropertyValueFactory(Datoteka::ime.name);
-    }
-
-    @FXML
-    fun clicked() {
-        println("clicked")
     }
 }

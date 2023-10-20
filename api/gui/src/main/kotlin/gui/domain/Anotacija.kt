@@ -27,10 +27,12 @@ data class Anotacija(
     val area: Double get() = this.width * this.height
 
     val average: Vektor get() = Vektor(x = this.x + this.width / 2.0, y = this.y + this.height / 2.0)
-
-    fun contains(x: Double, y: Double): Boolean {
-        return x in this.x..this.x_max && y in this.y..this.y_max
+    val prvaCrka: Char get() = this.text.first()
+    fun vzporedna(ano: Anotacija): Boolean {
+        return this.average.y in ano.y..ano.y_max
     }
 
+    fun najblizjiY(anos: List<Anotacija>){
 
+    }
 }

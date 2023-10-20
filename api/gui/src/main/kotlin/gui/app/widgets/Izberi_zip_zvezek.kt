@@ -1,9 +1,10 @@
 package gui.app.widgets
 
-import gui.domain.Datoteka
-import gui.domain.Slika
 import gui.app.elements.ListView_Datoteka
 import gui.app.elements.TreeTableView_Datoteka
+import gui.base.Opazovan
+import gui.domain.Datoteka
+import gui.domain.Slika
 import gui.services.LogService
 import gui.services.ResouceService
 import javafx.fxml.FXML
@@ -12,34 +13,36 @@ import org.koin.core.component.inject
 import java.util.zip.ZipFile
 import javax.imageio.ImageIO
 
-class Izberi_zip_zvezek : KoinComponent {
-
-    var zip_zvezek = gui.base.Opazovan<Datoteka?>(null)
-    val resourseService by this.inject<ResouceService>()
-    val log by this.inject<LogService>()
-
+abstract class Izberi_zip_zvezek_Ui : KoinComponent {
     @FXML
     lateinit var listView_datoteka_Controller: ListView_Datoteka
 
     @FXML
     lateinit var treeTableView_datoteka_Controller: TreeTableView_Datoteka
+    val LIST get() = this.listView_datoteka_Controller
+    val TREE get() = this.treeTableView_datoteka_Controller
+}
 
+class Izberi_zip_zvezek : Izberi_zip_zvezek_Ui() {
+    val resourseService by this.inject<ResouceService>()
+    val log by this.inject<LogService>()
+    var zip_zvezek = Opazovan<Datoteka?>(null)
 
     @FXML
     fun initialize() {
         println("init Izberi_zip_zvezek")
-        this.listView_datoteka_Controller.self.selectionModel.selectedItemProperty().addListener { observable, oldValue, newValue ->
+        this.LIST.self.selectionModel.selectedItemProperty().addListener { observable, oldValue, newValue ->
             this.init(datoteka = newValue)
         }
 
-        this.listView_datoteka_Controller.init(this.resourseService.najdi_zip_datoteke())
+        this.LIST.init(this.resourseService.najdi_zip_datoteke())
     }
 
     private fun init(datoteka: Datoteka) {
         this.log.info("init: $datoteka")
 
         //Posodobi tree table.
-        this.treeTableView_datoteka_Controller.init(datoteka)
+        this.TREE.init(datoteka)
 
         //Shrani zip zvezek
         this.zip_zvezek.value = datoteka
@@ -54,7 +57,7 @@ class Izberi_zip_zvezek : KoinComponent {
         val entries = zipFile.entries().toList()
 
         //Poglej koliko datotek si ze obdelal.
-        val steviloOpravljenihDatotek = this.treeTableView_datoteka_Controller.self.root.children.size
+        val steviloOpravljenihDatotek = this.TREE.self.root.children.size
 
         //Dobi zip datoteko ki je naslednja za obdelavo.
         val nasledjiZipEntry = entries[steviloOpravljenihDatotek]

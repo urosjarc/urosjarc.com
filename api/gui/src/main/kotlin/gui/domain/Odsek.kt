@@ -1,10 +1,11 @@
 package gui.domain
 
-import java.awt.image.BufferedImage
-
 data class Odsek(
     val x: Int,
     val y: Int,
     var anotacije: List<Anotacija>,
-    val img: BufferedImage,
-)
+    val slika: Slika
+) {
+    val visina get() = this.slika.img.height.toDouble()
+    val sirina get() = this.slika.img.width.toDouble()
+}

@@ -1,10 +1,8 @@
 package gui.use_cases
 
-import gui.domain.*
-import gui.extend.averagePixel
-import gui.extend.removeBorder
-import gui.extend.vmes
-import java.awt.image.BufferedImage
+import gui.domain.Odsek
+import gui.domain.Stran
+import gui.extend.*
 import kotlin.math.abs
 
 class Razrezi_stran() {
@@ -15,23 +13,25 @@ class Razrezi_stran() {
          * Glava
          */
         if (stran.glava.size > 0) {
-            val maxGlava = stran.glava.maxBy { it.y_max }
-            val yEnd = this.dol_najblizji(stran, start = maxGlava.y_max)
-            val img = stran.slika.img.getSubimage(0, 0, stran.slika.img.width, yEnd)
-            val border = img.removeBorder(50)
-            deli.add(Odsek(x = border.first, y = 0 + border.first, img = border.second, anotacije = stran.glava))
+            val zgornja_meja = stran.glava.najvisjaMeja(default = 0.0)
+            val najvisja_zgornja_meja = stran.anotacije.najblizjaZgornjaMeja(meja=zgornja_meja, default = zgornja_meja)
+            val subImg = stran.slika.img.getSubimage(0, 0, stran.slika.img.width, najvisja_zgornja_meja.toInt())
+            val border = subImg.removeBorder(50)
+            val slika = stran.slika.copy(img = border.second)
+            deli.add(Odsek(x = border.first, y = 0 + border.first, slika = slika, anotacije = stran.glava))
         }
 
         /**
          * Teorija
          */
         if (stran.teorija.size > 0) {
-            val minGlava = stran.teorija.minBy { it.y }
-            val maxGlava = stran.teorija.maxBy { it.y_max }
-            val yStart = this.gor_najblizji(stran, start = minGlava.y)
-            val yEnd = this.dol_najblizji(stran, start = maxGlava.y_max)
-            val img = stran.slika.img.getSubimage(0, yStart, stran.slika.img.width, yEnd)
-            deli.add(Odsek(x = 0, y = yStart, img = img, anotacije = stran.teorija))
+            val zgornja_meja = stran.teorija.najvisjaMeja(default = 0.0)
+            val spodnja_meja = stran.teorija.najnizjaMeja(default = stran.visina)
+            val najvisja_zgornja_meja = stran.anotacije.najblizjaZgornjaMeja(meja=zgornja_meja, default = zgornja_meja).toInt()
+            val najnizja_spodnja_meja = stran.anotacije.najblizjaSpodnjaMeja(meja=spodnja_meja, default = spodnja_meja).toInt()
+            val subImg = stran.slika.img.getSubimage(0, najvisja_zgornja_meja, stran.slika.img.width, najnizja_spodnja_meja)
+            val slika = stran.slika.copy(img = subImg)
+            deli.add(Odsek(x = 0, y = najvisja_zgornja_meja, slika = slika, anotacije = stran.teorija))
         }
 
         /**
@@ -44,12 +44,14 @@ class Razrezi_stran() {
          * Naloge
          */
         for (i in 0 until nalogaY.size - 1) {
-            val yStart = this.gor_najblizji(stran, start = nalogaY[i])
-            val yEnd = nalogaY[i + 1].toInt()
-            val img = stran.slika.img.getSubimage(0, yStart, stran.slika.img.width, abs(yStart - yEnd))
-            val anotacije = stran.anotacije.filter { it.average.y.vmes(yStart, yEnd) }
-            val border = img.removeBorder(50)
-            deli.add(Odsek(x = border.first, y = yStart + border.first, img = border.second, anotacije = anotacije))
+            val zgornja_meja = stran.anotacije.najblizjaZgornjaMeja(meja = nalogaY[i], default = 0.0)
+            val spodnja_meja = nalogaY[i + 1]
+            val visina = abs(spodnja_meja - zgornja_meja)
+            val subImg = stran.slika.img.getSubimage(0, zgornja_meja.toInt(), stran.slika.img.width, visina.toInt())
+            val anos = stran.anotacije.vmesY(zgornja_meja = zgornja_meja, spodnja_meja = spodnja_meja)
+            val border = subImg.removeBorder(50)
+            val slika = stran.slika.copy(img = border.second)
+            deli.add(Odsek(x = border.first, y = zgornja_meja.toInt() + border.first, slika = slika, anotacije = anos))
         }
 
         deli.sortBy { it.anotacije.first().y }
@@ -64,10 +66,4 @@ class Razrezi_stran() {
 
         return deli
     }
-
-    private fun gor_najblizji(stran: Stran, start: Double): Int =
-        stran.anotacije.filter { it.average.y < start }.maxBy { it.average.y }.y_max.toInt()
-
-    private fun dol_najblizji(stran: Stran, start: Double): Int =
-        stran.anotacije.filter { it.average.y > start }.minBy { it.average.y }.y_max.toInt()
 }

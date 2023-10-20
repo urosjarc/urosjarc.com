@@ -7,7 +7,7 @@ plugins {
     this.id("buildSrc.db")
     this.id("buildSrc.jwks")
     this.id("buildSrc.openapi")
-    this.id("io.ktor.plugin") version "2.2.3"
+    this.id("io.ktor.plugin") version "2.3.5"
 }
 
 dependencies {
@@ -15,7 +15,7 @@ dependencies {
 
     this.implementation("io.insert-koin:koin-ktor:3.3.0")
 
-    val ktor_version = "2.2.3"
+    val ktor_version = "2.3.5"
     this.implementation("io.ktor:ktor-server-cors:$ktor_version")
     this.implementation("io.ktor:ktor-server-resources:$ktor_version")
     this.implementation("io.ktor:ktor-server-sessions-jvm:$ktor_version")

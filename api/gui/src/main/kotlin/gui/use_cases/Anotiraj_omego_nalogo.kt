@@ -3,100 +3,77 @@ package gui.use_cases
 import gui.domain.Anotacija
 import gui.domain.Naloga
 import gui.domain.Odsek
+import gui.extend.*
 import kotlin.math.abs
 
 class Anotiraj_omego_nalogo {
 
-    private fun kodaCrke(crka: Char): Int {
+    private fun slKoda(crka: Char): Int {
         var c = crka
-        if (c == '1') c = 'l'
+        if (c == '1') c = 'l' //Google prepozna l kot 1 :(
         return "abcdefghijklmnoprstuvz".indexOf(c)
+    }
+
+    private fun vseCrkeZOklepajem(anotacije: List<Anotacija>): MutableList<Anotacija> {
+        val oklepaji = anotacije.filter { it.text == ")" }
+
+        val returned = mutableListOf<Anotacija>()
+        for (oklepaj in oklepaji) {
+            val i = anotacije.indexOf(oklepaj)
+            val prejsnji = anotacije[i - 1]
+            if (prejsnji.text.length == 1) returned.add(prejsnji)
+        }
+
+        return returned
     }
 
     fun zdaj(odsek: Odsek): Naloga {
         val naloga = Naloga(odsek = odsek)
+        val crkaOklepaj = vseCrkeZOklepajem(odsek.anotacije)
 
         /**
-         * Najdi vse oklepaje
-         */
-        val oklepaji = odsek.anotacije.filter { it.text == ")" }
-
-        /**
-         * Dobi vse elemente pred oklepaji
-         */
-        val crke_oklepaj = mutableListOf<Anotacija>()
-        for (oklepaj in oklepaji) {
-            val i = odsek.anotacije.indexOf(oklepaj)
-            val prejsnji = odsek.anotacije[i - 1]
-            if (prejsnji.text.length == 1) {
-                crke_oklepaj.add(prejsnji)
-            }
-        }
-
-        /**
-         * Filtriraj elemente ki imajo crke v pravilnem zaporedju eno za drugo
-         */
-        var charIndex = this.kodaCrke(crke_oklepaj.first().text.first())
-        val podnaloge = mutableListOf<Anotacija>()
-        while (true) {
-            val ano = crke_oklepaj.filter { this.kodaCrke(it.text.first()) == charIndex }
-            if (ano.isEmpty()) break
-            podnaloge.addAll(ano)
-            charIndex++
-        }
-
-        /**
-         * Grupiraj naloge po vrstici in stolpcu ter sortiraj po x
+         * Ustvari grupe
          */
         val grupe = mutableListOf<MutableList<Anotacija>>()
-        while (podnaloge.isNotEmpty()) {
-            /**
-             * Ustvarjanje grupe
-             */
-            val ano = podnaloge.removeAt(0)
-            val grupa = mutableListOf(ano)
-            for (i in 0 until podnaloge.size) {
-                if (podnaloge[i].average.y in ano.y..ano.y_max) {
-                    grupa.add(podnaloge[i])
+        while (crkaOklepaj.isNotEmpty()) {
+            //Najdi kandidate za grupo
+            val ano = crkaOklepaj.removeAt(0)
+            val kandidati = mutableListOf(ano)
+            for (i in 0 until crkaOklepaj.size) {
+                if (crkaOklepaj[i].vzporedna(ano)) kandidati.add(crkaOklepaj[i])
+            }
+            kandidati.sortBy { it.x }
+            kandidati.forEach { crkaOklepaj.remove(it) }
+
+            //Odstrani neprimerne kandidate
+            val grupa = mutableListOf(kandidati[0])
+            for (i in 1 until kandidati.size) {
+                if (this.slKoda(grupa.last().prvaCrka) - this.slKoda(kandidati[i].prvaCrka) == -1) {
+                    grupa.add(kandidati[i])
                 }
             }
-
-            /**
-             * Sortiraj po poziciji
-             */
-            grupa.sortBy { it.x }
-
-            /**
-             * Odstrani vse tiste ki niso v rangu
-             */
-            grupa.forEach { podnaloge.remove(it) }
-            val novaGrupa = mutableListOf(grupa[0])
-            for (i in 1 until grupa.size) {
-                if (this.kodaCrke(novaGrupa.last().text.first()) - this.kodaCrke(grupa[i].text.first()) == -1) {
-                    novaGrupa.add(grupa[i])
-                }
-            }
-            grupe.add(novaGrupa)
+            grupe.add(grupa)
         }
 
         /**
          * Sortiraj vrstice grup
          */
-        grupe.sortBy { this.kodaCrke(it.first().text.first()) }
+        grupe.sortBy { this.slKoda(it.first().prvaCrka) }
 
         /**
          * Dodaj glavo ce je tip naloge
          */
         val y_min = grupe.first().first().y
-        val glavaAno = odsek.anotacije.filter { it.average.y < y_min }
+        val anotacijeGlave = odsek.anotacije.nad(meja = y_min)
         if (odsek.anotacije.first().tip == Anotacija.Tip.NALOGA) {
-            val y_max_zadnji = glavaAno.maxOf { it.y_max }
-            val y_max = odsek.anotacije.filter { it.y > y_max_zadnji }.minOf { it.y }
+            val spodnja_meja_anotacij = anotacijeGlave.najnizjaMeja(default = 0.0)
+            val spodnja_meja = odsek.anotacije.najblizjaSpodnjaMeja(meja = spodnja_meja_anotacij, default = odsek.visina)
+
             naloga.glava.add(
                 Anotacija(
                     x = 0.0, y = 0.0,
-                    height = y_max,
-                    width = odsek.img.width.toDouble(),
+                    height = spodnja_meja,
+                    width = odsek.sirina,
                     text = "",
                     tip = Anotacija.Tip.HEAD
                 )
@@ -110,24 +87,20 @@ class Anotiraj_omego_nalogo {
             for (x in 0 until grupe[y].size) {
                 val curr = grupe[y][x]
 
-                //Dobi prvo zgornjo anotacijo, ali glavo drugace pa zacetek slike
-                val y_min = grupe.getOrNull(y - 1)?.first()?.y_max ?: glavaAno.maxOfOrNull { it.y_max } ?: 0.0
+                val spodnja_meja_glave = anotacijeGlave.najnizjaMeja(default = 0.0)
+                val spodnja_meja_slike = odsek.visina
 
-                //Dobi prvo naslednjo ali konec slike
-                val y_max = grupe.getOrNull(y + 1)?.first()?.y ?: odsek.img.height.toDouble()
-
-                //Dobi prvo pred to anotacijo na isti visini ali zacetek slike
-                val x_min = odsek.anotacije.filter { it.average.y in curr.y..curr.y_max }.filter { it.x < curr.x }.maxOfOrNull { it.x_max } ?: 0.0
-
-                //Dobi zacetek naslednje anotacije
-                val x_max = grupe[y].getOrNull(x + 1)?.x ?: odsek.img.width.toDouble()
+                val zgoraj = grupe.getOrNull(y - 1).najnizjaMeja(default = spodnja_meja_glave)
+                val spodaj = grupe.getOrNull(y + 1).najvisjaMeja(default = spodnja_meja_slike)
+                val levo = odsek.anotacije.vzporedne(ano = curr).najblizjaLevaMeja(ano = curr, default = 0.0)
+                val desno = grupe[y].najblizjaDesnaMeja(ano=curr, default=odsek.sirina)
 
                 naloga.podnaloge.add(
                     curr.copy(
-                        x = x_min,
-                        y = y_min,
-                        height = abs(y_max - y_min),
-                        width = abs(x_max - x_min),
+                        x = desno,
+                        y = zgoraj,
+                        height = abs(spodaj - zgoraj),
+                        width = abs(desno - desno),
                     )
                 )
             }

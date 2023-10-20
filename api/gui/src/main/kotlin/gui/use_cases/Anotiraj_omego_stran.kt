@@ -1,128 +1,89 @@
 package gui.use_cases
 
 import gui.domain.Anotacija
-import gui.domain.Stran
 import gui.domain.Slika
-import gui.extend.averagePixel
-import gui.extend.vmes
-import java.awt.image.BufferedImage
+import gui.domain.Stran
+import gui.extend.*
 
 class Anotiraj_omego_stran {
 
-    fun zdaj(slika: Slika, annos: List<Anotacija>): Stran {
-        val stran = Stran(slika = slika, anotacije = annos)
+    fun zdaj(slika: Slika, anos: List<Anotacija>): Stran {
+        val stran = Stran(slika = slika, anotacije = anos)
 
-        this.parse_footer(stran, annos)
-        this.parse_naloge(slika.img, stran, annos)
-        this.parse_naslov(slika.img, stran, annos)
-        this.parse_head(stran, annos)
-        this.parse_teorija(stran, annos)
+        this.parse_footer(stran, anos)
+        this.parse_naloge(stran, anos)
+        this.parse_naslov(stran, anos)
+        this.parse_head(stran, anos)
+        this.parse_teorija(stran, anos)
 
         stran.init()
         return stran
     }
 
 
-    fun parse_teorija(slika: Stran, annos: List<Anotacija>) {
-        /**
-         * Parsanje teorije
-         */
-        val naslov_maxY = slika.naslov.maxByOrNull { it.y_max }?.y_max
-        if (naslov_maxY != null) {
-            val closestNaloga = slika.naloge.map { it.first() }.filter { it.average.y > naslov_maxY }.minByOrNull { it.average.y }
-            if (closestNaloga != null) { //Ce najbljizja naloga ni bila najdena
-                val naloga_minY = closestNaloga.y
-                for (annotation in annos) {
-                    val ave = annotation.average
-                    if (ave.y.vmes(naslov_maxY, naloga_minY)) {
-                        slika.teorija.add(annotation)
-                    }
-                }
-            } else { //Najblizja naloga ni bila najdena
-                for (anno in annos) {
-                    val annoAve = anno.average
-                    if (naslov_maxY < annoAve.y && !slika.noga.contains(anno)) {
-                        slika.teorija.add(anno)
-                    }
-                }
-            }
+    fun parse_teorija(stran: Stran, anos: List<Anotacija>) {
+        if (stran.naslov.isNotEmpty()) {
+            val zgornja_meja = stran.naslov.najnizjaMeja(default = stran.visina)
+            val najnizja_spodnja_meja = stran.noga.najvisjaMeja(default = stran.visina)
+            val spodnja_meja = stran.naloge.map { it.first() }.najblizjaSpodnjaMeja(meja = zgornja_meja, default = najnizja_spodnja_meja)
+            stran.teorija.addAll(anos.vmesY(zgornja_meja = zgornja_meja, spodnja_meja = spodnja_meja))
         }
     }
 
-    fun parse_footer(slika: Stran, annos: List<Anotacija>) {
-        val lowestY = annos.maxBy { it.y_max }
-        for (anno in annos) {
-            val annoAve = anno.average
-            val dy = lowestY.height / 2
-            if (annoAve.y.vmes(lowestY.y - dy, lowestY.y_max + dy)) {
-                slika.noga.add(anno)
-            }
+    fun parse_footer(stran: Stran, anos: List<Anotacija>) {
+        val najnizji = anos.najnizji()
+        if (najnizji != null) {
+            val y = najnizji.average.y
+            val dy = najnizji.height / 2
+            stran.noga.addAll(anos.vmesY(zgornja_meja = y - dy, spodnja_meja = y + dy))
         }
     }
 
-    fun parse_naloge(img: BufferedImage, slika: Stran, annos: List<Anotacija>) {
-        for (anno in annos) {
+    fun parse_naloge(stran: Stran, anos: List<Anotacija>) {
+        val img = stran.slika.img
+        for (anno in anos) {
             val pass = img.averagePixel(anno).is_red()
             val hasEndDot = anno.text.endsWith(".")
             if (hasEndDot && pass) {
-                val nalogeAnnos = annos  //Pridobivanje annotationov ki so rdeci in pripadajo isti vrstici in so levo od pike ter dovolj blizu
-                    .filter { anno.average.y.vmes(it.y, it.y_max) }
-                    .filter { it.average.x < anno.average.x && it.x_max - anno.x < 20 }
+                val nalogeAnnos = anos  //Pridobivanje annotationov ki so rdeci in pripadajo isti vrstici in so levo od pike ter dovolj blizu
+                    .vzporedne(anno)
+                    .desno(ano = anno)
+                    .filter { it.x_max - anno.x < 20 }
                     .filter { img.averagePixel(it).is_red() }
                     .sortedBy { it.average.x }.toMutableList()
 
                 nalogeAnnos.add(anno)
-                val area = nalogeAnnos.map { it.area }.sum()
-                if (area.vmes(30 * 30, 300 * 50)) {
-                    slika.naloge.add(nalogeAnnos)
+                if (nalogeAnnos.povrsina().vmes(30 * 30, 300 * 50)) {
+                    stran.naloge.add(nalogeAnnos)
                 }
             }
         }
-        if (slika.naloge.isNotEmpty()) {
-            slika.naloge.sortBy { it.first().average.y }
-        }
+        if (stran.naloge.isNotEmpty()) stran.naloge.sortBy { it.first().average.y }
     }
 
-    fun parse_naslov(img: BufferedImage, slika: Stran, annos: List<Anotacija>) {
+    fun parse_naslov(stran: Stran, anos: List<Anotacija>) {
         /**
          * Parsanje naslovov
          */
-        val naslovi = mutableListOf<MutableList<Anotacija>>()
-        for (anno in annos) {
+        val naslovi = mutableListOf<List<Anotacija>>()
+        for (anno in anos) {
             val nums = anno.text.split(".").map { it.toIntOrNull() }
-            if (!nums.contains(null) && img.averagePixel(anno).is_red()) {
-                val deli = mutableListOf(anno)
-                for (del in annos) {
-                    val delAve = del.average
-                    if (delAve.y.vmes(anno.y, anno.y_max) && delAve.x > anno.x_max) {
-                        deli.add(del)
-                    }
-                }
-                deli.sortBy { it.average.x }
-                val area = deli.map { it.area }.sum()
-                if (area.vmes(150 * 150, 1000 * 150)) naslovi.add(deli)
+            if (!nums.contains(null) && stran.slika.img.averagePixel(anno).is_red()) {
+                val deli = anos.vzporedne(anno).desno(anno).sortedBy { it.average.x }
+                if (deli.povrsina().vmes(150 * 150, 1000 * 150)) naslovi.add(deli)
             }
         }
-
-        /**
-         * Najdi naslov z najvecjo povrsino!
-         */
         if (naslovi.isNotEmpty()) {
-            //Samo en naslov je lahko na strani in ta mora biti najvecji!
-            slika.naslov = naslovi.maxBy { it.map { it.area }.sum() }
+            //Najdi naslov z najvecjo povrsino
+            stran.naslov = naslovi.maxBy { it.povrsina() }.toMutableList()
         }
     }
 
-    fun parse_head(slika: Stran, annos: List<Anotacija>) {
-        val highest = slika.naloge.map { it.first() } + slika.naslov
-        if (highest.isEmpty()) return
-        val highestY = highest.minBy { it.y }.y
-        for (annotation in annos) {
-            val annoAve = annotation.average
-            if (annoAve.y < highestY) {
-                slika.glava.add(annotation)
-            }
-        }
+    fun parse_head(stran: Stran, anos: List<Anotacija>) {
+        val najvisje_anotacije = stran.naloge.map { it.first() } + stran.naslov
+        if (najvisje_anotacije.isEmpty()) return
+        val spodnja_meja = najvisje_anotacije.najvisjaMeja(default = 0.0)
+        stran.glava = anos.nad(meja = spodnja_meja).toMutableList()
     }
 
 }
