@@ -12,7 +12,7 @@ import javafx.scene.control.Button
 import javafx.scene.paint.Color
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import java.awt.image.BufferedImage
+
 
 abstract class Rezanje_slike_Ui : KoinComponent {
     @FXML

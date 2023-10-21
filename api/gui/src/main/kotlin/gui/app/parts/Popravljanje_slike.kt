@@ -59,8 +59,8 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
 
     private fun init_imageView() {
         this.log.info("init: ${this.infoL.text}")
-        val img = this.process_data().negative()
-        img.drawGrid()
+        val img = this.process_data().binarna(negativ = true)
+        img.narisiMrezo()
         this.IMG.init(img = img)
     }
 
@@ -72,8 +72,8 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
 
     private fun resetiraj() {
         this.log.info("resetiraj sliko")
-        val deskew = this.slika.img.deskew()
-        val removeBorder = deskew.second.removeBorder(maxWidth = 300)
+        val deskew = this.slika.img.poravnaj()
+        val removeBorder = deskew.second.odstraniObrobo(maxWidth = 300)
 
         this.rotacijaS.value = deskew.first
         this.paddingS.value = removeBorder.first.toDouble()
@@ -89,7 +89,7 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
 
     private fun process_data(): BufferedImage {
         val m = this.paddingS.value.toInt()
-        val img = this.slika.img.rotate(this.rotacijaS.value)
+        val img = this.slika.img.rotiraj(this.rotacijaS.value)
         return img.getSubimage(m, m, img.width - 2 * m, img.height - 2 * m)
     }
 }

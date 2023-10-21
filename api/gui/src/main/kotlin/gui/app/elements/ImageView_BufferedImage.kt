@@ -24,8 +24,8 @@ abstract class ImageView_BufferedImage_UI : KoinComponent {
 
 class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
     var sirokaSlika = false
-    var visina = 900.0
-    var sirina = 300.0
+    var visina = 1000.0
+    var sirina = 900.0
     var zoom = Opazovan(0.0)
 
     @FXML
@@ -54,25 +54,25 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
 
         this.backgroundP.let {
             if (sirokaSlika) {
-                it.maxHeight = v
-                it.minHeight = v
-                it.maxWidth = v / ratio
-                it.minWidth = v / ratio
-            } else {
                 it.maxWidth = v
                 it.minWidth = v
                 it.maxHeight = v * ratio
                 it.minHeight = v * ratio
+            } else {
+                it.maxHeight = v
+                it.minHeight = v
+                it.maxWidth = v / ratio
+                it.minWidth = v / ratio
             }
         }
         this.self.let {
             if (sirokaSlika) {
-                it.fitHeight = v
-                it.fitWidth = v / ratio
-                sirina = v
-            } else {
                 it.fitWidth = v
                 it.fitHeight = v * ratio
+                sirina = v
+            } else {
+                it.fitHeight = v
+                it.fitWidth = v / ratio
                 visina = v
             }
         }

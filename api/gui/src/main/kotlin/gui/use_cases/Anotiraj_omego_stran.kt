@@ -42,14 +42,14 @@ class Anotiraj_omego_stran {
     fun parse_naloge(stran: Stran, anos: List<Anotacija>) {
         val img = stran.slika.img
         for (anno in anos) {
-            val pass = img.averagePixel(anno).is_red()
+            val pass = img.povprecenPiksel(anno).is_red()
             val hasEndDot = anno.text.endsWith(".")
             if (hasEndDot && pass) {
                 val nalogeAnnos = anos  //Pridobivanje annotationov ki so rdeci in pripadajo isti vrstici in so levo od pike ter dovolj blizu
                     .vzporedne(anno)
                     .desno(ano = anno)
                     .filter { it.x_max - anno.x < 20 }
-                    .filter { img.averagePixel(it).is_red() }
+                    .filter { img.povprecenPiksel(it).is_red() }
                     .sortedBy { it.average.x }.toMutableList()
 
                 nalogeAnnos.add(anno)
@@ -68,7 +68,7 @@ class Anotiraj_omego_stran {
         val naslovi = mutableListOf<List<Anotacija>>()
         for (anno in anos) {
             val nums = anno.text.split(".").map { it.toIntOrNull() }
-            if (!nums.contains(null) && stran.slika.img.averagePixel(anno).is_red()) {
+            if (!nums.contains(null) && stran.slika.img.povprecenPiksel(anno).is_red()) {
                 val deli = anos.vzporedne(anno).desno(anno).sortedBy { it.average.x }
                 if (deli.povrsina().vmes(150 * 150, 1000 * 150)) naslovi.add(deli)
             }

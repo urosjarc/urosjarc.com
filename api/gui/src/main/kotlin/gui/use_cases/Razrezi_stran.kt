@@ -16,7 +16,7 @@ class Razrezi_stran() {
             val spodnja_meja = stran.glava.najnizjaMeja(default = stran.visina)
             val najnizja_spodnja_meja = stran.anotacije.najblizjaSpodnjaMeja(meja = spodnja_meja, default = spodnja_meja)
             val subImg = stran.slika.img.getSubimage(0, 0, stran.sirina.toInt(), najnizja_spodnja_meja.toInt())
-            val border = subImg.removeBorder(50)
+            val border = subImg.odstraniObrobo(50)
             val slika = stran.slika.copy(img = border.second)
             deli.add(Odsek(x = border.first, y = 0 + border.first, slika = slika, anotacije = stran.glava))
         }
@@ -49,7 +49,7 @@ class Razrezi_stran() {
             val visina = abs(spodnja_meja - zgornja_meja)
             val subImg = stran.slika.img.getSubimage(0, zgornja_meja.toInt(), stran.sirina.toInt(), visina.toInt())
             val anos = stran.anotacije.medY(zgornja_meja = zgornja_meja, spodnja_meja = spodnja_meja)
-            val border = subImg.removeBorder(50)
+            val border = subImg.odstraniObrobo(50)
             val slika = stran.slika.copy(img = border.second)
             deli.add(Odsek(x = border.first, y = zgornja_meja.toInt() + border.first, slika = slika, anotacije = anos))
         }
