@@ -11,10 +11,15 @@ fun List<Anotacija>.povrsina(): Double = this.sumOf { it.area }
 /**
  * Vzporedne anotacije
  */
-fun List<Anotacija>.vzporedne(ano: Anotacija): List<Anotacija> = this.filter { ano.vzporedna(it) }
+fun List<Anotacija>.enakaVrstica(ano: Anotacija): List<Anotacija> = this.filter { ano.enakaVrstica(it) }
+fun List<Anotacija>.enakStolpec(ano: Anotacija): List<Anotacija> = this.filter { ano.enakStolpec(it) }
+fun List<Anotacija>.vsebovani(ano: Anotacija): List<Anotacija> = this.filter { ano.vsebovana(it) }
 
 fun List<Anotacija>.medY(zgornja_meja: Double, spodnja_meja: Double): List<Anotacija> =
     this.filter { it.average.y.vmes(start = zgornja_meja, end = spodnja_meja) }
+
+fun List<Anotacija>.medX(leva_meja: Double, desna_meja: Double): List<Anotacija> =
+    this.filter { it.average.x.vmes(start = leva_meja, end = desna_meja) }
 
 /**
  * Dobi anotacije glede na vse smeri od meje ali anotacije

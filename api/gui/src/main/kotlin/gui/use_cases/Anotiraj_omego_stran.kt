@@ -46,7 +46,7 @@ class Anotiraj_omego_stran {
             val hasEndDot = anno.text.endsWith(".")
             if (hasEndDot && pass) {
                 val nalogeAnnos = anos  //Pridobivanje annotationov ki so rdeci in pripadajo isti vrstici in so levo od pike ter dovolj blizu
-                    .vzporedne(anno)
+                    .enakaVrstica(anno)
                     .desno(ano = anno)
                     .filter { it.x_max - anno.x < 20 }
                     .filter { img.povprecenPiksel(it).is_red() }
@@ -69,7 +69,7 @@ class Anotiraj_omego_stran {
         for (anno in anos) {
             val nums = anno.text.split(".").map { it.toIntOrNull() }
             if (!nums.contains(null) && stran.slika.img.povprecenPiksel(anno).is_red()) {
-                val deli = anos.vzporedne(anno).desno(anno).sortedBy { it.average.x }
+                val deli = anos.enakaVrstica(anno).desno(anno).sortedBy { it.average.x }
                 if (deli.povrsina().vmes(150 * 150, 1000 * 150)) naslovi.add(deli)
             }
         }

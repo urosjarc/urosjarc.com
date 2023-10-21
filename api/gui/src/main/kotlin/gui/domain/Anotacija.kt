@@ -28,11 +28,7 @@ data class Anotacija(
 
     val average: Vektor get() = Vektor(x = this.x + this.width / 2.0, y = this.y + this.height / 2.0)
     val prvaCrka: Char get() = this.text.first()
-    fun vzporedna(ano: Anotacija): Boolean {
-        return this.average.y in ano.y..ano.y_max
-    }
-
-    fun najblizjiY(anos: List<Anotacija>){
-
-    }
+    fun enakaVrstica(ano: Anotacija): Boolean = ano.average.y in this.y..this.y_max
+    fun enakStolpec(ano: Anotacija): Boolean = ano.average.x in this.x..this.x_max
+    fun vsebovana(ano: Anotacija): Boolean = this.enakStolpec(ano) && this.enakaVrstica(ano)
 }

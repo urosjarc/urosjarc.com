@@ -2,8 +2,7 @@ package gui.domain
 
 data class Naloga(
     val odsek: Odsek,
-    val glava: MutableList<Anotacija> = mutableListOf(),
-    val podnaloge: MutableList<Anotacija> = mutableListOf(),
+    val deli: MutableList<DelNaloge> = mutableListOf(),
 ) {
     enum class Tip {
         NEZNANO,

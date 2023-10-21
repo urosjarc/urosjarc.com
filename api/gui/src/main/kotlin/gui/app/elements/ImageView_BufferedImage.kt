@@ -81,14 +81,28 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
     }
 
     fun kvadratAnotacije(ano: Anotacija, color: Color = Color.BLACK): Rectangle {
-        val v = Vektor(x = ano.x, y = ano.y)
         val img = this.self.image
         val rx = img.width / this.self.fitWidth
         val ry = img.height / this.self.fitHeight
+
+        val v = Vektor(x = ano.x, y = ano.y)
         val rec = Rectangle(v.x / rx, v.y / ry, ano.width / rx, ano.height / ry)
         rec.fill = null
         rec.stroke = color
         rec.strokeWidth = 2.0
+
         return rec
+    }
+
+    fun anotacijaKvadrata(r: Rectangle, text: String, tip: Anotacija.Tip): Anotacija {
+        val img = this.self.image
+        val rx = img.width / this.self.fitWidth
+        val ry = img.height / this.self.fitHeight
+        return Anotacija(x = r.x * rx, y = r.y * ry, width = r.width * rx, height = r.height * ry, text = text, tip = tip)
+    }
+
+    fun narisi_rectangle(ano: Anotacija, color: Color) {
+        val rec = this.kvadratAnotacije(ano = ano, color = color)
+        this.backgroundP.children.add(rec)
     }
 }

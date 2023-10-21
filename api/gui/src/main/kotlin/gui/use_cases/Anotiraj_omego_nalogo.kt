@@ -3,6 +3,7 @@ package gui.use_cases
 import gui.domain.Anotacija
 import gui.domain.Naloga
 import gui.domain.Odsek
+import gui.domain.DelNaloge
 import gui.extend.*
 
 class Anotiraj_omego_nalogo {
@@ -20,7 +21,7 @@ class Anotiraj_omego_nalogo {
             val ano = crkaOklepaj.removeAt(0)
             val kandidati = mutableListOf(ano)
             for (i in 0 until crkaOklepaj.size) {
-                if (crkaOklepaj[i].vzporedna(ano)) kandidati.add(crkaOklepaj[i])
+                if (crkaOklepaj[i].enakaVrstica(ano)) kandidati.add(crkaOklepaj[i])
             }
             kandidati.sortBy { it.x }
             kandidati.forEach { crkaOklepaj.remove(it) }
@@ -50,15 +51,15 @@ class Anotiraj_omego_nalogo {
             val spodnja_meja = odsek.anotacije.najblizjaSpodnjaMeja(meja = spodnja_meja_anotacij, default = odsek.visina)
             val leva_meja = anotacijeGlave.levaMeja(default = 0.0)
 
-            naloga.glava.add(
-                Anotacija(
-                    x = leva_meja, y = 0.0,
-                    height = spodnja_meja,
-                    width = odsek.sirina - leva_meja,
-                    text = "",
-                    tip = Anotacija.Tip.HEAD
-                )
+            val ano = Anotacija(
+                x = leva_meja, y = 0.0,
+                height = spodnja_meja,
+                width = odsek.sirina - leva_meja,
+                text = "",
+                tip = Anotacija.Tip.HEAD
             )
+
+            naloga.deli.add(DelNaloge(anotacije = mutableListOf(ano)))
         }
 
         /**
@@ -73,15 +74,8 @@ class Anotiraj_omego_nalogo {
                 val spodaj = grupe.getOrNull(y + 1).najvisjaMeja(default = spodnja_meja_slike)
                 val levo = curr.x
                 val desno = grupe[y].najblizjaDesnaMeja(ano = curr, default = odsek.sirina)
-
-                naloga.podnaloge.add(
-                    curr.copy(
-                        x = levo,
-                        y = zgoraj,
-                        height = spodaj - zgoraj,
-                        width = desno - levo,
-                    )
-                )
+                val podnal = DelNaloge(anotacije = mutableListOf(curr.copy(x = levo, y = zgoraj, height = spodaj - zgoraj, width = desno - levo)))
+                naloga.deli.add(podnal)
             }
         }
 

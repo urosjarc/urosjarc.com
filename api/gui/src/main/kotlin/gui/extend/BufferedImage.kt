@@ -58,12 +58,12 @@ fun BufferedImage.copiraj(): BufferedImage {
 }
 
 fun BufferedImage.dodajSpodaj(img: BufferedImage): BufferedImage {
-    val w: Int = Math.max(this.getWidth(), img.getWidth())
-    val h: Int = this.getHeight() + img.getHeight()
+    val w: Int = Math.max(this.width, img.width)
+    val h: Int = this.height + img.height
     val combined = BufferedImage(w, h, BufferedImage.TYPE_INT_RGB)
-    val g = combined.graphics
+    val g = combined.createGraphics()
     g.drawImage(this, 0, 0, null)
-    g.drawImage(img, 0, h, null)
+    g.drawImage(img, 0, this.height, null)
     g.dispose()
     return combined
 }

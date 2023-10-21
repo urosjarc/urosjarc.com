@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" BorderPane.alignment="CENTER" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="gui.app.parts.Rezanje_slike">
+<SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.parts.Rezanje_slike">
     <items>
         <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
             <center>
@@ -14,15 +14,15 @@
                     <children>
                         <HBox maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                             <children>
-                                <Button fx:id="resetirajDelNalogeB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Resetiraj del" HBox.hgrow="ALWAYS" />
-                                <Button fx:id="potrdiDelNalogeB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Potrdi del" HBox.hgrow="ALWAYS" />
+                                <Button fx:id="prejsnjiDelB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Prejsnji del" HBox.hgrow="ALWAYS" />
+                                <Button fx:id="naslednjiDelB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Naslednji del" HBox.hgrow="ALWAYS" />
                             </children>
                         </HBox>
                     </children>
                 </VBox>
             </bottom>
         </BorderPane>
-        <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+        <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="422.0" prefWidth="636.0">
             <center>
                 <fx:include fx:id="down_imageView_bufferedImage_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../elements/ImageView_BufferedImage.fxml" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS" />
             </center>
@@ -31,8 +31,9 @@
                <children>
                   <HBox maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                      <children>
-                        <Button fx:id="resetirajNalogoB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Resetiraj nalogo" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="potrdiNalogoB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Potrdi nalogo" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="prejsnjaNalogaB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Prejsnja naloga" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="resetirajNalogoB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Resetiraj" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="naslednjaNalogaB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Naslednja naloga" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                </children>
