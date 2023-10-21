@@ -34,6 +34,8 @@ fun List<Anotacija>.levo(ano: Anotacija): List<Anotacija> = this.levo(meja = ano
  */
 fun List<Anotacija>.najnizji(): Anotacija? = this.maxByOrNull { it.y_max }
 fun List<Anotacija>.najvisji(): Anotacija? = this.minByOrNull { it.y }
+fun List<Anotacija>.levaMeja(default: Double): Double = this.minOfOrNull { it.x } ?: default
+fun List<Anotacija>.desnaMeja(default: Double): Double = this.maxOfOrNull { it.x_max } ?: default
 fun List<Anotacija>?.najnizjaMeja(default: Double): Double = this?.najnizji()?.y_max ?: default
 fun List<Anotacija>?.najvisjaMeja(default: Double): Double = this?.najvisji()?.y ?: default
 

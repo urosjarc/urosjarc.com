@@ -48,12 +48,13 @@ class Anotiraj_omego_nalogo {
         if (odsek.anotacije.first().tip == Anotacija.Tip.NALOGA) {
             val spodnja_meja_anotacij = anotacijeGlave.najnizjaMeja(default = 0.0)
             val spodnja_meja = odsek.anotacije.najblizjaSpodnjaMeja(meja = spodnja_meja_anotacij, default = odsek.visina)
+            val leva_meja = anotacijeGlave.levaMeja(default = 0.0)
 
             naloga.glava.add(
                 Anotacija(
-                    x = 0.0, y = 0.0,
+                    x = leva_meja, y = 0.0,
                     height = spodnja_meja,
-                    width = odsek.sirina,
+                    width = odsek.sirina - leva_meja,
                     text = "",
                     tip = Anotacija.Tip.HEAD
                 )
@@ -70,7 +71,7 @@ class Anotiraj_omego_nalogo {
                 val spodnja_meja_slike = odsek.visina
                 val zgoraj = grupe.getOrNull(y - 1).najnizjaMeja(default = spodnja_meja_glave)
                 val spodaj = grupe.getOrNull(y + 1).najvisjaMeja(default = spodnja_meja_slike)
-                val levo = odsek.anotacije.medY(zgornja_meja = zgoraj, spodnja_meja = spodaj).najblizjaLevaMeja(ano = curr, default = 0.0)
+                val levo = curr.x
                 val desno = grupe[y].najblizjaDesnaMeja(ano = curr, default = odsek.sirina)
 
                 naloga.podnaloge.add(
