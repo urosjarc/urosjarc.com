@@ -13,21 +13,21 @@ data class Stran(
     val sirina get() = this.slika.img.width.toDouble()
 
     fun init() {
-        this.noga.forEach { it.tip = Anotacija.Tip.FOOTER }
+        this.noga.forEach { it.tip = Anotacija.Tip.NOGA }
         this.naloge.forEach { it.forEach { it.tip = Anotacija.Tip.NALOGA } }
         this.naslov.forEach { it.tip = Anotacija.Tip.NASLOV }
-        this.glava.forEach { it.tip = Anotacija.Tip.HEAD }
+        this.glava.forEach { it.tip = Anotacija.Tip.GLAVA }
         this.teorija.forEach { it.tip = Anotacija.Tip.TEORIJA }
     }
 
     fun dodaj(ano: List<Anotacija>, tip: Anotacija.Tip) {
         when (tip) {
             Anotacija.Tip.NEZNANO -> {}
-            Anotacija.Tip.HEAD -> this.glava.addAll(ano)
+            Anotacija.Tip.GLAVA -> this.glava.addAll(ano)
             Anotacija.Tip.NASLOV -> this.naslov.addAll(ano)
             Anotacija.Tip.TEORIJA -> this.teorija.addAll(ano)
             Anotacija.Tip.NALOGA -> this.naloge.add(ano.toMutableList())
-            Anotacija.Tip.FOOTER -> this.noga.addAll(ano)
+            Anotacija.Tip.NOGA -> this.noga.addAll(ano)
         }
         this.init()
     }
@@ -36,11 +36,11 @@ data class Stran(
         ano.forEach {
             when (it.tip) {
                 Anotacija.Tip.NEZNANO -> {}
-                Anotacija.Tip.HEAD -> this.glava.remove(it)
+                Anotacija.Tip.GLAVA -> this.glava.remove(it)
                 Anotacija.Tip.NASLOV -> this.naslov.remove(it)
                 Anotacija.Tip.TEORIJA -> this.teorija.remove(it)
                 Anotacija.Tip.NALOGA -> this.naloge.forEach { lit -> lit.remove(it) }
-                Anotacija.Tip.FOOTER -> this.noga.remove(it)
+                Anotacija.Tip.NOGA -> this.noga.remove(it)
             }
         }
         this.init()

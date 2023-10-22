@@ -13,11 +13,11 @@ data class Anotacija(
 ) {
     enum class Tip {
         NEZNANO,
-        HEAD,
+        GLAVA,
         NASLOV,
         TEORIJA,
         NALOGA,
-        FOOTER,
+        NOGA,
     }
 
     val x_max: Double get() = this.x + this.width

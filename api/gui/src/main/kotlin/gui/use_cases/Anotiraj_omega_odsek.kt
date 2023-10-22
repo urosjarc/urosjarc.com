@@ -1,20 +1,17 @@
 package gui.use_cases
 
 import gui.domain.Anotacija
-import gui.domain.Naloga
+import gui.domain.DelOdseka
 import gui.domain.Odsek
-import gui.domain.DelNaloge
 import gui.extend.*
 
-class Anotiraj_omego_nalogo {
+class Anotiraj_omega_odsek {
 
-    fun zdaj(odsek: Odsek): Naloga {
-        val naloga = Naloga(odsek = odsek)
-        val crkaOklepaj = vseCrkeZOklepajem(odsek.anotacije)
-
+    fun zdaj(odsek: Odsek) {
         /**
          * Ustvari grupe
          */
+        val crkaOklepaj = vseCrkeZOklepajem(odsek.anotacije)
         val grupe = mutableListOf<MutableList<Anotacija>>()
         while (crkaOklepaj.isNotEmpty()) {
             //Najdi kandidate za grupo
@@ -56,10 +53,10 @@ class Anotiraj_omego_nalogo {
                 height = spodnja_meja,
                 width = odsek.sirina - leva_meja,
                 text = "",
-                tip = Anotacija.Tip.HEAD
+                tip = Anotacija.Tip.GLAVA
             )
 
-            naloga.deli.add(DelNaloge(anotacije = mutableListOf(ano)))
+            odsek.deli.add(DelOdseka(anotacije = mutableListOf(ano)))
         }
 
         /**
@@ -74,12 +71,10 @@ class Anotiraj_omego_nalogo {
                 val spodaj = grupe.getOrNull(y + 1).najvisjaMeja(default = spodnja_meja_slike)
                 val levo = curr.x
                 val desno = grupe[y].najblizjaDesnaMeja(ano = curr, default = odsek.sirina)
-                val podnal = DelNaloge(anotacije = mutableListOf(curr.copy(x = levo, y = zgoraj, height = spodaj - zgoraj, width = desno - levo)))
-                naloga.deli.add(podnal)
+                val podnal = DelOdseka(anotacije = mutableListOf(curr.copy(x = levo, y = zgoraj, height = spodaj - zgoraj, width = desno - levo)))
+                odsek.deli.add(podnal)
             }
         }
-
-        return naloga
     }
 
     private fun vseCrkeZOklepajem(anotacije: List<Anotacija>): MutableList<Anotacija> {

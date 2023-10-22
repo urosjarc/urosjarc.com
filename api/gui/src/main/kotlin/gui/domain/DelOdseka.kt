@@ -1,5 +1,5 @@
 package gui.domain
 
-data class DelNaloge(
+data class DelOdseka(
     var anotacije: MutableList<Anotacija> = mutableListOf(),
 )

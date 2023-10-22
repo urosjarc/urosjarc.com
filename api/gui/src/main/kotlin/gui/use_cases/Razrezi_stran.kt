@@ -1,11 +1,12 @@
 package gui.use_cases
 
+import gui.domain.Anotacija
 import gui.domain.Odsek
 import gui.domain.Stran
 import gui.extend.*
 import kotlin.math.abs
 
-class Razrezi_stran() {
+class Razrezi_stran {
 
     fun zdaj(stran: Stran): MutableList<Odsek> {
         val deli = mutableListOf<Odsek>()
@@ -18,7 +19,7 @@ class Razrezi_stran() {
             val subImg = stran.slika.img.getSubimage(0, 0, stran.sirina.toInt(), najnizja_spodnja_meja.toInt())
             val border = subImg.odstraniObrobo(50)
             val slika = stran.slika.copy(img = border.second)
-            deli.add(Odsek(x = border.first, y = 0 + border.first, slika = slika, anotacije = stran.glava))
+            deli.add(Odsek(x = border.first, y = 0 + border.first, slika = slika, anotacije = stran.glava, tip=Odsek.Tip.GLAVA))
         }
 
         /**
@@ -31,7 +32,7 @@ class Razrezi_stran() {
             val najnizja_spodnja_meja = stran.anotacije.najblizjaSpodnjaMeja(meja = spodnja_meja, default = spodnja_meja).toInt()
             val subImg = stran.slika.img.getSubimage(0, najvisja_zgornja_meja, stran.sirina.toInt(), najnizja_spodnja_meja)
             val slika = stran.slika.copy(img = subImg)
-            deli.add(Odsek(x = 0, y = najvisja_zgornja_meja, slika = slika, anotacije = stran.teorija))
+            deli.add(Odsek(x = 0, y = najvisja_zgornja_meja, slika = slika, anotacije = stran.teorija, tip=Odsek.Tip.TEORIJA))
         }
 
         /**
@@ -51,7 +52,7 @@ class Razrezi_stran() {
             val anos = stran.anotacije.medY(zgornja_meja = zgornja_meja, spodnja_meja = spodnja_meja)
             val border = subImg.odstraniObrobo(50)
             val slika = stran.slika.copy(img = border.second)
-            deli.add(Odsek(x = border.first, y = zgornja_meja.toInt() + border.first, slika = slika, anotacije = anos))
+            deli.add(Odsek(x = border.first, y = zgornja_meja.toInt() + border.first, slika = slika, anotacije = anos, tip = Odsek.Tip.NALOGA))
         }
 
         /**

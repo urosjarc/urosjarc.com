@@ -46,7 +46,7 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
     fun initialize() {
         println("init Procesiranje_zip_zvezkov")
         this.IZBERI.zip_zvezek.opazuj { this.PROCES.init(this.IZBERI.naslednja_slika()) }
-        this.PROCES.REZ.koncneNaloge.opazuj { this.potrdi_procesiranje_trenutne_slike() }
+        this.PROCES.REZ.koncniOdseki.opazuj { this.potrdi_procesiranje_trenutne_slike() }
         this.PROCES.POP.preskociSliko.opazuj { this.preskoci_popravljanje_trenutne_slike(it) }
     }
 
