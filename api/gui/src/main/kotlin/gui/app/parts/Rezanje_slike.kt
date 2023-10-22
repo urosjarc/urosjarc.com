@@ -1,6 +1,7 @@
 package gui.app.parts
 
 import gui.app.elements.ImageView_BufferedImage
+import gui.base.Opazovan
 import gui.domain.*
 import gui.extend.dodajSpodaj
 import gui.use_cases.Anotiraj_omego_nalogo
@@ -49,6 +50,7 @@ class Rezanje_slike : Rezanje_slike_Ui() {
     private var indexOdseka = 0
     private var indexDelNaloge = 0
 
+    var koncneNaloge = Opazovan<List<Naloga>>(listOf())
 
     @FXML
     fun initialize() {
@@ -140,6 +142,7 @@ class Rezanje_slike : Rezanje_slike_Ui() {
 
         if (this.indexOdseka >= this.odseki.size) {
             this.indexOdseka = this.odseki.size - 1
+            this.zakljuci()
         } else if (this.indexOdseka < 0) {
             this.indexOdseka = 0
         }
@@ -156,6 +159,10 @@ class Rezanje_slike : Rezanje_slike_Ui() {
         } else {
             this.init_top_img()
         }
+    }
+
+    private fun zakljuci() {
+        this.koncneNaloge.value = this.nalogeOdsekov.values.toList()
     }
 
     val delNaloge get() = this.naloga.deli[this.indexDelNaloge]

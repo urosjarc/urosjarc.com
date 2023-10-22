@@ -4,7 +4,7 @@
 
 <TabPane fx:id="tabPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.widgets.Procesiranje_slike">
   <tabs>
-    <Tab fx:id="obracanjeRezanjeT" text="Obracanje">
+    <Tab fx:id="popravljanjeT" text="Popravljanje">
       <content>
           <fx:include fx:id="popravljanje_slike_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../parts/Popravljanje_slike.fxml" />
       </content>

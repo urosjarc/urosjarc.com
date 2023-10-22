@@ -7,6 +7,7 @@ import javafx.scene.control.TreeTableColumn
 import javafx.scene.control.TreeTableView
 import javafx.scene.control.cell.TreeItemPropertyValueFactory
 import org.koin.core.component.KoinComponent
+import java.io.File
 import java.nio.file.Paths
 
 abstract class TreeTableView_Datoteka_Ui : KoinComponent {
@@ -50,5 +51,15 @@ class TreeTableView_Datoteka : TreeTableView_Datoteka_Ui() {
 
         root.isExpanded = true
         this.self.root = root
+    }
+
+    fun dodajDatoteko(datoteka: Datoteka) {
+        val newItem = TreeItem(datoteka)
+        datoteka.file.listFiles { dir: File, name: String ->
+            val dat = Datoteka(file = dir)
+            val item = TreeItem(dat)
+            newItem.children.add(item)
+        }
+        this.self.root.children.add(newItem)
     }
 }

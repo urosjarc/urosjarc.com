@@ -6,6 +6,8 @@ import gui.app.parts.Rezanje_slike
 import gui.domain.Slika
 import gui.services.LogService
 import javafx.fxml.FXML
+import javafx.scene.control.Alert
+import javafx.scene.control.ButtonType
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import org.koin.core.component.KoinComponent
@@ -47,6 +49,7 @@ class Procesiranje_slike : Procesiranje_slike_Ui() {
         this.log.info("init: $slika")
         this.slika = slika
         this.POP.init(slika)
+        this.tabPane.selectionModel.select(this.popravljanjeT)
     }
 
     @FXML
@@ -61,5 +64,6 @@ class Procesiranje_slike : Procesiranje_slike_Ui() {
             this.tabPane.selectionModel.select(this.rezanjeT)
         }
     }
+
 
 }
