@@ -6,6 +6,9 @@ import gui.app.widgets.Prikazi_log_dnevnik
 import gui.app.widgets.Procesiranje_slike
 import gui.base.App
 import gui.domain.Datoteka
+import gui.domain.Slika
+import gui.extend.inputStream
+import gui.extend.shrani
 import gui.services.LogService
 import javafx.application.Application
 import javafx.fxml.FXML
@@ -19,7 +22,6 @@ import jfxtras.styles.jmetro.Style
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.io.File
-import java.nio.file.Paths
 
 abstract class Procesiranje_zip_zvezkov_Ui : Application(), KoinComponent {
     @FXML
@@ -45,6 +47,7 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
         println("init Procesiranje_zip_zvezkov")
         this.IZBERI.zip_zvezek.opazuj { this.PROCES.init(this.IZBERI.naslednja_slika()) }
         this.PROCES.REZ.koncneNaloge.opazuj { this.potrdi_procesiranje_trenutne_slike() }
+        this.PROCES.POP.preskociSliko.opazuj { this.preskoci_popravljanje_trenutne_slike(it) }
     }
 
     override fun start(stage: Stage) {
@@ -61,21 +64,29 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
         val alert = Alert(
             Alert.AlertType.CONFIRMATION, "Želite shraniti vaše spremembe?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL
         ).apply { this.showAndWait() }
-        if (alert.result == ButtonType.YES) this.zakljuci_procesiranje_trenutne_slike()
+        if (alert.result == ButtonType.YES) this.ustvari_direktorij_trenutne_slike()
     }
 
-    fun zakljuci_procesiranje_trenutne_slike() {
+    fun preskoci_popravljanje_trenutne_slike(slika: Slika) {
+        val dat = this.ustvari_direktorij_trenutne_slike()
+        val file = File(dat.file, "popravljanje.png")
+        slika.img.shrani(file)
+        this.zacni_procesiranje_naslednje_slike()
+    }
+
+    fun ustvari_direktorij_trenutne_slike(): Datoteka {
         val zadnjiFolder = this.IZBERI.TREE.self.root.children.last().value
         this.log.info("Zadnji folder: ${zadnjiFolder.file}")
         val naslednjiFolder = File(zadnjiFolder.file.parent, (zadnjiFolder.ime.toInt() + 1).toString())
         this.log.info("Naslednji folder: ${naslednjiFolder}")
-        if(naslednjiFolder.mkdir()){
-            this.log.info("Direktorij se je ustvaril.")
-            val datoteka = Datoteka(file=naslednjiFolder)
-            this.IZBERI.TREE.dodajDatoteko(datoteka)
-            this.PROCES.init(this.IZBERI.naslednja_slika())
-        } else {
+        naslednjiFolder.mkdir()
+        this.log.info("Direktorij se je ustvaril.")
+        val datoteka = Datoteka(file = naslednjiFolder)
+        this.IZBERI.TREE.dodajDatoteko(datoteka)
+        return datoteka
+    }
 
-        }
+    fun zacni_procesiranje_naslednje_slike() {
+        this.PROCES.init(this.IZBERI.naslednja_slika())
     }
 }

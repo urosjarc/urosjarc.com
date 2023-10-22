@@ -26,7 +26,7 @@ abstract class Izberi_zip_zvezek_Ui : KoinComponent {
 class Izberi_zip_zvezek : Izberi_zip_zvezek_Ui() {
     val resourseService by this.inject<ResouceService>()
     val log by this.inject<LogService>()
-    var zip_zvezek = Opazovan<Datoteka?>(null)
+    var zip_zvezek = Opazovan<Datoteka>()
 
     @FXML
     fun initialize() {

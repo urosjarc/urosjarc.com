@@ -1,6 +1,7 @@
 package gui.base
 
-class Opazovan<T>(private var _vrednost: T) {
+class Opazovan<T : Any> {
+    lateinit var _vrednost: T
     var value: T
         get() = this._vrednost
         set(v) {

@@ -8,6 +8,7 @@ import gui.use_cases.Anotiraj_omego_nalogo
 import gui.use_cases.Razrezi_stran
 import javafx.fxml.FXML
 import javafx.scene.control.Button
+import javafx.scene.control.MenuItem
 import javafx.scene.input.MouseEvent
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
@@ -23,13 +24,22 @@ abstract class Rezanje_slike_Ui : KoinComponent {
     lateinit var down_imageView_bufferedImage_Controller: ImageView_BufferedImage
 
     @FXML
-    lateinit var resetirajDelB: Button
-
-    @FXML
     lateinit var prejsnjiDelB: Button
 
     @FXML
     lateinit var naslednjiDelB: Button
+
+    @FXML
+    lateinit var izbrisiDodaneAnotacijeB: MenuItem
+
+    @FXML
+    lateinit var izbrisiVseAnotacijeB: MenuItem
+
+    @FXML
+    lateinit var izbrisiCelotniDelB: MenuItem
+
+    @FXML
+    lateinit var ustvariDelB: Button
 
     val TOP_IMG get() = this.top_imageView_bufferedImage_Controller
     val DOWN_IMG get() = this.down_imageView_bufferedImage_Controller
@@ -50,7 +60,7 @@ class Rezanje_slike : Rezanje_slike_Ui() {
     private var indexOdseka = 0
     private var indexDelNaloge = 0
 
-    var koncneNaloge = Opazovan<List<Naloga>>(listOf())
+    var koncneNaloge = Opazovan<List<Naloga>>()
 
     @FXML
     fun initialize() {
@@ -63,8 +73,18 @@ class Rezanje_slike : Rezanje_slike_Ui() {
         this.naslednjiDelB.setOnAction { this.naslednjiDelNaloge(naprej = true) }
         this.prejsnjiDelB.setOnAction { this.naslednjiDelNaloge(naprej = false) }
 
-        this.resetirajDelB.setOnAction {
+        this.izbrisiCelotniDelB.setOnAction {
+            println("Prden celoten del")
+        }
+
+        this.izbrisiDodaneAnotacijeB.setOnAction {
             this.delNaloge.anotacije = mutableListOf(this.delNaloge.anotacije.first())
+            this.init_down_img()
+            this.init_top_img()
+        }
+
+        this.izbrisiVseAnotacijeB.setOnAction {
+            this.delNaloge.anotacije = mutableListOf()
             this.init_down_img()
             this.init_top_img()
         }

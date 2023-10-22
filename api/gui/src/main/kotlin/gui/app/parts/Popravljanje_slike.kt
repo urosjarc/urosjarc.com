@@ -32,6 +32,9 @@ abstract class Popravljanje_slike_Ui : KoinComponent {
     @FXML
     lateinit var potrdiB: Button
 
+    @FXML
+    lateinit var preskociB: Button
+
     val IMG: ImageView_BufferedImage get() = this.imageView_bufferedImage_Controller
 }
 
@@ -39,7 +42,8 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
 
     private val log by this.inject<LogService>()
     private lateinit var slika: Slika
-    var koncnaSlika = Opazovan<Slika?>(null)
+    var koncnaSlika = Opazovan<Slika>()
+    var preskociSliko = Opazovan<Slika>()
 
     @FXML
     fun initialize() {
@@ -50,6 +54,7 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
         this.paddingS.setOnMouseReleased { this.init_imageView() }
         this.resetirajB.setOnAction { this.resetiraj() }
         this.potrdiB.setOnAction { this.potrdi() }
+        this.preskociB.setOnAction { this.preskociSliko.value = this.slika }
     }
 
     fun init(slika: Slika) {

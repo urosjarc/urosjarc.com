@@ -26,7 +26,7 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
     var sirokaSlika = false
     var visina = 1000.0
     var sirina = 900.0
-    var zoom = Opazovan(0.0)
+    var zoom = Opazovan<Double>()
 
     @FXML
     fun initialize() {
