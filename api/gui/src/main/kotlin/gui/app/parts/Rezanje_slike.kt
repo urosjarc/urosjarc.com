@@ -22,13 +22,7 @@ abstract class Rezanje_slike_Ui : KoinComponent {
     lateinit var down_imageView_bufferedImage_Controller: ImageView_BufferedImage
 
     @FXML
-    lateinit var prejsnjaNalogaB: Button
-
-    @FXML
-    lateinit var resetirajNalogoB: Button
-
-    @FXML
-    lateinit var naslednjaNalogaB: Button
+    lateinit var resetirajDelB: Button
 
     @FXML
     lateinit var prejsnjiDelB: Button
@@ -66,10 +60,8 @@ class Rezanje_slike : Rezanje_slike_Ui() {
 
         this.naslednjiDelB.setOnAction { this.naslednjiDelNaloge(naprej = true) }
         this.prejsnjiDelB.setOnAction { this.naslednjiDelNaloge(naprej = false) }
-        this.naslednjaNalogaB.setOnAction { this.naslednjaNaloga(naprej = true) }
-        this.prejsnjaNalogaB.setOnAction { this.naslednjaNaloga(naprej = false) }
 
-        this.resetirajNalogoB.setOnAction {
+        this.resetirajDelB.setOnAction {
             this.delNaloge.anotacije = mutableListOf(this.delNaloge.anotacije.first())
             this.init_down_img()
             this.init_top_img()
