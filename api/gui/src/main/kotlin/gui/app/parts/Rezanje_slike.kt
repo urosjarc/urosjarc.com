@@ -50,8 +50,10 @@ class Rezanje_slike : Rezanje_slike_Ui() {
     var dragRectangle: Rectangle = Rectangle()
 
     private var odseki = listOf<Odsek>()
+    private var nalogeOdsekov = mutableMapOf<Odsek, Naloga>()
+
     private var indexOdseka = 0
-    private var indexDelOdseka = 0
+    private var indexDelNaloge = 0
 
 
     @FXML
@@ -62,27 +64,15 @@ class Rezanje_slike : Rezanje_slike_Ui() {
         this.DOWN_IMG.self.setOnMouseReleased { this.self_onMouseReleased(me = it) }
         this.DOWN_IMG.self.setOnMouseDragged { this.self_onMouseDragg(me = it) }
 
-        this.naslednjiDelB.setOnAction {
-            this.indexDelOdseka++
-            this.init_top_img()
-        }
-        this.prejsnjiDelB.setOnAction {
-            this.indexDelOdseka--
-            this.init_top_img()
-        }
-        this.naslednjaNalogaB.setOnAction {
-            this.indexOdseka++
-            this.init_odsek()
-        }
+        this.naslednjiDelB.setOnAction { this.naslednjiDelNaloge(naprej = true) }
+        this.prejsnjiDelB.setOnAction { this.naslednjiDelNaloge(naprej = false) }
+        this.naslednjaNalogaB.setOnAction { this.naslednjaNaloga(naprej = true) }
+        this.prejsnjaNalogaB.setOnAction { this.naslednjaNaloga(naprej = false) }
+
         this.resetirajNalogoB.setOnAction {
-            val delNaloge = this.getDelNaloge()
-            delNaloge.anotacije = mutableListOf(delNaloge.anotacije.first())
+            this.delNaloge.anotacije = mutableListOf(this.delNaloge.anotacije.first())
             this.init_down_img()
             this.init_top_img()
-        }
-        this.prejsnjaNalogaB.setOnAction {
-            this.indexOdseka--
-            this.init_odsek()
         }
     }
 
@@ -90,16 +80,26 @@ class Rezanje_slike : Rezanje_slike_Ui() {
         this.indexOdseka = 0
         this.stran = stran
         this.odseki = this.razrezi_stran.zdaj(stran = stran)
-        this.init_odsek()
+        this.init_naloga(naprej = true)
+    }
+
+    private fun init_naloga(naprej: Boolean) {
+        this.naloga = this.nalogeOdsekov.getOrDefault(this.odsek, defaultValue = this.anotiraj_omego_nalogo.zdaj(odsek = this.odsek))
+        this.nalogeOdsekov.putIfAbsent(this.odsek, this.naloga)
+
+        this.indexDelNaloge = if (naprej) 0 else this.naloga.deli.size - 1
+
+        this.init_down_img()
+        this.init_top_img()
     }
 
     private fun init_down_img() {
-        this.DOWN_IMG.init(this.getOdsek().slika.img, sirokaSlika = true)
+        this.DOWN_IMG.init(this.odsek.slika.img, sirokaSlika = true)
     }
 
     private fun init_top_img() {
-        val imgs = this.getDelNaloge().anotacije.map {
-            this.getOdsek().slika.img.getSubimage(it.x.toInt(), it.y.toInt(), it.width.toInt(), it.height.toInt())
+        val imgs = this.delNaloge.anotacije.map {
+            this.odsek.slika.img.getSubimage(it.x.toInt(), it.y.toInt(), it.width.toInt(), it.height.toInt())
         }.toMutableList()
 
         var img = imgs.removeAt(0)
@@ -109,21 +109,14 @@ class Rezanje_slike : Rezanje_slike_Ui() {
         this.redraw_down_img()
     }
 
-    private fun init_odsek() {
-        this.indexDelOdseka = 0
-        this.naloga = this.anotiraj_omego_nalogo.zdaj(odsek = this.getOdsek())
-        this.init_down_img()
-        this.init_top_img()
-    }
-
     private fun redraw_down_img() {
         this.DOWN_IMG.pobrisiOzadje()
-        this.getDelNaloge().anotacije.forEach { this.DOWN_IMG.narisi_rectangle(ano = it, color = Color.RED) }
+        this.delNaloge.anotacije.forEach { this.DOWN_IMG.narisi_rectangle(ano = it, color = Color.RED) }
     }
 
     private fun self_onMouseReleased(me: MouseEvent) {
         val anotacija = this.DOWN_IMG.anotacijaKvadrata(r = this.dragRectangle, text = "", tip = Anotacija.Tip.NALOGA)
-        naloga.deli[this.indexDelOdseka].anotacije.add(anotacija)
+        naloga.deli[this.indexDelNaloge].anotacije.add(anotacija)
 
         this.redraw_down_img()
         this.init_top_img()
@@ -150,26 +143,30 @@ class Rezanje_slike : Rezanje_slike_Ui() {
         this.DOWN_IMG.backgroundP.children.add(this.dragRectangle)
     }
 
-    private fun getOdsek(): Odsek {
-        //Popravi indeks ce je izven meje
+    private fun naslednjaNaloga(naprej: Boolean) {
+        this.indexOdseka += if (naprej) 1 else -1
+
         if (this.indexOdseka >= this.odseki.size) {
             this.indexOdseka = this.odseki.size - 1
-        } else if (this.indexOdseka < 0)
+        } else if (this.indexOdseka < 0) {
             this.indexOdseka = 0
-
-        //Dobi odsek
-        return this.odseki[this.indexOdseka]
+        }
+        this.init_naloga(naprej = naprej)
     }
 
-    private fun getDelNaloge(): DelNaloge {
-        //Popravi indeks ce je izven meje
-        if (this.indexDelOdseka >= naloga.deli.size) {
-            this.indexDelOdseka = naloga.deli.size - 1
-        } else if (this.indexDelOdseka < 0)
-            this.indexDelOdseka = 0
+    private fun naslednjiDelNaloge(naprej: Boolean) {
+        this.indexDelNaloge += if (naprej) 1 else -1
 
-        //Dobi odsek
-        return naloga.deli[this.indexDelOdseka]
+        if (this.indexDelNaloge >= naloga.deli.size) {
+            this.naslednjaNaloga(naprej = true)
+        } else if (this.indexDelNaloge < 0) {
+            this.naslednjaNaloga(naprej = false)
+        } else {
+            this.init_top_img()
+        }
     }
+
+    val delNaloge get() = this.naloga.deli[this.indexDelNaloge]
+    val odsek get() = this.odseki[this.indexOdseka]
 
 }
