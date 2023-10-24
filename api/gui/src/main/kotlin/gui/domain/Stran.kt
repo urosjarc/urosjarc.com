@@ -1,12 +1,12 @@
 package gui.domain
 
-data class Stran(
-    var glava: MutableList<Anotacija> = mutableListOf(),
-    var naslov: MutableList<Anotacija> = mutableListOf(),
-    val teorija: MutableList<Anotacija> = mutableListOf(),
-    val naloge: MutableList<MutableList<Anotacija>> = mutableListOf(),
-    val noga: MutableList<Anotacija> = mutableListOf(),
-) {
+class Stran {
+    var glava: MutableList<Anotacija> = mutableListOf()
+    var naslov: MutableList<Anotacija> = mutableListOf()
+    val teorija: MutableList<Anotacija> = mutableListOf()
+    val naloge: MutableList<MutableList<Anotacija>> = mutableListOf()
+    val noga: MutableList<Anotacija> = mutableListOf()
+
     fun init() {
         this.noga.forEach { it.tip = Anotacija.Tip.NOGA }
         this.naloge.forEach { it.forEach { it.tip = Anotacija.Tip.NALOGA } }
