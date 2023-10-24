@@ -2,6 +2,7 @@ package gui.app.elements
 
 import gui.base.Opazovan
 import gui.domain.Anotacija
+import gui.domain.Odsek
 import gui.domain.Vektor
 import gui.extend.inputStream
 import javafx.fxml.FXML
@@ -101,7 +102,12 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
         return Anotacija(x = r.x * rx, y = r.y * ry, width = r.width * rx, height = r.height * ry, text = text, tip = tip)
     }
 
-    fun narisi_rectangle(ano: Anotacija, color: Color) {
+    fun narisi_anotacijo(ano: Anotacija, color: Color) {
+        val rec = this.kvadratAnotacije(ano = ano, color = color)
+        this.backgroundP.children.add(rec)
+    }
+    fun narisi_odsek(odsek: Odsek, color: Color) {
+        val ano = Anotacija(x= odsek.x.toDouble(), y= odsek.y.toDouble(), width = odsek.sirina, height = odsek.visina, text = "", tip = Anotacija.Tip.NEZNANO)
         val rec = this.kvadratAnotacije(ano = ano, color = color)
         this.backgroundP.children.add(rec)
     }

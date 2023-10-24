@@ -2,7 +2,10 @@ package gui.app.parts
 
 import gui.app.elements.ImageView_BufferedImage
 import gui.base.Opazovan
-import gui.domain.*
+import gui.domain.Anotacija
+import gui.domain.Odsek
+import gui.domain.Stran
+import gui.domain.Vektor
 import gui.extend.dodajSpodaj
 import gui.services.LogService
 import gui.use_cases.Anotiraj_omega_odsek
@@ -71,8 +74,8 @@ class Rezanje_slike : Rezanje_slike_Ui() {
         this.DOWN_IMG.self.setOnMouseReleased { this.self_onMouseReleased() }
         this.DOWN_IMG.self.setOnMouseDragged { this.self_onMouseDragg(me = it) }
 
-        this.naslednjiDelB.setOnAction { this.naslednjiDelOdseka(naprej = true) }
-        this.prejsnjiDelB.setOnAction { this.naslednjiDelOdseka(naprej = false) }
+        this.naslednjiDelB.setOnAction { this.init_naslednjiDelOdseka(naprej = true) }
+        this.prejsnjiDelB.setOnAction { this.init_naslednjiDelOdseka(naprej = false) }
 
         this.izbrisiCelotniDelB.setOnAction {
             println("Prden celoten del")
@@ -99,7 +102,7 @@ class Rezanje_slike : Rezanje_slike_Ui() {
     }
 
     private fun init_odsek(naprej: Boolean) {
-        if(this.odsek.deli.isEmpty()) this.anotiraj_omega_odsek.zdaj(odsek = this.odsek)
+        if (this.odsek.deli.isEmpty()) this.anotiraj_omega_odsek.zdaj(odsek = this.odsek)
         this.indexDelOdseka = if (naprej) 0 else this.odsek.deli.size - 1
 
         this.init_down_img()
@@ -114,7 +117,7 @@ class Rezanje_slike : Rezanje_slike_Ui() {
         val imgs = this.delOdseka.anotacije.map {
             try {
                 this.odsek.slika.img.getSubimage(it.x.toInt(), it.y.toInt(), it.width.toInt(), it.height.toInt())
-            } catch (err: Throwable){
+            } catch (err: Throwable) {
                 println("Anot: $it")
                 val img = this.odsek.slika.img
                 println("Img: ${img.width} ${img.height}")
@@ -122,7 +125,7 @@ class Rezanje_slike : Rezanje_slike_Ui() {
             }
         }.toMutableList()
 
-        if(imgs.size == 0){
+        if (imgs.size == 0) {
             println("asdfsdf")
         }
 
@@ -133,9 +136,28 @@ class Rezanje_slike : Rezanje_slike_Ui() {
         this.redraw_down_img()
     }
 
-    private fun redraw_down_img() {
-        this.DOWN_IMG.pobrisiOzadje()
-        this.delOdseka.anotacije.forEach { this.DOWN_IMG.narisi_rectangle(ano = it, color = Color.RED) }
+    private fun init_naslednjiOdsek(naprej: Boolean) {
+        this.indexOdseka += if (naprej) 1 else -1
+
+        if (this.indexOdseka >= this.odseki.size) {
+            this.indexOdseka = this.odseki.size - 1
+            this.zakljuci()
+        } else if (this.indexOdseka < 0) {
+            this.indexOdseka = 0
+        }
+        this.init_odsek(naprej = naprej)
+    }
+
+    private fun init_naslednjiDelOdseka(naprej: Boolean) {
+        this.indexDelOdseka += if (naprej) 1 else -1
+
+        if (this.indexDelOdseka >= this.odsek.deli.size) {
+            this.init_naslednjiOdsek(naprej = true)
+        } else if (this.indexDelOdseka < 0) {
+            this.init_naslednjiOdsek(naprej = false)
+        } else {
+            this.init_top_img()
+        }
     }
 
     private fun self_onMouseReleased() {
@@ -167,29 +189,11 @@ class Rezanje_slike : Rezanje_slike_Ui() {
         this.DOWN_IMG.backgroundP.children.add(this.dragRectangle)
     }
 
-    private fun naslednjiOdsek(naprej: Boolean) {
-        this.indexOdseka += if (naprej) 1 else -1
-
-        if (this.indexOdseka >= this.odseki.size) {
-            this.indexOdseka = this.odseki.size - 1
-            this.zakljuci()
-        } else if (this.indexOdseka < 0) {
-            this.indexOdseka = 0
-        }
-        this.init_odsek(naprej = naprej)
+    private fun redraw_down_img() {
+        this.DOWN_IMG.pobrisiOzadje()
+        this.delOdseka.anotacije.forEach { this.DOWN_IMG.narisi_anotacijo(ano = it, color = Color.RED) }
     }
 
-    private fun naslednjiDelOdseka(naprej: Boolean) {
-        this.indexDelOdseka += if (naprej) 1 else -1
-
-        if (this.indexDelOdseka >= this.odsek.deli.size) {
-            this.naslednjiOdsek(naprej = true)
-        } else if (this.indexDelOdseka < 0) {
-            this.naslednjiOdsek(naprej = false)
-        } else {
-            this.init_top_img()
-        }
-    }
 
     private fun zakljuci() {
         this.koncniOdseki.value = this.odseki
