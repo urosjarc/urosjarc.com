@@ -4,7 +4,6 @@ import gui.app.elements.ListView_Datoteka
 import gui.app.elements.TreeTableView_Datoteka
 import gui.base.Opazovan
 import gui.domain.Datoteka
-import gui.domain.Slika
 import gui.services.LogService
 import gui.services.ResouceService
 import javafx.fxml.FXML

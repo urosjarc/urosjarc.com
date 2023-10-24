@@ -6,8 +6,6 @@ import gui.app.widgets.Prikazi_log_dnevnik
 import gui.app.widgets.Procesiranje_slike
 import gui.base.App
 import gui.domain.Datoteka
-import gui.domain.Slika
-import gui.extend.inputStream
 import gui.extend.shrani
 import gui.services.LogService
 import javafx.application.Application

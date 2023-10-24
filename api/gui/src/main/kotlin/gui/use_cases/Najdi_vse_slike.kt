@@ -1,6 +1,5 @@
 package gui.use_cases
 
-import gui.domain.Slika
 import java.io.File
 import java.util.zip.ZipFile
 import javax.imageio.ImageIO

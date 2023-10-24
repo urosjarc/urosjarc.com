@@ -1,17 +1,12 @@
 package gui.domain
 
 data class Stran(
-    val slika: Slika,
-    val anotacije: List<Anotacija>,
     var glava: MutableList<Anotacija> = mutableListOf(),
     var naslov: MutableList<Anotacija> = mutableListOf(),
     val teorija: MutableList<Anotacija> = mutableListOf(),
     val naloge: MutableList<MutableList<Anotacija>> = mutableListOf(),
     val noga: MutableList<Anotacija> = mutableListOf(),
 ) {
-    val visina get() = this.slika.img.height.toDouble()
-    val sirina get() = this.slika.img.width.toDouble()
-
     fun init() {
         this.noga.forEach { it.tip = Anotacija.Tip.NOGA }
         this.naloge.forEach { it.forEach { it.tip = Anotacija.Tip.NALOGA } }

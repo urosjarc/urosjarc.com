@@ -1,13 +1,13 @@
 package gui.use_cases
 
 import gui.domain.Anotacija
-import gui.domain.DelOdseka
 import gui.domain.Odsek
 import gui.extend.*
 
 class Anotiraj_omega_odsek {
 
-    fun zdaj(odsek: Odsek) {
+    fun zdaj(odsek: Odsek): MutableList<DelOdseka> {
+        val deliOdseka = mutableListOf<DelOdseka>()
         /**
          * Ustvari grupe
          */
@@ -56,7 +56,7 @@ class Anotiraj_omega_odsek {
                 tip = Anotacija.Tip.GLAVA
             )
 
-            odsek.deli.add(DelOdseka(anotacije = mutableListOf(ano)))
+            deliOdseka.add(DelOdseka(okvirji = mutableListOf(ano)))
         }
 
         /**
@@ -71,10 +71,12 @@ class Anotiraj_omega_odsek {
                 val spodaj = grupe.getOrNull(y + 1).najvisjaMeja(default = spodnja_meja_slike)
                 val levo = curr.x
                 val desno = grupe[y].najblizjaDesnaMeja(ano = curr, default = odsek.sirina)
-                val podnal = DelOdseka(anotacije = mutableListOf(curr.copy(x = levo, y = zgoraj, height = spodaj - zgoraj, width = desno - levo)))
-                odsek.deli.add(podnal)
+                val podnal = DelOdseka(okvirji = mutableListOf(curr.copy(x = levo, y = zgoraj, height = spodaj - zgoraj, width = desno - levo)))
+                deliOdseka.add(podnal)
             }
         }
+
+        return deliOdseka
     }
 
     private fun vseCrkeZOklepajem(anotacije: List<Anotacija>): MutableList<Anotacija> {

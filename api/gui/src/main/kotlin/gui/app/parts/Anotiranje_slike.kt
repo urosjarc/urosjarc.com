@@ -35,8 +35,8 @@ abstract class Anotiranje_slike_Ui : KoinComponent {
 
 class Anotiranje_slike : Anotiranje_slike_Ui() {
     val log by this.inject<LogService>()
-    val procesirajOmegoSliko by this.inject<Anotiraj_omego_stran>()
-    val razreziStran by this.inject<Razrezi_stran>()
+    val anotiraj_omego_stran by this.inject<Anotiraj_omego_stran>()
+    val razrezi_stran by this.inject<Razrezi_stran>()
     val ocrService by this.inject<OcrService>()
     val contextMenu = ContextMenu()
 
@@ -57,12 +57,12 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
         println("init Anotiranje_zip_slike")
 
         // Popravi anotacije ce se slika zoomira
-        this.IMG.zoom.opazuj { this.redraw_img_background() }
-        this.IMG.self.setOnMousePressed { this.dragStart = Vektor(x = it.x, y = it.y) }
-        this.IMG.self.setOnMouseReleased { this.self_onMouseReleased(me = it) }
-        this.IMG.self.setOnMouseDragged { this.self_onMouseDragg(me = it) }
-        this.resetirajB.setOnAction { this.init_img() }
-        this.naslednjiOdsekB.setOnAction { this.init_naslednjiOdsek() }
+        this.IMG.zoom.opazuj { this.na_novo_narisi_anotacije_v_ozadju() }
+        this.IMG.self.setOnMousePressed { this.dragStart = Vektor(x = it.x.toInt(), y = it.y.toInt()) }
+        this.IMG.self.setOnMouseReleased { this.onMouseReleased(me = it) }
+        this.IMG.self.setOnMouseDragged { this.onMouseDragg(me = it) }
+        this.resetirajB.setOnAction { this.anotiraj_razrezi_stran_in_prikazi_vse() }
+        this.naslednjiOdsekB.setOnAction { this.prikazi_naslednji_odsek_v_ozadju() }
 
         // Dodajanje tipov anotacij v context menu slike
         Anotacija.Tip.entries.forEach {
@@ -78,27 +78,27 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
             if (tip == Anotacija.Tip.NEZNANO) this.stran.odstrani(this.userAnotacije.toList())
             else this.stran.dodaj(ano = this.userAnotacije.toList(), tip = tip)
 
-            this.odseki = this.razreziStran.zdaj(stran)
+            this.odseki = this.razrezi_stran.zdaj(this.stran)
             this.userAnotacije.clear()
-            this.redraw_img_background()
+            this.na_novo_narisi_anotacije_v_ozadju()
         }
     }
 
-    fun init(zipSlika: Slika) {
-        this.slika = zipSlika
-        this.anotacije = this.ocrService.google(image = zipSlika.img)
-        this.init_img()
+    fun init(slika: Slika) {
+        this.slika = slika
+        this.anotacije = this.ocrService.google(image = slika.img)
+        this.anotiraj_razrezi_stran_in_prikazi_vse()
     }
 
-    private fun init_img() {
+    private fun anotiraj_razrezi_stran_in_prikazi_vse() {
         this.log.info("init: ${this.slika}")
-        this.stran = this.procesirajOmegoSliko.zdaj(slika = this.slika, anos = this.anotacije)
-        this.odseki = this.razreziStran.zdaj(stran)
+        this.stran = this.anotiraj_omego_stran.zdaj(slika = this.slika, anos = this.anotacije)
+        this.odseki = this.razrezi_stran.zdaj(stran)
         this.IMG.init(img = this.slika.img)
-        this.redraw_img_background()
+        this.na_novo_narisi_anotacije_v_ozadju()
     }
 
-    private fun redraw_img_background() {
+    private fun na_novo_narisi_anotacije_v_ozadju() {
         this.IMG.pobrisiOzadje()
         this.stran.let { stran ->
             stran.noga.forEach { this.IMG.narisi_anotacijo(it, Color.BLACK) }
@@ -108,31 +108,35 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
             stran.teorija.forEach { this.IMG.narisi_anotacijo(it, Color.RED) }
         }
         this.userAnotacije.forEach { this.IMG.narisi_anotacijo(it, Color.MAGENTA) }
-
         this.IMG.narisi_odsek(this.odseki[this.indexOdseka], Color.RED)
     }
+    private fun prikazi_naslednji_odsek_v_ozadju() {
+        this.indexOdseka += 1
+        if (this.indexOdseka >= this.odseki.size) this.indexOdseka = 0
+        this.na_novo_narisi_anotacije_v_ozadju()
+    }
 
-    private fun self_onMouseReleased(me: MouseEvent) {
+    private fun onMouseReleased(me: MouseEvent) {
         this.contextMenu.show(this.IMG.self, me.screenX, me.screenY)
 
-        val dragAnotacija = this.IMG.anotacijaKvadrata(r = this.dragRectangle, text = "", tip = Anotacija.Tip.NEZNANO)
+        val dragAnotacija = this.IMG.anotacija(r = this.dragRectangle, text = "", tip = Anotacija.Tip.NEZNANO)
         this.userAnotacije = this.anotacije.vsebovani(dragAnotacija).toMutableSet()
 
         //Vse skupaj se enkrat narisi
-        this.redraw_img_background()
+        this.na_novo_narisi_anotacije_v_ozadju()
     }
 
-    private fun self_onMouseDragg(me: MouseEvent) {
+    private fun onMouseDragg(me: MouseEvent) {
         //Odstrani drag rectangle
         this.IMG.backgroundP.children.remove(this.dragRectangle)
 
         //Ustvari drag rectangle
-        val v = Vektor(x = me.x, y = me.y)
+        val v = Vektor(x = me.x.toInt(), y = me.y.toInt())
         this.dragRectangle = Rectangle(
-            this.dragStart.x,
-            this.dragStart.y,
-            v.x - this.dragStart.x,
-            v.y - this.dragStart.y
+            this.dragStart.x.toDouble(),
+            this.dragStart.y.toDouble(),
+            (v.x - this.dragStart.x).toDouble(),
+            (v.y - this.dragStart.y).toDouble()
         ).apply {
             this.fill = null
             this.stroke = Color.MAGENTA
@@ -143,9 +147,4 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
         this.IMG.backgroundP.children.add(this.dragRectangle)
     }
 
-    private fun init_naslednjiOdsek() {
-        this.indexOdseka += 1
-        if (this.indexOdseka >= this.odseki.size) this.indexOdseka = 0
-        this.redraw_img_background()
-    }
 }

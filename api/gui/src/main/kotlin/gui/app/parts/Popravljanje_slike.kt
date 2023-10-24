@@ -2,7 +2,6 @@ package gui.app.parts
 
 import gui.app.elements.ImageView_BufferedImage
 import gui.base.Opazovan
-import gui.domain.Slika
 import gui.extend.*
 import gui.services.LogService
 import javafx.fxml.FXML
@@ -48,34 +47,34 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
     @FXML
     fun initialize() {
         println("init Obracanje_rezanje_zip_slike")
-        this.rotacijaS.valueProperty().addListener { _, _, _ -> this.init_infoL() }
-        this.paddingS.valueProperty().addListener { _, _, _ -> this.init_infoL() }
-        this.rotacijaS.setOnMouseReleased { this.init_imageView() }
-        this.paddingS.setOnMouseReleased { this.init_imageView() }
-        this.resetirajB.setOnAction { this.resetiraj() }
-        this.potrdiB.setOnAction { this.potrdi() }
+        this.rotacijaS.valueProperty().addListener { _, _, _ -> this.posodobi_info_slike() }
+        this.paddingS.valueProperty().addListener { _, _, _ -> this.posodobi_info_slike() }
+        this.rotacijaS.setOnMouseReleased { this.pripravi_sliko_narisi_mrezo_in_jo_prikazi() }
+        this.paddingS.setOnMouseReleased { this.pripravi_sliko_narisi_mrezo_in_jo_prikazi() }
+        this.resetirajB.setOnAction { this.resetiraj_celotno_sliko_na_default_vrednosti() }
+        this.potrdiB.setOnAction { this.potrdi_trenutne_nastavitve() }
         this.preskociB.setOnAction { this.preskociSliko.value = this.slika }
     }
 
     fun init(slika: Slika) {
         this.slika = slika
-        this.resetiraj()
+        this.resetiraj_celotno_sliko_na_default_vrednosti()
     }
 
-    private fun init_imageView() {
+    private fun pripravi_sliko_narisi_mrezo_in_jo_prikazi() {
         this.log.info("init: ${this.infoL.text}")
-        val img = this.process_data().binarna(negativ = true)
+        val img = this.rotiraj_in_odrezi_robove_slike().binarna(negativ = true)
         img.narisiMrezo()
         this.IMG.init(img = img)
     }
 
-    private fun init_infoL() {
+    private fun posodobi_info_slike() {
         val r = "%.2f°".format(this.rotacijaS.value)
         val m = "%.2fpx".format(this.paddingS.value)
         this.infoL.text = "Rotacija: $r, Padding: $m"
     }
 
-    private fun resetiraj() {
+    private fun resetiraj_celotno_sliko_na_default_vrednosti() {
         this.log.info("resetiraj sliko")
         val deskew = this.slika.img.poravnaj()
         val removeBorder = deskew.second.odstraniObrobo(maxWidth = 300)
@@ -83,16 +82,16 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
         this.rotacijaS.value = deskew.first
         this.paddingS.value = removeBorder.first.toDouble()
 
-        this.init_infoL()
-        this.init_imageView()
+        this.posodobi_info_slike()
+        this.pripravi_sliko_narisi_mrezo_in_jo_prikazi()
     }
 
-    private fun potrdi() {
-        this.koncnaSlika.value = this.slika.copy(img = this.process_data())
+    private fun potrdi_trenutne_nastavitve() {
+        this.koncnaSlika.value = this.slika.copy(img = this.rotiraj_in_odrezi_robove_slike())
         this.log.info("potrdi sliko: ${this.koncnaSlika.value}")
     }
 
-    private fun process_data(): BufferedImage {
+    private fun rotiraj_in_odrezi_robove_slike(): BufferedImage {
         val m = this.paddingS.value.toInt()
         val img = this.slika.img.rotiraj(this.rotacijaS.value)
         return img.getSubimage(m, m, img.width - 2 * m, img.height - 2 * m)

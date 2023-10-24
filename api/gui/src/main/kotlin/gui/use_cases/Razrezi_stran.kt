@@ -1,8 +1,8 @@
 package gui.use_cases
 
-import gui.domain.Anotacija
 import gui.domain.Odsek
 import gui.domain.Stran
+import gui.domain.Vektor
 import gui.extend.*
 import kotlin.math.abs
 
@@ -19,7 +19,8 @@ class Razrezi_stran {
             val subImg = stran.slika.img.getSubimage(0, 0, stran.sirina.toInt(), najnizja_spodnja_meja.toInt())
             val border = subImg.odstraniObrobo(50)
             val slika = stran.slika.copy(img = border.second)
-            deli.add(Odsek(x = border.first, y = 0 + border.first, slika = slika, anotacije = stran.glava, tip=Odsek.Tip.GLAVA))
+            val vektor = Vektor(x = border.first.toDouble(), y = (0 + border.first).toDouble())
+            deli.add(Odsek(pozicija = vektor, slika = slika, anotacije = stran.glava, tip = Odsek.Tip.GLAVA))
         }
 
         /**
@@ -32,7 +33,8 @@ class Razrezi_stran {
             val najnizja_spodnja_meja = stran.anotacije.najblizjaSpodnjaMeja(meja = spodnja_meja, default = spodnja_meja).toInt()
             val subImg = stran.slika.img.getSubimage(0, najvisja_zgornja_meja, stran.sirina.toInt(), najnizja_spodnja_meja)
             val slika = stran.slika.copy(img = subImg)
-            deli.add(Odsek(x = 0, y = najvisja_zgornja_meja, slika = slika, anotacije = stran.teorija, tip=Odsek.Tip.TEORIJA))
+            val vektor = Vektor(x = 0.0, y = najvisja_zgornja_meja.toDouble())
+            deli.add(Odsek(pozicija = vektor, slika = slika, anotacije = stran.teorija, tip = Odsek.Tip.TEORIJA))
         }
 
         /**

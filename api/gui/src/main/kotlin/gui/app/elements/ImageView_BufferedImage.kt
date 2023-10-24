@@ -3,7 +3,7 @@ package gui.app.elements
 import gui.base.Opazovan
 import gui.domain.Anotacija
 import gui.domain.Odsek
-import gui.domain.Vektor
+import gui.domain.Okvir
 import gui.extend.inputStream
 import javafx.fxml.FXML
 import javafx.scene.image.Image
@@ -81,13 +81,12 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
         zoom.value = dy
     }
 
-    fun kvadratAnotacije(ano: Anotacija, color: Color = Color.BLACK): Rectangle {
+    fun kvadrat(okvir: Okvir, color: Color = Color.BLACK): Rectangle {
         val img = this.self.image
         val rx = img.width / this.self.fitWidth
         val ry = img.height / this.self.fitHeight
 
-        val v = Vektor(x = ano.x, y = ano.y)
-        val rec = Rectangle(v.x / rx, v.y / ry, ano.width / rx, ano.height / ry)
+        val rec = Rectangle(okvir.x0 / rx, okvir.y0 / ry, okvir.x1 / rx, okvir.y1 / ry)
         rec.fill = null
         rec.stroke = color
         rec.strokeWidth = 2.0
@@ -95,20 +94,34 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
         return rec
     }
 
-    fun anotacijaKvadrata(r: Rectangle, text: String, tip: Anotacija.Tip): Anotacija {
+    fun anotacija(r: Rectangle, text: String, tip: Anotacija.Tip): Anotacija {
         val img = this.self.image
         val rx = img.width / this.self.fitWidth
         val ry = img.height / this.self.fitHeight
-        return Anotacija(x = r.x * rx, y = r.y * ry, width = r.width * rx, height = r.height * ry, text = text, tip = tip)
+        return Anotacija(
+            x = (r.x * rx).toInt(),
+            y = (r.y * ry).toInt(),
+            width = (r.width * rx).toInt(),
+            height = (r.height * ry).toInt(),
+            text = text,
+            tip = tip
+        )
     }
 
     fun narisi_anotacijo(ano: Anotacija, color: Color) {
-        val rec = this.kvadratAnotacije(ano = ano, color = color)
+        val okvir = Okvir(x0 = ano.x, y0 = ano.y, x1 = ano.x_max, y1 = ano.y_max)
+        val rec = this.kvadrat(okvir = okvir, color = color)
         this.backgroundP.children.add(rec)
     }
+
     fun narisi_odsek(odsek: Odsek, color: Color) {
-        val ano = Anotacija(x= odsek.x.toDouble(), y= odsek.y.toDouble(), width = odsek.sirina, height = odsek.visina, text = "", tip = Anotacija.Tip.NEZNANO)
-        val rec = this.kvadratAnotacije(ano = ano, color = color)
+        val okvir = Okvir(
+            x0 = odsek.pozicija.x,
+            y0 = odsek.pozicija.y,
+            x1 = odsek.pozicija.x + odsek.sirina,
+            y1 = odsek.pozicija.y + odsek.visina
+        )
+        val rec = this.kvadrat(okvir = okvir, color = color)
         this.backgroundP.children.add(rec)
     }
 }

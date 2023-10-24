@@ -1,7 +1,6 @@
 package gui.use_cases
 
 import gui.domain.Anotacija
-import gui.domain.Slika
 import gui.domain.Stran
 import gui.extend.*
 

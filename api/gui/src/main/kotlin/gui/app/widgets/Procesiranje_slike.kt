@@ -3,11 +3,9 @@ package gui.app.widgets
 import gui.app.parts.Anotiranje_slike
 import gui.app.parts.Popravljanje_slike
 import gui.app.parts.Rezanje_slike
-import gui.domain.Slika
 import gui.services.LogService
+import gui.use_cases.Razrezi_stran
 import javafx.fxml.FXML
-import javafx.scene.control.Alert
-import javafx.scene.control.ButtonType
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import org.koin.core.component.KoinComponent
@@ -42,6 +40,7 @@ abstract class Procesiranje_slike_Ui : KoinComponent {
 
 class Procesiranje_slike : Procesiranje_slike_Ui() {
     private val log by this.inject<LogService>()
+    private val razrezi_stran by this.inject<Razrezi_stran>()
     private var slika: Slika? = null
 
 
