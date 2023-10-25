@@ -1,6 +1,5 @@
 package gui.extend
 
-import gui.domain.Anotacija
 import gui.domain.Okvir
 
 

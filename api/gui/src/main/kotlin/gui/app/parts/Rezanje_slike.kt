@@ -2,6 +2,7 @@ package gui.app.parts
 
 import gui.app.elements.ImageView_BufferedImage
 import gui.domain.*
+import gui.extend.izrezi
 import gui.use_cases.Anotiraj_omega_odsek
 import gui.use_cases.Razrezi_stran
 import javafx.fxml.FXML
@@ -69,19 +70,9 @@ class Rezanje_slike : Rezanje_slike_Ui() {
         this.naslednjiDelB.setOnAction { this.pripravi_naslednji_del_odseka(naprej = true) }
         this.prejsnjiDelB.setOnAction { this.pripravi_naslednji_del_odseka(naprej = false) }
 
-        this.izbrisiCelotniDelB.setOnAction {
-            println("Prden celoten del")
-        }
-
-        this.izbrisiDodaneAnotacijeB.setOnAction {
-            //TODO...
-            this.IMG.init(this.slika, sirokaSlika = true)
-        }
-
-        this.izbrisiVseAnotacijeB.setOnAction {
-            //TODO...
-            this.IMG.init(this.slika, sirokaSlika = true)
-        }
+        this.izbrisiCelotniDelB.setOnAction { println("Prden celoten del") }
+        this.izbrisiDodaneAnotacijeB.setOnAction { this.IMG.init(this.slika) }
+        this.izbrisiVseAnotacijeB.setOnAction { this.IMG.init(this.slika) }
     }
 
     fun init(slika: BufferedImage, stran: Stran) {
@@ -118,7 +109,7 @@ class Rezanje_slike : Rezanje_slike_Ui() {
     private fun anotiraj_trenutni_odsek(naprej: Boolean) {
         this.deliOdseka = this.anotiraj_omega_odsek.zdaj(odsek = this.odsek)
         this.indexDelOdseka = if (naprej) 0 else this.deliOdseka.size - 1
-        this.IMG.init(this.slika, sirokaSlika = true)
+        this.IMG.init(this.slika.izrezi(okvir=this.odsek.okvir))
     }
 
     private fun na_novo_narisi_anotacije_v_ozadju() {

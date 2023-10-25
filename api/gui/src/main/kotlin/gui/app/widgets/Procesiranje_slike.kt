@@ -60,7 +60,7 @@ class Procesiranje_slike : Procesiranje_slike_Ui() {
             this.tabPane.selectionModel.select(this.anotiranjeT)
         }
         this.ANO.potrdiB.setOnAction {
-            this.REZ.init(slika=this.ANO.img, stran = this.ANO.stran)
+            this.REZ.init(slika=this.ANO.slika, stran = this.ANO.stran)
             this.tabPane.selectionModel.select(this.rezanjeT)
         }
     }

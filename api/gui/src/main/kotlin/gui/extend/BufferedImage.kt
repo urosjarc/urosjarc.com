@@ -48,6 +48,8 @@ fun BufferedImage.shrani(file: File) {
     ImageIO.write(this, "png", file)
 }
 
+fun BufferedImage.izrezi(okvir: Okvir): BufferedImage = this.getSubimage(okvir.start.x, okvir.start.y, okvir.sirina, okvir.visina)
+
 fun BufferedImage.copiraj(): BufferedImage {
     val b = BufferedImage(this.getWidth(), this.getHeight(), this.getType())
     val g: Graphics = b.graphics

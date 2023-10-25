@@ -36,9 +36,9 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
         }
     }
 
-    fun init(img: BufferedImage, sirokaSlika: Boolean = false) {
-        this.sirokaSlika = sirokaSlika
-        this.self.image = Image(img.inputStream)
+    fun init(slika: BufferedImage) {
+        this.sirokaSlika = slika.width > slika.height
+        this.self.image = Image(slika.inputStream)
         this.pobrisiOzadje()
         this.popraviVelikost(0.0)
     }

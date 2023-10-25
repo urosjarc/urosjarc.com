@@ -43,7 +43,7 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
     lateinit var dragStart: Vektor
     var dragRectangle: Rectangle = Rectangle()
 
-    lateinit var img: BufferedImage
+    lateinit var slika: BufferedImage
     lateinit var stran: Stran
 
     private var userOkvirji = listOf<Okvir>()
@@ -83,15 +83,15 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
         }
     }
 
-    fun init(img: BufferedImage) {
-        this.img = img
-        this.stran = this.anotiraj_omego_stran.zdaj(img = this.img, anotacije = this.ocrService.google(image = img))
+    fun init(slika: BufferedImage) {
+        this.slika = slika
+        this.stran = this.anotiraj_omego_stran.zdaj(img = this.slika, anotacije = this.ocrService.google(image = slika))
         this.razrezi_stran_in_na_novo_narisi_anotacije()
     }
 
     private fun razrezi_stran_in_na_novo_narisi_anotacije() {
         this.odseki = this.razrezi_stran.zdaj(this.stran)
-        this.IMG.init(img = this.img)
+        this.IMG.init(slika = this.slika)
         this.na_novo_narisi_anotacije_v_ozadju()
     }
 

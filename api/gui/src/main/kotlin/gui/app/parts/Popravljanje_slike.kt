@@ -65,7 +65,7 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
         this.log.info("init: ${this.infoL.text}")
         val img = this.rotiraj_in_odrezi_robove_slike().binarna(negativ = true)
         img.narisiMrezo()
-        this.IMG.init(img = img)
+        this.IMG.init(slika = img)
     }
 
     private fun posodobi_info_slike() {
