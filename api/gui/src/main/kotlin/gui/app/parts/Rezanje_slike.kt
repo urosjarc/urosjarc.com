@@ -1,7 +1,11 @@
 package gui.app.parts
 
 import gui.app.elements.ImageView_BufferedImage
-import gui.domain.*
+import gui.base.Izbire
+import gui.domain.Odsek
+import gui.domain.Okvir
+import gui.domain.Stran
+import gui.domain.Vektor
 import gui.extend.izrezi
 import gui.use_cases.Anotiraj_omega_odsek
 import gui.use_cases.Razrezi_stran
@@ -51,12 +55,9 @@ class Rezanje_slike : Rezanje_slike_Ui() {
     lateinit var dragStart: Vektor
 
     lateinit var stran: Stran
-    var odseki = listOf<Odsek>()
-    var deliOdseka = mutableListOf<Odsek>()
     private var userOkvirji = mutableListOf<Okvir>()
-
-    private var indexOdseka = 0
-    private var indexDelOdseka = 0
+    var odseki = Izbire<Odsek>()
+    var deliOdseka = Izbire<Odsek>()
 
 
     @FXML
@@ -78,43 +79,31 @@ class Rezanje_slike : Rezanje_slike_Ui() {
     fun init(slika: BufferedImage, stran: Stran) {
         this.slika = slika
         this.stran = stran
-        this.odseki = this.razrezi_stran.zdaj(stran=stran)
+        this.odseki.izbire = this.razrezi_stran.zdaj(stran = stran)
         this.anotiraj_trenutni_odsek(naprej = true)
     }
 
 
     private fun pripravi_naslednji_odsek(naprej: Boolean) {
-        this.indexOdseka += if (naprej) 1 else -1
-
-        if (this.indexOdseka >= this.odseki.size) {
-            this.indexOdseka = this.odseki.size - 1
-        } else if (this.indexOdseka < 0) {
-            this.indexOdseka = 0
-        }
+        if (naprej) this.odseki.naprej() else this.odseki.nazaj()
         this.anotiraj_trenutni_odsek(naprej = naprej)
     }
 
     private fun pripravi_naslednji_del_odseka(naprej: Boolean) {
-        this.indexDelOdseka += if (naprej) 1 else -1
-
-        if (this.indexDelOdseka >= this.deliOdseka.size) {
-            this.pripravi_naslednji_odsek(naprej = true)
-        } else if (this.indexDelOdseka < 0) {
-            this.pripravi_naslednji_odsek(naprej = false)
-        } else {
-            this.na_novo_narisi_anotacije_v_ozadju()
-        }
+        if (naprej) this.deliOdseka.naprej() else this.deliOdseka.nazaj()
+        this.na_novo_narisi_anotacije_v_ozadju()
     }
 
     private fun anotiraj_trenutni_odsek(naprej: Boolean) {
-        this.deliOdseka = this.anotiraj_omega_odsek.zdaj(odsek = this.odsek)
-        this.indexDelOdseka = if (naprej) 0 else this.deliOdseka.size - 1
-        this.IMG.init(this.slika.izrezi(okvir=this.odsek.okvir))
+        this.deliOdseka.izbire = this.anotiraj_omega_odsek.zdaj(odsek = this.odseki.trenutni)
+        this.deliOdseka.resetiraj(naKonec = !naprej)
+        this.IMG.init(this.slika.izrezi(okvir = this.odseki.trenutni.okvir))
     }
 
     private fun na_novo_narisi_anotacije_v_ozadju() {
         this.IMG.pobrisiOzadje()
         this.userOkvirji.forEach { this.IMG.narisi_okvir(okvir = it, color = Color.RED) }
+        this.IMG.narisi_okvir(okvir = this.deliOdseka.trenutni.okvir, color = Color.RED)
     }
 
     private fun onMouseReleased() {
@@ -143,5 +132,4 @@ class Rezanje_slike : Rezanje_slike_Ui() {
         //Dodaj drag rectangle v background
         this.IMG.backgroundP.children.add(this.dragRectangle)
     }
-    val odsek get() = this.odseki[this.indexOdseka]
 }

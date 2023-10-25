@@ -1,6 +1,7 @@
 package gui.app.parts
 
 import gui.app.elements.ImageView_BufferedImage
+import gui.base.Izbire
 import gui.domain.*
 import gui.extend.okvirji
 import gui.extend.vOkvirju
@@ -47,9 +48,7 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
     lateinit var stran: Stran
 
     private var userOkvirji = listOf<Okvir>()
-    var odseki = mutableListOf<Odsek>()
-
-    var indexOdseka = 0
+    var odseki = Izbire<Odsek>()
 
     @FXML
     fun initialize() {
@@ -61,7 +60,7 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
         this.IMG.self.setOnMouseReleased { this.onMouseReleased(me = it) }
         this.IMG.self.setOnMouseDragged { this.onMouseDragg(me = it) }
         this.resetirajB.setOnAction { this.razrezi_stran_in_na_novo_narisi_anotacije() }
-        this.naslednjiOdsekB.setOnAction { this.prikazi_naslednji_odsek_v_ozadju() }
+        this.naslednjiOdsekB.setOnAction { this.odseki.naprej(); this.na_novo_narisi_anotacije_v_ozadju() }
 
         // Dodajanje tipov anotacij v context menu slike
         Anotacija.Tip.entries.forEach {
@@ -76,10 +75,8 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
             val tip = (it.target as MenuItem).userData as Anotacija.Tip
             if (tip == Anotacija.Tip.NEZNANO) this.stran.odstrani(this.userOkvirji)
             else this.stran.dodaj(okvirji = this.userOkvirji, tip = tip)
-
-            this.odseki = this.razrezi_stran.zdaj(this.stran)
             this.userOkvirji = listOf()
-            this.na_novo_narisi_anotacije_v_ozadju()
+            this.razrezi_stran_in_na_novo_narisi_anotacije()
         }
     }
 
@@ -90,7 +87,7 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
     }
 
     private fun razrezi_stran_in_na_novo_narisi_anotacije() {
-        this.odseki = this.razrezi_stran.zdaj(this.stran)
+        this.odseki.izbire = this.razrezi_stran.zdaj(this.stran)
         this.IMG.init(slika = this.slika)
         this.na_novo_narisi_anotacije_v_ozadju()
     }
@@ -105,13 +102,7 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
             stran.teorija.forEach { this.IMG.narisi_okvir(it, Color.RED) }
         }
         this.userOkvirji.forEach { this.IMG.narisi_okvir(it, Color.MAGENTA) }
-        this.IMG.narisi_okvir(this.odseki[this.indexOdseka].okvir, Color.RED)
-    }
-
-    private fun prikazi_naslednji_odsek_v_ozadju() {
-        this.indexOdseka += 1
-        if (this.indexOdseka >= this.odseki.size) this.indexOdseka = 0
-        this.na_novo_narisi_anotacije_v_ozadju()
+        this.IMG.narisi_okvir(this.odseki.trenutni.okvir, Color.RED)
     }
 
     private fun onMouseReleased(me: MouseEvent) {
