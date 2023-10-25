@@ -4,7 +4,6 @@ import gui.app.elements.ImageView_BufferedImage
 import gui.domain.*
 import gui.extend.okvirji
 import gui.extend.vOkvirju
-import gui.services.LogService
 import gui.services.OcrService
 import gui.use_cases.Anotiraj_omego_stran
 import gui.use_cases.Razrezi_stran
@@ -36,7 +35,6 @@ abstract class Anotiranje_slike_Ui : KoinComponent {
 }
 
 class Anotiranje_slike : Anotiranje_slike_Ui() {
-    val log by this.inject<LogService>()
     val anotiraj_omego_stran by this.inject<Anotiraj_omego_stran>()
     val razrezi_stran by this.inject<Razrezi_stran>()
     val ocrService by this.inject<OcrService>()
@@ -49,7 +47,6 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
     lateinit var stran: Stran
 
     private var userOkvirji = listOf<Okvir>()
-    private var anotacije = listOf<Anotacija>()
     var odseki = mutableListOf<Odsek>()
 
     var indexOdseka = 0
@@ -63,7 +60,7 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
         this.IMG.self.setOnMousePressed { this.dragStart = Vektor(x = it.x.toInt(), y = it.y.toInt()) }
         this.IMG.self.setOnMouseReleased { this.onMouseReleased(me = it) }
         this.IMG.self.setOnMouseDragged { this.onMouseDragg(me = it) }
-        this.resetirajB.setOnAction { this.anotiraj_razrezi_stran_in_prikazi_vse() }
+        this.resetirajB.setOnAction { this.razrezi_stran_in_na_novo_narisi_anotacije() }
         this.naslednjiOdsekB.setOnAction { this.prikazi_naslednji_odsek_v_ozadju() }
 
         // Dodajanje tipov anotacij v context menu slike
@@ -88,13 +85,12 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
 
     fun init(img: BufferedImage) {
         this.img = img
-        this.anotacije = this.ocrService.google(image = img)
-        this.anotiraj_razrezi_stran_in_prikazi_vse()
+        this.stran = this.anotiraj_omego_stran.zdaj(img = this.img, anotacije = this.ocrService.google(image = img))
+        this.razrezi_stran_in_na_novo_narisi_anotacije()
     }
 
-    private fun anotiraj_razrezi_stran_in_prikazi_vse() {
-        this.stran = this.anotiraj_omego_stran.zdaj(img = this.img, anotacije = this.anotacije)
-        this.odseki = this.razrezi_stran.zdaj(stran)
+    private fun razrezi_stran_in_na_novo_narisi_anotacije() {
+        this.odseki = this.razrezi_stran.zdaj(this.stran)
         this.IMG.init(img = this.img)
         this.na_novo_narisi_anotacije_v_ozadju()
     }
@@ -122,7 +118,7 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
         this.contextMenu.show(this.IMG.self, me.screenX, me.screenY)
 
         val dragOkvir = this.IMG.vOkvir(r = this.dragRectangle)
-        this.userOkvirji = this.anotacije.vOkvirju(okvir = dragOkvir).okvirji
+        this.userOkvirji = this.stran.anotacije.vOkvirju(okvir = dragOkvir).okvirji
 
         //Vse skupaj se enkrat narisi
         this.na_novo_narisi_anotacije_v_ozadju()

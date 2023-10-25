@@ -85,7 +85,7 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
         val rx = img.width / this.self.fitWidth
         val ry = img.height / this.self.fitHeight
 
-        val rec = Rectangle(okvir.start.x / rx, okvir.start.y / ry, okvir.end.x / rx, okvir.end.y / ry)
+        val rec = Rectangle(okvir.start.x / rx, okvir.start.y / ry, okvir.sirina / rx, okvir.visina / ry)
         rec.fill = null
         rec.stroke = color
         rec.strokeWidth = 2.0
