@@ -1,9 +1,8 @@
 package gui.app.elements
 
 import gui.base.Opazovan
-import gui.domain.Anotacija
-import gui.domain.Odsek
 import gui.domain.Okvir
+import gui.domain.Vektor
 import gui.extend.inputStream
 import javafx.fxml.FXML
 import javafx.scene.image.Image
@@ -39,7 +38,7 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
 
     fun init(img: BufferedImage, sirokaSlika: Boolean = false) {
         this.sirokaSlika = sirokaSlika
-        this.self.image = Image(img.inputStream())
+        this.self.image = Image(img.inputStream)
         this.pobrisiOzadje()
         this.popraviVelikost(0.0)
     }
@@ -81,12 +80,12 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
         zoom.value = dy
     }
 
-    fun kvadrat(okvir: Okvir, color: Color = Color.BLACK): Rectangle {
+    fun vRectangle(okvir: Okvir, color: Color = Color.BLACK): Rectangle {
         val img = this.self.image
         val rx = img.width / this.self.fitWidth
         val ry = img.height / this.self.fitHeight
 
-        val rec = Rectangle(okvir.x0 / rx, okvir.y0 / ry, okvir.x1 / rx, okvir.y1 / ry)
+        val rec = Rectangle(okvir.start.x / rx, okvir.start.y / ry, okvir.end.x / rx, okvir.end.y / ry)
         rec.fill = null
         rec.stroke = color
         rec.strokeWidth = 2.0
@@ -94,34 +93,25 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
         return rec
     }
 
-    fun anotacija(r: Rectangle, text: String, tip: Anotacija.Tip): Anotacija {
+    fun vOkvir(r: Rectangle): Okvir {
         val img = this.self.image
         val rx = img.width / this.self.fitWidth
         val ry = img.height / this.self.fitHeight
-        return Anotacija(
-            x = (r.x * rx).toInt(),
-            y = (r.y * ry).toInt(),
-            width = (r.width * rx).toInt(),
-            height = (r.height * ry).toInt(),
-            text = text,
-            tip = tip
+        return Okvir(
+            start = Vektor(
+                x = (r.x * rx).toInt(),
+                y = (r.y * ry).toInt(),
+            ),
+            end = Vektor(
+                x = (rx + r.width).toInt(),
+                y = (ry + r.height).toInt(),
+            )
         )
     }
 
-    fun narisi_anotacijo(ano: Anotacija, color: Color) {
-        val okvir = Okvir(x0 = ano.x, y0 = ano.y, x1 = ano.x_max, y1 = ano.y_max)
-        val rec = this.kvadrat(okvir = okvir, color = color)
+    fun narisi_okvir(okvir: Okvir, color: Color) {
+        val rec = this.vRectangle(okvir = okvir, color = color)
         this.backgroundP.children.add(rec)
     }
 
-    fun narisi_odsek(odsek: Odsek, color: Color) {
-        val okvir = Okvir(
-            x0 = odsek.pozicija.x,
-            y0 = odsek.pozicija.y,
-            x1 = odsek.pozicija.x + odsek.sirina,
-            y1 = odsek.pozicija.y + odsek.visina
-        )
-        val rec = this.kvadrat(okvir = okvir, color = color)
-        this.backgroundP.children.add(rec)
-    }
 }

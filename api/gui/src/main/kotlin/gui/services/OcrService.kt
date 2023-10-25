@@ -6,6 +6,8 @@ import com.google.cloud.vision.v1.Image
 import com.google.cloud.vision.v1.ImageAnnotatorClient
 import com.google.protobuf.ByteString
 import gui.domain.Anotacija
+import gui.domain.Okvir
+import gui.domain.Vektor
 import net.sourceforge.tess4j.Tesseract
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
@@ -62,18 +64,9 @@ class OcrService {
                 ys.add(vertex.y)
             }
 
-            val x = xs.min().toDouble()
-            val X = xs.max().toDouble()
-            val y = ys.min().toDouble()
-            val Y = ys.max().toDouble()
-
             Anotacija(
-                x = x,
-                y = y,
-                width = X - x,
-                height = Y - y,
-                text = it.description,
-                tip = Anotacija.Tip.NEZNANO
+                okvir = Okvir(start = Vektor(x = xs.min(), y = ys.min()), end = Vektor(x = xs.max(), y = ys.max())),
+                text = it.description, tip = Anotacija.Tip.NEZNANO
             )
         }
     }

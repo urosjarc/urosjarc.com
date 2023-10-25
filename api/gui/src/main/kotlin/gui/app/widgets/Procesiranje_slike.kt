@@ -10,6 +10,7 @@ import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.awt.image.BufferedImage
 
 abstract class Procesiranje_slike_Ui : KoinComponent {
     @FXML
@@ -41,10 +42,10 @@ abstract class Procesiranje_slike_Ui : KoinComponent {
 class Procesiranje_slike : Procesiranje_slike_Ui() {
     private val log by this.inject<LogService>()
     private val razrezi_stran by this.inject<Razrezi_stran>()
-    private var slika: Slika? = null
+    private lateinit var slika: BufferedImage
 
 
-    fun init(slika: Slika) {
+    fun init(slika: BufferedImage) {
         this.log.info("init: $slika")
         this.slika = slika
         this.POP.init(slika)
@@ -55,11 +56,11 @@ class Procesiranje_slike : Procesiranje_slike_Ui() {
     fun initialize() {
         println("init Procesiranje_zip_slike")
         this.POP.koncnaSlika.opazuj {
-            this.ANO.init(it!!)
+            this.ANO.init(it)
             this.tabPane.selectionModel.select(this.anotiranjeT)
         }
         this.ANO.potrdiB.setOnAction {
-            this.REZ.init(this.ANO.stran)
+            this.REZ.init(slika=this.ANO.img, stran = this.ANO.stran)
             this.tabPane.selectionModel.select(this.rezanjeT)
         }
     }

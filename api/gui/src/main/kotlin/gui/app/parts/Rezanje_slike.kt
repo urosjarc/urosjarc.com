@@ -12,6 +12,7 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.awt.image.BufferedImage
 
 
 abstract class Rezanje_slike_Ui : KoinComponent {
@@ -41,6 +42,7 @@ abstract class Rezanje_slike_Ui : KoinComponent {
 }
 
 class Rezanje_slike : Rezanje_slike_Ui() {
+    private lateinit var slika: BufferedImage
     private val anotiraj_omega_odsek by this.inject<Anotiraj_omega_odsek>()
     private val razrezi_stran by this.inject<Razrezi_stran>()
 
@@ -49,7 +51,8 @@ class Rezanje_slike : Rezanje_slike_Ui() {
 
     lateinit var stran: Stran
     var odseki = listOf<Odsek>()
-    var deliOdseka = mutableListOf<DelOdseka>()
+    var deliOdseka = mutableListOf<Odsek>()
+    private var userOkvirji = mutableListOf<Okvir>()
 
     private var indexOdseka = 0
     private var indexDelOdseka = 0
@@ -72,16 +75,17 @@ class Rezanje_slike : Rezanje_slike_Ui() {
 
         this.izbrisiDodaneAnotacijeB.setOnAction {
             //TODO...
-            this.IMG.init(this.odsek.slika.img, sirokaSlika = true)
+            this.IMG.init(this.slika, sirokaSlika = true)
         }
 
         this.izbrisiVseAnotacijeB.setOnAction {
             //TODO...
-            this.IMG.init(this.odsek.slika.img, sirokaSlika = true)
+            this.IMG.init(this.slika, sirokaSlika = true)
         }
     }
 
-    fun init(stran: Stran) {
+    fun init(slika: BufferedImage, stran: Stran) {
+        this.slika = slika
         this.stran = stran
         this.odseki = this.razrezi_stran.zdaj(stran=stran)
         this.anotiraj_trenutni_odsek(naprej = true)
@@ -114,17 +118,17 @@ class Rezanje_slike : Rezanje_slike_Ui() {
     private fun anotiraj_trenutni_odsek(naprej: Boolean) {
         this.deliOdseka = this.anotiraj_omega_odsek.zdaj(odsek = this.odsek)
         this.indexDelOdseka = if (naprej) 0 else this.deliOdseka.size - 1
-        this.IMG.init(this.odsek.slika.img, sirokaSlika = true)
+        this.IMG.init(this.slika, sirokaSlika = true)
     }
 
     private fun na_novo_narisi_anotacije_v_ozadju() {
         this.IMG.pobrisiOzadje()
-        this.delOdseka.okvirji.forEach { this.IMG.narisi_anotacijo(ano = it, color = Color.RED) }
+        this.userOkvirji.forEach { this.IMG.narisi_okvir(okvir = it, color = Color.RED) }
     }
 
     private fun onMouseReleased() {
-        val anotacija = this.IMG.anotacija(r = this.dragRectangle, text = "", tip = Anotacija.Tip.NALOGA)
-        this.delOdseka.okvirji.add(anotacija)
+        val okvir = this.IMG.vOkvir(r = this.dragRectangle)
+        this.userOkvirji.add(okvir)
         this.na_novo_narisi_anotacije_v_ozadju()
     }
 
@@ -148,8 +152,5 @@ class Rezanje_slike : Rezanje_slike_Ui() {
         //Dodaj drag rectangle v background
         this.IMG.backgroundP.children.add(this.dragRectangle)
     }
-
-    val delOdseka get() = this.deliOdseka[this.indexDelOdseka]
     val odsek get() = this.odseki[this.indexOdseka]
-
 }

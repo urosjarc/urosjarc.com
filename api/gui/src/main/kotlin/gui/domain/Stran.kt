@@ -1,47 +1,29 @@
 package gui.domain
 
-class Stran {
-    var glava: MutableList<Anotacija> = mutableListOf()
-    var naslov: MutableList<Anotacija> = mutableListOf()
-    val teorija: MutableList<Anotacija> = mutableListOf()
-    val naloge: MutableList<MutableList<Anotacija>> = mutableListOf()
-    val noga: MutableList<Anotacija> = mutableListOf()
+class Stran(val okvir: Okvir, val anotacije: List<Anotacija>) {
 
-    fun init() {
-        this.noga.forEach { it.tip = Anotacija.Tip.NOGA }
-        this.naloge.forEach { it.forEach { it.tip = Anotacija.Tip.NALOGA } }
-        this.naslov.forEach { it.tip = Anotacija.Tip.NASLOV }
-        this.glava.forEach { it.tip = Anotacija.Tip.GLAVA }
-        this.teorija.forEach { it.tip = Anotacija.Tip.TEORIJA }
+    var glava = mutableListOf<Okvir>()
+    var naslov = mutableListOf<Okvir>()
+    val teorija = mutableListOf<Okvir>()
+    val naloge = mutableListOf<Okvir>()
+    val noga = mutableListOf<Okvir>()
+
+    fun odstrani(okvirji: Collection<Okvir>) {
+        this.glava.removeAll(okvirji)
+        this.naslov.removeAll(okvirji)
+        this.teorija.removeAll(okvirji)
+        this.naloge.removeAll(okvirji)
+        this.noga.removeAll(okvirji)
     }
 
-    fun dodaj(ano: List<Anotacija>, tip: Anotacija.Tip) {
+    fun dodaj(okvirji: Collection<Okvir>, tip: Anotacija.Tip) {
         when (tip) {
             Anotacija.Tip.NEZNANO -> {}
-            Anotacija.Tip.GLAVA -> this.glava.addAll(ano)
-            Anotacija.Tip.NASLOV -> this.naslov.addAll(ano)
-            Anotacija.Tip.TEORIJA -> this.teorija.addAll(ano)
-            Anotacija.Tip.NALOGA -> this.naloge.add(ano.toMutableList())
-            Anotacija.Tip.NOGA -> this.noga.addAll(ano)
+            Anotacija.Tip.GLAVA -> this.glava.addAll(okvirji)
+            Anotacija.Tip.NASLOV -> this.naslov.addAll(okvirji)
+            Anotacija.Tip.TEORIJA -> this.teorija.addAll(okvirji)
+            Anotacija.Tip.NALOGA -> this.naloge.addAll(okvirji)
+            Anotacija.Tip.NOGA -> this.noga.addAll(okvirji)
         }
-        this.init()
-    }
-
-    fun odstrani(ano: List<Anotacija>) {
-        ano.forEach {
-            when (it.tip) {
-                Anotacija.Tip.NEZNANO -> {}
-                Anotacija.Tip.GLAVA -> this.glava.remove(it)
-                Anotacija.Tip.NASLOV -> this.naslov.remove(it)
-                Anotacija.Tip.TEORIJA -> this.teorija.remove(it)
-                Anotacija.Tip.NALOGA -> this.naloge.forEach { lit -> lit.remove(it) }
-                Anotacija.Tip.NOGA -> this.noga.remove(it)
-            }
-        }
-        this.init()
-    }
-
-    override fun toString(): String {
-        return "AnotacijeStrani(naloge=${this.naloge.size}, noga=${this.noga.size}, naslov=${this.naslov.size}, glava=${this.glava.size}, teorija=${this.teorija.size})"
     }
 }

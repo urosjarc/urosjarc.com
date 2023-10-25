@@ -9,6 +9,7 @@ import gui.services.ResouceService
 import javafx.fxml.FXML
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.awt.image.BufferedImage
 import java.util.zip.ZipFile
 import javax.imageio.ImageIO
 
@@ -30,7 +31,7 @@ class Izberi_zip_zvezek : Izberi_zip_zvezek_Ui() {
     @FXML
     fun initialize() {
         println("init Izberi_zip_zvezek")
-        this.LIST.self.selectionModel.selectedItemProperty().addListener { observable, oldValue, newValue ->
+        this.LIST.self.selectionModel.selectedItemProperty().addListener { _, _, newValue ->
             this.init(datoteka = newValue)
         }
 
@@ -47,9 +48,9 @@ class Izberi_zip_zvezek : Izberi_zip_zvezek_Ui() {
         this.zip_zvezek.value = datoteka
     }
 
-    fun naslednja_slika(): Slika {
+    fun naslednja_slika(): BufferedImage {
         //Dobi zip datoteko
-        val datoteka = this.zip_zvezek.value ?: throw this.log.error("Nobena datoteka ni bila se izbrana!")
+        val datoteka = this.zip_zvezek.value
 
         //Dobi zip entries.
         val zipFile = ZipFile(datoteka.file.absolutePath)
@@ -68,7 +69,7 @@ class Izberi_zip_zvezek : Izberi_zip_zvezek_Ui() {
         //Zapri zip file
         zipFile.close()
 
-        return Slika(img = bufferedImage, index = steviloOpravljenihDatotek, size = entries.size)
+        return bufferedImage
     }
 
 }

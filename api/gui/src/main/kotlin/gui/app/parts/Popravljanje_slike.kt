@@ -40,9 +40,9 @@ abstract class Popravljanje_slike_Ui : KoinComponent {
 class Popravljanje_slike : Popravljanje_slike_Ui() {
 
     private val log by this.inject<LogService>()
-    private lateinit var slika: Slika
-    var koncnaSlika = Opazovan<Slika>()
-    var preskociSliko = Opazovan<Slika>()
+    private lateinit var slika: BufferedImage
+    var koncnaSlika = Opazovan<BufferedImage>()
+    var preskociSliko = Opazovan<BufferedImage>()
 
     @FXML
     fun initialize() {
@@ -56,7 +56,7 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
         this.preskociB.setOnAction { this.preskociSliko.value = this.slika }
     }
 
-    fun init(slika: Slika) {
+    fun init(slika: BufferedImage) {
         this.slika = slika
         this.resetiraj_celotno_sliko_na_default_vrednosti()
     }
@@ -76,7 +76,7 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
 
     private fun resetiraj_celotno_sliko_na_default_vrednosti() {
         this.log.info("resetiraj sliko")
-        val deskew = this.slika.img.poravnaj()
+        val deskew = this.slika.poravnaj()
         val removeBorder = deskew.second.odstraniObrobo(maxWidth = 300)
 
         this.rotacijaS.value = deskew.first
@@ -87,13 +87,13 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
     }
 
     private fun potrdi_trenutne_nastavitve() {
-        this.koncnaSlika.value = this.slika.copy(img = this.rotiraj_in_odrezi_robove_slike())
+        this.koncnaSlika.value = this.rotiraj_in_odrezi_robove_slike()
         this.log.info("potrdi sliko: ${this.koncnaSlika.value}")
     }
 
     private fun rotiraj_in_odrezi_robove_slike(): BufferedImage {
         val m = this.paddingS.value.toInt()
-        val img = this.slika.img.rotiraj(this.rotacijaS.value)
+        val img = this.slika.rotiraj(this.rotacijaS.value)
         return img.getSubimage(m, m, img.width - 2 * m, img.height - 2 * m)
     }
 }

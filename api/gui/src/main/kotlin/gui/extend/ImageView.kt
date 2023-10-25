@@ -14,7 +14,7 @@ fun ImageView.mousePosition(img: BufferedImage, event: MouseEvent): Vektor {
     val yPercent: Double = event.y / h
 
     return Vektor(
-        x = xPercent * img.width,
-        y = yPercent * img.height
+        x = (xPercent * img.width).toInt(),
+        y = (yPercent * img.height).toInt()
     )
 }

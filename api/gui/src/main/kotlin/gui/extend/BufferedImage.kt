@@ -1,9 +1,9 @@
 package gui.extend
 
 import com.recognition.software.jdeskew.ImageDeskew
-import gui.domain.Anotacija
 import gui.domain.Okvir
 import gui.domain.Piksel
+import gui.domain.Vektor
 import net.coobird.thumbnailator.Thumbnails
 import net.sourceforge.tess4j.util.ImageHelper
 import java.awt.BorderLayout
@@ -48,7 +48,6 @@ fun BufferedImage.shrani(file: File) {
     ImageIO.write(this, "png", file)
 }
 
-
 fun BufferedImage.copiraj(): BufferedImage {
     val b = BufferedImage(this.getWidth(), this.getHeight(), this.getType())
     val g: Graphics = b.graphics
@@ -68,11 +67,11 @@ fun BufferedImage.dodajSpodaj(img: BufferedImage): BufferedImage {
     return combined
 }
 
-fun BufferedImage.povprecenPiksel(a: Anotacija): Piksel {
+fun BufferedImage.povprecenPiksel(okvir: Okvir): Piksel {
     val pixels = mutableListOf<Piksel>()
 
-    for (y in a.y.toInt()..a.y_max.toInt()) {
-        for (x in a.x.toInt()..a.x_max.toInt()) {
+    for (y in okvir.start.y..okvir.end.y) {
+        for (x in okvir.start.x..okvir.end.x) {
             val pixel = this.HSV(x, y)
             if (!pixel.is_white()) pixels.add(pixel)
         }
@@ -98,7 +97,7 @@ fun BufferedImage.poravnaj(): Pair<Double, BufferedImage> {
     return Pair(-imgdeskew.skewAngle, this.rotiraj(-imgdeskew.skewAngle)) // rotateImage static method
 }
 
-fun BufferedImage.zameglenaSlika(radij: Int): BufferedImage {
+fun BufferedImage.zamegliSliko(radij: Int): BufferedImage {
     val size = radij * 2 + 1
     val weight = 1.0f / (size * size)
     val data = FloatArray(size * size)
@@ -147,7 +146,10 @@ fun BufferedImage.rotiraj(angle: Double): BufferedImage {
 
 fun BufferedImage.boundBox(): Okvir {
     val maxCount = 10
-    val boundBox = Okvir(-1, -1, -1, -1)
+    var start_y = 0
+    var start_x = 0
+    var end_y = 0
+    var end_x = 0
 
     //up to down
     var count = 0
@@ -155,7 +157,7 @@ fun BufferedImage.boundBox(): Okvir {
         for (x in 0 until this.width) {
             if (!this.HSV(x, y).is_white()) count++
             if (count > maxCount) {
-                boundBox.y0 = y
+                start_y = y
                 break@start
             }
         }
@@ -167,7 +169,7 @@ fun BufferedImage.boundBox(): Okvir {
         for (x in 0 until this.width) {
             if (!this.HSV(x, y).is_white()) count++
             if (count > maxCount) {
-                boundBox.y1 = y
+                end_y = y
                 break@start
             }
         }
@@ -179,7 +181,7 @@ fun BufferedImage.boundBox(): Okvir {
         for (y in 0 until this.height) {
             if (!this.HSV(x, y).is_white()) count++
             if (count > maxCount) {
-                boundBox.x0 = x
+                start_x = x
                 break@start
             }
         }
@@ -191,14 +193,16 @@ fun BufferedImage.boundBox(): Okvir {
         for (y in 0 until this.height) {
             if (!this.HSV(x, y).is_white()) count++
             if (count > maxCount) {
-                boundBox.x1 = x
+                end_x = x
                 break@start
             }
         }
     }
 
-    return boundBox
+    return Okvir(start = Vektor(x = start_x, y = start_y), end = Vektor(x = end_x, y = end_y))
 }
+
+val BufferedImage.okvir: Okvir get() = Okvir(start= Vektor(x=0, y=0), end = Vektor(x=this.width, y=this.height))
 
 fun BufferedImage.narisiMrezo(dx: Int = 100, dy: Int = 100, w: Int = 2, color: Color = Color.DARK_GRAY) {
     for (x in dx..this.width - dx / 2 step dx) {
@@ -234,7 +238,7 @@ fun BufferedImage.binarna(negativ: Boolean = false): BufferedImage {
     return bw
 }
 
-fun BufferedImage.inputStream(): ByteArrayInputStream {
+val BufferedImage.inputStream: ByteArrayInputStream get() {
     val os = ByteArrayOutputStream()
     ImageIO.write(this, "png", os)
     return ByteArrayInputStream(os.toByteArray())

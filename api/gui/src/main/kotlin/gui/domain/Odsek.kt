@@ -1,9 +1,9 @@
 package gui.domain
 
 data class Odsek(
-    val tip: Tip,
+    val anotacije: List<Anotacija>,
     val okvir: Okvir,
-    var deli: List<Okvir>
+    val tip: Tip,
 ) {
     enum class Tip {
         GLAVA,

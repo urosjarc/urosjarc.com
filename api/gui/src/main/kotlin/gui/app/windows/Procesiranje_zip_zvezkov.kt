@@ -19,6 +19,8 @@ import jfxtras.styles.jmetro.JMetro
 import jfxtras.styles.jmetro.Style
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.awt.image.BufferedImage
+import java.io.BufferedInputStream
 import java.io.File
 
 abstract class Procesiranje_zip_zvezkov_Ui : Application(), KoinComponent {
@@ -44,7 +46,6 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
     fun initialize() {
         println("init Procesiranje_zip_zvezkov")
         this.IZBERI.zip_zvezek.opazuj { this.PROCES.init(this.IZBERI.naslednja_slika()) }
-        this.PROCES.REZ.koncniOdseki.opazuj { this.potrdi_procesiranje_trenutne_slike() }
         this.PROCES.POP.preskociSliko.opazuj { this.preskoci_popravljanje_trenutne_slike(it) }
     }
 
@@ -65,10 +66,10 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
         if (alert.result == ButtonType.YES) this.ustvari_direktorij_trenutne_slike()
     }
 
-    fun preskoci_popravljanje_trenutne_slike(slika: Slika) {
+    fun preskoci_popravljanje_trenutne_slike(slika: BufferedImage) {
         val dat = this.ustvari_direktorij_trenutne_slike()
         val file = File(dat.file, "popravljanje.png")
-        slika.img.shrani(file)
+        slika.shrani(file)
         this.zacni_procesiranje_naslednje_slike()
     }
 
