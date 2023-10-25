@@ -5,6 +5,7 @@ import gui.base.Izbire
 import gui.domain.*
 import gui.extend.okvirji
 import gui.extend.vOkvirju
+import gui.extend.vektor
 import gui.services.OcrService
 import gui.use_cases.Anotiraj_omego_stran
 import gui.use_cases.Razrezi_stran
@@ -41,7 +42,7 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
     val ocrService by this.inject<OcrService>()
 
     val contextMenu = ContextMenu()
-    lateinit var dragStart: Vektor
+    var dragOkvir = Okvir(start = Vektor(x = 0, y = 0), end = Vektor(x = 0, y = 0))
     var dragRectangle: Rectangle = Rectangle()
 
     lateinit var slika: BufferedImage
@@ -56,7 +57,7 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
 
         // Popravi anotacije ce se slika zoomira
         this.IMG.zoom.opazuj { this.na_novo_narisi_anotacije_v_ozadju() }
-        this.IMG.self.setOnMousePressed { this.dragStart = Vektor(x = it.x.toInt(), y = it.y.toInt()) }
+        this.IMG.self.setOnMousePressed { this.dragOkvir.start = it.vektor }
         this.IMG.self.setOnMouseReleased { this.onMouseReleased(me = it) }
         this.IMG.self.setOnMouseDragged { this.onMouseDragg(me = it) }
         this.resetirajB.setOnAction { this.razrezi_stran_in_na_novo_narisi_anotacije() }
@@ -71,7 +72,6 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
 
         // Ko se izbere context menu shrani izbrane anotacije in jih prikazi na strani.
         this.contextMenu.setOnAction {
-
             val tip = (it.target as MenuItem).userData as Anotacija.Tip
             if (tip == Anotacija.Tip.NEZNANO) this.stran.odstrani(this.userOkvirji)
             else this.stran.dodaj(okvirji = this.userOkvirji, tip = tip)
@@ -83,12 +83,12 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
     fun init(slika: BufferedImage) {
         this.slika = slika
         this.stran = this.anotiraj_omego_stran.zdaj(img = this.slika, anotacije = this.ocrService.google(image = slika))
+        this.IMG.init(slika = slika)
         this.razrezi_stran_in_na_novo_narisi_anotacije()
     }
 
     private fun razrezi_stran_in_na_novo_narisi_anotacije() {
         this.odseki.izbire = this.razrezi_stran.zdaj(this.stran)
-        this.IMG.init(slika = this.slika)
         this.na_novo_narisi_anotacije_v_ozadju()
     }
 
@@ -102,37 +102,20 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
             stran.teorija.forEach { this.IMG.narisi_okvir(it, Color.RED) }
         }
         this.userOkvirji.forEach { this.IMG.narisi_okvir(it, Color.MAGENTA) }
-        this.IMG.narisi_okvir(this.odseki.trenutni.okvir, Color.RED)
+        if(this.odseki.izbire.isNotEmpty()) this.IMG.narisi_okvir(this.odseki.trenutni.okvir, Color.RED)
     }
 
     private fun onMouseReleased(me: MouseEvent) {
         this.contextMenu.show(this.IMG.self, me.screenX, me.screenY)
-
-        val dragOkvir = this.IMG.vOkvir(r = this.dragRectangle)
-        this.userOkvirji = this.stran.anotacije.vOkvirju(okvir = dragOkvir).okvirji
-
-        //Vse skupaj se enkrat narisi
+        val dragOkvirSlike = this.IMG.vOkvir(r = this.dragRectangle)
+        this.userOkvirji = this.stran.anotacije.vOkvirju(okvir = dragOkvirSlike).okvirji
         this.na_novo_narisi_anotacije_v_ozadju()
     }
 
     private fun onMouseDragg(me: MouseEvent) {
-        //Odstrani drag rectangle
         this.IMG.backgroundP.children.remove(this.dragRectangle)
-
-        //Ustvari drag rectangle
-        val v = Vektor(x = me.x.toInt(), y = me.y.toInt())
-        this.dragRectangle = Rectangle(
-            this.dragStart.x.toDouble(),
-            this.dragStart.y.toDouble(),
-            (v.x - this.dragStart.x).toDouble(),
-            (v.y - this.dragStart.y).toDouble()
-        ).apply {
-            this.fill = null
-            this.stroke = Color.MAGENTA
-            this.strokeWidth = 2.0
-        }
-
-        //Dodaj drag rectangle v background
+        this.dragOkvir.end = me.vektor
+        this.dragRectangle = this.dragOkvir.vRectangle(color = Color.RED)
         this.IMG.backgroundP.children.add(this.dragRectangle)
     }
 

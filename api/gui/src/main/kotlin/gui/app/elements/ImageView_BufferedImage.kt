@@ -103,8 +103,8 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
                 y = (r.y * ry).toInt(),
             ),
             end = Vektor(
-                x = (rx + r.width).toInt(),
-                y = (ry + r.height).toInt(),
+                x = ((r.x + r.width) * rx).toInt(),
+                y = ((r.y + r.height) * ry).toInt(),
             )
         )
     }
