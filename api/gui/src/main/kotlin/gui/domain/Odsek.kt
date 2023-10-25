@@ -6,8 +6,9 @@ data class Odsek(
     val tip: Tip,
 ) {
     enum class Tip {
+        NEZNANO,
         GLAVA,
-        TEORIJA,
         NALOGA,
+        TEORIJA,
     }
 }

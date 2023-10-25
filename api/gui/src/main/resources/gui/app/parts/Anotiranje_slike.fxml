@@ -9,7 +9,6 @@
          <children>
             <Button fx:id="resetirajB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Resetiraj" HBox.hgrow="ALWAYS" />
             <Button fx:id="potrdiB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Potrdi" HBox.hgrow="ALWAYS" />
-            <Button fx:id="naslednjiOdsekB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Naslednji odsek" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
    </bottom>

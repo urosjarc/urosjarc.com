@@ -14,7 +14,9 @@ data class Anotacija(
         NASLOV,
         TEORIJA,
         NALOGA,
+        PODNALOGA,
         NOGA,
+        DODATNO,
     }
 
     val prvaCrka: Char get() = this.text.first()

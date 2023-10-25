@@ -14,10 +14,5 @@
           <fx:include fx:id="anotiranje_slike_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../parts/Anotiranje_slike.fxml" />
       </content>
     </Tab>
-    <Tab fx:id="rezanjeT" text="Rezanje">
-      <content>
-        <fx:include fx:id="rezanje_slike_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../parts/Rezanje_slike.fxml" />
-      </content>
-    </Tab>
   </tabs>
 </TabPane>

@@ -11,7 +11,7 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.contextual
 
 
-class JsonService {
+class JsonService(prettyPrint: Boolean = false) {
     val module = Json {
         serializersModule = SerializersModule {
             contextual(ObjectIdSerializer)
@@ -19,7 +19,7 @@ class JsonService {
             contextual(EncryptedSerializer)
             contextual(HashedSerializer)
         }
-        this.prettyPrint = false
+        this.prettyPrint = prettyPrint
         this.isLenient = true
         this.allowSpecialFloatingPointValues = true
     }

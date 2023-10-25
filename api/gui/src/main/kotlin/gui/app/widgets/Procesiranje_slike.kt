@@ -2,9 +2,7 @@ package gui.app.widgets
 
 import gui.app.parts.Anotiranje_slike
 import gui.app.parts.Popravljanje_slike
-import gui.app.parts.Rezanje_slike
 import gui.services.LogService
-import gui.use_cases.Razrezi_stran
 import javafx.fxml.FXML
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
@@ -31,17 +29,13 @@ abstract class Procesiranje_slike_Ui : KoinComponent {
     @FXML
     lateinit var anotiranje_slike_Controller: Anotiranje_slike
 
-    @FXML
-    lateinit var rezanje_slike_Controller: Rezanje_slike
 
     val POP get() = this.popravljanje_slike_Controller
     val ANO get() = this.anotiranje_slike_Controller
-    val REZ get() = this.rezanje_slike_Controller
 }
 
 class Procesiranje_slike : Procesiranje_slike_Ui() {
     private val log by this.inject<LogService>()
-    private val razrezi_stran by this.inject<Razrezi_stran>()
     private lateinit var slika: BufferedImage
 
 
@@ -58,10 +52,6 @@ class Procesiranje_slike : Procesiranje_slike_Ui() {
         this.POP.koncnaSlika.opazuj {
             this.ANO.init(it)
             this.tabPane.selectionModel.select(this.anotiranjeT)
-        }
-        this.ANO.potrdiB.setOnAction {
-            this.REZ.init(slika=this.ANO.slika, stran = this.ANO.stran)
-            this.tabPane.selectionModel.select(this.rezanjeT)
         }
     }
 

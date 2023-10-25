@@ -1,6 +1,7 @@
 package gui.app.windows
 
 import core.extend.ime
+import core.services.JsonService
 import gui.app.widgets.Izberi_zip_zvezek
 import gui.app.widgets.Prikazi_log_dnevnik
 import gui.app.widgets.Procesiranje_slike
@@ -12,15 +13,12 @@ import javafx.application.Application
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
-import javafx.scene.control.Alert
-import javafx.scene.control.ButtonType
 import javafx.stage.Stage
 import jfxtras.styles.jmetro.JMetro
 import jfxtras.styles.jmetro.Style
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.awt.image.BufferedImage
-import java.io.BufferedInputStream
 import java.io.File
 
 abstract class Procesiranje_zip_zvezkov_Ui : Application(), KoinComponent {
@@ -41,12 +39,14 @@ abstract class Procesiranje_zip_zvezkov_Ui : Application(), KoinComponent {
 class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
 
     val log by this.inject<LogService>()
+    val json by this.inject<JsonService>()
 
     @FXML
     fun initialize() {
         println("init Procesiranje_zip_zvezkov")
         this.IZBERI.zip_zvezek.opazuj { this.PROCES.init(this.IZBERI.naslednja_slika()) }
         this.PROCES.POP.preskociSliko.opazuj { this.preskoci_popravljanje_trenutne_slike(it) }
+        this.PROCES.ANO.potrdiB.setOnAction { this.potrditev_anotiranja_trenutne_slike() }
     }
 
     override fun start(stage: Stage) {
@@ -59,17 +59,17 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
         stage.show()
     }
 
-    fun potrdi_procesiranje_trenutne_slike() {
-        val alert = Alert(
-            Alert.AlertType.CONFIRMATION, "Želite shraniti vaše spremembe?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL
-        ).apply { this.showAndWait() }
-        if (alert.result == ButtonType.YES) this.ustvari_direktorij_trenutne_slike()
-    }
-
     fun preskoci_popravljanje_trenutne_slike(slika: BufferedImage) {
         val dat = this.ustvari_direktorij_trenutne_slike()
-        val file = File(dat.file, "popravljanje.png")
-        slika.shrani(file)
+        this.shrani_sliko(dat = dat, slika = slika)
+        this.zacni_procesiranje_naslednje_slike()
+    }
+
+    fun potrditev_anotiranja_trenutne_slike() {
+        val dat = this.ustvari_direktorij_trenutne_slike()
+        val slika = this.PROCES.ANO.slika
+        this.shrani_sliko(dat = dat, slika = slika)
+        this.shrani_stran(dat = dat)
         this.zacni_procesiranje_naslednje_slike()
     }
 
@@ -83,6 +83,17 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
         val datoteka = Datoteka(file = naslednjiFolder)
         this.IZBERI.TREE.dodajDatoteko(datoteka)
         return datoteka
+    }
+
+    fun shrani_sliko(dat: Datoteka, slika: BufferedImage) {
+        val imgFile = File(dat.file, "popravljanje.png")
+        slika.shrani(imgFile)
+    }
+
+    fun shrani_stran(dat: Datoteka) {
+        val stran = this.PROCES.ANO.stran
+        val stranFile = File(dat.file, "stran.json")
+        stranFile.writeText(text = this.json.zakodiraj(value = stran))
     }
 
     fun zacni_procesiranje_naslednje_slike() {

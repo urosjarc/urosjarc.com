@@ -9,6 +9,10 @@ data class Okvir(
     var start: Vektor,
     var end: Vektor
 ) {
+    companion object {
+        val PRAZEN get() = Okvir(start = Vektor.NIC, end = Vektor.NIC)
+    }
+
     val sirina: Int get() = this.end.x - this.start.x
     val visina: Int get() = this.end.y - this.start.y
     val povrsina: Int get() = this.sirina * this.visina

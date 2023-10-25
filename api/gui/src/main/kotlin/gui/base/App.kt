@@ -1,12 +1,10 @@
 package gui.base
 
+import core.services.JsonService
 import gui.services.LogService
 import gui.services.OcrService
 import gui.services.ResouceService
-import gui.use_cases.Anotiraj_omega_odsek
-import gui.use_cases.Najdi_vse_slike
-import gui.use_cases.Anotiraj_omego_stran
-import gui.use_cases.Razrezi_stran
+import gui.use_cases.*
 import kotlinx.serialization.json.Json
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
@@ -30,18 +28,18 @@ object App {
         this.single<LogService> {
             LogService()
         }
-        this.single<Json> {
-            Json { prettyPrint = true }
+        this.single<JsonService> {
+            JsonService(prettyPrint = true)
         }
 
-        this.factoryOf(::Razrezi_stran)
         this.factoryOf(::Najdi_vse_slike)
         this.factoryOf(::Anotiraj_omego_stran)
-        this.factoryOf(::Anotiraj_omega_odsek)
+        this.factoryOf(::Razrezi_stran)
+        this.factoryOf(::Razrezi_odsek)
     }
 
     fun pripravi_DI() {
-        val app_module = gui.base.App.modul()
+        val app_module = modul()
         startKoin {
             this.modules(app_module)
         }

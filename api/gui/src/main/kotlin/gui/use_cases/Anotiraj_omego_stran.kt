@@ -11,11 +11,15 @@ class Anotiraj_omego_stran {
 
     fun zdaj(img: BufferedImage, anotacije: List<Anotacija>): Stran {
         val stran = Stran(okvir = img.okvir, anotacije = anotacije)
+
         this.parse_footer(stran = stran, anos = anotacije)
         this.parse_naloge(img = img, stran = stran, anos = anotacije)
         this.parse_naslov(img = img, stran = stran, anos = anotacije)
         this.parse_head(stran = stran, anos = anotacije)
         this.parse_teorija(img = img, stran = stran, anos = anotacije)
+
+        this.parse_podnaloge(stran = stran, anos = anotacije)
+
         return stran
     }
 
@@ -82,6 +86,48 @@ class Anotiraj_omego_stran {
         if (najvisji_okvirji.isEmpty()) return
         val spodnja_meja = najvisji_okvirji.najvisjaMeja(default = 0)
         stran.glava = anos.okvirji.nad(meja = spodnja_meja).toMutableList()
+    }
+
+    fun parse_podnaloge(stran: Stran, anos: List<Anotacija>) {
+        val crkaOklepaj = vseCrkeZOklepajem(anos)
+        while (crkaOklepaj.isNotEmpty()) {
+            //Najdi kandidate za grupo
+            val ano = crkaOklepaj.removeAt(0)
+            val kandidati = mutableListOf(ano)
+            for (i in 0 until crkaOklepaj.size) {
+                if (crkaOklepaj[i].okvir.enakaVrstica(ano.okvir)) kandidati.add(crkaOklepaj[i])
+            }
+            kandidati.sortBy { it.okvir.start.x }
+            kandidati.forEach { crkaOklepaj.remove(it) }
+
+            //Odstrani neprimerne kandidate
+            val grupa = mutableListOf(kandidati[0])
+            for (i in 1 until kandidati.size) {
+                if (this.slKoda(grupa.last().prvaCrka) - this.slKoda(kandidati[i].prvaCrka) == -1) {
+                    grupa.add(kandidati[i])
+                }
+            }
+            stran.podnaloge.addAll(grupa.okvirji)
+        }
+        stran.glava.removeAll(stran.podnaloge)
+    }
+
+    private fun vseCrkeZOklepajem(anotacije: List<Anotacija>): MutableList<Anotacija> {
+        val oklepaji = anotacije.filter { it.text == ")" }
+
+        val returned = mutableListOf<Anotacija>()
+        for (oklepaj in oklepaji) {
+            val i = anotacije.indexOf(oklepaj)
+            val prejsnji = anotacije[i - 1]
+            if (prejsnji.text.length == 1) returned.add(prejsnji)
+        }
+        return returned
+    }
+
+    private fun slKoda(crka: Char): Int {
+        var c = crka
+        if (c == '1') c = 'l' //Google prepozna l kot 1 :(
+        return "abcdefghijklmnoprstuvz".indexOf(c)
     }
 
 }
