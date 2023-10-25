@@ -41,6 +41,7 @@ class Razrezi_stran {
          */
         val nalogaY = stran.naloge.map { it.start.y }.toMutableList()
         nalogaY.add(stran.noga[0].start.y)
+        nalogaY.sort()
 
         /**
          * Naloge

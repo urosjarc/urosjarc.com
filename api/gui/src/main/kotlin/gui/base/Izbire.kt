@@ -2,7 +2,9 @@ package gui.base
 
 class Izbire<T>(var izbire: List<T> = listOf()) {
     var index: Int = 0
-    val trenutni get() = this.izbire[this.index]
+    val trenutni: T get() = this.izbire[this.index]
+
+    val aktivni get() = this.izbire.isNotEmpty()
 
     fun naprej() {
         this.index++
@@ -18,6 +20,8 @@ class Izbire<T>(var izbire: List<T> = listOf()) {
         }
     }
 
-    fun resetiraj(naKonec: Boolean){ this.index = if(naKonec) this.izbire.size-1 else 0 }
+    fun resetiraj(naKonec: Boolean) {
+        this.index = if (naKonec) this.izbire.size - 1 else 0
+    }
 
 }

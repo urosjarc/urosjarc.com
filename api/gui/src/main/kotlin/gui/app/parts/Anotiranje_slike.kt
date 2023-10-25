@@ -89,6 +89,7 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
 
     private fun razrezi_stran_in_na_novo_narisi_anotacije() {
         this.odseki.izbire = this.razrezi_stran.zdaj(this.stran)
+
         this.na_novo_narisi_anotacije_v_ozadju()
     }
 
@@ -102,14 +103,14 @@ class Anotiranje_slike : Anotiranje_slike_Ui() {
             stran.teorija.forEach { this.IMG.narisi_okvir(it, Color.RED) }
         }
         this.userOkvirji.forEach { this.IMG.narisi_okvir(it, Color.MAGENTA) }
-        if(this.odseki.izbire.isNotEmpty()) this.IMG.narisi_okvir(this.odseki.trenutni.okvir, Color.RED)
+        if(this.odseki.aktivni) this.IMG.narisi_okvir(this.odseki.trenutni.okvir, Color.RED)
     }
 
     private fun onMouseReleased(me: MouseEvent) {
-        this.contextMenu.show(this.IMG.self, me.screenX, me.screenY)
         val dragOkvirSlike = this.IMG.vOkvir(r = this.dragRectangle)
         this.userOkvirji = this.stran.anotacije.vOkvirju(okvir = dragOkvirSlike).okvirji
         this.na_novo_narisi_anotacije_v_ozadju()
+        this.contextMenu.show(this.IMG.self, me.screenX, me.screenY)
     }
 
     private fun onMouseDragg(me: MouseEvent) {
