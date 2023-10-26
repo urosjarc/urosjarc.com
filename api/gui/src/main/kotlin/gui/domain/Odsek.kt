@@ -1,7 +1,7 @@
 package gui.domain
 
 data class Odsek(
-    val anotacije: List<Anotacija>,
+    val anotacije: Set<Anotacija>,
     val okvir: Okvir,
     val tip: Tip,
 ) {

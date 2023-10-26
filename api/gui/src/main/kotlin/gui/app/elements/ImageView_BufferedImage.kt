@@ -3,7 +3,9 @@ package gui.app.elements
 import gui.base.Opazovan
 import gui.domain.Okvir
 import gui.domain.Vektor
+import gui.extend.end
 import gui.extend.inputStream
+import gui.extend.start
 import javafx.fxml.FXML
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
@@ -80,32 +82,20 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
         zoom.value = dy
     }
 
-    fun vRectangle(okvir: Okvir, color: Color = Color.BLACK): Rectangle {
+    fun vRectangle(okvir: Okvir, color: Color = Color.BLACK): Rectangle = Okvir(
+        start = this.mapiraj(v = okvir.start, noter = true),
+        end = this.mapiraj(v = okvir.end, noter = true)
+    ).vRectangle(color = color)
+
+    fun vOkvir(r: Rectangle): Okvir = Okvir(start = this.mapiraj(v = r.start, noter = false), end = this.mapiraj(v = r.end, noter = false))
+
+    fun mapiraj(v: Vektor, noter: Boolean): Vektor {
         val img = this.self.image
         val rx = img.width / this.self.fitWidth
         val ry = img.height / this.self.fitHeight
-
-        val rec = Rectangle(okvir.start.x / rx, okvir.start.y / ry, okvir.sirina / rx, okvir.visina / ry)
-        rec.fill = null
-        rec.stroke = color
-        rec.strokeWidth = 2.0
-
-        return rec
-    }
-
-    fun vOkvir(r: Rectangle): Okvir {
-        val img = this.self.image
-        val rx = img.width / this.self.fitWidth
-        val ry = img.height / this.self.fitHeight
-        return Okvir(
-            start = Vektor(
-                x = (r.x * rx).toInt(),
-                y = (r.y * ry).toInt(),
-            ),
-            end = Vektor(
-                x = ((r.x + r.width) * rx).toInt(),
-                y = ((r.y + r.height) * ry).toInt(),
-            )
+        return Vektor(
+            x = (if (noter) v.x / rx else v.x * rx).toInt(),
+            y = (if (noter) v.y / ry else v.y * ry).toInt(),
         )
     }
 

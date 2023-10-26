@@ -9,14 +9,13 @@ data class Anotacija(
     var tip: Tip,
 ) {
     enum class Tip {
-        NEZNANO,
-        GLAVA,
         NASLOV,
         TEORIJA,
         NALOGA,
         PODNALOGA,
         NOGA,
         DODATNO,
+        NEZNANO,
     }
 
     val prvaCrka: Char get() = this.text.first()

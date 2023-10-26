@@ -20,6 +20,8 @@ data class Okvir(
     fun enakaVrstica(okvir: Okvir): Boolean = okvir.povprecje.y in this.start.y..this.end.y
     fun enakStolpec(okvir: Okvir): Boolean = okvir.povprecje.x in this.start.x..this.end.x
     fun vsebuje(okvir: Okvir): Boolean = this.enakStolpec(okvir) && this.enakaVrstica(okvir)
+
+    fun vsebuje(vektor: Vektor): Boolean = vektor.x in this.start.x..this.end.x && vektor.y in this.start.y..this.end.y
     fun vRectangle(color: Color): Rectangle {
         return Rectangle(
             this.start.x.toDouble(),
