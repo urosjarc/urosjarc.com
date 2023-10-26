@@ -62,7 +62,10 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
         // Dodajanje tipov anotacij v context menu slike
         Anotacija.Tip.entries.forEach { tip ->
             when (tip) {
-                Anotacija.Tip.DODATNO -> {}
+                Anotacija.Tip.DODATNO -> {
+                    val menuItem = MenuItem(tip.name).also { it.userData = tip }
+                    this.ustvariM.items.add(menuItem)
+                }
                 else -> {
                     val menuItem = MenuItem(tip.name).also { it.userData = tip }
                     val menuItem2 = MenuItem(tip.name).also { it.userData = tip }
@@ -116,7 +119,7 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
         this.contextMenu.hide()
         this.userOkvirji = setOf()
         this.IMG.pobrisi_ozadje()
-        if (me.isPrimaryButtonDown) {
+        if (!me.isPrimaryButtonDown) {
             val vektor = this.IMG.mapiraj(v = me.vektor, noter = false)
             this.mouseOkvirji = this.stran.okvirjiV(vektor = vektor)
         }

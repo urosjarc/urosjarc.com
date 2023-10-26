@@ -19,5 +19,5 @@ dependencies {
 }
 
 configure<BuildSrc_domainMap_gradle.DomainMapExtension> {
-    this.inputDir.set("src/main/kotlin/domain")
+    this.inputDir.set("src/main/kotlin/core/domain")
 }
