@@ -7,13 +7,16 @@ import gui.extend.end
 import gui.extend.inputStream
 import gui.extend.start
 import javafx.fxml.FXML
+import javafx.scene.control.ScrollPane
 import javafx.scene.image.Image
 import javafx.scene.image.ImageView
 import javafx.scene.layout.Pane
+import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import org.koin.core.component.KoinComponent
 import java.awt.image.BufferedImage
+
 
 abstract class ImageView_BufferedImage_UI : KoinComponent {
 
@@ -22,6 +25,12 @@ abstract class ImageView_BufferedImage_UI : KoinComponent {
 
     @FXML
     lateinit var backgroundP: Pane
+
+    @FXML
+    lateinit var stackPane: StackPane
+
+    @FXML
+    lateinit var scrollPane: ScrollPane
 }
 
 class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
@@ -33,23 +42,17 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
     @FXML
     fun initialize() {
         println("init ImageView_ZipSlika")
-        this.self.setOnScroll {
-            this.popraviVelikost(dy = it.deltaY)
-        }
+        this.self.setOnScroll { if (it.isControlDown) this.popravi_velikost(dy = it.deltaY) }
     }
 
     fun init(slika: BufferedImage) {
         this.sirokaSlika = slika.width > slika.height
         this.self.image = Image(slika.inputStream)
-        this.pobrisiOzadje()
-        this.popraviVelikost(0.0)
+        this.pobrisi_ozadje()
+        this.popravi_velikost()
     }
 
-    fun pobrisiOzadje() {
-        if (this.backgroundP.children.size > 1) this.backgroundP.children.remove(1, this.backgroundP.children.size)
-    }
-
-    private fun popraviVelikost(dy: Double) {
+    private fun popravi_velikost(dy: Double = 0.0) {
         val img = this.self.image
         val ratio = img.height / img.width
         val v = (if (sirokaSlika) sirina else visina) + dy
@@ -82,10 +85,19 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
         zoom.value = dy
     }
 
+    fun pobrisi_ozadje() {
+        if (this.backgroundP.children.size > 1) this.backgroundP.children.remove(1, this.backgroundP.children.size)
+    }
+
+    fun narisi_okvir(okvir: Okvir, color: Color) {
+        val rec = this.vRectangle(okvir = okvir, color = color)
+        this.backgroundP.children.add(1, rec)
+    }
+
     fun vRectangle(okvir: Okvir, color: Color = Color.BLACK): Rectangle = Okvir(
         start = this.mapiraj(v = okvir.start, noter = true),
         end = this.mapiraj(v = okvir.end, noter = true)
-    ).vRectangle(color = color)
+    ).vRectangle(color = color).also { rec -> rec.setOnScroll { if (it.isControlDown) this.popravi_velikost(dy = it.deltaY) } }
 
     fun vOkvir(r: Rectangle): Okvir = Okvir(start = this.mapiraj(v = r.start, noter = false), end = this.mapiraj(v = r.end, noter = false))
 
@@ -99,9 +111,5 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
         )
     }
 
-    fun narisi_okvir(okvir: Okvir, color: Color) {
-        val rec = this.vRectangle(okvir = okvir, color = color)
-        this.backgroundP.children.add(rec)
-    }
 
 }

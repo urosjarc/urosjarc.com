@@ -8,15 +8,13 @@ import gui.extend.vOkvirju
 import gui.extend.vektor
 import gui.services.OcrService
 import gui.use_cases.Anotiraj_omego_stran
-import javafx.collections.FXCollections
-import javafx.collections.ObservableArrayBase
-import javafx.collections.ObservableList
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.Button
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.Menu
 import javafx.scene.control.MenuItem
+import javafx.scene.control.ScrollPane
 import javafx.scene.input.MouseEvent
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
@@ -100,7 +98,7 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
     }
 
     fun na_novo_narisi_anotacije_v_ozadju(narisiDragRec: Boolean = false) {
-        this.IMG.pobrisiOzadje()
+        this.IMG.pobrisi_ozadje()
         this.stran.let { stran ->
             stran.noga.forEach { this.IMG.narisi_okvir(it, Color.BLACK) }
             stran.naloge.forEach { this.IMG.narisi_okvir(it, Color.GREEN) }
@@ -117,19 +115,23 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
     private fun onMouseMove(me: MouseEvent) {
         this.contextMenu.hide()
         this.userOkvirji = setOf()
-        this.IMG.pobrisiOzadje()
-        val vektor = this.IMG.mapiraj(v = me.vektor, noter = false)
-        this.mouseOkvirji = this.stran.okvirjiV(vektor = vektor)
+        this.IMG.pobrisi_ozadje()
+        if (me.isPrimaryButtonDown) {
+            val vektor = this.IMG.mapiraj(v = me.vektor, noter = false)
+            this.mouseOkvirji = this.stran.okvirjiV(vektor = vektor)
+        }
         this.na_novo_narisi_anotacije_v_ozadju()
     }
 
     private fun onMousePressed(me: MouseEvent) {
+        if(me.isPrimaryButtonDown) this.IMG.scrollPane.isPannable = false
         this.dragOkvir.start = me.vektor
         this.mouseOkvirji = setOf()
         this.na_novo_narisi_anotacije_v_ozadju()
     }
 
     private fun onMouseDragg(me: MouseEvent) {
+        if (!me.isPrimaryButtonDown) return
         this.IMG.backgroundP.children.remove(this.dragRectangle)
 
         this.dragOkvir.end = me.vektor
@@ -141,6 +143,7 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
     }
 
     private fun onMouseReleased(me: MouseEvent) {
+        this.IMG.scrollPane.isPannable = true
         this.dragOkvir.end = me.vektor
         this.dragRectangle = this.dragOkvir.vRectangle(color = Color.RED)
         val okvir = this.IMG.vOkvir(r = this.dragRectangle)
