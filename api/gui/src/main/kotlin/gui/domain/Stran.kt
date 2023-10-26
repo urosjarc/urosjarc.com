@@ -17,8 +17,7 @@ class Stran(val okvir: Okvir, val anotacije: Set<Anotacija>) {
         val PRAZNA get() = Stran(okvir = Okvir.PRAZEN, anotacije = setOf())
     }
 
-    val okvirji get() = this.anotacije.okvirji + this.dodatno
-
+    val okvirji get() = this.anotacije.okvirji + this.naslov + this.teorija + this.naloge + this.podnaloge + this.noga + this.dodatno
     fun odstrani(okvirji: Set<Okvir>) {
         this.naslov.removeAll(okvirji)
         this.teorija.removeAll(okvirji)
@@ -29,6 +28,7 @@ class Stran(val okvir: Okvir, val anotacije: Set<Anotacija>) {
     }
 
     fun dodaj(okvirji: Set<Okvir>, tip: Anotacija.Tip) {
+        this.odstrani(okvirji = okvirji)
         when (tip) {
             Anotacija.Tip.NEZNANO -> {}
             Anotacija.Tip.NASLOV -> this.naslov.addAll(okvirji)

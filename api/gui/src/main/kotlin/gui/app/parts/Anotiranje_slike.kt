@@ -4,11 +4,13 @@ import gui.app.elements.ImageView_BufferedImage
 import gui.domain.Anotacija
 import gui.domain.Okvir
 import gui.domain.Stran
-import gui.extend.okvirji
 import gui.extend.vOkvirju
 import gui.extend.vektor
 import gui.services.OcrService
 import gui.use_cases.Anotiraj_omego_stran
+import javafx.collections.FXCollections
+import javafx.collections.ObservableArrayBase
+import javafx.collections.ObservableList
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.Button
@@ -75,7 +77,7 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
 
         // Popravi anotacije ce se slika zoomira
         this.IMG.zoom.opazuj { this.na_novo_narisi_anotacije_v_ozadju() }
-        this.IMG.self.setOnMousePressed { this.onMousePressed(me=it) }
+        this.IMG.self.setOnMousePressed { this.onMousePressed(me = it) }
         this.IMG.self.setOnMouseReleased { this.onMouseReleased(me = it) }
         this.IMG.self.setOnMouseDragged { this.onMouseDragg(me = it) }
         this.IMG.self.setOnMouseMoved { this.onMouseMove(me = it) }
@@ -97,7 +99,7 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
         this.na_novo_narisi_anotacije_v_ozadju()
     }
 
-    fun na_novo_narisi_anotacije_v_ozadju() {
+    fun na_novo_narisi_anotacije_v_ozadju(narisiDragRec: Boolean = false) {
         this.IMG.pobrisiOzadje()
         this.stran.let { stran ->
             stran.noga.forEach { this.IMG.narisi_okvir(it, Color.BLACK) }
@@ -109,9 +111,12 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
         }
         this.userOkvirji.forEach { this.IMG.narisi_okvir(it, Color.MAGENTA) }
         this.mouseOkvirji.forEach { this.IMG.narisi_okvir(it, Color.BLUE) }
+        if (narisiDragRec) this.IMG.backgroundP.children.add(this.dragRectangle)
     }
 
     private fun onMouseMove(me: MouseEvent) {
+        this.contextMenu.hide()
+        this.userOkvirji = setOf()
         this.IMG.pobrisiOzadje()
         val vektor = this.IMG.mapiraj(v = me.vektor, noter = false)
         this.mouseOkvirji = this.stran.okvirjiV(vektor = vektor)
@@ -129,6 +134,8 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
 
         this.dragOkvir.end = me.vektor
         this.dragRectangle = this.dragOkvir.vRectangle(color = Color.RED)
+        this.dragRectangle.strokeWidth = 1.0
+        this.dragRectangle.strokeDashArray.addAll(5.0)
 
         this.IMG.backgroundP.children.add(this.dragRectangle)
     }
@@ -139,10 +146,10 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
         val okvir = this.IMG.vOkvir(r = this.dragRectangle)
 
         val izbraniOkvirji = this.stran.okvirjiV(vektor = okvir.end)
-        this.userOkvirji = this.stran.anotacije.vOkvirju(okvir = okvir).okvirji.union(izbraniOkvirji)
+        this.userOkvirji = this.stran.okvirji.vOkvirju(okvir = okvir).union(izbraniOkvirji)
 
         this.mouseOkvirji = setOf()
-        this.na_novo_narisi_anotacije_v_ozadju()
+        this.na_novo_narisi_anotacije_v_ozadju(narisiDragRec = this.userOkvirji.isEmpty())
         this.contextMenu.show(this.IMG.self, me.screenX, me.screenY)
     }
 
