@@ -9,10 +9,10 @@ data class Anotacija(
     var tip: Tip,
 ) {
     enum class Tip {
+        PODNALOGA,
+        NALOGA,
         NASLOV,
         TEORIJA,
-        NALOGA,
-        PODNALOGA,
         NOGA,
         DODATNO,
         NEZNANO,

@@ -10,11 +10,7 @@ import gui.services.OcrService
 import gui.use_cases.Anotiraj_omego_stran
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
-import javafx.scene.control.Button
-import javafx.scene.control.ContextMenu
-import javafx.scene.control.Menu
-import javafx.scene.control.MenuItem
-import javafx.scene.control.ScrollPane
+import javafx.scene.control.*
 import javafx.scene.input.MouseEvent
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
@@ -32,14 +28,17 @@ abstract class Anotiranje_slike_Ui : KoinComponent {
     @FXML
     lateinit var potrdiB: Button
 
+    @FXML
+    lateinit var anotacijaL: Label
+
     val IMG: ImageView_BufferedImage get() = this.imageView_bufferedImage_Controller
 
     enum class Akcija { ODSTRANI, USTVARI, IZBERI }
 
-    val dodajM = Menu("Dodaj...")
     val ustvariM = Menu("Ustvari...")
     val odstraniMI = MenuItem("Odstrani...")
-    val contextMenu = ContextMenu()
+    val dodajCM = ContextMenu()
+    val ostaloCM = ContextMenu()
 }
 
 open class Anotiranje_slike : Anotiranje_slike_Ui() {
@@ -48,6 +47,7 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
 
     var dragOkvir = Okvir.PRAZEN
     var dragRectangle: Rectangle = Rectangle()
+    lateinit var zadnjiMouseEvent: MouseEvent
 
     lateinit var slika: BufferedImage
     var anotacije = listOf<Anotacija>()
@@ -66,15 +66,16 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
                     val menuItem = MenuItem(tip.name).also { it.userData = tip }
                     this.ustvariM.items.add(menuItem)
                 }
+
                 else -> {
                     val menuItem = MenuItem(tip.name).also { it.userData = tip }
                     val menuItem2 = MenuItem(tip.name).also { it.userData = tip }
-                    this.dodajM.items.add(menuItem)
+                    this.dodajCM.items.add(menuItem)
                     this.ustvariM.items.add(menuItem2)
                 }
             }
         }
-        this.contextMenu.items.addAll(this.dodajM, this.odstraniMI, this.ustvariM)
+        this.ostaloCM.items.addAll(this.odstraniMI, this.ustvariM)
 
         // Popravi anotacije ce se slika zoomira
         this.IMG.zoom.opazuj { this.na_novo_narisi_anotacije_v_ozadju() }
@@ -83,7 +84,7 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
         this.IMG.self.setOnMouseDragged { this.onMouseDragg(me = it) }
         this.IMG.self.setOnMouseMoved { this.onMouseMove(me = it) }
         this.resetirajB.setOnAction { this.anotiraj_stran_in_na_novo_narisi_anotacije() }
-        this.dodajM.setOnAction { this.onContextAction(am = it, akcija = Akcija.IZBERI) }
+        this.dodajCM.setOnAction { this.onContextAction(am = it, akcija = Akcija.IZBERI) }
         this.ustvariM.setOnAction { this.onContextAction(am = it, akcija = Akcija.USTVARI) }
         this.odstraniMI.setOnAction { this.onContextAction(am = it, akcija = Akcija.ODSTRANI) }
     }
@@ -116,25 +117,34 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
     }
 
     private fun onMouseMove(me: MouseEvent) {
-        this.contextMenu.hide()
+        this.dodajCM.hide()
+        this.ostaloCM.hide()
         this.userOkvirji = setOf()
         this.IMG.pobrisi_ozadje()
-        if (!me.isPrimaryButtonDown) {
+
+        this.anotacijaL.text = ""
+        if (!me.isPrimaryButtonDown && !me.isSecondaryButtonDown && !me.isMiddleButtonDown) {
             val vektor = this.IMG.mapiraj(v = me.vektor, noter = false)
             this.mouseOkvirji = this.stran.okvirjiV(vektor = vektor)
+            if (this.mouseOkvirji.isNotEmpty()) {
+                val text = this.stran.anotacije.vOkvirju(okvir = this.mouseOkvirji.first()).firstOrNull()?.text ?: ""
+                this.anotacijaL.text = if (text.isEmpty()) "" else "\"${text}\""
+            }
         }
+
         this.na_novo_narisi_anotacije_v_ozadju()
     }
 
     private fun onMousePressed(me: MouseEvent) {
-        if(me.isPrimaryButtonDown) this.IMG.scrollPane.isPannable = false
+        this.zadnjiMouseEvent = me
+        if (me.isPrimaryButtonDown || me.isSecondaryButtonDown) this.IMG.scrollPane.isPannable = false
         this.dragOkvir.start = me.vektor
         this.mouseOkvirji = setOf()
         this.na_novo_narisi_anotacije_v_ozadju()
     }
 
     private fun onMouseDragg(me: MouseEvent) {
-        if (!me.isPrimaryButtonDown) return
+        if (!me.isPrimaryButtonDown && !me.isSecondaryButtonDown) return
         this.IMG.backgroundP.children.remove(this.dragRectangle)
 
         this.dragOkvir.end = me.vektor
@@ -147,16 +157,21 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
 
     private fun onMouseReleased(me: MouseEvent) {
         this.IMG.scrollPane.isPannable = true
+        if (!this.zadnjiMouseEvent.isPrimaryButtonDown && !me.isSecondaryButtonDown) return
+
         this.dragOkvir.end = me.vektor
         this.dragRectangle = this.dragOkvir.vRectangle(color = Color.RED)
+
         val okvir = this.IMG.vOkvir(r = this.dragRectangle)
-
         val izbraniOkvirji = this.stran.okvirjiV(vektor = okvir.end)
-        this.userOkvirji = this.stran.okvirji.vOkvirju(okvir = okvir).union(izbraniOkvirji)
 
+        this.userOkvirji = this.stran.okvirji.vOkvirju(okvir = okvir).union(izbraniOkvirji)
         this.mouseOkvirji = setOf()
+
         this.na_novo_narisi_anotacije_v_ozadju(narisiDragRec = this.userOkvirji.isEmpty())
-        this.contextMenu.show(this.IMG.self, me.screenX, me.screenY)
+
+        if (this.zadnjiMouseEvent.isPrimaryButtonDown) this.dodajCM.show(this.IMG.self, me.screenX, me.screenY)
+        if (this.zadnjiMouseEvent.isSecondaryButtonDown) this.ostaloCM.show(this.IMG.self, me.screenX, me.screenY)
     }
 
     private fun onContextAction(am: ActionEvent, akcija: Akcija) {
