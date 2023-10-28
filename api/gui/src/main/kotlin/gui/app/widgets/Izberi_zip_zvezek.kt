@@ -23,6 +23,13 @@ abstract class Izberi_zip_zvezek_Ui : KoinComponent {
     lateinit var flowPane_datoteka_Controller: FlowPane_Datoteka
     val LIST get() = this.listView_datoteka_Controller
     val FLOW get() = this.flowPane_datoteka_Controller
+
+}
+
+enum class BarveSlik(val ime: String) {
+    OPRAVLJENO("darkgreen"),
+    NEOPRAVLJENO("darkred"),
+    PRESKOCENO("blue")
 }
 
 class Izberi_zip_zvezek : Izberi_zip_zvezek_Ui() {
@@ -32,12 +39,10 @@ class Izberi_zip_zvezek : Izberi_zip_zvezek_Ui() {
     lateinit var zip_save_dir: File
     lateinit var zip_file: ZipFile
     lateinit var zip_entries: List<ZipEntry>
-
     val izbrana_slika = Opazovan<Pair<Int, BufferedImage>>()
 
     @FXML
     fun initialize() {
-        println("init Izberi_zip_zvezek")
         this.LIST.self.selectionModel.selectedItemProperty().addListener { _, _, newValue -> this.init(file = newValue.file) }
         this.LIST.init(this.resourseService.najdi_zip_datoteke())
     }
@@ -50,26 +55,28 @@ class Izberi_zip_zvezek : Izberi_zip_zvezek_Ui() {
         this.zip_entries = this.zip_file.entries().toList()
         this.zip_save_dir = Paths.get(file.absolutePath, "../${file.nameWithoutExtension}").normalize().toFile()
 
-        val ustvarjeniFilesi = this.zip_save_dir.listFiles()!!.sortedBy { it.name.toInt() }.map { it.name.toInt() }
+        this.zip_save_dir.mkdir()
 
-        this.zip_entries.forEach {
-            val ime = it.name.split("_").last().split(".").first().toInt()
-            val color = if (ustvarjeniFilesi.contains(ime)) "darkgreen" else "darkred"
-            this.FLOW.dodaj(ime = ime.toString(), color = color, onAction = { name -> izberi_sliko(num = name.toInt()) })
+        this.FLOW.reset()
+        this.zip_entries.forEachIndexed { index, _ ->
+            val dir = File(this.zip_save_dir, index.toString())
+            val barva = if (!dir.exists()) BarveSlik.NEOPRAVLJENO
+            else if (dir.listFiles()!!.isEmpty()) BarveSlik.PRESKOCENO
+            else BarveSlik.OPRAVLJENO
+
+            this.FLOW.dodaj(ime = index.toString(), barva = barva.ime, onAction = { izberi_sliko(num = index) })
         }
     }
 
     fun izberi_sliko(num: Int) {
         //Dobi zip datoteko ki je naslednja za obdelavo.
-        val nasledjiZipEntry = zip_entries[num]
+        val nasledjiZipEntry = this.zip_entries[num]
 
         //Nalozi naslednji zip entry kot sliko
         val inputStream = this.zip_file.getInputStream(nasledjiZipEntry)
         val bufferedImage = ImageIO.read(inputStream)
 
-        //Zapri zip file
-        this.zip_file.close()
-
         this.izbrana_slika.value = Pair(num, bufferedImage)
     }
+
 }

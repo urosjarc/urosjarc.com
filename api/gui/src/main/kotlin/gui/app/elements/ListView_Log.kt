@@ -10,9 +10,4 @@ abstract class ListView_Log_Ui : KoinComponent {
     lateinit var self: ListView<Log>
 }
 
-class ListView_Log : ListView_Log_Ui() {
-    @FXML
-    fun initialize() {
-        println("init ListView_Log")
-    }
-}
+class ListView_Log : ListView_Log_Ui()

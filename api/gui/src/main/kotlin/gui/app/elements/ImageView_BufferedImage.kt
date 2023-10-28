@@ -41,7 +41,6 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
 
     @FXML
     fun initialize() {
-        println("init ImageView_ZipSlika")
         this.self.setOnScroll { if (it.isControlDown) this.popravi_velikost(dy = it.deltaY) }
     }
 

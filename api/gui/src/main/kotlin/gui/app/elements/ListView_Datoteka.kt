@@ -12,15 +12,7 @@ abstract class ListView_Datoteka_Ui : KoinComponent {
 }
 
 class ListView_Datoteka : ListView_Datoteka_Ui() {
-
-    @FXML
-    fun initialize() {
-        println("init ListView_Datoteka")
-    }
-
     fun init(datoteke: Collection<Datoteka>) {
         this.self.items = FXCollections.observableArrayList(datoteke)
     }
-
-
 }

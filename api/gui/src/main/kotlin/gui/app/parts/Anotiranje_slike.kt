@@ -57,7 +57,6 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
 
     @FXML
     fun initialize() {
-        println("init Anotiranje_zip_slike")
 
         // Dodajanje tipov anotacij v context menu slike
         Anotacija.Tip.entries.forEach { tip ->

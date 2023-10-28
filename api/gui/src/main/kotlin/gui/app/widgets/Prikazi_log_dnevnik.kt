@@ -19,6 +19,5 @@ class Prikazi_log_dnevnik : Prikazi_log_dnevnik_Ui() {
     @FXML
     fun initialize() {
         this.log.opazuj { this.LIST.self.items.add(it) }
-        println("init Prikazi_log_dnevnik")
     }
 }

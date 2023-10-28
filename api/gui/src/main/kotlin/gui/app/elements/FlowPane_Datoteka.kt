@@ -11,22 +11,25 @@ abstract class FlowPane_Datoteka_Ui : KoinComponent {
 }
 
 class FlowPane_Datoteka : FlowPane_Datoteka_Ui() {
-    @FXML
-    fun initialize() {
-        println("init TreeTableView_Datoteka")
-    }
-
-    fun dodaj(ime: String, color: String, onAction: (String) -> Unit) {
+    fun dodaj(ime: String, barva: String, onAction: () -> Unit) {
         val button = Button(ime)
         button.userData = ime
         button.minWidth = 60.0
-        button.style += ";-fx-background-color: $color;"
-        button.setOnAction { onAction(ime) }
+        button.style = ";-fx-background-color: $barva;"
+        button.setOnAction { onAction() }
         this.self.children.add(button)
+    }
+
+    fun posodobi(ime: String, color: String) {
+        this.self.children.find { it.userData == ime }?.style = ";-fx-background-color: $color;"
     }
 
     fun odstrani(ime: String) {
         this.self.children.removeIf { it.userData == ime }
+    }
+
+    fun reset() {
+        this.self.children.clear()
     }
 
 }

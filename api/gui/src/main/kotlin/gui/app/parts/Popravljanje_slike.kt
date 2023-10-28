@@ -46,7 +46,6 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
 
     @FXML
     fun initialize() {
-        println("init Obracanje_rezanje_zip_slike")
         this.rotacijaS.valueProperty().addListener { _, _, _ -> this.posodobi_info_slike() }
         this.paddingS.valueProperty().addListener { _, _, _ -> this.posodobi_info_slike() }
         this.rotacijaS.setOnMouseReleased { this.pripravi_sliko_narisi_mrezo_in_jo_prikazi() }

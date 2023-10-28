@@ -50,7 +50,6 @@ class Procesiranje_slike : Procesiranje_slike_Ui() {
 
     @FXML
     fun initialize() {
-        println("init Procesiranje_zip_slike")
         this.POP.koncnaSlika.opazuj {
             this.ANO.init(it)
             this.tabPane.selectionModel.select(this.anotiranjeT)

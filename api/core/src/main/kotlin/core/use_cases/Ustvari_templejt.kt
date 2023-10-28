@@ -84,8 +84,3 @@ class Ustvari_templejt {
         """.trimIndent().trim()
     )
 }
-
-fun main() {
-    val t = Ustvari_templejt()
-    println(t.sms_potrditev_prejema_kontaktnega_obrazca().length)
-}
