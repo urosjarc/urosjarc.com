@@ -44,7 +44,7 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
     @FXML
     fun initialize() {
         println("init Procesiranje_zip_zvezkov")
-//        this.IZBERI.zip_zvezek.opazuj { this.PROCES.init(this.IZBERI.naslednja_slika()) }
+        this.IZBERI.izbrana_slika.opazuj { this.PROCES.init(stSlike = it.first, slika = it.second) }
         this.PROCES.POP.preskociSliko.opazuj { this.preskoci_popravljanje_trenutne_slike(it) }
         this.PROCES.ANO.potrdiB.setOnAction { this.potrditev_anotiranja_trenutne_slike() }
     }
@@ -73,18 +73,18 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
         this.zacni_procesiranje_naslednje_slike()
     }
 
-//    fun ustvari_direktorij_trenutne_slike(): Datoteka {
-//        val zadnjaDatoteka = this.IZBERI.FLOW.zadnjaDatoteka
-//        this.log.info("Zadnji folder: ${zadnjaDatoteka.file}")
-//        val naslednjiFolder = File(zadnjaDatoteka.file.parent, (zadnjaDatoteka.ime.toInt() + 1).toString())
-//        this.log.info("Naslednji folder: ${naslednjiFolder}")
-//        naslednjiFolder.mkdir()
-//        this.log.info("Direktorij se je ustvaril.")
-//        val datoteka = Datoteka(file = naslednjiFolder)
-//        this.IZBERI.FLOW.dodajDatoteko(datoteka)
-//        return datoteka
-//        return File()
-//    }
+    fun ustvari_direktorij_trenutne_slike(): Datoteka {
+        val zadnjaDatoteka = this.IZBERI.FLOW.zadnjaDatoteka
+        this.log.info("Zadnji folder: ${zadnjaDatoteka.file}")
+        val naslednjiFolder = File(zadnjaDatoteka.file.parent, (zadnjaDatoteka.ime.toInt() + 1).toString())
+        this.log.info("Naslednji folder: ${naslednjiFolder}")
+        naslednjiFolder.mkdir()
+        this.log.info("Direktorij se je ustvaril.")
+        val datoteka = Datoteka(file = naslednjiFolder)
+        this.IZBERI.FLOW.dodajDatoteko(datoteka)
+        return datoteka
+        return File()
+    }
 
     fun shrani_sliko(dat: Datoteka, slika: BufferedImage) {
         val imgFile = File(dat.file, "popravljanje.png")

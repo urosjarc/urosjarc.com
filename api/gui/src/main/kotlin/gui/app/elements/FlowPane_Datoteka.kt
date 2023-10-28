@@ -1,6 +1,5 @@
 package gui.app.elements
 
-import gui.base.Opazovan
 import javafx.fxml.FXML
 import javafx.scene.control.Button
 import javafx.scene.layout.FlowPane
@@ -12,22 +11,17 @@ abstract class FlowPane_Datoteka_Ui : KoinComponent {
 }
 
 class FlowPane_Datoteka : FlowPane_Datoteka_Ui() {
-
-    val imena = mutableListOf<String>()
-    val ime = Opazovan<String>()
-
     @FXML
     fun initialize() {
         println("init TreeTableView_Datoteka")
     }
 
-    fun dodaj(ime: String, color: String) {
-        this.imena.add(ime)
+    fun dodaj(ime: String, color: String, onAction: (String) -> Unit) {
         val button = Button(ime)
         button.userData = ime
         button.minWidth = 60.0
         button.style += ";-fx-background-color: $color;"
-        button.setOnAction { this.ime.value = ime }
+        button.setOnAction { onAction(ime) }
         this.self.children.add(button)
     }
 

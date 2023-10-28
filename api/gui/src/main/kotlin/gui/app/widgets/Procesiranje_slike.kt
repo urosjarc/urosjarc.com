@@ -37,10 +37,12 @@ abstract class Procesiranje_slike_Ui : KoinComponent {
 class Procesiranje_slike : Procesiranje_slike_Ui() {
     private val log by this.inject<LogService>()
     private lateinit var slika: BufferedImage
+    var stSlike: Int = -1
 
 
-    fun init(slika: BufferedImage) {
+    fun init(stSlike: Int, slika: BufferedImage) {
         this.log.info("init: $slika")
+        this.stSlike = stSlike
         this.slika = slika
         this.POP.init(slika)
         this.tabPane.selectionModel.select(this.popravljanjeT)
