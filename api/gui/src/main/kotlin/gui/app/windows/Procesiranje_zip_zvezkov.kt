@@ -7,7 +7,6 @@ import gui.app.widgets.Izberi_zip_zvezek
 import gui.app.widgets.Prikazi_log_dnevnik
 import gui.app.widgets.Procesiranje_slike
 import gui.base.App
-import gui.extend.shrani
 import gui.services.LogService
 import javafx.application.Application
 import javafx.fxml.FXML
@@ -65,26 +64,17 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
 
     fun potrditev_anotiranja_trenutne_slike() {
         this.ustvari_direktorij()
-        this.shrani_sliko()
-        this.shrani_stran()
+
+        val stran = this.PROCES.ANO.stran
+        val stranFile = this.slika_dir("stran.json")
+        stranFile.writeText(text = this.json.zakodiraj(value = stran))
+
         this.IZBERI.FLOW.posodobi(ime = this.PROCES.stSlike.toString(), color = BarveSlik.OPRAVLJENO.ime)
         this.IZBERI.izberi_sliko(this.PROCES.stSlike + 1)
     }
 
     fun ustvari_direktorij() {
         this.slika_dir().mkdir()
-    }
-
-    fun shrani_sliko() {
-        val slika = this.PROCES.ANO.slika
-        val imgFile = this.slika_dir("popravljanje.png")
-        slika.shrani(imgFile)
-    }
-
-    fun shrani_stran() {
-        val stran = this.PROCES.ANO.stran
-        val stranFile = this.slika_dir("stran.json")
-        stranFile.writeText(text = this.json.zakodiraj(value = stran))
     }
 
     fun slika_dir(ime: String = "") = File(this.IZBERI.zip_save_dir, "${this.PROCES.stSlike}/$ime")

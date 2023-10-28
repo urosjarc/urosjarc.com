@@ -156,7 +156,7 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
 
     private fun onMouseReleased(me: MouseEvent) {
         this.IMG.scrollPane.isPannable = true
-        if (!this.zadnjiMouseEvent.isPrimaryButtonDown && !me.isSecondaryButtonDown) return
+        if (!this.zadnjiMouseEvent.isPrimaryButtonDown && !this.zadnjiMouseEvent.isSecondaryButtonDown) return
 
         this.dragOkvir.end = me.vektor
         this.dragRectangle = this.dragOkvir.vRectangle(color = Color.RED)
