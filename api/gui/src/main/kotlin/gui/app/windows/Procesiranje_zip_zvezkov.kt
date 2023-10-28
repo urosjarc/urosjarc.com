@@ -44,7 +44,7 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
     @FXML
     fun initialize() {
         println("init Procesiranje_zip_zvezkov")
-        this.IZBERI.zip_zvezek.opazuj { this.PROCES.init(this.IZBERI.naslednja_slika()) }
+//        this.IZBERI.zip_zvezek.opazuj { this.PROCES.init(this.IZBERI.naslednja_slika()) }
         this.PROCES.POP.preskociSliko.opazuj { this.preskoci_popravljanje_trenutne_slike(it) }
         this.PROCES.ANO.potrdiB.setOnAction { this.potrditev_anotiranja_trenutne_slike() }
     }
@@ -60,30 +60,31 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
     }
 
     fun preskoci_popravljanje_trenutne_slike(slika: BufferedImage) {
-        val dat = this.ustvari_direktorij_trenutne_slike()
-        this.shrani_sliko(dat = dat, slika = slika)
+//        val dat = this.ustvari_direktorij_trenutne_slike()
+//        this.shrani_sliko(dat = dat, slika = slika)
         this.zacni_procesiranje_naslednje_slike()
     }
 
     fun potrditev_anotiranja_trenutne_slike() {
-        val dat = this.ustvari_direktorij_trenutne_slike()
+//        val dat = this.ustvari_direktorij_trenutne_slike()
         val slika = this.PROCES.ANO.slika
-        this.shrani_sliko(dat = dat, slika = slika)
-        this.shrani_stran(dat = dat)
+//        this.shrani_sliko(dat = dat, slika = slika)
+//        this.shrani_stran(dat = dat)
         this.zacni_procesiranje_naslednje_slike()
     }
 
-    fun ustvari_direktorij_trenutne_slike(): Datoteka {
-        val zadnjiFolder = this.IZBERI.TREE.self.root.children.last().value
-        this.log.info("Zadnji folder: ${zadnjiFolder.file}")
-        val naslednjiFolder = File(zadnjiFolder.file.parent, (zadnjiFolder.ime.toInt() + 1).toString())
-        this.log.info("Naslednji folder: ${naslednjiFolder}")
-        naslednjiFolder.mkdir()
-        this.log.info("Direktorij se je ustvaril.")
-        val datoteka = Datoteka(file = naslednjiFolder)
-        this.IZBERI.TREE.dodajDatoteko(datoteka)
-        return datoteka
-    }
+//    fun ustvari_direktorij_trenutne_slike(): Datoteka {
+//        val zadnjaDatoteka = this.IZBERI.FLOW.zadnjaDatoteka
+//        this.log.info("Zadnji folder: ${zadnjaDatoteka.file}")
+//        val naslednjiFolder = File(zadnjaDatoteka.file.parent, (zadnjaDatoteka.ime.toInt() + 1).toString())
+//        this.log.info("Naslednji folder: ${naslednjiFolder}")
+//        naslednjiFolder.mkdir()
+//        this.log.info("Direktorij se je ustvaril.")
+//        val datoteka = Datoteka(file = naslednjiFolder)
+//        this.IZBERI.FLOW.dodajDatoteko(datoteka)
+//        return datoteka
+//        return File()
+//    }
 
     fun shrani_sliko(dat: Datoteka, slika: BufferedImage) {
         val imgFile = File(dat.file, "popravljanje.png")
@@ -97,6 +98,6 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
     }
 
     fun zacni_procesiranje_naslednje_slike() {
-        this.PROCES.init(this.IZBERI.naslednja_slika())
+//        this.PROCES.init(this.IZBERI.naslednja_slika())
     }
 }

@@ -7,7 +7,7 @@
     <items>
         <fx:include fx:id="listView_datoteka_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                     source="../elements/ListView_Datoteka.fxml"/>
-        <fx:include fx:id="treeTableView_datoteka_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                    source="../elements/TreeTableView_Datoteka.fxml"/>
+        <fx:include fx:id="flowPane_datoteka_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                    source="../elements/FlowPane_Datoteka.fxml"/>
     </items>
 </SplitPane>
