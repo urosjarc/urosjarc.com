@@ -33,7 +33,7 @@ abstract class Procesiranje_slike_Ui : KoinComponent {
 
 enum class BarveAnotacij(val value: Color) {
     NOGA(Color.BLACK),
-    NALOGE(Color.CYAN),
+    NALOGE(Color.DEEPSKYBLUE),
     PODNALOGE(Color.MAGENTA),
     NASLOV(Color.BLUE),
     TEORIJA(Color.BLUEVIOLET),
