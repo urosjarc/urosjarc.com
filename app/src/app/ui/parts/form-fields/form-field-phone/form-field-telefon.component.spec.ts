@@ -52,6 +52,7 @@ describe('parts/form-field-telefon testiranje', () => {
   })
   it('mora vrniti validiran formControl ob ustrezni telefonski številki', () => {
     component.formControl.setValue('040111222');
+
     expect(component.formControl.valid).toBeTrue();
   })
 })

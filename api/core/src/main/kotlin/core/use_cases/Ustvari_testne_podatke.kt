@@ -80,7 +80,7 @@ class Ustvari_testne_podatke(
         )
         val admin_email = Kontakt(
             oseba_id = mutableSetOf(admin._id),
-            data = "info@urosjarc.com".encrypted(),
+            data = Env.SMTP_USERNAME.encrypted(),
             tip = Kontakt.Tip.EMAIL
         )
         db.ustvari(admin)
@@ -152,7 +152,7 @@ class Ustvari_testne_podatke(
         val statusi = mutableSetOf<Status>()
         ucenci.forEach { ucenec ->
             testi.forEach { test ->
-                naloge.nakljucni(3 * naloge.size / 4).forEach { naloga ->
+                naloge.nakljucni( naloge.size / 10).forEach { naloga ->
                     val status = this.ustvari_status(naloga = naloga, test = test, oseba = ucenec)
                     statusi += status
                 }

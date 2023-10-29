@@ -1,11 +1,10 @@
-import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {PublicKontaktComponent} from "./public-kontakt.component";
 import {
   ProgressBarLoadingComponent
 } from "../../../ui/parts/progress-bars/progress-bar-loading/progress-bar-loading.component";
 import {ReactiveFormsModule} from "@angular/forms";
 import {FormFieldGesloComponent} from "../../../ui/parts/form-fields/form-field-geslo/form-field-geslo.component";
-import {FormFieldMsgComponent} from "../../../ui/parts/form-fields/form-field-sporocilo/form-field-msg.component";
 import {FormFieldTelefonComponent} from "../../../ui/parts/form-fields/form-field-phone/form-field-telefon.component";
 import {FormFieldEmailComponent} from "../../../ui/parts/form-fields/form-field-email/form-field-email.component";
 import {FormFieldOsebaComponent} from "../../../ui/parts/form-fields/form-field-oseba/form-field-oseba.component";
@@ -17,6 +16,9 @@ import {
 } from "../../../core/use_cases/poslji-public-kontaktni-obrazec/poslji-public-kontaktni-obrazec.service";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {HttpClient, HttpHandler} from "@angular/common/http";
+import {
+  FormFieldSporociloComponent
+} from "../../../ui/parts/form-fields/form-field-sporocilo/form-field-sporocilo.component";
 
 
 describe('Public-kontakt.component testi', () => {
@@ -25,8 +27,7 @@ describe('Public-kontakt.component testi', () => {
   let posljiPublicKontaktniObrazecService: PosljiPublicKontaktniObrazecService
   let component: PublicKontaktComponent;
   let alertService: AlertService;
-  let alertServiceSpy: jasmine.Spy
-  let posljiPublicKontaktniObrazecServiceSpy : jasmine.Spy;
+
   const formatErrorja = /^[A-Z].*!$/;
   beforeEach(async () => {
 
@@ -35,7 +36,7 @@ describe('Public-kontakt.component testi', () => {
         ProgressBarLoadingComponent,
         ReactiveFormsModule,
         FormFieldGesloComponent,
-        FormFieldMsgComponent,
+        FormFieldSporociloComponent,
         FormFieldTelefonComponent,
         FormFieldEmailComponent,
         FormFieldOsebaComponent,
@@ -60,7 +61,7 @@ describe('Public-kontakt.component testi', () => {
 
   it('mora inicializirati formGroup oseba', () => {
 
-    expect(component).toBeTruthy()
+    expect(component).toBeThruthy()
   });
 
   it('mora inicializirati formGroup pri ngAfterViewInit', () => {

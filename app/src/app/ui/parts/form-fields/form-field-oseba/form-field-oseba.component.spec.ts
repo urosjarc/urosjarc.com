@@ -38,10 +38,9 @@ describe('parts/form-field-oseba testiranje', () => {
 
   })
   it('mora vrniti pravi format errorja ob praznem polju za osebo', () => {
-    component.formControl.setErrors({'required': true});
+    component.formControl.setErrors({ 'required': true });
     expect(component.getErrorMessage()).toMatch(formatErrorja);
-
-  })
+  });
   it('mora vrniti pravi format errorja ob nepravilnem imenu', () => {
     component.formControl.setErrors({'pattern': true});
     expect(component.getErrorMessage()).toMatch(formatErrorja);
