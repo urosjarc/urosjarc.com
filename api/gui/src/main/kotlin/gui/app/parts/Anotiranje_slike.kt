@@ -118,8 +118,8 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
             stran.teorija.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.TEORIJA.value) }
             stran.dodatno.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.DODATNO.value) }
         }
-        this.userOkvirji.forEach { this.IMG.narisi_okvir(it, Color.GRAY) }
-        this.mouseOkvirji.forEach { this.IMG.narisi_okvir(it, Color.GRAY) }
+        this.userOkvirji.forEach { this.IMG.narisi_okvir(it, Color.BLACK, fill = true) }
+        this.mouseOkvirji.forEach { this.IMG.narisi_okvir(it, Color.BLACK, fill = true) }
         if (narisiDragRec) this.IMG.backgroundP.children.add(this.dragRectangle)
     }
 

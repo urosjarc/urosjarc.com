@@ -204,21 +204,23 @@ fun BufferedImage.boundBox(): Okvir {
     return Okvir(start = Vektor(x = start_x, y = start_y), end = Vektor(x = end_x, y = end_y))
 }
 
-val BufferedImage.okvir: Okvir get() = Okvir(start= Vektor(x=0, y=0), end = Vektor(x=this.width, y=this.height))
+val BufferedImage.okvir: Okvir get() = Okvir(start = Vektor(x = 0, y = 0), end = Vektor(x = this.width, y = this.height))
 
 fun BufferedImage.narisiMrezo(dx: Int = 100, dy: Int = 100, w: Int = 2, color: Color = Color.DARK_GRAY): BufferedImage {
     val new = this.copiraj()
     for (x in dx..new.width - dx / 2 step dx) {
         for (y in dy / 2..new.height - dy / 2) {
             for (i in 0..w) {
-                new.setRGB(x + i, y, color.rgb)
+                val col = if (x <= 2 * dx) Color.MAGENTA else color
+                new.setRGB(x + i, y, col.rgb)
             }
         }
     }
     for (y in dy..new.height - dy / 2 step dy) {
         for (x in dx / 2..new.width - dx / 2) {
             for (i in 0..w) {
-                new.setRGB(x, y + i, color.rgb)
+                val col = if (y <= 2 * dy) Color.MAGENTA else color
+                new.setRGB(x, y + i, col.rgb)
             }
         }
     }
@@ -242,8 +244,9 @@ fun BufferedImage.binarna(negativ: Boolean = false): BufferedImage {
     return bw
 }
 
-val BufferedImage.inputStream: ByteArrayInputStream get() {
-    val os = ByteArrayOutputStream()
-    ImageIO.write(this, "png", os)
-    return ByteArrayInputStream(os.toByteArray())
-}
+val BufferedImage.inputStream: ByteArrayInputStream
+    get() {
+        val os = ByteArrayOutputStream()
+        ImageIO.write(this, "png", os)
+        return ByteArrayInputStream(os.toByteArray())
+    }
