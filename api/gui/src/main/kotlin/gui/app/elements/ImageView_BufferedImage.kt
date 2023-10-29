@@ -93,7 +93,7 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
         this.backgroundP.children.add(1, rec)
     }
 
-    fun vRectangle(okvir: Okvir, color: Color = Color.BLACK): Rectangle = Okvir(
+    fun vRectangle(okvir: Okvir, color: Color = Color.GRAY): Rectangle = Okvir(
         start = this.mapiraj(v = okvir.start, noter = true),
         end = this.mapiraj(v = okvir.end, noter = true)
     ).vRectangle(color = color).also { rec -> rec.setOnScroll { if (it.isControlDown) this.popravi_velikost(dy = it.deltaY) } }

@@ -14,10 +14,9 @@ class Anotiraj_omego_stran {
 
         this.parse_footer(stran = stran, anos = anotacije.toSet())
         this.parse_naloge(img = img, stran = stran, anos = anotacije.toSet())
+        this.parse_podnaloge(stran = stran, anos = anotacije)
         this.parse_naslov(img = img, stran = stran, anos = anotacije.toSet())
         this.parse_teorija(img = img, stran = stran, anos = anotacije.toSet())
-
-        this.parse_podnaloge(stran = stran, anos = anotacije)
 
         return stran
     }

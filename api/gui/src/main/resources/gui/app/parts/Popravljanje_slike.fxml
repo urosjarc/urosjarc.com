@@ -19,7 +19,7 @@
 
                 <Slider fx:id="rotacijaS" blockIncrement="0.0" majorTickUnit="1.0" max="10.0" min="-10.0" minorTickCount="5" showTickLabels="true"
                         showTickMarks="true"/>
-                <Slider fx:id="paddingS" blockIncrement="0.0" majorTickUnit="10.0" max="150.0" minorTickCount="5" showTickLabels="true"
+                <Slider fx:id="paddingS" blockIncrement="0.0" majorTickUnit="20.0" max="500.0" minorTickCount="5" showTickLabels="true"
                         showTickMarks="true"/>
                 <HBox>
                     <children>

@@ -6,6 +6,7 @@ import gui.domain.Stran
 import javafx.fxml.FXML
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
+import javafx.scene.paint.Color
 import org.koin.core.component.KoinComponent
 import java.awt.image.BufferedImage
 
@@ -28,6 +29,15 @@ abstract class Procesiranje_slike_Ui : KoinComponent {
 
     val POP get() = this.popravljanje_slike_Controller
     val ANO get() = this.anotiranje_slike_Controller
+}
+
+enum class BarveAnotacij(val value: Color) {
+    NOGA(Color.BLACK),
+    NALOGE(Color.CYAN),
+    PODNALOGE(Color.MAGENTA),
+    NASLOV(Color.BLUE),
+    TEORIJA(Color.BLUEVIOLET),
+    DODATNO(Color.GREEN)
 }
 
 class Procesiranje_slike : Procesiranje_slike_Ui() {
