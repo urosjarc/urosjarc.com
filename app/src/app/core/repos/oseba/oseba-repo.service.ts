@@ -25,6 +25,7 @@ export class OsebaRepoService {
     const oseba = await this.db.oseba.where(ime<Oseba>("_id")).equals(profil_id).first()
     const naslovi = await this.db.naslov.where(ime<Naslov>("oseba_id")).equals(profil_id).toArray()
     const kontakti = await this.db.kontakt.where(ime<Kontakt>("oseba_id")).equals(profil_id).toArray()
+
     return {oseba, naslovi, kontakti}
   }
 
