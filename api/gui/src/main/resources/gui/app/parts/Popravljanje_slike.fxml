@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.parts.Popravljanje_slike">
+    <center>
+        <fx:include fx:id="imageView_bufferedImage_" source="../elements/ImageView_BufferedImage.fxml" BorderPane.alignment="CENTER"/>
+    </center>
+    <bottom>
+        <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+            <children>
+                <Label fx:id="infoL" alignment="CENTER" contentDisplay="CENTER" textAlignment="CENTER">
+                    <VBox.margin>
+                        <Insets bottom="10.0" top="10.0"/>
+                    </VBox.margin>
+                </Label>
+
+                <Slider fx:id="rotacijaS" blockIncrement="0.0" majorTickUnit="1.0" max="10.0" min="-10.0" minorTickCount="5" showTickLabels="true"
+                        showTickMarks="true"/>
+                <Slider fx:id="paddingS" blockIncrement="0.0" majorTickUnit="20.0" max="500.0" minorTickCount="5" showTickLabels="true"
+                        showTickMarks="true"/>
+                <HBox>
+                    <children>
+                        <Button fx:id="preskociB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Preskoči" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="resetirajB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Resetiraj" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="potrdiB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Potrdi" HBox.hgrow="ALWAYS"/>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </bottom>
+</BorderPane>

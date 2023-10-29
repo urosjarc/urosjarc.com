@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hvalue="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true" vvalue="0.5" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.elements.ImageView_BufferedImage">
+   <content>
+      <StackPane fx:id="stackPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+         <children>
+            <Pane fx:id="backgroundP" maxHeight="1100.0" maxWidth="636.0" minHeight="1100.0" minWidth="636.0" prefHeight="1100.0" prefWidth="636.0">
+               <children>
+                  <ImageView fx:id="self" fitHeight="1100.0" fitWidth="636.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </Pane>
+         </children>
+      </StackPane>
+   </content>
+</ScrollPane>
