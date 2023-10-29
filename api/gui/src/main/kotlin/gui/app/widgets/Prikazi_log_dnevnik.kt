@@ -1,6 +1,7 @@
 package gui.app.widgets
 
 import gui.app.elements.ListView_Log
+import gui.domain.Log
 import gui.services.LogService
 import javafx.fxml.FXML
 import org.koin.core.component.KoinComponent
@@ -18,6 +19,9 @@ class Prikazi_log_dnevnik : Prikazi_log_dnevnik_Ui() {
 
     @FXML
     fun initialize() {
-        this.log.opazuj { this.LIST.self.items.add(it) }
+        this.log.opazuj {
+            this.LIST.self.items.add(it)
+            this.LIST.self.scrollTo(it)
+        }
     }
 }

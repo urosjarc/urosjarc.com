@@ -48,6 +48,7 @@ class Izberi_zip_zvezek : Izberi_zip_zvezek_Ui() {
     }
 
     private fun init(file: File) {
+        this.log.warn("Izbran zip zvezek: $file")
         //Dobi zip entries.
         this.zip_file = ZipFile(file.absolutePath)
         this.zip_entries = this.zip_file.entries().toList()
@@ -67,7 +68,7 @@ class Izberi_zip_zvezek : Izberi_zip_zvezek_Ui() {
     }
 
     fun izberi_sliko(num: Int) {
-        this.log.info("Izberi sliko: $num")
+        this.log.warn("Izberi sliko: $num")
         //Dobi zip datoteko, ki je naslednja za obdelavo.
         val nasledjiZipEntry = this.zip_entries.getOrNull(num) ?: return
 

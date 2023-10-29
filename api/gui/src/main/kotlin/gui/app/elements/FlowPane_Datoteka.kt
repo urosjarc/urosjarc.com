@@ -15,13 +15,13 @@ class FlowPane_Datoteka : FlowPane_Datoteka_Ui() {
         val button = Button(ime)
         button.userData = ime
         button.minWidth = 60.0
-        button.style = ";-fx-background-color: $barva;"
+        button.style = "-fx-background-color: $barva"
         button.setOnAction { onAction() }
         this.self.children.add(button)
     }
 
     fun posodobi(ime: String, color: String) {
-        this.self.children.find { it.userData == ime }?.style = ";-fx-background-color: $color;"
+        this.self.children.find { it.userData == ime }?.style = "-fx-background-color: $color"
     }
 
     fun reset() {
