@@ -111,15 +111,15 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
     fun na_novo_narisi_anotacije_v_ozadju(narisiDragRec: Boolean = false) {
         this.IMG.pobrisi_ozadje()
         this.stran.let { stran ->
-            stran.noga.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NOGA.value) }
-            stran.naloge.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NALOGE.value) }
-            stran.podnaloge.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.PODNALOGE.value) }
-            stran.naslov.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NASLOV.value) }
-            stran.teorija.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.TEORIJA.value) }
-            stran.dodatno.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.DODATNO.value) }
+            stran.noga.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NOGA.value, round=true) }
+            stran.naloge.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NALOGE.value, round=true) }
+            stran.podnaloge.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.PODNALOGE.value, round=true) }
+            stran.naslov.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NASLOV.value, round=true) }
+            stran.teorija.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.TEORIJA.value, round=true) }
+            stran.dodatno.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.DODATNO.value, round=false) }
         }
-        this.userOkvirji.forEach { this.IMG.narisi_okvir(it, Color.BLACK, fill = true) }
-        this.mouseOkvirji.forEach { this.IMG.narisi_okvir(it, Color.BLACK, fill = true) }
+        this.userOkvirji.forEach { this.IMG.narisi_okvir(it, Color.BLACK, round=false) }
+        this.mouseOkvirji.forEach { this.IMG.narisi_okvir(it, Color.BLACK, round=false) }
         if (narisiDragRec) this.IMG.backgroundP.children.add(this.dragRectangle)
     }
 
@@ -155,7 +155,7 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
         this.IMG.backgroundP.children.remove(this.dragRectangle)
 
         this.dragOkvir.end = me.vektor
-        this.dragRectangle = this.dragOkvir.vRectangle()
+        this.dragRectangle = this.dragOkvir.vRectangle(width = 1.0, round = false)
         this.dragRectangle.strokeWidth = 1.0
         this.dragRectangle.strokeDashArray.addAll(5.0)
 
@@ -167,7 +167,7 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
         if (!this.zadnjiMouseEvent.isPrimaryButtonDown && !this.zadnjiMouseEvent.isSecondaryButtonDown) return
 
         this.dragOkvir.end = me.vektor
-        this.dragRectangle = this.dragOkvir.vRectangle()
+        this.dragRectangle = this.dragOkvir.vRectangle(round = false)
 
         val okvir = this.IMG.vOkvir(r = this.dragRectangle)
         val izbraniOkvirji = this.stran.okvirjiV(vektor = okvir.end)

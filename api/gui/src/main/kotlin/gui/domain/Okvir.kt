@@ -22,16 +22,20 @@ data class Okvir(
     fun vsebuje(okvir: Okvir): Boolean = this.enakStolpec(okvir) && this.enakaVrstica(okvir)
 
     fun vsebuje(vektor: Vektor): Boolean = vektor.x in this.start.x..this.end.x && vektor.y in this.start.y..this.end.y
-    fun vRectangle(color: Color = Color.BLACK, fill: Boolean = false): Rectangle {
+    fun vRectangle(color: Color = Color.BLACK, round: Boolean = true, width: Double = 2.0): Rectangle {
         return Rectangle(
-            this.start.x.toDouble(),
-            this.start.y.toDouble(),
-            this.sirina.toDouble(),
-            this.visina.toDouble()
+            this.start.x.toDouble() - width,
+            this.start.y.toDouble() - width,
+            this.sirina.toDouble() + 2 * width,
+            this.visina.toDouble() + 2 * width
         ).apply {
-            this.fill = if(fill) color else null
+            this.fill = null
             this.stroke = color
-            this.strokeWidth = 3.0
+            if (round) {
+                this.arcHeight = 40.0
+                this.arcWidth = 40.0
+            }
+            this.strokeWidth = width
         }
     }
 }
