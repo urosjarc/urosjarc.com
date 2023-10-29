@@ -2,6 +2,7 @@ package gui.app.widgets
 
 import gui.app.parts.Anotiranje_slike
 import gui.app.parts.Popravljanje_slike
+import gui.domain.Stran
 import gui.services.LogService
 import javafx.fxml.FXML
 import javafx.scene.control.Tab
@@ -40,18 +41,23 @@ class Procesiranje_slike : Procesiranje_slike_Ui() {
     var stSlike: Int = -1
 
 
-    fun init(stSlike: Int, slika: BufferedImage) {
-        this.log.info("init: $slika")
+    fun init(stSlike: Int, slika: BufferedImage, stran: Stran?) {
         this.stSlike = stSlike
         this.slika = slika
-        this.POP.init(slika)
-        this.tabPane.selectionModel.select(this.popravljanjeT)
+        this.POP.init(slika, popravi = stran == null)
+        val tab = if (stran == null) {
+            this.popravljanjeT
+        } else {
+            this.ANO.init(slika = slika, stran = stran)
+            this.anotiranjeT
+        }
+        this.tabPane.selectionModel.select(tab)
     }
 
     @FXML
     fun initialize() {
         this.POP.koncnaSlika.opazuj {
-            this.ANO.init(it)
+            this.ANO.init(it, stran = null)
             this.tabPane.selectionModel.select(this.anotiranjeT)
         }
     }

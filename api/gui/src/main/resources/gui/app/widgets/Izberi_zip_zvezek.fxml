@@ -2,12 +2,9 @@
 
 <?import javafx.scene.control.*?>
 
-<SplitPane dividerPositions="50.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL"
-           xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.widgets.Izberi_zip_zvezek">
+<SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.widgets.Izberi_zip_zvezek">
     <items>
-        <fx:include fx:id="listView_datoteka_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                    source="../elements/ListView_Datoteka.fxml"/>
-        <fx:include fx:id="flowPane_datoteka_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                    source="../elements/FlowPane_Datoteka.fxml"/>
+        <fx:include fx:id="listView_datoteka_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../elements/ListView_Datoteka.fxml" />
+        <fx:include fx:id="flowPane_datoteka_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../elements/FlowPane_Datoteka.fxml" />
     </items>
 </SplitPane>

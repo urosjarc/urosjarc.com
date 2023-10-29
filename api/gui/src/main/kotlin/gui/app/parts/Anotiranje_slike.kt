@@ -88,11 +88,18 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
         this.odstraniMI.setOnAction { this.onContextAction(am = it, akcija = Akcija.ODSTRANI) }
     }
 
-    fun init(slika: BufferedImage) {
+    fun init(slika: BufferedImage, stran: Stran?) {
         this.slika = slika
-        this.anotacije = this.ocrService.google(image = slika)
         this.IMG.init(slika = slika)
-        this.anotiraj_stran_in_na_novo_narisi_anotacije()
+
+        if (stran != null) {
+            this.stran = stran
+            this.anotacije = stran.anotacije.toList()
+            this.na_novo_narisi_anotacije_v_ozadju()
+        } else {
+            this.anotacije = this.ocrService.google(image = slika)
+            this.anotiraj_stran_in_na_novo_narisi_anotacije()
+        }
     }
 
     open fun anotiraj_stran_in_na_novo_narisi_anotacije() {

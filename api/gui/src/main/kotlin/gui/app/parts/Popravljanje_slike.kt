@@ -48,33 +48,38 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
     fun initialize() {
         this.rotacijaS.valueProperty().addListener { _, _, _ -> this.posodobi_info_slike() }
         this.paddingS.valueProperty().addListener { _, _, _ -> this.posodobi_info_slike() }
-        this.rotacijaS.setOnMouseReleased { this.pripravi_sliko_narisi_mrezo_in_jo_prikazi() }
-        this.paddingS.setOnMouseReleased { this.pripravi_sliko_narisi_mrezo_in_jo_prikazi() }
+        this.rotacijaS.setOnMouseReleased { this.pripravi_sliko() }
+        this.paddingS.setOnMouseReleased { this.pripravi_sliko() }
         this.resetirajB.setOnAction { this.resetiraj_celotno_sliko_na_default_vrednosti() }
         this.potrdiB.setOnAction { this.potrdi_trenutne_nastavitve() }
         this.preskociB.setOnAction { this.preskociSliko.value = this.slika }
     }
 
-    fun init(slika: BufferedImage) {
+    fun init(slika: BufferedImage, popravi: Boolean) {
         this.slika = slika
-        this.resetiraj_celotno_sliko_na_default_vrednosti()
+        this.posodobi_info_slike(reset = true)
+        if (popravi) this.resetiraj_celotno_sliko_na_default_vrednosti()
+        else this.pripravi_sliko(procesiranje = false)
     }
 
-    private fun pripravi_sliko_narisi_mrezo_in_jo_prikazi() {
-        this.log.info("init: ${this.infoL.text}")
-        val img = this.rotiraj_in_odrezi_robove_slike().binarna(negativ = true)
-        img.narisiMrezo()
-        this.IMG.init(slika = img)
+    private fun pripravi_sliko(procesiranje: Boolean = true) {
+        var img = this.slika
+        if (procesiranje) img = this.rotiraj_in_odrezi_robove_slike()
+        this.IMG.init(slika = img.binarna(negativ = true).narisiMrezo())
     }
 
-    private fun posodobi_info_slike() {
+    private fun posodobi_info_slike(reset: Boolean = false) {
+        if(reset){
+            this.rotacijaS.value = 0.0
+            this.paddingS.value = 0.0
+        }
         val r = "%.2f°".format(this.rotacijaS.value)
         val m = "%.2fpx".format(this.paddingS.value)
         this.infoL.text = "Rotacija: $r, Padding: $m"
     }
 
     private fun resetiraj_celotno_sliko_na_default_vrednosti() {
-        this.log.info("resetiraj sliko")
+        this.log.info("Resetiraj rotacijo in padding trenutne slike.")
         val deskew = this.slika.poravnaj()
         val removeBorder = deskew.second.odstraniObrobo(maxWidth = 300)
 
@@ -82,12 +87,11 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
         this.paddingS.value = removeBorder.first.toDouble()
 
         this.posodobi_info_slike()
-        this.pripravi_sliko_narisi_mrezo_in_jo_prikazi()
+        this.pripravi_sliko()
     }
 
     private fun potrdi_trenutne_nastavitve() {
         this.koncnaSlika.value = this.rotiraj_in_odrezi_robove_slike()
-        this.log.info("potrdi sliko: ${this.koncnaSlika.value}")
     }
 
     private fun rotiraj_in_odrezi_robove_slike(): BufferedImage {

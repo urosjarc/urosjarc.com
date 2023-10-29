@@ -206,21 +206,23 @@ fun BufferedImage.boundBox(): Okvir {
 
 val BufferedImage.okvir: Okvir get() = Okvir(start= Vektor(x=0, y=0), end = Vektor(x=this.width, y=this.height))
 
-fun BufferedImage.narisiMrezo(dx: Int = 100, dy: Int = 100, w: Int = 2, color: Color = Color.DARK_GRAY) {
-    for (x in dx..this.width - dx / 2 step dx) {
-        for (y in dy / 2..this.height - dy / 2) {
+fun BufferedImage.narisiMrezo(dx: Int = 100, dy: Int = 100, w: Int = 2, color: Color = Color.DARK_GRAY): BufferedImage {
+    val new = this.copiraj()
+    for (x in dx..new.width - dx / 2 step dx) {
+        for (y in dy / 2..new.height - dy / 2) {
             for (i in 0..w) {
-                this.setRGB(x + i, y, color.rgb)
+                new.setRGB(x + i, y, color.rgb)
             }
         }
     }
-    for (y in dy..this.height - dy / 2 step dy) {
-        for (x in dx / 2..this.width - dx / 2) {
+    for (y in dy..new.height - dy / 2 step dy) {
+        for (x in dx / 2..new.width - dx / 2) {
             for (i in 0..w) {
-                this.setRGB(x, y + i, color.rgb)
+                new.setRGB(x, y + i, color.rgb)
             }
         }
     }
+    return new
 }
 
 fun BufferedImage.binarna(negativ: Boolean = false): BufferedImage {
