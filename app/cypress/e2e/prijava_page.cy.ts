@@ -1,34 +1,46 @@
 import 'cypress-xpath';
 const domain = 'http://localhost:4200'
 describe('Prijava page urosjarc.com tests', () => {
+  function prijava(username:string, geslo:string){
+    cy.get('#mat-input-0').type(username, { force: true })
+    cy.get('#mat-input-1').type(geslo, { force: true })
+  }
   beforeEach(() => {
     cy.visit(`${domain}/prijava`)
   })
 
   it('should get a error message if trying to log in on empty inputs field', () => {
+    // wait for http://127.0.0.1:8080/auth/prijava response
+    cy.intercept('POST', 'http://127.0.0.1:8080/auth/prijava').as('interceptedPrijavaRequest');
     cy.get('#mat-input-0').focus()
     cy.get('#mat-input-1').focus()
     cy.get('body').click();
     cy.get('#mat-mdc-error-0').should('have.text', 'Vnos je obvezen!');
     cy.get('#mat-mdc-error-1').should('have.text', 'Geslo je obvezno!');
     cy.xpath('/html/body/app/app-public/app-card-navigacija/div/div/div/div/app-public-prijava/form/div/div[3]/button').click()
-    cy.get('#mat-mdc-dialog-title-0').should('have.text', ' KRITIČNA NAPAKA ')
-    // if clicked on zapri on error message the message should not be visible
-    cy.get('.mdc-dialog__container button').click()
-    cy.get('.mdc-dialog__container button').should('not.be.visible')
+    cy.wait('@interceptedPrijavaRequest', {timeout: 30000}).then(({response}) => {
+      cy.get('#mat-mdc-dialog-title-0').should('have.text', ' KRITIČNA NAPAKA ')
+      // if clicked on zapri on error message the message should not be visible
+      cy.get('.mdc-dialog__container button').click()
+      cy.get('.mdc-dialog__container button').should('not.be.visible')
+    })
   });
   it('should log in ucenec page with correct credentials', () => {
+    cy.intercept('POST', 'http://127.0.0.1:8080/auth/prijava').as('interceptedPrijavaRequest');
+    cy.intercept('GET', 'http://127.0.0.1:8080/auth/profil').as('interceptedProfilRequest');
     let root_id = '';
-    cy.get('#mat-input-0').type('ucenec', { force: true })
-    cy.get('#mat-input-1').type('geslo', { force: true })
+    prijava('ucenec', 'geslo')
     //click prijava
     cy.xpath('//app-public-prijava/form/div/div[3]/button').click()
-    cy.wait(1000);
-    cy.intercept('GET', 'http://127.0.0.1:8080/auth/profil').as('interceptedRequest');
 
-    //wait for response and intercept, then test the body id and tip
-    cy.wait('@interceptedRequest').then(({ response }) => {
+    cy.wait('@interceptedPrijavaRequest',{ timeout: 20000 }).then(({ response }) => {
+      const token = response!.body.token;
+      expect(token).not.be.empty;
+    });
+    //wait for profil response and intercept, then test the body id and tip
+    cy.wait('@interceptedProfilRequest',{ timeout: 20000 }).then(({ response }) => {
       root_id = response!.body.oseba_id;
+      // TODO: every now and then it skips waiting for response and jumps to this tests
       expect(response!.body.tip[0]).equal('UCENEC');
       expect(root_id).not.be.empty;
     });
@@ -56,15 +68,18 @@ describe('Prijava page urosjarc.com tests', () => {
 
   });
   it('should log in ucitelj page with correct credentials', () => {
+    cy.intercept('POST', 'http://127.0.0.1:8080/auth/prijava').as('interceptedPrijavaRequest');
+    cy.intercept('GET', 'http://127.0.0.1:8080/auth/profil').as('interceptedProfilRequest'); // Alias the intercepted request
     let root_id = '';
-    cy.get('#mat-input-0').type('ucitelj', { force: true })
-    cy.get('#mat-input-1').type('geslo', { force: true })
+    prijava('ucitelj', 'geslo')
     //click prijava
     cy.xpath('//app-public-prijava/form/div/div[3]/button').click()
-    cy.wait(1000);
-    cy.intercept('GET', 'http://127.0.0.1:8080/auth/profil').as('interceptedRequest'); // Alias the intercepted request
-    //wait for response and intercept, then test the body id and tip
-    cy.wait('@interceptedRequest').then(({ response }) => {
+    cy.wait('@interceptedPrijavaRequest',{ timeout: 20000 }).then(({ response }) => {
+      const token = response!.body.token;
+      expect(token).not.be.empty;
+    });
+    //wait for profil response and intercept, then test the body id and tip
+    cy.wait('@interceptedProfilRequest',{ timeout: 20000 }).then(({ response }) => {
       root_id = response!.body.oseba_id;
       expect(response!.body.tip[0]).equal('UCITELJ');
       expect(root_id).not.be.undefined;

@@ -39,12 +39,15 @@ describe('Log in as UCENEC and test navbar links', () => {
     })
     //get total table row number for later tests of creating test
     countTableRows1()
+
     function countTableRows1() {
-      cy.get('.mdc-data-table__content tr').its('length').then(row_length => {
-        tests_table_row_length_before += row_length;
-        console.error(tests_table_row_length_before, 'total table rows  before/-------------------')
-        navigateToNextPage1()
-      })
+      cy.get('.mdc-data-table__content tr')
+        .its('length')
+        .then(row_length => {
+          tests_table_row_length_before += row_length;
+          console.error(tests_table_row_length_before, 'total table rows  before/-------------------')
+          navigateToNextPage1()
+        })
     }
 
     function navigateToNextPage1() {
@@ -54,7 +57,7 @@ describe('Log in as UCENEC and test navbar links', () => {
             if (nextPageButton && !nextPageButton.is(':disabled')) {
               cy.xpath('//app-ucitelj-testi/app-table/mat-paginator/div/div/div[2]/button[3]').click()
               countTableRows1()
-            }
+            } else return
           }
         )
     }
@@ -111,39 +114,38 @@ describe('Log in as UCENEC and test navbar links', () => {
     // testi button
     cy.xpath('/html/body/app/app-ucitelj/app-card-navigacija/div/div/div/app-toolbar-navigacija/div/div[3]/app-button-toolbar/div/div[1]/button').click()
 
-    cy.wait('@interceptedTestiRequest', {timeout: 20000}).then(() => {
+    cy.wait('@interceptedTestiRequest', {timeout: 25000}).then(() => {
       //refresh the page to get the next test visible in table row
       cy.reload()
       //get total table row number for later tests of creating test
       countTableRows()
 
-
-      function countTableRows() {
-        cy.get('.mdc-data-table__content tr').its('length').then(row_length => {
+      async function countTableRows() {
+        cy.get('.mdc-data-table__content tr').its('length').then(async row_length => {
           tests_table_row_lenght_after += row_length;
           console.error(tests_table_row_lenght_after, 'total table rows after/-------------------')
           // expect(row_length).to.equal(tests_table_row_length + 1)
-          navigateToNextPage()
+          await navigateToNextPage()
         })
       }
 
-      function navigateToNextPage() {
+      async function navigateToNextPage() {
         cy.xpath('//app-ucitelj-testi/app-table/mat-paginator/div/div/div[2]/button[3]')
           .should('be.visible')
-          .then(nextPageButton => {
+          .then(async nextPageButton => {
               if (nextPageButton && !nextPageButton.is(':disabled')) {
                 cy.xpath('//app-ucitelj-testi/app-table/mat-paginator/div/div/div[2]/button[3]').click()
-                countTableRows()
-              }
-              else {
+                await countTableRows()
+              } else {
                 // if the pagnation button is not visible, all the rows have benn counted and test the length of tests table rows
                 expect(tests_table_row_length_before + 1).to.equal(tests_table_row_lenght_after)
+                return
               }
             }
           )
       }
-    })
 
+    })
 
     // učenci button
     cy.xpath('/html/body/app/app-ucitelj/app-card-navigacija/div/div/div/app-toolbar-navigacija/div/div[4]/app-button-toolbar/div/div[1]/button').click()
