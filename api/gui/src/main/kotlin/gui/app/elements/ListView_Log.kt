@@ -1,4 +1,4 @@
-package gui.app.elements;
+package gui.app.elements
 
 import gui.domain.Log
 import javafx.fxml.FXML

@@ -24,12 +24,7 @@ class FlowPane_Datoteka : FlowPane_Datoteka_Ui() {
         this.self.children.find { it.userData == ime }?.style = ";-fx-background-color: $color;"
     }
 
-    fun odstrani(ime: String) {
-        this.self.children.removeIf { it.userData == ime }
-    }
-
     fun reset() {
         this.self.children.clear()
     }
-
 }

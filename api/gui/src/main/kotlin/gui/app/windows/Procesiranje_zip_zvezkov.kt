@@ -4,7 +4,6 @@ import core.extend.ime
 import core.services.JsonService
 import gui.app.widgets.BarveSlik
 import gui.app.widgets.Izberi_zip_zvezek
-import gui.app.widgets.Prikazi_log_dnevnik
 import gui.app.widgets.Procesiranje_slike
 import gui.base.App
 import gui.domain.Stran
@@ -30,12 +29,8 @@ abstract class Procesiranje_zip_zvezkov_Ui : Application(), KoinComponent {
     @FXML
     lateinit var procesiranje_slike_Controller: Procesiranje_slike
 
-    @FXML
-    lateinit var prikazi_log_dnevnik_Controller: Prikazi_log_dnevnik
-
     val IZBERI get() = this.izberi_zip_zvezek_Controller
     val PROCES get() = this.procesiranje_slike_Controller
-    val LOG get() = this.prikazi_log_dnevnik_Controller
 }
 
 class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {

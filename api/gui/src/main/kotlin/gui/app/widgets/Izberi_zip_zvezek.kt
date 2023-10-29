@@ -6,7 +6,6 @@ import gui.base.Opazovan
 import gui.services.LogService
 import gui.services.ResouceService
 import javafx.fxml.FXML
-import javafx.scene.control.Alert
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.awt.image.BufferedImage
@@ -69,7 +68,7 @@ class Izberi_zip_zvezek : Izberi_zip_zvezek_Ui() {
 
     fun izberi_sliko(num: Int) {
         this.log.info("Izberi sliko: $num")
-        //Dobi zip datoteko ki je naslednja za obdelavo.
+        //Dobi zip datoteko, ki je naslednja za obdelavo.
         val nasledjiZipEntry = this.zip_entries.getOrNull(num) ?: return
 
         //Nalozi naslednji zip entry kot sliko

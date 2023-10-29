@@ -3,12 +3,10 @@ package gui.app.widgets
 import gui.app.parts.Anotiranje_slike
 import gui.app.parts.Popravljanje_slike
 import gui.domain.Stran
-import gui.services.LogService
 import javafx.fxml.FXML
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import java.awt.image.BufferedImage
 
 abstract class Procesiranje_slike_Ui : KoinComponent {
@@ -22,9 +20,6 @@ abstract class Procesiranje_slike_Ui : KoinComponent {
     lateinit var anotiranjeT: Tab
 
     @FXML
-    lateinit var rezanjeT: Tab
-
-    @FXML
     lateinit var popravljanje_slike_Controller: Popravljanje_slike
 
     @FXML
@@ -36,7 +31,6 @@ abstract class Procesiranje_slike_Ui : KoinComponent {
 }
 
 class Procesiranje_slike : Procesiranje_slike_Ui() {
-    private val log by this.inject<LogService>()
     private lateinit var slika: BufferedImage
     var stSlike: Int = -1
 
