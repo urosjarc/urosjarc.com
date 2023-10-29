@@ -13,13 +13,18 @@ import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.*
 import javafx.scene.input.MouseEvent
+import javafx.scene.layout.BorderPane
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.awt.image.BufferedImage
 
+
 abstract class Anotiranje_slike_Ui : KoinComponent {
+    @FXML
+    lateinit var self: BorderPane
+
     @FXML
     lateinit var imageView_bufferedImage_Controller: ImageView_BufferedImage
 
@@ -87,6 +92,8 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
         this.dodajCM.setOnAction { this.onContextAction(am = it, akcija = Akcija.IZBERI) }
         this.ustvariM.setOnAction { this.onContextAction(am = it, akcija = Akcija.USTVARI) }
         this.odstraniMI.setOnAction { this.onContextAction(am = it, akcija = Akcija.ODSTRANI) }
+        this.self.setOnKeyPressed { println("key"); this.IMG.pobrisi_ozadje() }
+        this.self.setOnKeyReleased { println("key release"); this.na_novo_narisi_anotacije_v_ozadju() }
     }
 
     fun init(slika: BufferedImage, stran: Stran?) {
@@ -111,15 +118,15 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
     fun na_novo_narisi_anotacije_v_ozadju(narisiDragRec: Boolean = false) {
         this.IMG.pobrisi_ozadje()
         this.stran.let { stran ->
-            stran.noga.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NOGA.value, round=true) }
-            stran.naloge.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NALOGE.value, round=true) }
-            stran.podnaloge.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.PODNALOGE.value, round=true) }
-            stran.naslov.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NASLOV.value, round=true) }
-            stran.teorija.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.TEORIJA.value, round=true) }
-            stran.dodatno.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.DODATNO.value, round=false) }
+            stran.noga.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NOGA.value, round = true) }
+            stran.naloge.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NALOGE.value, round = true) }
+            stran.podnaloge.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.PODNALOGE.value, round = true) }
+            stran.naslov.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NASLOV.value, round = true) }
+            stran.teorija.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.TEORIJA.value, round = true) }
+            stran.dodatno.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.DODATNO.value, round = false) }
         }
-        this.userOkvirji.forEach { this.IMG.narisi_okvir(it, Color.BLACK, round=false) }
-        this.mouseOkvirji.forEach { this.IMG.narisi_okvir(it, Color.BLACK, round=false) }
+        this.userOkvirji.forEach { this.IMG.narisi_okvir(it, Color.BLACK, round = false) }
+        this.mouseOkvirji.forEach { this.IMG.narisi_okvir(it, Color.BLACK, round = false) }
         if (narisiDragRec) this.IMG.backgroundP.children.add(this.dragRectangle)
     }
 
