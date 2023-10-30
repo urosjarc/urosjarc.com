@@ -50,7 +50,43 @@ describe('Kontakt page urosjarc.com tests', () => {
 
 
   });
+  it('should except phone number in all possible formats', () => {
+    // wait for kontakt response
+    cy.intercept('POST', 'http://127.0.0.1:8080/kontakt').as('interceptedKontaktRequest');
+    const stevilkeFormati = [
+        '040664247',
+        '040-664-247',
+        '040/664/247',
+        '040/664-247',
+        '040/664 247',
+        '+386040664247',
+        '+386-040-664 247',
+        '+386/040/664 247',
+        '+386-40664/247'
+    ]
+    //fill out the form with valid information
+    for (let i = 0; i < stevilkeFormati.length; i++) {
+      cy.get('#mat-input-0').type('Danijel Korbar');
+      cy.get('#mat-input-1').type('korbar41@gmail.com');
+      cy.get('#mat-input-3').type('To je testno sporočilo');
+      cy.get('#mat-input-2').type(stevilkeFormati[i]);
+      cy.xpath('//app-public-kontakt/form/div/div[4]/button').click();
+      cy.wait('@interceptedKontaktRequest', { timeout: 20000 }).then(({ response }) => {
+        expect(response!.statusCode).to.equal(200);
+        // pop up alert window
+        cy.get('.ng-star-inserted').should('be.visible')
+        cy.get('.ng-star-inserted h1').should('have.text', ' Vaše sporočilo je bilo sprejeto! ')
+        // click the zapri button upon a successful message
+        cy.contains('Zapri').click();
+        cy.get('#mat-input-0').clear()
+        cy.get('#mat-input-1').clear()
+        cy.get('#mat-input-3').clear()
+        cy.get('#mat-input-2').clear()
+      });
+      }
 
+
+  });
   it('should send the form in the inputs are valid', () => {
     // wait for kontakt response
     cy.intercept('POST', 'http://127.0.0.1:8080/kontakt').as('interceptedKontaktRequest');
