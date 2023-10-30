@@ -1,10 +1,8 @@
 import 'cypress-xpath';
-import Chainable = Cypress.Chainable;
 
 const domain = 'http://localhost:4200'
 
 describe('Kontakt page urosjarc.com tests', () => {
-
 
   beforeEach(() => {
     cy.visit(`${domain}/kontakt`)
@@ -84,8 +82,6 @@ describe('Kontakt page urosjarc.com tests', () => {
         cy.get('#mat-input-2').clear()
       });
       }
-
-
   });
   it('should send the form in the inputs are valid', () => {
     // wait for kontakt response

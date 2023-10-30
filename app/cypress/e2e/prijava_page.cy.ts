@@ -28,6 +28,7 @@ describe('Prijava page urosjarc.com tests', () => {
   it('should log in ucenec page with correct credentials', () => {
     cy.intercept('POST', 'http://127.0.0.1:8080/auth/prijava').as('interceptedPrijavaRequest');
     cy.intercept('GET', 'http://127.0.0.1:8080/auth/profil').as('interceptedProfilRequest');
+    cy.intercept('GET', 'http://127.0.0.1:8080/ucenec').as('interceptedUcenecRequest');
     let root_id = '';
     prijava('ucenec', 'geslo')
     //click prijava
@@ -37,9 +38,15 @@ describe('Prijava page urosjarc.com tests', () => {
       const token = response!.body.token;
       expect(token).not.be.empty;
     });
+    cy.wait('@interceptedUcenecRequest',{ timeout: 20000 }).then(({ response }) => {
+      expect(response!.statusCode).to.equal(200)
+      expect(response!.body.oseba.tip[0]).equal('UCENEC');
+      expect(response!.body.oseba._id).not.be.empty;
+    });
     //wait for profil response and intercept, then test the body id and tip
     cy.wait('@interceptedProfilRequest',{ timeout: 20000 }).then(({ response }) => {
       root_id = response!.body.oseba_id;
+      expect(response!.statusCode).to.equal(200)
       // TODO: every now and then it skips waiting for response and jumps to this tests
       expect(response!.body.tip[0]).equal('UCENEC');
       expect(root_id).not.be.empty;
@@ -69,14 +76,21 @@ describe('Prijava page urosjarc.com tests', () => {
   });
   it('should log in ucitelj page with correct credentials', () => {
     cy.intercept('POST', 'http://127.0.0.1:8080/auth/prijava').as('interceptedPrijavaRequest');
-    cy.intercept('GET', 'http://127.0.0.1:8080/auth/profil').as('interceptedProfilRequest'); // Alias the intercepted request
+    cy.intercept('GET', 'http://127.0.0.1:8080/auth/profil').as('interceptedProfilRequest');
+    cy.intercept('GET', 'http://127.0.0.1:8080/ucitelj').as('interceptedUciteljRequest');
     let root_id = '';
     prijava('ucitelj', 'geslo')
     //click prijava
     cy.xpath('//app-public-prijava/form/div/div[3]/button').click()
     cy.wait('@interceptedPrijavaRequest',{ timeout: 20000 }).then(({ response }) => {
       const token = response!.body.token;
+      expect(response!.statusCode).to.equal(200)
       expect(token).not.be.empty;
+    });
+    cy.wait('@interceptedUciteljRequest',{ timeout: 20000 }).then(({ response }) => {
+      expect(response!.statusCode).to.equal(200)
+      expect(response!.body.oseba.tip[0]).equal('UCITELJ');
+      expect(response!.body.oseba._id).not.be.empty;
     });
     //wait for profil response and intercept, then test the body id and tip
     cy.wait('@interceptedProfilRequest',{ timeout: 20000 }).then(({ response }) => {
@@ -84,6 +98,7 @@ describe('Prijava page urosjarc.com tests', () => {
       expect(response!.body.tip[0]).equal('UCITELJ');
       expect(root_id).not.be.undefined;
     });
+
     //test local storage
     cy.window().its('localStorage').invoke('getItem', 'root_id').as('rootId');
     cy.window().its('localStorage').invoke('getItem', 'token').as('token');
