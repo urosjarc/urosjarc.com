@@ -42,18 +42,20 @@ class Anotiraj_omego_stran {
     }
 
     fun parse_naloge(img: BufferedImage, stran: Stran, anos: Set<Anotacija>) {
-        for (anno in anos) {
-            val pass = img.povprecenPiksel(anno.okvir).is_red()
-            val hasEndDot = anno.text.endsWith(".")
-            if (hasEndDot && pass) {
+        for (ano in anos) {
+            val isRed = img.povprecenPiksel(ano.okvir).is_red()
+            val isInt = ano.text.removeSuffix(".").toIntOrNull() != null
+            val isFloat = ano.text.toFloatOrNull() != null
+            val hasEndDot = ano.text.endsWith('.')
+            if (isRed && (isInt || (isFloat && hasEndDot))) {
                 val okvirji = anos.okvirji  //Pridobivanje annotationov ki so rdeci in pripadajo isti vrstici in so levo od pike ter dovolj blizu
-                    .enakaVrstica(anno.okvir)
-                    .desno(okvir = anno.okvir)
-                    .filter { it.end.x - anno.okvir.start.x < 20 }
+                    .enakaVrstica(ano.okvir)
+                    .desno(okvir = ano.okvir)
+                    .filter { it.end.x - ano.okvir.start.x < 20 }
                     .filter { img.povprecenPiksel(it).is_red() }
                     .sortedBy { it.povprecje.x }.toMutableSet()
 
-                okvirji.add(anno.okvir)
+                okvirji.add(ano.okvir)
                 if (okvirji.povrsina in 30 * 30..300 * 50) {
                     stran.naloge.addAll(okvirji)
                 }
@@ -67,11 +69,14 @@ class Anotiraj_omego_stran {
          * Parsanje naslovov
          */
         val naslovi = mutableSetOf<Set<Okvir>>()
-        for (anno in anos) {
-            val nums = anno.text.split(".").map { it.toIntOrNull() }
-            if (!nums.contains(null) && img.povprecenPiksel(anno.okvir).is_red()) {
-                val okvirji = anos.okvirji.enakaVrstica(anno.okvir).desno(anno.okvir).sortedBy { it.povprecje.x }.toSet()
-                if (okvirji.povrsina in 150 * 150..1000 * 150) naslovi.add(okvirji)
+        for (ano in anos) {
+            val isRed = img.povprecenPiksel(ano.okvir).is_red()
+            val isFloat = ano.text.toFloatOrNull() != null
+            val hasMiddleDot = ano.text.indexOf('.') in 1..ano.text.length - 2
+            val isLong = ano.text.length >= 3
+            if (isRed && isLong && isFloat && hasMiddleDot) {
+                val okvirji = anos.okvirji.enakaVrstica(ano.okvir).desno(ano.okvir).sortedBy { it.povprecje.x }.toSet()
+                if (okvirji.povrsina in 150 * 50..1000 * 150) naslovi.add(okvirji)
             }
         }
         if (naslovi.isNotEmpty()) {
@@ -110,7 +115,7 @@ class Anotiraj_omego_stran {
         for (oklepaj in oklepaji) {
             val i = anotacije.indexOf(oklepaj)
             val prejsnji = anotacije[i - 1]
-            if (prejsnji.text.length == 1) returned.add(prejsnji)
+            if (prejsnji.text.length == 1 && this.slKoda(prejsnji.prvaCrka) > -1) returned.add(prejsnji)
         }
         return returned
     }
