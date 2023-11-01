@@ -1,5 +1,16 @@
 import 'cypress-xpath';
+import Ajv from "ajv";
+import {ucenecSchema} from "src/app/core/repos/scheme/ucenecSchema";
+
+// @ts-ignore
+import generateSchema from "generate-schema"
+import jsonResponse from "./ucenecSchema";
+const schema = generateSchema.json(jsonResponse);
+//delete the delete schema property
+delete schema['$schema'];
+const ajv = new Ajv();
 const domain = 'http://localhost:4200'
+
 describe('Prijava page urosjarc.com tests', () => {
   function prijava(username:string, geslo:string){
     cy.get('#mat-input-0').type(username, { force: true })
@@ -35,18 +46,30 @@ describe('Prijava page urosjarc.com tests', () => {
     cy.xpath('//app-public-prijava/form/div/div[3]/button').click()
 
     cy.wait('@interceptedPrijavaRequest',{ timeout: 20000 }).then(({ response }) => {
+      expect(response!.statusCode).to.equal(200);
       const token = response!.body.token;
       expect(token).not.be.empty;
     });
     cy.wait('@interceptedUcenecRequest',{ timeout: 20000 }).then(({ response }) => {
-      expect(response!.statusCode).to.equal(200)
-      expect(response!.body.oseba.tip[0]).equal('UCENEC');
-      expect(response!.body.oseba._id).not.be.empty;
+
+      expect(response!.statusCode).to.equal(200);
+
+      // validate json schema
+      const validate = ajv.compile(schema);
+      const isValid = validate(response!.body);
+      expect(isValid).to.be.true;
+
+
+      expect(response!.body.oseba.tip[0]).to.equal('UCENEC');
+      expect(response!.body.oseba._id).to.not.be.empty;
+
+      // test it the response json object has keys
+      expect(Object.keys(response!.body).length).to.be.gt(0);
     });
     //wait for profil response and intercept, then test the body id and tip
     cy.wait('@interceptedProfilRequest',{ timeout: 20000 }).then(({ response }) => {
-      root_id = response!.body.oseba_id;
       expect(response!.statusCode).to.equal(200)
+      root_id = response!.body.oseba_id;
       // TODO: every now and then it skips waiting for response and jumps to this tests
       expect(response!.body.tip[0]).equal('UCENEC');
       expect(root_id).not.be.empty;
