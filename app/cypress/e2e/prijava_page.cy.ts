@@ -1,13 +1,15 @@
 import 'cypress-xpath';
 import Ajv from "ajv";
-import {ucenecSchema} from "src/app/core/repos/scheme/ucenecSchema";
 
 // @ts-ignore
 import generateSchema from "generate-schema"
-import jsonResponse from "./ucenecSchema";
-const schema = generateSchema.json(jsonResponse);
-//delete the delete schema property
-delete schema['$schema'];
+import ucenecResponse from "./ucenecResponse";
+import uciteljResponse from "./uciteljResponse";
+const ucenecSchema = generateSchema.json(ucenecResponse);
+const uciteljSchema = generateSchema.json(uciteljResponse);
+//delete the delete ucenecSchema property
+delete ucenecSchema['$schema'];
+delete uciteljSchema['$schema'];
 const ajv = new Ajv();
 const domain = 'http://localhost:4200'
 
@@ -51,20 +53,16 @@ describe('Prijava page urosjarc.com tests', () => {
       expect(token).not.be.empty;
     });
     cy.wait('@interceptedUcenecRequest',{ timeout: 20000 }).then(({ response }) => {
-
+      const validate = ajv.compile(ucenecSchema);
+      const isValid = validate(response!.body);
       expect(response!.statusCode).to.equal(200);
 
-      // validate json schema
-      const validate = ajv.compile(schema);
-      const isValid = validate(response!.body);
       expect(isValid).to.be.true;
-
 
       expect(response!.body.oseba.tip[0]).to.equal('UCENEC');
       expect(response!.body.oseba._id).to.not.be.empty;
 
-      // test it the response json object has keys
-      expect(Object.keys(response!.body).length).to.be.gt(0);
+
     });
     //wait for profil response and intercept, then test the body id and tip
     cy.wait('@interceptedProfilRequest',{ timeout: 20000 }).then(({ response }) => {
@@ -111,7 +109,11 @@ describe('Prijava page urosjarc.com tests', () => {
       expect(token).not.be.empty;
     });
     cy.wait('@interceptedUciteljRequest',{ timeout: 20000 }).then(({ response }) => {
-      expect(response!.statusCode).to.equal(200)
+      const validate = ajv.compile(uciteljSchema);
+      const isValid = validate(response!.body);
+      expect(response!.statusCode).to.equal(200);
+
+      expect(isValid).to.be.true;
       expect(response!.body.oseba.tip[0]).equal('UCITELJ');
       expect(response!.body.oseba._id).not.be.empty;
     });
