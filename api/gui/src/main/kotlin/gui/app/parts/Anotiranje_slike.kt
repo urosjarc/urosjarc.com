@@ -194,10 +194,7 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
         val tip = (am.target as MenuItem).userData as Anotacija.Tip? ?: Anotacija.Tip.NEZNANO
         when (akcija) {
             Akcija.ODSTRANI -> this.stran.odstrani(okvirji = this.userOkvirji)
-            Akcija.USTVARI -> {
-                println("Ustvari $tip anotacijo $okvir")
-                this.stran.dodaj(okvirji = setOf(okvir), tip = tip)
-            }
+            Akcija.USTVARI -> this.stran.dodaj(okvirji = setOf(okvir), tip = tip)
             Akcija.IZBERI -> this.stran.izberi(okvirji = this.userOkvirji, tip = tip)
         }
 
