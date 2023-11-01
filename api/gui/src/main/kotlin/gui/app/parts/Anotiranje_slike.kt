@@ -92,8 +92,8 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
         this.dodajCM.setOnAction { this.onContextAction(am = it, akcija = Akcija.IZBERI) }
         this.ustvariM.setOnAction { this.onContextAction(am = it, akcija = Akcija.USTVARI) }
         this.odstraniMI.setOnAction { this.onContextAction(am = it, akcija = Akcija.ODSTRANI) }
-        this.self.setOnKeyPressed { println("key"); this.IMG.pobrisi_ozadje() }
-        this.self.setOnKeyReleased { println("key release"); this.na_novo_narisi_anotacije_v_ozadju() }
+        this.self.setOnKeyPressed { this.IMG.pobrisi_ozadje() }
+        this.self.setOnKeyReleased { this.na_novo_narisi_anotacije_v_ozadju() }
     }
 
     fun init(slika: BufferedImage, stran: Stran?) {
@@ -122,7 +122,7 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
             stran.naloge.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NALOGE.value, round = true) }
             stran.podnaloge.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.PODNALOGE.value, round = true) }
             stran.naslov.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NASLOV.value, round = true) }
-            stran.teorija.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.TEORIJA.value, round = true) }
+            stran.teorija.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.TEORIJA.value, round = false) }
             stran.dodatno.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.DODATNO.value, round = false) }
         }
         this.userOkvirji.forEach { this.IMG.narisi_okvir(it, Color.BLACK, round = false) }

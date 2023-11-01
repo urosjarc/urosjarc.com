@@ -36,7 +36,7 @@ class Stran(val okvir: Okvir, val anotacije: Set<Anotacija>) {
             Anotacija.Tip.NALOGA -> this.naloge.addAll(okvirji)
             Anotacija.Tip.PODNALOGA -> this.podnaloge.addAll(okvirji)
             Anotacija.Tip.NOGA -> this.noga.addAll(okvirji)
-            Anotacija.Tip.DODATNO -> this.noga.addAll(okvirji)
+            Anotacija.Tip.DODATNO -> this.dodatno.addAll(okvirji)
         }
     }
 

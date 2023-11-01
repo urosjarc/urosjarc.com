@@ -35,9 +35,9 @@ enum class BarveAnotacij(val value: Color) {
     NOGA(Color.BLACK),
     NALOGE(Color.DEEPSKYBLUE),
     PODNALOGE(Color.MAGENTA),
-    NASLOV(Color.BLUE),
+    NASLOV(Color.GREEN),
     TEORIJA(Color.BLUEVIOLET),
-    DODATNO(Color.GREEN)
+    DODATNO(Color.RED)
 }
 
 class Procesiranje_slike : Procesiranje_slike_Ui() {
