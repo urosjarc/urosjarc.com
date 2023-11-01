@@ -42,7 +42,6 @@ abstract class Anotiranje_slike_Ui : KoinComponent {
     enum class Akcija { ODSTRANI, USTVARI, IZBERI }
 
     val ustvariM = Menu("Ustvari...")
-    val odstraniMI = MenuItem("Odstrani...")
     val dodajCM = ContextMenu()
     val ostaloCM = ContextMenu()
 }
@@ -67,11 +66,11 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
         // Dodajanje tipov anotacij v context menu slike
         Anotacija.Tip.entries.forEach { tip ->
             when (tip) {
+                Anotacija.Tip.NEZNANO -> {}
                 Anotacija.Tip.DODATNO -> {
                     val menuItem = MenuItem(tip.name).also { it.userData = tip }
                     this.ustvariM.items.add(menuItem)
                 }
-
                 else -> {
                     val menuItem = MenuItem(tip.name).also { it.userData = tip }
                     val menuItem2 = MenuItem(tip.name).also { it.userData = tip }
@@ -80,7 +79,7 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
                 }
             }
         }
-        this.ostaloCM.items.addAll(this.odstraniMI, this.ustvariM)
+        this.ostaloCM.items.addAll(this.ustvariM)
 
         // Popravi anotacije ce se slika zoomira
         this.IMG.zoom.opazuj { this.na_novo_narisi_anotacije_v_ozadju() }
@@ -91,7 +90,6 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
         this.resetirajB.setOnAction { this.anotiraj_stran_in_na_novo_narisi_anotacije() }
         this.dodajCM.setOnAction { this.onContextAction(am = it, akcija = Akcija.IZBERI) }
         this.ustvariM.setOnAction { this.onContextAction(am = it, akcija = Akcija.USTVARI) }
-        this.odstraniMI.setOnAction { this.onContextAction(am = it, akcija = Akcija.ODSTRANI) }
         this.self.setOnKeyPressed { this.IMG.pobrisi_ozadje() }
         this.self.setOnKeyReleased { this.na_novo_narisi_anotacije_v_ozadju() }
     }
@@ -151,14 +149,14 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
 
     private fun onMousePressed(me: MouseEvent) {
         this.zadnjiMouseEvent = me
-        if (me.isPrimaryButtonDown || me.isSecondaryButtonDown) this.IMG.scrollPane.isPannable = false
+        if (me.isPrimaryButtonDown || me.isSecondaryButtonDown || me.isMiddleButtonDown) this.IMG.scrollPane.isPannable = false
         this.dragOkvir.start = me.vektor
         this.mouseOkvirji = setOf()
         this.na_novo_narisi_anotacije_v_ozadju()
     }
 
     private fun onMouseDragg(me: MouseEvent) {
-        if (!me.isPrimaryButtonDown && !me.isSecondaryButtonDown) return
+        if (!me.isPrimaryButtonDown && !me.isSecondaryButtonDown && !me.isMiddleButtonDown) return
         this.IMG.backgroundP.children.remove(this.dragRectangle)
 
         this.dragOkvir.end = me.vektor
@@ -171,7 +169,7 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
 
     private fun onMouseReleased(me: MouseEvent) {
         this.IMG.scrollPane.isPannable = true
-        if (!this.zadnjiMouseEvent.isPrimaryButtonDown && !this.zadnjiMouseEvent.isSecondaryButtonDown) return
+        if (!this.zadnjiMouseEvent.isPrimaryButtonDown && !this.zadnjiMouseEvent.isSecondaryButtonDown && !this.zadnjiMouseEvent.isMiddleButtonDown) return
 
         this.dragOkvir.end = me.vektor
         this.dragRectangle = this.dragOkvir.vRectangle(round = false)
@@ -186,12 +184,14 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
 
         if (this.zadnjiMouseEvent.isPrimaryButtonDown) this.dodajCM.show(this.IMG.self, me.screenX, me.screenY)
         if (this.zadnjiMouseEvent.isSecondaryButtonDown) this.ostaloCM.show(this.IMG.self, me.screenX, me.screenY)
+        if (this.zadnjiMouseEvent.isMiddleButtonDown) this.onContextAction(am=null, akcija = Akcija.ODSTRANI)
     }
 
-    private fun onContextAction(am: ActionEvent, akcija: Akcija) {
+    private fun onContextAction(am: ActionEvent?, akcija: Akcija) {
         val okvir = this.IMG.vOkvir(r = this.dragRectangle)
 
-        val tip = (am.target as MenuItem).userData as Anotacija.Tip? ?: Anotacija.Tip.NEZNANO
+        val tip = if(am == null) Anotacija.Tip.NEZNANO else (am.target as MenuItem).userData as Anotacija.Tip
+
         when (akcija) {
             Akcija.ODSTRANI -> this.stran.odstrani(okvirji = this.userOkvirji)
             Akcija.USTVARI -> this.stran.dodaj(okvirji = setOf(okvir), tip = tip)
