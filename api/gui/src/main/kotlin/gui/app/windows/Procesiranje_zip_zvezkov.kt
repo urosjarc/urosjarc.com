@@ -6,8 +6,8 @@ import gui.app.widgets.BarveSlik
 import gui.app.widgets.Izberi_zip_zvezek
 import gui.app.widgets.Procesiranje_slike
 import gui.base.App
-import gui.domain.Odsek
-import gui.domain.Stran
+import gui.domain.*
+import gui.extend.izrezi
 import gui.extend.shrani
 import gui.services.LogService
 import gui.use_cases.Razrezi_stran
@@ -60,60 +60,115 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
     private fun razrezi_anotiran_zvezek() {
         val self = this
         GlobalScope.launch(Dispatchers.Main) {
+            val zip_save_dir = self.IZBERI.zip_save_dir
+            val zvezek = ZipZvezek(zip_save_dir.name)
+            val strani_dirs = zip_save_dir.listFiles()?.sortedBy { it.name.toInt() } ?: listOf()
+            var zadnjiOdsek: Odsek? = null
 
-            val rootDir = self.IZBERI.zip_save_dir
-            val files = rootDir.listFiles()?.sortedBy { it.name.toInt() } ?: return@launch
-            for ((k, stranDir) in files.withIndex()) {
+            //Sparsaj
+            for (stran_dir in strani_dirs) {
 
-                if (stranDir.list()!!.isEmpty()) continue
+                //Preskoci prazne strani
+                if (stran_dir.list()!!.isEmpty()) continue
 
-                val node = self.IZBERI.FLOW.najdi(ime = "$k")
+                //Dobi trenutno število strani
+                val st_strani = stran_dir.name
+
+                //Pobarvaj gumb ki se procesira
+                val node = self.IZBERI.FLOW.najdi(ime = st_strani)
                 val style = node?.style
-                self.IZBERI.FLOW.posodobi(ime = "$k", color = "orange")
-
+                self.IZBERI.FLOW.posodobi(ime = st_strani, color = "orange")
                 delay(1)
 
-                val imgFile = File(stranDir, Datoteke.POPRAVLJANJE_PNG.ime)
-                val stranFile = File(stranDir, Datoteke.STRAN_JSON.ime)
-                val nalogeDir = File(stranDir, Datoteke.NALOGE.ime)
-                val stran = self.json.dekodiraj<Stran>(value = stranFile.readText())
+                //Nalozi sliko in json strani
+                val stranImg = withContext(Dispatchers.IO) {
+                    val imgFile = File(stran_dir, Datoteke.POPRAVLJANJE_PNG.ime)
+                    ImageIO.read(imgFile)
+                }
+                val stran = self.json.dekodiraj<Stran>(value = File(stran_dir, Datoteke.STRAN_JSON.ime).readText())
 
-                nalogeDir.deleteRecursively()
-                nalogeDir.mkdir()
+                for (odsek in self.razrezi_stran.zdaj(stran = stran)) {
 
-                for ((i, odsek) in self.razrezi_stran.zdaj(stran = stran).withIndex()) {
+                    when (odsek.tip) {
+                        Odsek.Tip.PODNALOGA -> throw Throwable("Fail!")
+                        Odsek.Tip.NEZNANO -> throw Throwable("Fail!")
+                        Odsek.Tip.TEORIJA -> {
+                            zvezek.tematike.last().teorije.add(ZipTeorija(img = stranImg.izrezi(odsek.okvir)))
+                        }
 
-                    if (!listOf(Odsek.Tip.NALOGA, Odsek.Tip.GLAVA).contains(odsek.tip)) continue
+                        Odsek.Tip.NASLOV -> {
+                            val imeTematike = odsek.tekst.split(" ").filterIndexed { index, s -> index != 0 }.joinToString(" ")
+                            zvezek.tematike.add(ZipTematika(ime = imeTematike))
+                        }
 
-                    val originalImg = withContext(Dispatchers.IO) { ImageIO.read(imgFile) }
-                    val okvirOdseka = odsek.okvir
-                    val odsekImg = originalImg.getSubimage(okvirOdseka.start.x, okvirOdseka.start.y, okvirOdseka.sirina, okvirOdseka.visina)
-                    val nalogaDir = File(nalogeDir, "$i")
-                    nalogaDir.mkdir()
-                    odsekImg.shrani(File(nalogeDir, "$i.png"))
+                        Odsek.Tip.NALOGA -> {
+                            val zipNaloga = ZipNaloga(text = odsek.tekst, img = stranImg.izrezi(odsek.okvir))
+                            odsek.pododseki.map { it.okvir }.forEach {
+                                zipNaloga.podnaloge.add(ZipPodnaloga(img = stranImg.getSubimage(it.start.x, it.start.y, it.sirina, it.visina)))
+                            }; zvezek.tematike.last().naloge.add(zipNaloga)
+                        }
 
+                        Odsek.Tip.GLAVA -> {
+                            when (zadnjiOdsek?.tip) {
+                                Odsek.Tip.NALOGA -> {
+                                    val zadnjaNaloga = zvezek.tematike.last().naloge.last()
+                                    odsek.pododseki.map { it.okvir }.forEach {
+                                        zadnjaNaloga.podnaloge.add(
+                                            ZipPodnaloga(
+                                                img = stranImg.getSubimage(
+                                                    it.start.x,
+                                                    it.start.y,
+                                                    it.sirina,
+                                                    it.visina
+                                                )
+                                            )
+                                        )
+                                    }
+                                }
 
-                    for ((j, pododsek) in odsek.pododseki.withIndex()) {
+                                Odsek.Tip.TEORIJA -> {
+                                    val zadnjaTematika = zvezek.tematike.last()
+                                    odsek.pododseki.map { it.okvir }.forEach {
+                                        zadnjaTematika.teorije.add(
+                                            ZipTeorija(
+                                                img = stranImg.getSubimage(
+                                                    it.start.x,
+                                                    it.start.y,
+                                                    it.sirina,
+                                                    it.visina
+                                                )
+                                            )
+                                        )
+                                    }
+                                }
 
-                        val okvirPododseka = pododsek.okvir
-                        try {
-                            val img = originalImg.getSubimage(
-                                okvirPododseka.start.x,
-                                okvirPododseka.start.y,
-                                okvirPododseka.sirina,
-                                okvirPododseka.visina
-                            )
-                            val pododsekImg = File(nalogaDir, "$j.png")
-                            img.shrani(pododsekImg)
-                        } catch (err: Throwable) {
-                            println("\n\n${originalImg.width} ${originalImg.height} $err")
-                            println("${odsek.okvir} ${odsek.okvir.sirina} ${odsek.okvir.visina}")
-                            println("$i $j $okvirOdseka ${okvirOdseka.sirina} ${okvirOdseka.visina}")
+                                else -> throw Throwable("Fail!")
+                            }
                         }
                     }
+
+                    zadnjiOdsek = odsek
                 }
 
                 node?.style = style
+            }
+
+            //Shrani
+            val zvezek_dir = File(self.IZBERI.zip_save_dir, "../${zvezek.ime}_db").also { it.deleteRecursively(); it.mkdir() }
+            zvezek.tematike.forEachIndexed { st_tematike, tematika ->
+                val tematika_dir = File(zvezek_dir, "$st_tematike. ${tematika.ime}").also { it.mkdir() }
+                tematika.teorije.forEachIndexed { st_teorije, teorija ->
+                    val teorija_dir = File(tematika_dir, "teorija").also { it.mkdir() }
+                    teorija.img.shrani(File(teorija_dir, "teorija_$st_teorije.png"))
+                }
+                tematika.naloge.forEachIndexed { st_naloge, naloga ->
+                    val naloga_dir = File(tematika_dir, "$st_naloge").also { it.mkdir() }
+                    naloga.img.shrani(File(naloga_dir, "naloga.png"))
+                    File(naloga_dir, "besedilo.txt").writeText(naloga.text)
+                    naloga.podnaloge.forEachIndexed { st_podnaloge, podnaloga ->
+                        podnaloga.img.shrani(File(naloga_dir, "podnaloga_${st_podnaloge}.png"))
+                    }
+                }
             }
         }
     }

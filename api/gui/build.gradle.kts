@@ -24,4 +24,5 @@ dependencies {
     this.implementation("net.coobird:thumbnailator:0.4.20")
     this.implementation("com.google.cloud:google-cloud-vision:3.21.0")
     this.implementation("net.sourceforge.tess4j:tess4j:5.8.0")
+    this.implementation("org.mongodb:bson-kotlinx:4.10.1")
 }
