@@ -1,6 +1,7 @@
 package gui.app.elements
 
 import javafx.fxml.FXML
+import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.layout.FlowPane
 import org.koin.core.component.KoinComponent
@@ -18,6 +19,10 @@ class FlowPane_Datoteka : FlowPane_Datoteka_Ui() {
         button.style = "-fx-background-color: $barva"
         button.setOnAction { onAction() }
         this.self.children.add(button)
+    }
+
+    fun najdi(ime: String): Node? {
+        return this.self.children.find { it.userData == ime }
     }
 
     fun posodobi(ime: String, color: String) {

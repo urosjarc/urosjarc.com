@@ -25,9 +25,6 @@ abstract class Izberi_zip_zvezek_Ui : KoinComponent {
     lateinit var flowPane_datoteka_Controller: FlowPane_Datoteka
 
     @FXML
-    lateinit var progressBar: ProgressBar
-
-    @FXML
     lateinit var razreziB: Button
 
     val LIST get() = this.listView_datoteka_Controller

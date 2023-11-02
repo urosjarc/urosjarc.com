@@ -60,16 +60,18 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
     private fun razrezi_anotiran_zvezek() {
         val self = this
         GlobalScope.launch(Dispatchers.Main) {
-            self.IZBERI.progressBar.progress = 0.0
 
             val rootDir = self.IZBERI.zip_save_dir
             val files = rootDir.listFiles()?.sortedBy { it.name.toInt() } ?: return@launch
             for ((k, stranDir) in files.withIndex()) {
 
-                self.IZBERI.progressBar.progress = k / files.size.toDouble()
-                delay(1)
-
                 if (stranDir.list()!!.isEmpty()) continue
+
+                val node = self.IZBERI.FLOW.najdi(ime = "$k")
+                val style = node?.style
+                self.IZBERI.FLOW.posodobi(ime = "$k", color = "orange")
+
+                delay(1)
 
                 val imgFile = File(stranDir, Datoteke.POPRAVLJANJE_PNG.ime)
                 val stranFile = File(stranDir, Datoteke.STRAN_JSON.ime)
@@ -81,11 +83,11 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
 
                 for ((i, odsek) in self.razrezi_stran.zdaj(stran = stran).withIndex()) {
 
-                    if (odsek.tip != Odsek.Tip.NALOGA) continue
+                    if (!listOf(Odsek.Tip.NALOGA, Odsek.Tip.GLAVA).contains(odsek.tip)) continue
 
-                    val originalImg = ImageIO.read(imgFile)
+                    val originalImg = withContext(Dispatchers.IO) { ImageIO.read(imgFile) }
                     val okvirOdseka = odsek.okvir
-                    val odsekImg = originalImg.getSubimage(okvirOdseka.start.x, okvirOdseka.start.y, okvirOdseka.sirina - 1, okvirOdseka.visina - 1)
+                    val odsekImg = originalImg.getSubimage(okvirOdseka.start.x, okvirOdseka.start.y, okvirOdseka.sirina, okvirOdseka.visina)
                     val nalogaDir = File(nalogeDir, "$i")
                     nalogaDir.mkdir()
                     odsekImg.shrani(File(nalogeDir, "$i.png"))
@@ -94,16 +96,24 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
                     for ((j, pododsek) in odsek.pododseki.withIndex()) {
 
                         val okvirPododseka = pododsek.okvir
-                        val img = originalImg.getSubimage(
-                            okvirPododseka.start.x,
-                            okvirPododseka.start.y,
-                            okvirPododseka.sirina - 1,
-                            okvirPododseka.visina - 1
-                        )
-                        val pododsekImg = File(nalogaDir, "$j.png")
-                        img.shrani(pododsekImg)
+                        try {
+                            val img = originalImg.getSubimage(
+                                okvirPododseka.start.x,
+                                okvirPododseka.start.y,
+                                okvirPododseka.sirina,
+                                okvirPododseka.visina
+                            )
+                            val pododsekImg = File(nalogaDir, "$j.png")
+                            img.shrani(pododsekImg)
+                        } catch (err: Throwable) {
+                            println("\n\n${originalImg.width} ${originalImg.height} $err")
+                            println("${odsek.okvir} ${odsek.okvir.sirina} ${odsek.okvir.visina}")
+                            println("$i $j $okvirOdseka ${okvirOdseka.sirina} ${okvirOdseka.visina}")
+                        }
                     }
                 }
+
+                node?.style = style
             }
         }
     }
