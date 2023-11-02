@@ -63,11 +63,11 @@ describe('Kontakt page urosjarc.com tests', () => {
         '+386-40664/247'
     ]
     //fill out the form with valid information
-    for (let i = 0; i < stevilkeFormati.length; i++) {
+    for (const item of stevilkeFormati) {
       cy.get('#mat-input-0').type('Danijel Korbar');
       cy.get('#mat-input-1').type('korbar41@gmail.com');
       cy.get('#mat-input-3').type('To je testno sporočilo');
-      cy.get('#mat-input-2').type(stevilkeFormati[i]);
+      cy.get('#mat-input-2').type(item);
       cy.xpath('//app-public-kontakt/form/div/div[4]/button').click();
       cy.wait('@interceptedKontaktRequest', { timeout: 20000 }).then(({ response }) => {
         expect(response!.statusCode).to.equal(200);
