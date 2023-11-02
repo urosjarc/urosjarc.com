@@ -152,7 +152,7 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
 
     fun ustvari_direktorij() {
         this.log.info("Ustvari direktorij za trenutno sliko.")
-        this.slika_dir().mkdir()
+        this.slika_dir().mkdirs()
     }
 
     fun shrani_sliko() {
@@ -169,6 +169,6 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
         this.log.info("Shrani stran: $stranFile")
     }
 
-    fun slika_dir(dat: Datoteke? = null, stSlike: Int? = null) = File(this.IZBERI.zip_save_dir, "${stSlike ?: this.PROCES.stSlike}/${dat?.ime}")
+    fun slika_dir(dat: Datoteke? = null, stSlike: Int? = null) = File(this.IZBERI.zip_save_dir, "${stSlike ?: this.PROCES.stSlike}/${dat?.ime ?: ""}")
 
 }
