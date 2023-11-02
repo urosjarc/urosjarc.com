@@ -7,7 +7,9 @@ import gui.app.widgets.Izberi_zip_zvezek
 import gui.app.widgets.Procesiranje_slike
 import gui.base.App
 import gui.domain.*
+import gui.extend.boundBox
 import gui.extend.izrezi
+import gui.extend.odstrani_prazen_prostor
 import gui.extend.shrani
 import gui.services.LogService
 import gui.use_cases.Razrezi_stran
@@ -102,9 +104,11 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
                         }
 
                         Odsek.Tip.NALOGA -> {
-                            val zipNaloga = ZipNaloga(text = odsek.tekst, img = stranImg.izrezi(odsek.okvir))
+                            val nalogaImg = stranImg.izrezi(odsek.okvir).odstrani_prazen_prostor()
+                            val zipNaloga = ZipNaloga(text = odsek.tekst, img = nalogaImg)
                             odsek.pododseki.map { it.okvir }.forEach {
-                                zipNaloga.podnaloge.add(ZipPodnaloga(img = stranImg.getSubimage(it.start.x, it.start.y, it.sirina, it.visina)))
+                                val podnalogaImg = stranImg.getSubimage(it.start.x, it.start.y, it.sirina, it.visina).odstrani_prazen_prostor()
+                                zipNaloga.podnaloge.add(ZipPodnaloga(img = podnalogaImg))
                             }; zvezek.tematike.last().naloge.add(zipNaloga)
                         }
 
@@ -113,32 +117,16 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
                                 Odsek.Tip.NALOGA -> {
                                     val zadnjaNaloga = zvezek.tematike.last().naloge.last()
                                     odsek.pododseki.map { it.okvir }.forEach {
-                                        zadnjaNaloga.podnaloge.add(
-                                            ZipPodnaloga(
-                                                img = stranImg.getSubimage(
-                                                    it.start.x,
-                                                    it.start.y,
-                                                    it.sirina,
-                                                    it.visina
-                                                )
-                                            )
-                                        )
+                                        val img = stranImg.getSubimage(it.start.x, it.start.y, it.sirina, it.visina).odstrani_prazen_prostor()
+                                        zadnjaNaloga.podnaloge.add(ZipPodnaloga(img = img))
                                     }
                                 }
 
                                 Odsek.Tip.TEORIJA -> {
                                     val zadnjaTematika = zvezek.tematike.last()
                                     odsek.pododseki.map { it.okvir }.forEach {
-                                        zadnjaTematika.teorije.add(
-                                            ZipTeorija(
-                                                img = stranImg.getSubimage(
-                                                    it.start.x,
-                                                    it.start.y,
-                                                    it.sirina,
-                                                    it.visina
-                                                )
-                                            )
-                                        )
+                                        val img = stranImg.getSubimage(it.start.x, it.start.y, it.sirina, it.visina).odstrani_prazen_prostor()
+                                        zadnjaTematika.teorije.add(ZipTeorija(img = img))
                                     }
                                 }
 

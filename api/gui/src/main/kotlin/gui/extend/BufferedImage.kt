@@ -50,7 +50,7 @@ fun BufferedImage.shrani(file: File) {
 
 fun BufferedImage.izrezi(okvir: Okvir): BufferedImage = this.getSubimage(okvir.start.x, okvir.start.y, okvir.sirina, okvir.visina)
 
-fun BufferedImage.copiraj(): BufferedImage {
+fun BufferedImage.kopiraj(): BufferedImage {
     val b = BufferedImage(this.getWidth(), this.getHeight(), this.getType())
     val g: Graphics = b.graphics
     g.drawImage(this, 0, 0, null)
@@ -74,14 +74,20 @@ fun BufferedImage.povprecenPiksel(okvir: Okvir): Piksel {
 
     for (y in okvir.start.y..okvir.end.y) {
         for (x in okvir.start.x..okvir.end.x) {
-            val pixel = this.HSV(x, y)
+            val pixel = this.piksel(x, y)
             if (!pixel.is_white()) pixels.add(pixel)
         }
     }
     return Piksel.average(pixels)
 }
 
-fun BufferedImage.HSV(x: Int, y: Int): Piksel {
+fun BufferedImage.odstrani_prazen_prostor(margin: Int = 10): BufferedImage {
+    var img = this.kopiraj()
+    img = img.izrezi(okvir = img.boundBox(margin = 0, countOn = { pix -> pix.is_black() }, stopOn = { it == 0 }))
+    return img.izrezi(okvir = img.boundBox(margin = margin, countOn = { pix -> pix.is_black() || pix.is_red() }, stopOn = { it > 2 }))
+}
+
+fun BufferedImage.piksel(x: Int, y: Int): Piksel {
     //Get RGB Value
     val rgb: Int = this.getRGB(x, y)
     //Convert to three separate channels
@@ -110,6 +116,7 @@ fun BufferedImage.zamegliSliko(radij: Int): BufferedImage {
 }
 
 fun BufferedImage.odstraniObrobo(maxWidth: Int): Pair<Int, BufferedImage> {
+    var widthCounter = 0
     for (i in 1..maxWidth) {
         val xStart = i
         val yStart = i
@@ -119,25 +126,20 @@ fun BufferedImage.odstraniObrobo(maxWidth: Int): Pair<Int, BufferedImage> {
 
         //Up down
         for (y in yStart until yEnd) {
-            val left = this.HSV(x = xStart, y = y)
-            val right = this.HSV(x = xEnd, y = y)
-            if (!left.is_black() || !right.is_black()) {
-                counter++
-            }
+            val left = this.piksel(x = xStart, y = y)
+            val right = this.piksel(x = xEnd, y = y)
+            if (left.is_black() || right.is_black()) counter++
         }
 
         //Left right
         for (x in xStart until xEnd) {
-            val up = this.HSV(y = yStart, x = x)
-            val down = this.HSV(y = yEnd, x = x)
-            if (!up.is_black() || !down.is_black()) {
-                counter++
-            }
+            val up = this.piksel(y = yStart, x = x)
+            val down = this.piksel(y = yEnd, x = x)
+            if (up.is_black() || down.is_black()) counter++
         }
 
-        if (counter == 0) {
-            return Pair(i, this.getSubimage(xStart, yStart, xEnd - xStart, yEnd - yStart))
-        }
+        if (counter == 0) widthCounter++
+        if (widthCounter >= 5) return Pair(i, this.getSubimage(xStart, yStart, xEnd - xStart, yEnd - yStart))
     }
     return Pair(0, this.getSubimage(0, 0, this.width, this.height))
 }
@@ -146,68 +148,64 @@ fun BufferedImage.rotiraj(angle: Double): BufferedImage {
     return ImageHelper.rotateImage(this, angle)
 }
 
-fun BufferedImage.boundBox(): Okvir {
-    val maxCount = 10
+fun BufferedImage.boundBox(margin: Int = 0, countOn: (Piksel) -> Boolean, stopOn: (Int) -> Boolean): Okvir {
     var start_y = 0
     var start_x = 0
-    var end_y = 0
-    var end_x = 0
+    var end_y = this.height
+    var end_x = this.width
 
     //up to down
-    var count = 0
-    start@ for (y in 0 until this.height) {
-        for (x in 0 until this.width) {
-            if (!this.HSV(x, y).is_white()) count++
-            if (count > maxCount) {
-                start_y = y
-                break@start
-            }
+    for (y in 0 until this.height) {
+        var count = 0
+        for (x in 0 until this.width) if (countOn(this.piksel(x, y))) count++
+        if (stopOn(count)) {
+            start_y = y; break
         }
     }
 
     //down to up
-    count = 0
-    start@ for (y in this.height - 1 downTo 0) {
-        for (x in 0 until this.width) {
-            if (!this.HSV(x, y).is_white()) count++
-            if (count > maxCount) {
-                end_y = y
-                break@start
-            }
+    for (y in this.height - 1 downTo 0) {
+        var count = 0
+        for (x in 0 until this.width) if (countOn(this.piksel(x, y))) count++
+        if (stopOn(count)) {
+            end_y = y; break
         }
     }
 
     //left to right
-    count = 0
-    start@ for (x in 0 until this.width) {
-        for (y in 0 until this.height) {
-            if (!this.HSV(x, y).is_white()) count++
-            if (count > maxCount) {
-                start_x = x
-                break@start
-            }
+    for (x in 0 until this.width) {
+        var count = 0
+        for (y in 0 until this.height) if (countOn(this.piksel(x, y))) count++
+        if (stopOn(count)) {
+            start_x = x; break
         }
     }
 
     //right to left
-    count = 0
-    start@ for (x in this.width - 1 downTo 0) {
-        for (y in 0 until this.height) {
-            if (!this.HSV(x, y).is_white()) count++
-            if (count > maxCount) {
-                end_x = x
-                break@start
-            }
+    for (x in this.width - 1 downTo 0) {
+        var count = 0
+        for (y in 0 until this.height) if (countOn(this.piksel(x, y))) count++
+        if (stopOn(count)) {
+            end_x = x; break
         }
     }
 
-    return Okvir(start = Vektor(x = start_x, y = start_y), end = Vektor(x = end_x, y = end_y))
+    return Okvir(
+        start = Vektor(
+            x = maxOf(0, start_x - margin),
+            y = maxOf(0, start_y - margin)
+        ),
+        end = Vektor(
+            x = minOf(this.width, end_x + margin),
+            y = minOf(this.height, end_y + margin)
+        )
+    )
 }
 
 val BufferedImage.okvir: Okvir get() = Okvir(start = Vektor(x = 0, y = 0), end = Vektor(x = this.width, y = this.height))
 
 fun BufferedImage.narisiMrezo(dx: Int = 100, dy: Int = 100, w: Int = 2, color: Color = Color.DARK_GRAY): BufferedImage {
-    val new = this.copiraj()
+    val new = this.kopiraj()
     for (x in dx..new.width - dx / 2 step dx) {
         for (y in dy / 2..new.height - dy / 2) {
             for (i in 0..w) {
@@ -231,7 +229,7 @@ fun BufferedImage.binarna(negativ: Boolean = false): BufferedImage {
     val bw = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
     for (y in 0 until height) {
         for (x in 0 until width) {
-            val p = this.HSV(x, y)
+            val p = this.piksel(x, y)
             val value = p.r + p.g + p.b
 
             if (value > 230 * 3) {

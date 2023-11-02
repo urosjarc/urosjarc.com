@@ -26,7 +26,10 @@ abstract class Popravljanje_slike_Ui : KoinComponent {
     lateinit var paddingS: Slider
 
     @FXML
-    lateinit var resetirajB: Button
+    lateinit var automaticnoB: Button
+
+    @FXML
+    lateinit var rocnoB: Button
 
     @FXML
     lateinit var potrdiB: Button
@@ -50,7 +53,8 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
         this.paddingS.valueProperty().addListener { _, _, _ -> this.posodobi_info_slike() }
         this.rotacijaS.setOnMouseReleased { this.pripravi_sliko() }
         this.paddingS.setOnMouseReleased { this.pripravi_sliko() }
-        this.resetirajB.setOnAction { this.resetiraj_celotno_sliko_na_default_vrednosti() }
+        this.automaticnoB.setOnAction { this.resetiraj_celotno_sliko_na_default_vrednosti() }
+        this.rocnoB.setOnAction { this.posodobi_info_slike(reset = true); this.pripravi_sliko() }
         this.potrdiB.setOnAction { this.potrdi_trenutne_nastavitve() }
         this.preskociB.setOnAction { this.preskociSliko.value = this.slika }
     }
