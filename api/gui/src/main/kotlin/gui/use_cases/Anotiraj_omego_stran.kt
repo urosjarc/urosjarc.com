@@ -86,25 +86,17 @@ class Anotiraj_omego_stran {
     }
 
     fun dodaj_anotacije_podnalog(stran: Stran, anos: List<Anotacija>) {
-        val crkaOklepaj = vseCrkeZOklepajem(anos)
-        while (crkaOklepaj.isNotEmpty()) {
-            //Najdi kandidate za grupo
-            val ano = crkaOklepaj.removeAt(0)
-            val kandidati = mutableListOf(ano)
-            for (i in 0 until crkaOklepaj.size) {
-                if (crkaOklepaj[i].okvir.enakaVrstica(ano.okvir)) kandidati.add(crkaOklepaj[i])
-            }
-            kandidati.sortBy { it.okvir.start.x }
-            kandidati.forEach { crkaOklepaj.remove(it) }
+        val crkaOklepaj = vseCrkeZOklepajem(anos).toSet()
+        val matrika = crkaOklepaj.matrika
 
-            //Odstrani neprimerne kandidate
-            val grupa = mutableListOf(kandidati[0])
-            for (i in 1 until kandidati.size) {
-                if (this.slKoda(grupa.last().prvaCrka) - this.slKoda(kandidati[i].prvaCrka) == -1) {
-                    grupa.add(kandidati[i])
+        for (kandidati in matrika) {
+            val vrstica = mutableListOf(kandidati.first())
+            for (x in 1 until kandidati.size) {
+                if (this.slKoda(vrstica.last().prvaCrka) - this.slKoda(kandidati[x].prvaCrka) == -1) {
+                    vrstica.add(kandidati[x])
                 }
             }
-            stran.podnaloge.addAll(grupa.toSet().okvirji)
+            stran.podnaloge.addAll(vrstica.toSet().okvirji)
         }
     }
 
