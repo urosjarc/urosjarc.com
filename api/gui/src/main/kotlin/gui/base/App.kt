@@ -35,7 +35,6 @@ object App {
         this.factoryOf(::Najdi_vse_slike)
         this.factoryOf(::Anotiraj_omego_stran)
         this.factoryOf(::Razrezi_stran)
-        this.factoryOf(::Razrezi_odsek)
     }
 
     fun pripravi_DI() {

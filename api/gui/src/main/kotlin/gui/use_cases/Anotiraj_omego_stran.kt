@@ -12,17 +12,17 @@ class Anotiraj_omego_stran {
     fun zdaj(img: BufferedImage, anotacije: List<Anotacija>): Stran {
         val stran = Stran(okvir = img.okvir, anotacije = anotacije.toSet())
 
-        this.parse_footer(stran = stran, anos = anotacije.toSet())
-        this.parse_naloge(img = img, stran = stran, anos = anotacije.toSet())
-        this.parse_podnaloge(stran = stran, anos = anotacije)
-        this.parse_naslov(img = img, stran = stran, anos = anotacije.toSet())
-        this.parse_teorija(img = img, stran = stran, anos = anotacije.toSet())
+        this.dodaj_anotacije_noge(stran = stran, anos = anotacije.toSet())
+        this.dodaj_anotacije_nalog(img = img, stran = stran, anos = anotacije.toSet())
+        this.dodaj_anotacije_podnalog(stran = stran, anos = anotacije)
+        this.dodaj_anotacije_naslovov(img = img, stran = stran, anos = anotacije.toSet())
+        this.dodaj_anotacije_teorij(img = img, stran = stran, anos = anotacije.toSet())
 
         return stran
     }
 
 
-    fun parse_teorija(img: BufferedImage, stran: Stran, anos: Set<Anotacija>) {
+    fun dodaj_anotacije_teorij(img: BufferedImage, stran: Stran, anos: Set<Anotacija>) {
         if (stran.naslov.isNotEmpty()) {
             val zgornja_meja = stran.naslov.najnizjaMeja(default = img.height)
             val najnizja_spodnja_meja = stran.noga.najvisjaMeja(default = img.height)
@@ -32,7 +32,7 @@ class Anotiraj_omego_stran {
         }
     }
 
-    fun parse_footer(stran: Stran, anos: Set<Anotacija>) {
+    fun dodaj_anotacije_noge(stran: Stran, anos: Set<Anotacija>) {
         val najnizji = anos.okvirji.najnizji
         if (najnizji != null) {
             val y = najnizji.povprecje.y
@@ -41,7 +41,7 @@ class Anotiraj_omego_stran {
         }
     }
 
-    fun parse_naloge(img: BufferedImage, stran: Stran, anos: Set<Anotacija>) {
+    fun dodaj_anotacije_nalog(img: BufferedImage, stran: Stran, anos: Set<Anotacija>) {
         for (ano in anos) {
             val isRed = img.povprecenPiksel(ano.okvir).is_red()
             val isInt = ano.text.removeSuffix(".").toIntOrNull() != null
@@ -64,7 +64,7 @@ class Anotiraj_omego_stran {
         if (stran.naloge.isNotEmpty()) stran.naloge
     }
 
-    fun parse_naslov(img: BufferedImage, stran: Stran, anos: Set<Anotacija>) {
+    fun dodaj_anotacije_naslovov(img: BufferedImage, stran: Stran, anos: Set<Anotacija>) {
         /**
          * Parsanje naslovov
          */
@@ -85,7 +85,7 @@ class Anotiraj_omego_stran {
         }
     }
 
-    fun parse_podnaloge(stran: Stran, anos: List<Anotacija>) {
+    fun dodaj_anotacije_podnalog(stran: Stran, anos: List<Anotacija>) {
         val crkaOklepaj = vseCrkeZOklepajem(anos)
         while (crkaOklepaj.isNotEmpty()) {
             //Najdi kandidate za grupo

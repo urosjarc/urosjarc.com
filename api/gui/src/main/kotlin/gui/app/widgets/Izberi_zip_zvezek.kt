@@ -6,6 +6,8 @@ import gui.base.Opazovan
 import gui.services.LogService
 import gui.services.ResouceService
 import javafx.fxml.FXML
+import javafx.scene.control.Button
+import javafx.scene.control.ProgressBar
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.awt.image.BufferedImage
@@ -21,6 +23,13 @@ abstract class Izberi_zip_zvezek_Ui : KoinComponent {
 
     @FXML
     lateinit var flowPane_datoteka_Controller: FlowPane_Datoteka
+
+    @FXML
+    lateinit var progressBar: ProgressBar
+
+    @FXML
+    lateinit var razreziB: Button
+
     val LIST get() = this.listView_datoteka_Controller
     val FLOW get() = this.flowPane_datoteka_Controller
 

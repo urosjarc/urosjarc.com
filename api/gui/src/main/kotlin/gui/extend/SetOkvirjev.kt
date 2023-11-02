@@ -1,6 +1,5 @@
 package gui.extend
 
-import gui.domain.Anotacija
 import gui.domain.Okvir
 import gui.domain.Vektor
 
@@ -10,6 +9,20 @@ import gui.domain.Vektor
  */
 
 val Set<Okvir>.povrsina get() = this.sumOf { it.povrsina }
+
+val Set<Okvir>.matrika
+    get(): MutableList<List<Okvir>> {
+        val mat = mutableListOf<List<Okvir>>()
+        var najvisji = this.najvisji ?: return mat
+
+        while (true) {
+            val vrstica = this.enakaVrstica(okvir = najvisji).sortedBy { it.povprecje.x }
+            mat.add(vrstica)
+            najvisji = this.najblizjiSpodaj(okvir = najvisji) ?: break
+        }
+
+        return mat
+    }
 
 /**
  * Vzporedne okvirtacije

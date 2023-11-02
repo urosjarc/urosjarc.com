@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
 <SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" orientation="VERTICAL" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.widgets.Izberi_zip_zvezek">
     <items>
         <fx:include fx:id="listView_datoteka_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../elements/ListView_Datoteka.fxml" />
-        <fx:include fx:id="flowPane_datoteka_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../elements/FlowPane_Datoteka.fxml" />
+      <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+         <children>
+            <ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" progress="0.0" VBox.vgrow="ALWAYS" />
+              <fx:include fx:id="flowPane_datoteka_" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" source="../elements/FlowPane_Datoteka.fxml" VBox.vgrow="ALWAYS" />
+            <Button fx:id="razreziB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Razreži" VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
     </items>
 </SplitPane>

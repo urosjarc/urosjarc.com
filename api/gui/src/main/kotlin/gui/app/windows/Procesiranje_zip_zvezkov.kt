@@ -6,9 +6,11 @@ import gui.app.widgets.BarveSlik
 import gui.app.widgets.Izberi_zip_zvezek
 import gui.app.widgets.Procesiranje_slike
 import gui.base.App
+import gui.domain.Odsek
 import gui.domain.Stran
 import gui.extend.shrani
 import gui.services.LogService
+import gui.use_cases.Razrezi_stran
 import javafx.application.Application
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -16,6 +18,7 @@ import javafx.scene.Scene
 import javafx.stage.Stage
 import jfxtras.styles.jmetro.JMetro
 import jfxtras.styles.jmetro.Style
+import kotlinx.coroutines.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.awt.image.BufferedImage
@@ -33,16 +36,76 @@ abstract class Procesiranje_zip_zvezkov_Ui : Application(), KoinComponent {
     val PROCES get() = this.procesiranje_slike_Controller
 }
 
+enum class Datoteke(val ime: String) {
+    STRAN_JSON("stran.json"),
+    POPRAVLJANJE_PNG("popravljanje.png"),
+    NALOGE("naloge")
+}
+
 class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
 
     val log by this.inject<LogService>()
     val json by this.inject<JsonService>()
+    val razrezi_stran by this.inject<Razrezi_stran>()
 
     @FXML
     fun initialize() {
         this.IZBERI.izbrana_slika.opazuj { this.izberi_trenutno_sliko(it.first, it.second) }
+        this.IZBERI.razreziB.setOnAction { this.razrezi_anotiran_zvezek() }
         this.PROCES.POP.preskociSliko.opazuj { this.preskoci_trenutno_sliko() }
         this.PROCES.ANO.potrdiB.setOnAction { this.shrani_procesiranje_trenutne_slike() }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun razrezi_anotiran_zvezek() {
+        val self = this
+        GlobalScope.launch(Dispatchers.Main) {
+            self.IZBERI.progressBar.progress = 0.0
+
+            val rootDir = self.IZBERI.zip_save_dir
+            val files = rootDir.listFiles()?.sortedBy { it.name.toInt() } ?: return@launch
+            for ((k, stranDir) in files.withIndex()) {
+
+                self.IZBERI.progressBar.progress = k / files.size.toDouble()
+                delay(1)
+
+                if (stranDir.list()!!.isEmpty()) continue
+
+                val imgFile = File(stranDir, Datoteke.POPRAVLJANJE_PNG.ime)
+                val stranFile = File(stranDir, Datoteke.STRAN_JSON.ime)
+                val nalogeDir = File(stranDir, Datoteke.NALOGE.ime)
+                val stran = self.json.dekodiraj<Stran>(value = stranFile.readText())
+
+                nalogeDir.deleteRecursively()
+                nalogeDir.mkdir()
+
+                for ((i, odsek) in self.razrezi_stran.zdaj(stran = stran).withIndex()) {
+
+                    if (odsek.tip != Odsek.Tip.NALOGA) continue
+
+                    val originalImg = ImageIO.read(imgFile)
+                    val okvirOdseka = odsek.okvir
+                    val odsekImg = originalImg.getSubimage(okvirOdseka.start.x, okvirOdseka.start.y, okvirOdseka.sirina - 1, okvirOdseka.visina - 1)
+                    val nalogaDir = File(nalogeDir, "$i")
+                    nalogaDir.mkdir()
+                    odsekImg.shrani(File(nalogeDir, "$i.png"))
+
+
+                    for ((j, pododsek) in odsek.pododseki.withIndex()) {
+
+                        val okvirPododseka = pododsek.okvir
+                        val img = originalImg.getSubimage(
+                            okvirPododseka.start.x,
+                            okvirPododseka.start.y,
+                            okvirPododseka.sirina - 1,
+                            okvirPododseka.visina - 1
+                        )
+                        val pododsekImg = File(nalogaDir, "$j.png")
+                        img.shrani(pododsekImg)
+                    }
+                }
+            }
+        }
     }
 
     override fun start(stage: Stage) {
@@ -60,8 +123,8 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
         this.log.info("Direktorij trenutne slike: $dir")
         if (dir.exists() && dir.listFiles()!!.isNotEmpty()) {
             this.log.info("Direktorij ze obstaja!")
-            val imgFile = this.slika_dir("popravljanje.png", stSlike = stSlike)
-            val stranFile = this.slika_dir("stran.json", stSlike = stSlike)
+            val imgFile = this.slika_dir(Datoteke.POPRAVLJANJE_PNG, stSlike = stSlike)
+            val stranFile = this.slika_dir(Datoteke.STRAN_JSON, stSlike = stSlike)
             val stran = this.json.dekodiraj<Stran>(value = stranFile.readText())
             val img = ImageIO.read(imgFile)
             this.PROCES.init(stSlike = stSlike, slika = img, stran = stran)
@@ -94,18 +157,18 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
 
     fun shrani_sliko() {
         val slika = this.PROCES.ANO.slika
-        val imgFile = this.slika_dir(ime = "popravljanje.png")
+        val imgFile = this.slika_dir(dat = Datoteke.POPRAVLJANJE_PNG)
         slika.shrani(imgFile)
         this.log.info("Shrani sliko: $imgFile")
     }
 
     fun shrani_stran() {
         val stran = this.PROCES.ANO.stran
-        val stranFile = this.slika_dir(ime = "stran.json")
+        val stranFile = this.slika_dir(dat = Datoteke.STRAN_JSON)
         stranFile.writeText(text = this.json.zakodiraj(value = stran))
         this.log.info("Shrani stran: $stranFile")
     }
 
-    fun slika_dir(ime: String = "", stSlike: Int? = null) = File(this.IZBERI.zip_save_dir, "${stSlike ?: this.PROCES.stSlike}/$ime")
+    fun slika_dir(dat: Datoteke? = null, stSlike: Int? = null) = File(this.IZBERI.zip_save_dir, "${stSlike ?: this.PROCES.stSlike}/${dat?.ime}")
 
 }
