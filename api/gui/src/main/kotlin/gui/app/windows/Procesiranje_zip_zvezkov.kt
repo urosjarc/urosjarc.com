@@ -143,18 +143,23 @@ class Procesiranje_zip_zvezkov : Procesiranje_zip_zvezkov_Ui() {
 
             //Shrani
             val zvezek_dir = File(self.IZBERI.zip_save_dir, "../${zvezek.ime}_db").also { it.deleteRecursively(); it.mkdir() }
+            val img_dir = File(self.IZBERI.zip_save_dir, "../${zvezek.ime}_img").also { it.deleteRecursively(); it.mkdir() }
+            var img_num = 0
             zvezek.tematike.forEachIndexed { st_tematike, tematika ->
                 val tematika_dir = File(zvezek_dir, "$st_tematike. ${tematika.ime}").also { it.mkdir() }
                 tematika.teorije.forEachIndexed { st_teorije, teorija ->
                     val teorija_dir = File(tematika_dir, "teorija").also { it.mkdir() }
                     teorija.img.shrani(File(teorija_dir, "teorija_$st_teorije.png"))
+                    teorija.img.shrani(File(img_dir, "${(++img_num).toString().padStart(4, '0')}_TEORIJA.png"))
                 }
                 tematika.naloge.forEachIndexed { st_naloge, naloga ->
                     val naloga_dir = File(tematika_dir, "$st_naloge").also { it.mkdir() }
                     naloga.img.shrani(File(naloga_dir, "naloga.png"))
+                    naloga.img.shrani(File(img_dir, "${(++img_num).toString().padStart(4, '0')}_NALOGA.png"))
                     File(naloga_dir, "besedilo.txt").writeText(naloga.text)
                     naloga.podnaloge.forEachIndexed { st_podnaloge, podnaloga ->
                         podnaloga.img.shrani(File(naloga_dir, "podnaloga_${st_podnaloge}.png"))
+                        podnaloga.img.shrani(File(img_dir, "${(++img_num).toString().padStart(4, '0')}_PODNALOGA.png"))
                     }
                 }
             }
