@@ -83,8 +83,8 @@ fun BufferedImage.povprecenPiksel(okvir: Okvir): Piksel {
 
 fun BufferedImage.odstrani_prazen_prostor(margin: Int = 10): BufferedImage {
     var img = this.kopiraj()
-    img = img.izrezi(okvir = img.boundBox(margin = 0, countOn = { pix -> pix.is_black() }, stopOn = { it == 0 }))
-    return img.izrezi(okvir = img.boundBox(margin = margin, countOn = { pix -> pix.is_black() || pix.is_red() }, stopOn = { it > 2 }))
+    img = img.izrezi(okvir = img.boundBox(margin = 0, countOn = { pix -> pix.is_black() || pix.is_red() }, stopOn = { it == 0 }))
+    return img.izrezi(okvir = img.boundBox(margin = margin, countOn = { pix -> pix.is_black() || pix.is_red() }, stopOn = { it > 5 }))
 }
 
 fun BufferedImage.piksel(x: Int, y: Int): Piksel {

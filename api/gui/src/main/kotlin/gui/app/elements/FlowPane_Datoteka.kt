@@ -15,7 +15,8 @@ class FlowPane_Datoteka : FlowPane_Datoteka_Ui() {
     fun dodaj(ime: String, barva: String, onAction: () -> Unit) {
         val button = Button(ime)
         button.userData = ime
-        button.minWidth = 60.0
+        button.maxWidth = 50.0
+        button.minWidth = button.maxWidth
         button.style = "-fx-background-color: $barva"
         button.setOnAction { onAction() }
         this.self.children.add(button)
