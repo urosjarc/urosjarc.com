@@ -3,8 +3,8 @@ import Ajv from "ajv";
 
 // @ts-ignore
 import generateSchema from "generate-schema"
-import ucenecResponse from "./ucenecResponse";
-import uciteljResponse from "./uciteljResponse";
+import ucenecResponse from "./responses/ucenecResponse";
+import uciteljResponse from "./responses/uciteljResponse";
 const ucenecSchema = generateSchema.json(ucenecResponse);
 const uciteljSchema = generateSchema.json(uciteljResponse);
 //delete the delete ucenecSchema property
