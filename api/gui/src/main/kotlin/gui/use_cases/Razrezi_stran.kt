@@ -5,32 +5,32 @@ import gui.domain.Okvir
 import gui.domain.Stran
 import gui.domain.Vektor
 import gui.extend.*
+import java.awt.image.BufferedImage
 
 class Razrezi_stran {
-
-    fun zdaj(stran: Stran): MutableList<Odsek> {
+    fun zdaj(slika: BufferedImage, stran: Stran): MutableList<Odsek> {
         val deli = mutableListOf<Odsek>()
 
-        deli.addAll(this.najdi_glave(stran = stran))
-        deli.addAll(this.najdi_naslove(stran = stran))
-        deli.addAll(this.najdi_teorije(stran = stran))
-        deli.addAll(this.najdi_naloge(stran = stran))
+        deli.addAll(this.najdi_glave(slika = slika, stran = stran))
+        deli.addAll(this.najdi_naslove(slika = slika, stran = stran))
+        deli.addAll(this.najdi_teorije(slika = slika, stran = stran))
+        deli.addAll(this.najdi_naloge(slika = slika, stran = stran))
 
         return deli
     }
 
-    fun najdi_glave(stran: Stran): MutableList<Odsek> {
+    fun najdi_glave(slika: BufferedImage, stran: Stran): MutableList<Odsek> {
         val deli = mutableListOf<Odsek>()
         val dol = (stran.naslov + stran.naloge).najvisjaMeja(default = stran.okvir.visina)
         val okvir = Okvir(start = Vektor(x = 0, y = 0), end = Vektor(x = stran.okvir.sirina, y = dol))
         val anotacije = stran.anotacije.vOkvirju(okvir = okvir)
         if (anotacije.isEmpty()) return deli
-        val pododseki = this.najdi_podnaloge(okvir = okvir, stran = stran, zacetek = null)
+        val pododseki = this.najdi_podnaloge(slika = slika, okvir = okvir, stran = stran, zacetek = null)
         deli.add(Odsek(okvir = anotacije.najmanjsiOkvir, tip = Odsek.Tip.GLAVA, anotacije = anotacije, pododseki = pododseki))
         return deli
     }
 
-    fun najdi_teorije(stran: Stran): MutableList<Odsek> {
+    fun najdi_teorije(slika: BufferedImage, stran: Stran): MutableList<Odsek> {
         val deli = mutableListOf<Odsek>()
         if (stran.teorija.size > 0) {
             val okvir = stran.teorija.najmanjsiOkvir
@@ -39,7 +39,7 @@ class Razrezi_stran {
         return deli
     }
 
-    fun najdi_naslove(stran: Stran): MutableList<Odsek> {
+    fun najdi_naslove(slika: BufferedImage, stran: Stran): MutableList<Odsek> {
         val deli = mutableListOf<Odsek>()
         if (stran.naslov.size > 0) {
             val okvir = stran.naslov.najmanjsiOkvir
@@ -48,7 +48,7 @@ class Razrezi_stran {
         return deli
     }
 
-    fun najdi_naloge(stran: Stran): MutableList<Odsek> {
+    fun najdi_naloge(slika: BufferedImage, stran: Stran): MutableList<Odsek> {
         val okvirji = stran.anotacije.okvirji
         val deli = mutableListOf<Odsek>()
         val matrika = stran.naloge.matrika
@@ -71,9 +71,9 @@ class Razrezi_stran {
                 val okvir = Okvir(start = Vektor(x = levo, y = gor), end = Vektor(x = desno, y = dol))
                 var anotacije = stran.anotacije.vOkvirju(okvir = okvir)
                 val najmanjsiOkvir = anotacije.najmanjsiOkvir
-                var zRobnimiAnotacije = stran.anotacije.robVOkvirju(okvir=najmanjsiOkvir)
+                var zRobnimiAnotacije = stran.anotacije.robVOkvirju(okvir = najmanjsiOkvir)
                 val popravljenOkvir = zRobnimiAnotacije.najmanjsiOkvir
-                val podnaloge = this.najdi_podnaloge(stran = stran, okvir = popravljenOkvir, zacetek = t)
+                val podnaloge = this.najdi_podnaloge(slika = slika, stran = stran, okvir = popravljenOkvir, zacetek = t)
                 val naloga = Odsek(
                     pododseki = podnaloge,
                     okvir = najmanjsiOkvir,
@@ -87,7 +87,7 @@ class Razrezi_stran {
         return deli
     }
 
-    fun najdi_podnaloge(stran: Stran, okvir: Okvir, zacetek: Okvir?): MutableList<Odsek> {
+    fun najdi_podnaloge(slika: BufferedImage, stran: Stran, okvir: Okvir, zacetek: Okvir?): MutableList<Odsek> {
         val okvirji = stran.anotacije.okvirji
         val dodatno = stran.dodatno.vOkvirju(okvir = okvir)
         val podnaloge = stran.podnaloge.vOkvirju(okvir = okvir)

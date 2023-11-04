@@ -69,12 +69,12 @@ open class Rezanje_slike : Rezanje_slike_Ui() {
         this.slika = slika
         this.IMG.init(slika = slika)
         this.stran = stran
-        this.odseki = odseki ?: this.razrezi_stran.zdaj(stran = stran)
+        this.odseki = odseki ?: this.razrezi_stran.zdaj(slika = slika, stran = stran)
         this.na_novo_narisi_odseke_v_ozadju()
     }
 
     open fun razrezi_stran_in_na_novo_narisi_odseke() {
-        this.odseki = this.razrezi_stran.zdaj(stran = this.stran)
+        this.odseki = this.razrezi_stran.zdaj(stran = this.stran, slika = this.slika)
         this.na_novo_narisi_odseke_v_ozadju()
     }
 
@@ -93,8 +93,9 @@ open class Rezanje_slike : Rezanje_slike_Ui() {
                 Odsek.Tip.TEORIJA -> this.IMG.narisi_okvir(odsek.okvir, BarveAnotacij.TEORIJA.value, round = 15)
                 Odsek.Tip.NASLOV -> this.IMG.narisi_okvir(odsek.okvir, BarveAnotacij.NASLOV.value, round = 15)
                 Odsek.Tip.GLAVA -> {
-                    odsek.pododseki.forEachIndexed { i, pododsek -> this.IMG.narisi_okvir(pododsek.okvir, BarveAnotacij.PODNALOGA.value, round = 15)}
+                    odsek.pododseki.forEachIndexed { i, pododsek -> this.IMG.narisi_okvir(pododsek.okvir, BarveAnotacij.PODNALOGA.value, round = 15) }
                 }
+
                 Odsek.Tip.NEZNANO -> TODO()
                 Odsek.Tip.PODNALOGA -> TODO()
             }
