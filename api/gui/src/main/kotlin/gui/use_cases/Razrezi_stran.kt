@@ -113,21 +113,31 @@ class Razrezi_stran {
             var najnizja_meja = odseki.getOrNull(i + 1)?.okvir?.start?.y ?: stran.noga.first().start.y
 
             //Popravek zaradi vmesnih naslovov
-            najnizja_meja = stran.naslov.medY(zgornja_meja = odsek.okvir.start.y, spodnja_meja = najnizja_meja).najvisjaMeja(default = najnizja_meja)
+            najnizja_meja = stran.naslov.medY(zgornja_meja = okvir.start.y, spodnja_meja = najnizja_meja).najvisjaMeja(default = najnizja_meja)
 
             //Popravki zaradi razsiritve anotacij
-            odsek.okvir.end.y = vsiOkvirji.najblizjaZgornjaMeja(meja = najnizja_meja, default = najnizja_meja)
+            okvir.end.y = vsiOkvirji.najblizjaZgornjaMeja(meja = najnizja_meja, default = najnizja_meja)
 
-            //Popravki ce se nahaja se kaj pod anotacijami naloge graf.
-            val robovi = odsek.okvir
+            //Popravki ce se nahaja se kaj pod anotacijami naloge (graf).
             var belaSirina = 0
-            for (y in robovi.end.y..najnizja_meja) {
+            for (y in okvir.end.y..najnizja_meja) {
                 var count = 0
-                for (x in robovi.start.x..robovi.end.x)
+                for (x in okvir.start.x..okvir.end.x)
                     if (!slika.piksel(x = x, y = y).is_white()) count++
                 if (count == 0) belaSirina++
                 else belaSirina = 0
-                if (belaSirina == 3) odsek.okvir.end.y = y - belaSirina
+                if (belaSirina == 3) okvir.end.y = y - belaSirina
+            }
+
+            //Popravki ce se nahaja se kaj desno od anotacij naloge (graf)
+            belaSirina = 0
+            for (x in okvir.end.x until stran.okvir.end.x) {
+                var count = 0
+                for (y in okvir.start.y..okvir.end.y)
+                    if (!slika.piksel(x = x, y = y).is_white()) count++
+                if (count == 0) belaSirina++
+                else belaSirina = 0
+                if (belaSirina == 3) okvir.end.x = x - belaSirina
             }
         }
 
