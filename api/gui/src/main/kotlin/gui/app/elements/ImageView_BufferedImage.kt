@@ -88,12 +88,12 @@ class ImageView_BufferedImage : ImageView_BufferedImage_UI() {
         if (this.backgroundP.children.size > 1) this.backgroundP.children.remove(1, this.backgroundP.children.size)
     }
 
-    fun narisi_okvir(okvir: Okvir, color: Color, round: Boolean) {
+    fun narisi_okvir(okvir: Okvir, color: Color, round: Int) {
         val rec = this.vRectangle(okvir = okvir, color = color, round = round)
         this.backgroundP.children.add(rec)
     }
 
-    fun vRectangle(okvir: Okvir, color: Color = Color.BLACK, round: Boolean): Rectangle = Okvir(
+    fun vRectangle(okvir: Okvir, color: Color = Color.BLACK, round: Int): Rectangle = Okvir(
         start = this.mapiraj(v = okvir.start, noter = true),
         end = this.mapiraj(v = okvir.end, noter = true)
     ).vRectangle(color = color, round = round).also { rec -> rec.setOnScroll { if (it.isControlDown) this.popravi_velikost(dy = it.deltaY) } }

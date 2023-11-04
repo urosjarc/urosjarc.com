@@ -8,6 +8,23 @@ import gui.domain.Vektor
  * Math
  */
 
+val Set<Okvir>.najmanjsiOkvir: Okvir
+    get() {
+        val okvir = Okvir(
+            start = Vektor(
+                x = this.levaMeja(0),
+                y = this.najvisjaMeja(0),
+            ),
+            end = Vektor(
+                x = this.desnaMeja(0),
+                y = this.najnizjaMeja(0),
+            )
+        )
+
+//        if (okvir.povrsina == 0) throw Throwable("Ni anotacij!")
+        return okvir
+    }
+
 val Set<Okvir>.povrsina get() = this.sumOf { it.povrsina }
 
 val Set<Okvir>.matrika
@@ -85,7 +102,7 @@ fun Set<Okvir>.najblizjiDesno(okvir: Okvir): Okvir? = this.desno(meja = okvir.en
 /**
  * Dobi najblizje meje glede na okvirtacijo
  */
-fun Set<Okvir>?.najblizjaSpodnjaMeja(okvir: Okvir, default: Int): Int = this?.najblizjiSpodaj(okvir = okvir)?.end?.y ?: default
-fun Set<Okvir>?.najblizjaZgornjaMeja(okvir: Okvir, default: Int): Int = this?.najblizjiZgoraj(okvir = okvir)?.start?.y ?: default
+fun Set<Okvir>?.najblizjaSpodnjaMeja(okvir: Okvir, default: Int): Int = this?.najblizjiSpodaj(okvir = okvir)?.start?.y ?: default
+fun Set<Okvir>?.najblizjaZgornjaMeja(okvir: Okvir, default: Int): Int = this?.najblizjiZgoraj(okvir = okvir)?.end?.y ?: default
 fun Set<Okvir>?.najblizjaLevaMeja(okvir: Okvir, default: Int): Int = this?.najblizjiLevo(okvir = okvir)?.end?.x ?: default
 fun Set<Okvir>?.najblizjaDesnaMeja(okvir: Okvir, default: Int): Int = this?.najblizjiDesno(okvir = okvir)?.start?.x ?: default

@@ -24,9 +24,6 @@ abstract class Izberi_zip_zvezek_Ui : KoinComponent {
     @FXML
     lateinit var flowPane_datoteka_Controller: FlowPane_Datoteka
 
-    @FXML
-    lateinit var razreziB: Button
-
     val LIST get() = this.listView_datoteka_Controller
     val FLOW get() = this.flowPane_datoteka_Controller
 

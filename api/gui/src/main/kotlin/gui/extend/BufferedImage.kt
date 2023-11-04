@@ -48,7 +48,15 @@ fun BufferedImage.shrani(file: File) {
     ImageIO.write(this, "png", file)
 }
 
-fun BufferedImage.izrezi(okvir: Okvir): BufferedImage = this.getSubimage(okvir.start.x, okvir.start.y, okvir.sirina, okvir.visina)
+fun BufferedImage.izrezi(okvir: Okvir): BufferedImage {
+    try {
+        return this.getSubimage(okvir.start.x, okvir.start.y, okvir.sirina, okvir.visina)
+    } catch (err: Throwable){
+        println("$okvir, $this")
+        this.prikazi()
+        return this
+    }
+}
 
 fun BufferedImage.kopiraj(): BufferedImage {
     val b = BufferedImage(this.getWidth(), this.getHeight(), this.getType())
@@ -82,9 +90,10 @@ fun BufferedImage.povprecenPiksel(okvir: Okvir): Piksel {
 }
 
 fun BufferedImage.odstrani_prazen_prostor(margin: Int = 10): BufferedImage {
-    var img = this.kopiraj()
-    img = img.izrezi(okvir = img.boundBox(margin = 0, countOn = { pix -> pix.is_black() || pix.is_red() }, stopOn = { it == 0 }))
-    return img.izrezi(okvir = img.boundBox(margin = margin, countOn = { pix -> pix.is_black() || pix.is_red() }, stopOn = { it > 5 }))
+    return this
+//    var img = this.kopiraj()
+//    img = img.izrezi(okvir = img.boundBox(margin = 0, countOn = { pix -> pix.is_black() || pix.is_red() }, stopOn = { it == 0 }))
+//    return img.izrezi(okvir = img.boundBox(margin = margin, countOn = { pix -> pix.is_black() || pix.is_red() }, stopOn = { it > 5 }))
 }
 
 fun BufferedImage.piksel(x: Int, y: Int): Piksel {
@@ -117,29 +126,32 @@ fun BufferedImage.zamegliSliko(radij: Int): BufferedImage {
 
 fun BufferedImage.odstraniObrobo(maxWidth: Int): Pair<Int, BufferedImage> {
     var widthCounter = 0
+    val bin = this.binarna()
     for (i in 1..maxWidth) {
         val xStart = i
         val yStart = i
-        val xEnd = this.width - 2 * i
-        val yEnd = this.height - 2 * i
+        val xEnd = this.width - i
+        val yEnd = this.height - i
         var counter = 0
 
         //Up down
         for (y in yStart until yEnd) {
-            val left = this.piksel(x = xStart, y = y)
-            val right = this.piksel(x = xEnd, y = y)
+            val left = bin.piksel(x = xStart, y = y)
+            val right = bin.piksel(x = xEnd, y = y)
             if (left.is_black() || right.is_black()) counter++
         }
 
         //Left right
         for (x in xStart until xEnd) {
-            val up = this.piksel(y = yStart, x = x)
-            val down = this.piksel(y = yEnd, x = x)
+            val up = bin.piksel(y = yStart, x = x)
+            val down = bin.piksel(y = yEnd, x = x)
             if (up.is_black() || down.is_black()) counter++
         }
 
         if (counter == 0) widthCounter++
-        if (widthCounter >= 5) return Pair(i, this.getSubimage(xStart, yStart, xEnd - xStart, yEnd - yStart))
+        else widthCounter = 0
+
+        if (widthCounter >= 3) return Pair(i, this.getSubimage(xStart, yStart, xEnd - xStart, yEnd - yStart))
     }
     return Pair(0, this.getSubimage(0, 0, this.width, this.height))
 }

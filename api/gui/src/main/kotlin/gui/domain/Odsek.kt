@@ -1,7 +1,9 @@
 package gui.domain
 
 import gui.extend.matrika
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Odsek(
     val okvir: Okvir,
     val anotacije: Set<Anotacija>,

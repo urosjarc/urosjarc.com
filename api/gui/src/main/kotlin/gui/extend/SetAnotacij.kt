@@ -3,8 +3,11 @@ package gui.extend
 import gui.domain.Anotacija
 import gui.domain.Okvir
 
+val Set<Anotacija>.najmanjsiOkvir: Okvir get() = this.okvirji.najmanjsiOkvir
+
 val Set<Anotacija>.okvirji get() = this.map { it.okvir }.toSet()
 
+fun Set<Anotacija>.robVOkvirju(okvir: Okvir): Set<Anotacija> = this.filter { okvir.vsebujeRob(it.okvir) }.toSet()
 fun Set<Anotacija>.vOkvirju(okvir: Okvir): Set<Anotacija> = this.filter { okvir.vsebuje(it.okvir) }.toSet()
 
 val Set<Anotacija>.matrika: List<List<Anotacija>>

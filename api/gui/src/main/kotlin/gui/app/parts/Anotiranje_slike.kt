@@ -11,7 +11,10 @@ import gui.services.OcrService
 import gui.use_cases.Anotiraj_omego_stran
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
-import javafx.scene.control.*
+import javafx.scene.control.Button
+import javafx.scene.control.ContextMenu
+import javafx.scene.control.Label
+import javafx.scene.control.MenuItem
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
 import javafx.scene.paint.Color
@@ -73,6 +76,7 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
                     menuItem.style = "-fx-text-fill: red"
                     this.ustvariCM.items.add(menuItem)
                 }
+
                 else -> {
                     val menuItem = MenuItem(tip.name).also { it.userData = tip }
                     val menuItem2 = MenuItem(tip.name).also {
@@ -120,15 +124,15 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
     fun na_novo_narisi_anotacije_v_ozadju(narisiDragRec: Boolean = false) {
         this.IMG.pobrisi_ozadje()
         this.stran.let { stran ->
-            stran.noga.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NOGA.value, round = true) }
-            stran.naloge.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NALOGE.value, round = true) }
-            stran.podnaloge.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.PODNALOGE.value, round = true) }
-            stran.naslov.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NASLOV.value, round = true) }
-            stran.teorija.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.TEORIJA.value, round = false) }
-            stran.dodatno.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.DODATNO.value, round = false) }
+            stran.noga.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NOGA.value, round = 40) }
+            stran.naloge.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NALOGA.value, round = 40) }
+            stran.podnaloge.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.PODNALOGA.value, round = 40) }
+            stran.naslov.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NASLOV.value, round = 40) }
+            stran.teorija.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.TEORIJA.value, round = 0) }
+            stran.dodatno.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.DODATNO.value, round = 0) }
         }
-        this.userOkvirji.forEach { this.IMG.narisi_okvir(it, Color.BLACK, round = false) }
-        this.mouseOkvirji.forEach { this.IMG.narisi_okvir(it, Color.BLACK, round = false) }
+        this.userOkvirji.forEach { this.IMG.narisi_okvir(it, Color.BLACK, round = 0) }
+        this.mouseOkvirji.forEach { this.IMG.narisi_okvir(it, Color.BLACK, round = 0) }
         if (narisiDragRec) this.IMG.backgroundP.children.add(this.dragRectangle)
     }
 
@@ -164,7 +168,7 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
         this.IMG.backgroundP.children.remove(this.dragRectangle)
 
         this.dragOkvir.end = me.vektor
-        this.dragRectangle = this.dragOkvir.vRectangle(width = 1.0, round = false)
+        this.dragRectangle = this.dragOkvir.vRectangle(width = 1.0, round = 0)
         this.dragRectangle.strokeWidth = 1.0
         this.dragRectangle.strokeDashArray.addAll(5.0)
 
@@ -176,7 +180,7 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
         if (!this.zadnjiMouseEvent.isPrimaryButtonDown && !this.zadnjiMouseEvent.isSecondaryButtonDown && !this.zadnjiMouseEvent.isMiddleButtonDown) return
 
         this.dragOkvir.end = me.vektor
-        this.dragRectangle = this.dragOkvir.vRectangle(round = false)
+        this.dragRectangle = this.dragOkvir.vRectangle(round = 0)
 
         val okvir = this.IMG.vOkvir(r = this.dragRectangle)
         val izbraniOkvirji = this.stran.okvirjiV(vektor = okvir.end)
@@ -188,13 +192,13 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
 
         if (this.zadnjiMouseEvent.isPrimaryButtonDown) this.izberiCM.show(this.IMG.self, me.screenX, me.screenY)
         if (this.zadnjiMouseEvent.isSecondaryButtonDown) this.ustvariCM.show(this.IMG.self, me.screenX, me.screenY)
-        if (this.zadnjiMouseEvent.isMiddleButtonDown) this.onContextAction(am=null, akcija = Akcija.ODSTRANI)
+        if (this.zadnjiMouseEvent.isMiddleButtonDown) this.onContextAction(am = null, akcija = Akcija.ODSTRANI)
     }
 
     private fun onContextAction(am: ActionEvent?, akcija: Akcija) {
         val okvir = this.IMG.vOkvir(r = this.dragRectangle)
 
-        val tip = if(am == null) Anotacija.Tip.NEZNANO else (am.target as MenuItem).userData as Anotacija.Tip
+        val tip = if (am == null) Anotacija.Tip.NEZNANO else (am.target as MenuItem).userData as Anotacija.Tip
 
         when (akcija) {
             Akcija.ODSTRANI -> this.stran.odstrani(okvirji = this.userOkvirji)

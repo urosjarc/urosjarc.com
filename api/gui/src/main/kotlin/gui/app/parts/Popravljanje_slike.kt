@@ -53,8 +53,8 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
         this.paddingS.valueProperty().addListener { _, _, _ -> this.posodobi_info_slike() }
         this.rotacijaS.setOnMouseReleased { this.pripravi_sliko() }
         this.paddingS.setOnMouseReleased { this.pripravi_sliko() }
-        this.automaticnoB.setOnAction { this.resetiraj_celotno_sliko_na_default_vrednosti() }
-        this.rocnoB.setOnAction { this.posodobi_info_slike(reset = true); this.pripravi_sliko() }
+        this.automaticnoB.setOnAction { this.resetiraj_sliko() }
+        this.rocnoB.setOnAction { this.resetiraj_sliko(rotiraj = false)}
         this.potrdiB.setOnAction { this.potrdi_trenutne_nastavitve() }
         this.preskociB.setOnAction { this.preskociSliko.value = this.slika }
     }
@@ -62,7 +62,7 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
     fun init(slika: BufferedImage, popravi: Boolean) {
         this.slika = slika
         this.posodobi_info_slike(reset = true)
-        if (popravi) this.resetiraj_celotno_sliko_na_default_vrednosti()
+        if (popravi) this.resetiraj_sliko()
         else this.pripravi_sliko(procesiranje = false)
     }
 
@@ -82,13 +82,20 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
         this.infoL.text = "Rotacija: $r, Padding: $m"
     }
 
-    private fun resetiraj_celotno_sliko_na_default_vrednosti() {
+    private fun resetiraj_sliko(rotiraj: Boolean = true) {
         this.log.info("Resetiraj rotacijo in padding trenutne slike.")
-        val deskew = this.slika.poravnaj()
-        val removeBorder = deskew.second.odstraniObrobo(maxWidth = 300)
 
-        this.rotacijaS.value = deskew.first
-        this.paddingS.value = removeBorder.first.toDouble()
+        var rotacija = 0.0
+        var img = this.slika
+
+        if(rotiraj) {
+            val deskew = img.poravnaj()
+            rotacija = deskew.first
+            img = deskew.second
+        }
+
+        this.paddingS.value = img.odstraniObrobo(maxWidth = 300).first.toDouble()
+        this.rotacijaS.value = rotacija
 
         this.posodobi_info_slike()
         this.pripravi_sliko()
