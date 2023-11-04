@@ -9,7 +9,7 @@ data class Odsek(
     val anotacije: Set<Anotacija>,
     val tip: Tip,
     val dodatno: Set<Okvir> = setOf(),
-    val pododseki: List<Odsek> = listOf()
+    var pododseki: List<Odsek> = listOf()
 ) {
     val tekst: String
         get() {

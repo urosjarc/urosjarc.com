@@ -78,22 +78,23 @@ open class Rezanje_slike : Rezanje_slike_Ui() {
         this.na_novo_narisi_odseke_v_ozadju()
     }
 
-    fun na_novo_narisi_odseke_v_ozadju(narisiDragRec: Boolean = false, narisiNaloge: Boolean = false) {
+    fun na_novo_narisi_odseke_v_ozadju(narisiDragRec: Boolean = false, narisiNaloge: Boolean = true) {
         this.IMG.pobrisi_ozadje()
         this.odseki.forEach { odsek ->
             when (odsek.tip) {
                 Odsek.Tip.NALOGA -> {
-                    if (narisiNaloge || odsek.pododseki.isEmpty()) this.IMG.narisi_okvir(odsek.okvir, BarveAnotacij.NALOGA.value, round = 15)
-                    odsek.pododseki.forEachIndexed { i, pododsek ->
-                        val barva = if (i == 0) BarveAnotacij.NALOGA else BarveAnotacij.PODNALOGA
-                        this.IMG.narisi_okvir(pododsek.okvir, barva.value, round = 15)
-                    }
+                    if (narisiNaloge) this.IMG.narisi_okvir(odsek.okvir, BarveAnotacij.NALOGA.value, round = 15)
+//                    odsek.pododseki.forEachIndexed { i, pododsek ->
+//                        val barva = if (i == 0) BarveAnotacij.NALOGA else BarveAnotacij.PODNALOGA
+//                        this.IMG.narisi_okvir(pododsek.okvir, barva.value, round = 15)
+//                    }
                 }
 
                 Odsek.Tip.TEORIJA -> this.IMG.narisi_okvir(odsek.okvir, BarveAnotacij.TEORIJA.value, round = 15)
                 Odsek.Tip.NASLOV -> this.IMG.narisi_okvir(odsek.okvir, BarveAnotacij.NASLOV.value, round = 15)
                 Odsek.Tip.GLAVA -> {
-                    odsek.pododseki.forEachIndexed { i, pododsek -> this.IMG.narisi_okvir(pododsek.okvir, BarveAnotacij.PODNALOGA.value, round = 15) }
+                    this.IMG.narisi_okvir(odsek.okvir, BarveAnotacij.NOGA.value, round = 15)
+//                    odsek.pododseki.forEachIndexed { i, pododsek -> this.IMG.narisi_okvir(pododsek.okvir, BarveAnotacij.PODNALOGA.value, round = 15) }
                 }
 
                 Odsek.Tip.NEZNANO -> TODO()
