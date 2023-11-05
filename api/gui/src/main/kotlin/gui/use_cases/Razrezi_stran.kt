@@ -26,8 +26,7 @@ class Razrezi_stran {
         val okvir = Okvir(start = Vektor(x = 0, y = 0), end = Vektor(x = stran.okvir.sirina, y = dol))
         val anotacije = stran.anotacije.vOkvirju(okvir = okvir)
         if (anotacije.isEmpty()) return deli
-        val pododseki = this.najdi_podnaloge(slika = slika, rob = okvir, stran = stran, zacetek = null)
-        deli.add(Odsek(okvir = okvir, tip = Odsek.Tip.GLAVA, anotacije = anotacije, pododseki = pododseki))
+        deli.add(Odsek(okvir = okvir, tip = Odsek.Tip.GLAVA, anotacije = anotacije))
         return deli
     }
 
@@ -50,47 +49,54 @@ class Razrezi_stran {
     }
 
     fun najdi_naloge(slika: BufferedImage, stran: Stran): MutableList<Odsek> {
-        val naloge = this.odseki_matrike(slika = slika, stran = stran, rob = slika.okvir, tip = Odsek.Tip.NALOGA)
-        naloge.forEach {
-            val zacetek = stran.naloge.vOkvirju(it.okvir).firstOrNull()
-            it.pododseki = this.najdi_podnaloge(slika = slika, stran = stran, rob = it.okvir, zacetek = zacetek)
-        }
+        val naloge = this.odseki_matrike(slika = slika, stran = stran, rob = slika.okvir)
+        naloge.forEach { it.pododseki = this.odseki_matrike2(slika = slika, stran = stran, rob = it.okvir, tip = Odsek.Tip.PODNALOGA) }
         return naloge
     }
 
-    fun najdi_podnaloge(slika: BufferedImage, stran: Stran, rob: Okvir, zacetek: Okvir?): MutableList<Odsek> {
-        val pododseki = odseki_matrike(slika = slika, stran = stran, rob = rob, tip = Odsek.Tip.PODNALOGA)
+    fun odseki_matrike2(slika: BufferedImage, stran: Stran, rob: Okvir, tip: Odsek.Tip): MutableList<Odsek> {
+        val odseki = mutableListOf<Odsek>()
+        val matrika = stran.podnaloge.vOkvirju(okvir = rob).matrika
 
-        //Ce je glava potem besedila ni
-        if (zacetek == null) return pododseki
+        for (y in 0 until matrika.size) {
+            for (x in 0 until matrika[y].size) {
+                val t = matrika[y][x]
+                val zgornji = matrika.getOrNull(y - 1)?.first()
+                val spodnji = matrika.getOrNull(y + 1)?.first()
+                val desno = matrika[y].getOrNull(x + 1)?.start?.x ?: rob.end.x
+                val levo = t.start.x
+                val gor = if (zgornji != null) listOf(t.povprecje.y, zgornji.povprecje.y).average() else t.start.y
+                val dol = if (spodnji != null) listOf(t.povprecje.y, spodnji.povprecje.y).average() else rob.end.y
 
-        //Ce ni podnalog vrni prazno
-        val prviPododsek = pododseki.firstOrNull() ?: return pododseki
+                val okvirOdseka = Okvir(start = Vektor(x = levo, y = gor.toInt()), end = Vektor(x = desno, y = dol.toInt()))
 
-        //Ce je prva podnaloga na enaki vrstici kot besedilo
-        if (prviPododsek.okvir.enakaVrstica(zacetek)) return pododseki
+                var anotacijeOkvirja = stran.anotacije.vOkvirju(okvir = okvirOdseka)
+                var najmanjsiOkvir = anotacijeOkvirja.najmanjsiOkvir
 
-        return pododseki
+                repeat(3) {
+                    anotacijeOkvirja = stran.anotacije.vOkvirju(okvir = najmanjsiOkvir)
+                    najmanjsiOkvir = anotacijeOkvirja.najmanjsiOkvir
+                }
+
+                odseki.add(Odsek(okvir = najmanjsiOkvir, anotacije = anotacijeOkvirja, tip = Odsek.Tip.PODNALOGA))
+            }
+        }
+
+        return odseki
     }
 
-    fun odseki_matrike(
-        slika: BufferedImage,
-        stran: Stran,
-        rob: Okvir,
-        tip: Odsek.Tip,
-    ): MutableList<Odsek> {
-        val vsiOkvirji = stran.okvirji
-        val okvirji = if (tip == Odsek.Tip.NALOGA) stran.naloge + stran.noga else stran.podnaloge
+    fun odseki_matrike(slika: BufferedImage, stran: Stran, rob: Okvir): MutableList<Odsek> {
         val odseki = mutableListOf<Odsek>()
-        val matrika = okvirji.matrika
+        val vsiOkvirji = stran.okvirji.vOkvirju(okvir = rob)
+        val matrika = (stran.naloge + stran.noga).matrika
 
         for (y in 0 until matrika.size - 1) {
             for (x in 0 until matrika[y].size) {
                 val t = matrika[y][x]
-                val levo = vsiOkvirji.najblizjaLevaMeja(okvir = t, default = 0)
+                val levo = vsiOkvirji.najblizjaLevaMeja(okvir = t, default = rob.start.x)
                 val desno = matrika[y].getOrNull(x + 1)?.start?.x ?: rob.end.x
-                val gor = vsiOkvirji.najblizjaZgornjaMeja(meja = t.start.y, default = 0)
-                var dol = matrika[y + 1].toSet().najvisjaMeja(default = rob.end.y)
+                val gor = vsiOkvirji.najblizjaZgornjaMeja(meja = t.start.y, default = rob.start.y)
+                val dol = matrika.getOrNull(y + 1)?.toSet().najvisjaMeja(default = rob.end.y)
 
                 val okvirOdseka = Okvir(start = Vektor(x = levo, y = gor), end = Vektor(x = desno, y = dol))
                 var anotacijeOkvirja = stran.anotacije.vOkvirju(okvir = okvirOdseka)
@@ -101,7 +107,7 @@ class Razrezi_stran {
                     najmanjsiOkvir = anotacijeOkvirja.najmanjsiOkvir
                 }
 
-                odseki.add(Odsek(okvir = najmanjsiOkvir, anotacije = anotacijeOkvirja, tip = tip))
+                odseki.add(Odsek(okvir = najmanjsiOkvir, anotacije = anotacijeOkvirja, tip = Odsek.Tip.NALOGA))
             }
         }
 

@@ -12,12 +12,12 @@ val Set<Okvir>.najmanjsiOkvir: Okvir
     get() {
         val okvir = Okvir(
             start = Vektor(
-                x = this.levaMeja(0),
-                y = this.najvisjaMeja(0),
+                x = this.levaMeja(10),
+                y = this.najvisjaMeja(10),
             ),
             end = Vektor(
-                x = this.desnaMeja(0),
-                y = this.najnizjaMeja(0),
+                x = this.desnaMeja(20),
+                y = this.najnizjaMeja(20),
             )
         )
 

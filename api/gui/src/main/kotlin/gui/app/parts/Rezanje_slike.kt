@@ -84,17 +84,16 @@ open class Rezanje_slike : Rezanje_slike_Ui() {
             when (odsek.tip) {
                 Odsek.Tip.NALOGA -> {
                     if (narisiNaloge) this.IMG.narisi_okvir(odsek.okvir, BarveAnotacij.NALOGA.value, round = 15)
-//                    odsek.pododseki.forEachIndexed { i, pododsek ->
-//                        val barva = if (i == 0) BarveAnotacij.NALOGA else BarveAnotacij.PODNALOGA
-//                        this.IMG.narisi_okvir(pododsek.okvir, barva.value, round = 15)
-//                    }
+                    odsek.pododseki.forEach {
+                        this.IMG.narisi_okvir(it.okvir, BarveAnotacij.PODNALOGA.value, round = 15)
+                    }
                 }
 
                 Odsek.Tip.TEORIJA -> this.IMG.narisi_okvir(odsek.okvir, BarveAnotacij.TEORIJA.value, round = 15)
                 Odsek.Tip.NASLOV -> this.IMG.narisi_okvir(odsek.okvir, BarveAnotacij.NASLOV.value, round = 15)
                 Odsek.Tip.GLAVA -> {
                     this.IMG.narisi_okvir(odsek.okvir, BarveAnotacij.NOGA.value, round = 15)
-//                    odsek.pododseki.forEachIndexed { i, pododsek -> this.IMG.narisi_okvir(pododsek.okvir, BarveAnotacij.PODNALOGA.value, round = 15) }
+                    odsek.pododseki.forEachIndexed { i, podsek -> this.IMG.narisi_okvir(podsek.okvir, BarveAnotacij.PODNALOGA.value, round = 15) }
                 }
 
                 Odsek.Tip.NEZNANO -> TODO()

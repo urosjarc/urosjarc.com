@@ -18,6 +18,7 @@ class Stran(val okvir: Okvir, val anotacije: Set<Anotacija>) {
     }
 
     val okvirji get() = this.anotacije.okvirji + this.naslov + this.teorija + this.naloge + this.podnaloge + this.noga + this.dodatno
+
     fun odstrani(okvirji: Set<Okvir>) {
         this.naslov.removeAll(okvirji)
         this.teorija.removeAll(okvirji)
