@@ -19,18 +19,23 @@ class Razrezi_stran {
         return deli.sortedBy { it.okvir.start.y }.toMutableList()
     }
 
-    fun najdi_glave(slika: BufferedImage, stran: Stran): MutableList<Odsek> {
-        val deli = mutableListOf<Odsek>()
-        val najnizja_meja = (stran.naslov + stran.naloge).najvisjaMeja(default = stran.okvir.visina)
-        val dol = stran.okvirji.najblizjaZgornjaMeja(meja = najnizja_meja, default = najnizja_meja)
+    private fun najdi_glave(slika: BufferedImage, stran: Stran): MutableList<Odsek> {
+        val dol = (stran.naslov + stran.naloge).najvisjaMeja(default = stran.okvir.visina)
         val okvir = Okvir(start = Vektor(x = 0, y = 0), end = Vektor(x = stran.okvir.sirina, y = dol))
+        val podnaloge = stran.podnaloge.vOkvirju(okvir = okvir)
         val anotacije = stran.anotacije.vOkvirju(okvir = okvir)
-        if (anotacije.isEmpty()) return deli
-        deli.add(Odsek(okvir = okvir, tip = Odsek.Tip.GLAVA, anotacije = anotacije))
-        return deli
+
+        if (anotacije.isEmpty()) return mutableListOf()
+
+        val najmanjsiOkvir = anotacije.najmanjsiOkvir
+        val odsek = Odsek(okvir = najmanjsiOkvir, tip = Odsek.Tip.GLAVA, anotacije = anotacije)
+        if (podnaloge.isNotEmpty())
+            odsek.pododseki = this.odseki_podnalog(slika = slika, stran = stran, rob = najmanjsiOkvir, tip = Odsek.Tip.PODNALOGA)
+
+        return mutableListOf(odsek)
     }
 
-    fun najdi_teorije(stran: Stran): MutableList<Odsek> {
+    private fun najdi_teorije(stran: Stran): MutableList<Odsek> {
         val deli = mutableListOf<Odsek>()
         if (stran.teorija.size > 0) {
             val okvir = stran.teorija.najmanjsiOkvir
@@ -39,7 +44,7 @@ class Razrezi_stran {
         return deli
     }
 
-    fun najdi_naslove(stran: Stran): MutableList<Odsek> {
+    private fun najdi_naslove(stran: Stran): MutableList<Odsek> {
         val deli = mutableListOf<Odsek>()
         if (stran.naslov.size > 0) {
             val okvir = stran.naslov.najmanjsiOkvir
@@ -48,13 +53,13 @@ class Razrezi_stran {
         return deli
     }
 
-    fun najdi_naloge(slika: BufferedImage, stran: Stran): MutableList<Odsek> {
-        val naloge = this.odseki_matrike(slika = slika, stran = stran, rob = slika.okvir)
-        naloge.forEach { it.pododseki = this.odseki_matrike2(slika = slika, stran = stran, rob = it.okvir, tip = Odsek.Tip.PODNALOGA) }
+    private fun najdi_naloge(slika: BufferedImage, stran: Stran): MutableList<Odsek> {
+        val naloge = this.odseki_nalog(slika = slika, stran = stran, rob = slika.okvir)
+        naloge.forEach { it.pododseki = this.odseki_podnalog(slika = slika, stran = stran, rob = it.okvir, tip = Odsek.Tip.PODNALOGA) }
         return naloge
     }
 
-    fun odseki_matrike2(slika: BufferedImage, stran: Stran, rob: Okvir, tip: Odsek.Tip): MutableList<Odsek> {
+    private fun odseki_podnalog(slika: BufferedImage, stran: Stran, rob: Okvir, tip: Odsek.Tip): MutableList<Odsek> {
         val odseki = mutableListOf<Odsek>()
         val matrika = stran.podnaloge.vOkvirju(okvir = rob).matrika
 
@@ -85,7 +90,7 @@ class Razrezi_stran {
         return odseki
     }
 
-    fun odseki_matrike(slika: BufferedImage, stran: Stran, rob: Okvir): MutableList<Odsek> {
+    private fun odseki_nalog(slika: BufferedImage, stran: Stran, rob: Okvir): MutableList<Odsek> {
         val odseki = mutableListOf<Odsek>()
         val vsiOkvirji = stran.okvirji.vOkvirju(okvir = rob)
         val matrika = (stran.naloge + stran.noga).matrika
@@ -93,7 +98,7 @@ class Razrezi_stran {
         for (y in 0 until matrika.size - 1) {
             for (x in 0 until matrika[y].size) {
                 val t = matrika[y][x]
-                val levo = vsiOkvirji.najblizjaLevaMeja(okvir = t, default = rob.start.x)
+                val levo = t.start.x
                 val desno = matrika[y].getOrNull(x + 1)?.start?.x ?: rob.end.x
                 val gor = vsiOkvirji.najblizjaZgornjaMeja(meja = t.start.y, default = rob.start.y)
                 val dol = matrika.getOrNull(y + 1)?.toSet().najvisjaMeja(default = rob.end.y)

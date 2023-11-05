@@ -23,7 +23,7 @@ data class Piksel(
     }
 
     fun is_red(): Boolean {
-        return (h > 300 || h < 30) && s > 0.1 && v > 0.3
+        return (h > 300 || h < 30) && s > 0.5 && v > 0.3
     }
 
     fun is_color(): Boolean {

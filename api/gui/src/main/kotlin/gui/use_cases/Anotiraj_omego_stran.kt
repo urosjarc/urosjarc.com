@@ -21,7 +21,6 @@ class Anotiraj_omego_stran {
         return stran
     }
 
-
     fun dodaj_anotacije_teorij(img: BufferedImage, stran: Stran, anos: Set<Anotacija>) {
         if (stran.naslov.isNotEmpty()) {
             val zgornja_meja = stran.naslov.najnizjaMeja(default = img.height)
@@ -29,6 +28,11 @@ class Anotiraj_omego_stran {
             val spodnja_meja = stran.naloge.najblizjaSpodnjaMeja(meja = zgornja_meja, default = najnizja_spodnja_meja)
             val okvirji = anos.okvirji.medY(zgornja_meja = zgornja_meja, spodnja_meja = spodnja_meja)
             stran.teorija.addAll(okvirji)
+
+            //Odstrani anotacije ce se slucajno najdejo v teoriji!
+            val najmanjsiOkvir = okvirji.najmanjsiOkvir
+            stran.naloge.removeIf { it.vsebuje(okvir = najmanjsiOkvir) }
+            stran.podnaloge.removeIf { it.vsebuje(okvir = najmanjsiOkvir) }
         }
     }
 
@@ -70,11 +74,14 @@ class Anotiraj_omego_stran {
          */
         val naslovi = mutableSetOf<Set<Okvir>>()
         for (ano in anos) {
-            val isRed = img.povprecenPiksel(ano.okvir).is_red()
-            val isFloat = ano.text.toFloatOrNull() != null
-            val hasMiddleDot = ano.text.indexOf('.') in 1..ano.text.length - 2
-            val isLong = ano.text.length >= 3
-            if (isRed && isLong && isFloat && hasMiddleDot) {
+            val jeRdec = img.povprecenPiksel(ano.okvir).is_red()
+            val jeDolg = ano.text.length >= 3
+            val imaStevilke = ano.text.contains("[0-9]".toRegex())
+
+            //Ce ima naslov format %i.%i
+            val jeDecimalka = ano.text.toFloatOrNull() != null
+            val imaPikoNaSredini = ano.text.indexOf('.') in 1..ano.text.length - 2
+            if ((jeRdec && jeDolg) || (jeDecimalka && imaPikoNaSredini) || (!imaStevilke && !imaPikoNaSredini)) {
                 val okvirji = anos.okvirji.enakaVrstica(ano.okvir).desno(ano.okvir).sortedBy { it.povprecje.x }.toSet()
                 if (okvirji.povrsina in 150 * 50..1000 * 150) naslovi.add(okvirji)
             }
@@ -96,6 +103,8 @@ class Anotiraj_omego_stran {
                     vrstica.add(kandidati[x])
                 }
             }
+            //Todo: V eni vrstici dobi vse grupe enakih anotacij in vzami tisto anotacijo ki bolje ustreza pogojem pravilne anotacije!
+            //Todo: Ce imaš 1) in potem anotacijo l) lahko preveriš tako da pogledaš prostor za oklepajem.
             stran.podnaloge.addAll(vrstica.toSet().okvirji)
         }
     }
