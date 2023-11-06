@@ -39,4 +39,6 @@ data class Okvir(
             this.strokeWidth = width
         }
     }
+
+    fun oddaljenost(okvir: Okvir): Double = this.povprecje.oddaljenost(okvir.povprecje)
 }

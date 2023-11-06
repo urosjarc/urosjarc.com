@@ -5,6 +5,8 @@ import gui.app.widgets.BarveAnotacij
 import gui.domain.Anotacija
 import gui.domain.Okvir
 import gui.domain.Stran
+import gui.extend.najmanjsiOkvir
+import gui.extend.povprecenPiksel
 import gui.extend.vOkvirju
 import gui.extend.vektor
 import gui.services.OcrService
@@ -148,7 +150,8 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
             this.mouseOkvirji = this.stran.okvirjiV(vektor = vektor)
             if (this.mouseOkvirji.isNotEmpty()) {
                 val text = this.stran.anotacije.vOkvirju(okvir = this.mouseOkvirji.first()).firstOrNull()?.text ?: ""
-                this.anotacijaL.text = if (text.isEmpty()) "" else "\"${text}\""
+                val pikel = this.slika.povprecenPiksel(okvir = this.mouseOkvirji.najmanjsiOkvir)
+                this.anotacijaL.text = if (text.isEmpty()) "" else "\"${text}\" $pikel"
             }
         }
 

@@ -28,11 +28,8 @@ class Anotiraj_omego_stran {
             val spodnja_meja = stran.naloge.najblizjaSpodnjaMeja(meja = zgornja_meja, default = najnizja_spodnja_meja)
             val okvirji = anos.okvirji.medY(zgornja_meja = zgornja_meja, spodnja_meja = spodnja_meja)
             stran.teorija.addAll(okvirji)
-
-            //Odstrani anotacije ce se slucajno najdejo v teoriji!
-            val najmanjsiOkvir = okvirji.najmanjsiOkvir
-            stran.naloge.removeIf { it.vsebuje(okvir = najmanjsiOkvir) }
-            stran.podnaloge.removeIf { it.vsebuje(okvir = najmanjsiOkvir) }
+            stran.naloge.removeIf { okvirji.contains(it) }
+            stran.podnaloge.removeIf { okvirji.contains(it) }
         }
     }
 
@@ -51,72 +48,57 @@ class Anotiraj_omego_stran {
             val isInt = ano.text.removeSuffix(".").toIntOrNull() != null
             val isFloat = ano.text.toFloatOrNull() != null
             val hasEndDot = ano.text.endsWith('.')
-            if (isRed && (isInt || (isFloat && hasEndDot))) {
-                val okvirji = anos.okvirji  //Pridobivanje annotationov ki so rdeci in pripadajo isti vrstici in so levo od pike ter dovolj blizu
-                    .enakaVrstica(ano.okvir)
-                    .desno(okvir = ano.okvir)
-                    .filter { it.end.x - ano.okvir.start.x < 20 }
-                    .filter { img.povprecenPiksel(it).is_red() }
-                    .sortedBy { it.povprecje.x }.toMutableSet()
-
-                okvirji.add(ano.okvir)
-                if (okvirji.povrsina in 30 * 30..300 * 50) {
-                    stran.naloge.addAll(okvirji)
-                }
-            }
+            if (isRed && (isInt || (isFloat && hasEndDot))) stran.naloge.add(ano.okvir)
         }
-        if (stran.naloge.isNotEmpty()) stran.naloge
     }
 
     fun dodaj_anotacije_naslovov(img: BufferedImage, stran: Stran, anos: Set<Anotacija>) {
-        /**
-         * Parsanje naslovov
-         */
-        val naslovi = mutableSetOf<Set<Okvir>>()
+        val naslovi = mutableSetOf<Okvir>()
         for (ano in anos) {
-            val jeRdec = img.povprecenPiksel(ano.okvir).is_red()
-            val jeDolg = ano.text.length >= 3
-            val imaStevilke = ano.text.contains("[0-9]".toRegex())
-
-            //Ce ima naslov format %i.%i
-            val jeDecimalka = ano.text.toFloatOrNull() != null
-            val imaPikoNaSredini = ano.text.indexOf('.') in 1..ano.text.length - 2
-            if ((jeRdec && jeDolg) || (jeDecimalka && imaPikoNaSredini) || (!imaStevilke && !imaPikoNaSredini)) {
-                val okvirji = anos.okvirji.enakaVrstica(ano.okvir).desno(ano.okvir).sortedBy { it.povprecje.x }.toSet()
-                if (okvirji.povrsina in 150 * 50..1000 * 150) naslovi.add(okvirji)
-            }
+            val okvirji = anos.okvirji.enakaVrstica(ano.okvir)
+            val vsiSoRdeci = okvirji.filter { img.povprecenPiksel(okvir = it).is_red() }.size == okvirji.size
+            if (vsiSoRdeci) naslovi.addAll(okvirji)
         }
-        if (naslovi.isNotEmpty()) {
-            //Najdi naslov z najvecjo povrsino
-            stran.naslov = naslovi.maxBy { it.povrsina }.toMutableSet()
-        }
+        stran.naslov.addAll(naslovi)
     }
 
     fun dodaj_anotacije_podnalog(stran: Stran, anos: List<Anotacija>) {
-        val crkaOklepaj = vseCrkeZOklepajem(anos).toSet()
+        val crkaOklepaj = najdi_kandidate_podnalog(anos).toSet()
         val matrika = crkaOklepaj.matrika
 
         for (kandidati in matrika) {
             val vrstica = mutableListOf(kandidati.first())
             for (x in 1 until kandidati.size) {
-                if (this.slKoda(vrstica.last().prvaCrka) - this.slKoda(kandidati[x].prvaCrka) == -1) {
-                    vrstica.add(kandidati[x])
-                }
+                val prva = this.slKoda(vrstica.last().prvaCrka)
+                val druga = this.slKoda(kandidati[x].prvaCrka)
+                if (prva - druga == -1) vrstica.add(kandidati[x])
             }
-            //Todo: V eni vrstici dobi vse grupe enakih anotacij in vzami tisto anotacijo ki bolje ustreza pogojem pravilne anotacije!
-            //Todo: Ce imaš 1) in potem anotacijo l) lahko preveriš tako da pogledaš prostor za oklepajem.
             stran.podnaloge.addAll(vrstica.toSet().okvirji)
         }
     }
 
-    private fun vseCrkeZOklepajem(anotacije: List<Anotacija>): MutableList<Anotacija> {
+    private fun najdi_kandidate_podnalog(anotacije: List<Anotacija>): MutableList<Anotacija> {
         val oklepaji = anotacije.filter { it.text == ")" }
 
         val returned = mutableListOf<Anotacija>()
         for (oklepaj in oklepaji) {
-            val i = anotacije.indexOf(oklepaj)
-            val prejsnji = anotacije[i - 1]
-            if (prejsnji.text.length == 1 && this.slKoda(prejsnji.prvaCrka) > -1) returned.add(prejsnji)
+            val vrstica = anotacije.toSet().enakaVrstica(ano = oklepaj)
+            val i = vrstica.indexOf(oklepaj)
+
+            val prejsnji = vrstica.getOrNull(i - 1)
+            val naslednji = vrstica.getOrNull(i + 1)
+            val predprejsnji = vrstica.getOrNull(i - 2)
+
+            val levaOddaljenost = predprejsnji?.okvir?.let { prejsnji?.okvir?.oddaljenost(it) } ?: 1e3
+            val desnaOddaljenost = oklepaj.okvir.let { naslednji?.okvir?.oddaljenost(it) } ?: 1e3
+
+            if (
+                prejsnji != null
+                && prejsnji.text.length == 1
+                && this.slKoda(prejsnji.prvaCrka) > -1
+                && levaOddaljenost > 40
+                && desnaOddaljenost > 40
+            ) returned.add(prejsnji)
         }
         return returned
     }
