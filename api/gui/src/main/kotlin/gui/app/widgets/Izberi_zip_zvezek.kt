@@ -6,8 +6,6 @@ import gui.base.Opazovan
 import gui.services.LogService
 import gui.services.ResouceService
 import javafx.fxml.FXML
-import javafx.scene.control.Button
-import javafx.scene.control.ProgressBar
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.awt.image.BufferedImage

@@ -101,7 +101,7 @@ class Popravljanje_slike : Popravljanje_slike_Ui() {
         this.pripravi_sliko()
     }
 
-    private fun potrdi_trenutne_nastavitve() {
+    fun potrdi_trenutne_nastavitve() {
         this.koncnaSlika.value = this.rotiraj_in_odrezi_robove_slike()
     }
 

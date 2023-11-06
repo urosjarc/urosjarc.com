@@ -59,21 +59,21 @@ class Procesiranje_slike : Procesiranje_slike_Ui() {
         this.stSlike = stSlike
         this.slika = slika
         this.POP.init(slika, popravi = stran == null)
-        val tab = if (stran == null || odseki == null) {
-            this.popravljanjeT
-        } else {
+        if (stran != null && odseki != null) {
             this.ANO.init(slika = slika, stran = stran)
             this.REZ.init(slika = slika, stran = stran, odseki=odseki)
-            this.anotiranjeT
+            this.tabPane.selectionModel.select(this.rezanjeT)
+        } else {
+            this.POP.potrdi_trenutne_nastavitve()
         }
-        this.tabPane.selectionModel.select(tab)
     }
 
     @FXML
     fun initialize() {
         this.POP.koncnaSlika.opazuj {
             this.ANO.init(it, stran = null)
-            this.tabPane.selectionModel.select(this.anotiranjeT)
+            this.REZ.init(slika = this.ANO.slika, stran = this.ANO.stran, odseki = null)
+            this.tabPane.selectionModel.select(this.rezanjeT)
         }
         this.ANO.potrdiB.setOnAction {
             this.REZ.init(slika = this.ANO.slika, stran = this.ANO.stran, odseki = null)
