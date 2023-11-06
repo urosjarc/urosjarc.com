@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane fx:id="self" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.parts.Rezanje_slike">
+
+<BorderPane fx:id="self" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.app.parts.Rezanje_slike">
     <bottom>
         <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
             <children>
                 <Label fx:id="odsekL" alignment="CENTER" contentDisplay="CENTER" textAlignment="CENTER">
                     <VBox.margin>
-                        <Insets bottom="10.0" top="10.0"/>
+                        <Insets bottom="10.0" top="10.0" />
                     </VBox.margin>
                 </Label>
+            <Slider fx:id="debugingS" blockIncrement="1.0" majorTickUnit="50.0" max="900.0" min="10.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" value="100.0" VBox.vgrow="ALWAYS" />
                 <HBox>
                     <children>
-                        <Button fx:id="resetirajB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Resetiraj" HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="potrdiB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Potrdi" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="resetirajB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Resetiraj" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="debugirajB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Debugiraj" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="potrdiB" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Potrdi" HBox.hgrow="ALWAYS" />
                     </children>
                 </HBox>
             </children>
         </VBox>
     </bottom>
     <center>
-        <fx:include fx:id="imageView_bufferedImage_" source="../elements/ImageView_BufferedImage.fxml" BorderPane.alignment="CENTER"/>
+        <fx:include fx:id="imageView_bufferedImage_" source="../elements/ImageView_BufferedImage.fxml" BorderPane.alignment="CENTER" />
     </center>
 </BorderPane>

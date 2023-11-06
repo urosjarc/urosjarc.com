@@ -20,7 +20,9 @@ class Anotiraj_omego_stran {
     }
 
     fun ustvari_stran(img: BufferedImage, anos: List<Anotacija>): Stran {
-        return Stran(okvir = img.okvir, anotacije = anos.toSet())
+        //Odstrani vse anotacije ki so manjse od dovoljene
+        val anotacije = anos.filter { it.okvir.povrsina > 8 * 8 && it.okvir.visina < 70 }.toSet()
+        return Stran(okvir = img.okvir, anotacije = anotacije)
     }
 
     fun dodaj_anotacije_teorij(img: BufferedImage, stran: Stran, anos: Set<Anotacija>) {

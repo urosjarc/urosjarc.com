@@ -12,10 +12,12 @@ import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.scene.control.Button
 import javafx.scene.control.Label
+import javafx.scene.control.Slider
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.BorderPane
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
+import kotlinx.coroutines.*
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.awt.image.BufferedImage
@@ -30,6 +32,12 @@ abstract class Rezanje_slike_Ui : KoinComponent {
 
     @FXML
     lateinit var resetirajB: Button
+
+    @FXML
+    lateinit var debugirajB: Button
+
+    @FXML
+    lateinit var debugingS: Slider
 
     @FXML
     lateinit var potrdiB: Button
@@ -63,6 +71,7 @@ open class Rezanje_slike : Rezanje_slike_Ui() {
         this.IMG.self.setOnMouseDragged { this.onMouseDragg(me = it) }
         this.IMG.self.setOnMouseMoved { this.onMouseMove(me = it) }
         this.resetirajB.setOnAction { this.razrezi_stran_in_na_novo_narisi_odseke() }
+        this.debugirajB.setOnAction { this.razrezi_stran_in_na_novo_narisi_odseke(debug = true) }
     }
 
     fun init(slika: BufferedImage, stran: Stran, odseki: MutableList<Odsek>?) {
@@ -73,10 +82,22 @@ open class Rezanje_slike : Rezanje_slike_Ui() {
         this.na_novo_narisi_odseke_v_ozadju()
     }
 
-    open fun razrezi_stran_in_na_novo_narisi_odseke() {
-        this.odseki = this.razrezi_stran.zdaj(stran = this.stran, slika = this.slika)
-        this.na_novo_narisi_odseke_v_ozadju()
+    @OptIn(DelicateCoroutinesApi::class)
+    open fun razrezi_stran_in_na_novo_narisi_odseke(debug: Boolean = false) {
+        val self = this
+        GlobalScope.launch(Dispatchers.Main) {
+            self.odseki = self.razrezi_stran.zdaj(stran = self.stran, slika = self.slika)
+
+            self.IMG.pobrisi_ozadje()
+            self.razrezi_stran.debug.forEach {
+                self.IMG.pobrisi_ozadje()
+                self.IMG.narisi_okvir(okvir = it, color = Color.RED, round = 0)
+                delay(self.debugingS.value.toLong())
+            }
+            self.na_novo_narisi_odseke_v_ozadju()
+        }
     }
+
 
     fun na_novo_narisi_odseke_v_ozadju(narisiDragRec: Boolean = false, narisiNaloge: Boolean = true) {
         this.IMG.pobrisi_ozadje()

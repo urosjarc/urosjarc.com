@@ -100,7 +100,7 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
         this.resetirajB.setOnAction { this.anotiraj_stran_in_na_novo_narisi_anotacije() }
         this.izberiCM.setOnAction { this.onContextAction(am = it, akcija = Akcija.IZBERI) }
         this.ustvariCM.setOnAction { this.onContextAction(am = it, akcija = Akcija.USTVARI) }
-        this.self.setOnKeyPressed { this.IMG.pobrisi_ozadje() }
+        this.self.setOnKeyPressed { this.na_novo_narisi_anotacije_v_ozadju(vse = true) }
         this.self.setOnKeyReleased { this.na_novo_narisi_anotacije_v_ozadju() }
     }
 
@@ -123,8 +123,9 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
         this.na_novo_narisi_anotacije_v_ozadju()
     }
 
-    fun na_novo_narisi_anotacije_v_ozadju(narisiDragRec: Boolean = false) {
+    fun na_novo_narisi_anotacije_v_ozadju(narisiDragRec: Boolean = false, vse: Boolean = false) {
         this.IMG.pobrisi_ozadje()
+        if (vse) this.stran.anotacije.forEach { this.IMG.narisi_okvir(it.okvir, Color.GRAY, round = 40) }
         this.stran.let { stran ->
             stran.noga.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NOGA.value, round = 40) }
             stran.naloge.forEach { this.IMG.narisi_okvir(it, BarveAnotacij.NALOGA.value, round = 40) }
@@ -150,8 +151,8 @@ open class Anotiranje_slike : Anotiranje_slike_Ui() {
             this.mouseOkvirji = this.stran.okvirjiV(vektor = vektor)
             if (this.mouseOkvirji.isNotEmpty()) {
                 val text = this.stran.anotacije.vOkvirju(okvir = this.mouseOkvirji.first()).firstOrNull()?.text ?: ""
-                val pikel = this.slika.povprecenPiksel(okvir = this.mouseOkvirji.najmanjsiOkvir)
-                this.anotacijaL.text = if (text.isEmpty()) "" else "\"${text}\" $pikel"
+                val okvir = this.mouseOkvirji.najmanjsiOkvir
+                this.anotacijaL.text = if (text.isEmpty()) "" else "\"${text}\" (w=${okvir.sirina}, h=${okvir.visina})"
             }
         }
 

@@ -20,6 +20,7 @@ dependencies {
     this.implementation(this.project(":core"))
     this.implementation("org.jfxtras:jmetro:11.6.14")
     this.implementation("org.jetbrains.kotlinx:kotlinx-coroutines-javafx:1.7.3")
+    this.implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.7.3")
     this.implementation("org.jsoup:jsoup:1.16.1")
     this.implementation("net.coobird:thumbnailator:0.4.20")
     this.implementation("com.google.cloud:google-cloud-vision:3.21.0")
