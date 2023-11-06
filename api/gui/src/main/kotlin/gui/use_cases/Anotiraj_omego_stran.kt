@@ -97,7 +97,7 @@ class Anotiraj_omego_stran {
                 && prejsnji.text.length == 1
                 && this.slKoda(prejsnji.prvaCrka) > -1
                 && levaOddaljenost > 40
-                && desnaOddaljenost > 40
+                && desnaOddaljenost > 35
             ) returned.add(prejsnji)
         }
         return returned
