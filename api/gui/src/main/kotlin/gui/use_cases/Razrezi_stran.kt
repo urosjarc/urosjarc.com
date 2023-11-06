@@ -7,6 +7,7 @@ import gui.domain.Vektor
 import gui.extend.*
 import java.awt.image.BufferedImage
 
+
 class Razrezi_stran {
     fun zdaj(slika: BufferedImage, stran: Stran): MutableList<Odsek> {
         val deli = mutableListOf<Odsek>()
@@ -55,7 +56,7 @@ class Razrezi_stran {
 
     private fun najdi_naloge(slika: BufferedImage, stran: Stran): MutableList<Odsek> {
         val naloge = this.odseki_nalog(slika = slika, stran = stran, rob = slika.okvir)
-        naloge.forEach { it.pododseki = this.odseki_podnalog(slika = slika, stran = stran, rob = it.okvir, tip = Odsek.Tip.PODNALOGA) }
+//        naloge.forEach { it.pododseki = this.odseki_podnalog(slika = slika, stran = stran, rob = it.okvir, tip = Odsek.Tip.PODNALOGA) }
         return naloge
     }
 
@@ -103,14 +104,19 @@ class Razrezi_stran {
                 val gor = vsiOkvirji.najblizjaZgornjaMeja(meja = t.start.y, default = rob.start.y)
                 val dol = matrika.getOrNull(y + 1)?.toSet().najvisjaMeja(default = rob.end.y)
 
+                //Najvecji okvir slike
                 val okvirOdseka = Okvir(start = Vektor(x = levo, y = gor), end = Vektor(x = desno, y = dol))
+                this.debug(slika = slika, okvirji = setOf(okvirOdseka), msg = "Najvecji okvir ($y, $x) slike...")
+
+                //Najmanjsi okvir slike
                 var anotacijeOkvirja = stran.anotacije.vOkvirju(okvir = okvirOdseka)
                 var najmanjsiOkvir = anotacijeOkvirja.najmanjsiOkvir
+                this.debug(slika = slika, okvirji = setOf(najmanjsiOkvir), msg = "Najmanjsi okvir ($y, $x) slike...")
 
-                repeat(3) {
-                    anotacijeOkvirja = stran.anotacije.robVOkvirju(okvir = najmanjsiOkvir)
-                    najmanjsiOkvir = anotacijeOkvirja.najmanjsiOkvir
-                }
+//                repeat(3) {
+//                    anotacijeOkvirja = stran.anotacije.robVOkvirju(okvir = najmanjsiOkvir)
+//                    najmanjsiOkvir = anotacijeOkvirja.najmanjsiOkvir
+//                }
 
                 odseki.add(Odsek(okvir = najmanjsiOkvir, anotacije = anotacijeOkvirja, tip = Odsek.Tip.NALOGA))
             }
@@ -129,12 +135,16 @@ class Razrezi_stran {
             //Popravki zaradi razsiritve anotacij
             okvir.end.y = vsiOkvirji.najblizjaZgornjaMeja(meja = najnizja_meja, default = najnizja_meja)
 
+            this.debug(slika = slika, okvirji = setOf(okvir), msg = "Popravki $i slike...")
+
+            val zamekljena = slika.zamegliSliko(radij = 5)
+
             //Popravki ce se nahaja se kaj pod anotacijami naloge (graf).
             var belaSirina = 0
             for (y in okvir.end.y..najnizja_meja) {
                 var count = 0
                 for (x in okvir.start.x..okvir.end.x)
-                    if (!slika.piksel(x = x, y = y).is_white()) count++
+                    if (!zamekljena.piksel(x = x, y = y).is_white()) count++
                 if (count == 0) belaSirina++
                 else belaSirina = 0
                 if (belaSirina == 3) okvir.end.y = y - belaSirina
@@ -145,13 +155,35 @@ class Razrezi_stran {
             for (x in okvir.end.x until stran.okvir.end.x) {
                 var count = 0
                 for (y in okvir.start.y..okvir.end.y)
-                    if (!slika.piksel(x = x, y = y).is_white()) count++
+                    if (!zamekljena.piksel(x = x, y = y).is_white()) count++
                 if (count == 0) belaSirina++
                 else belaSirina = 0
                 if (belaSirina == 3) okvir.end.x = x - belaSirina
             }
+
+            this.debug(slika = zamekljena, okvirji = setOf(okvir), msg = "Koncni okvir $i slike...")
         }
 
         return odseki
+    }
+
+    fun debug(slika: BufferedImage, okvirji: Set<Okvir>, msg: String) {
+//        var img = slika.kopiraj()
+//        okvirji.forEach {
+//            val graph = img.createGraphics()
+//            graph.stroke = BasicStroke(6.0f);
+//            graph.color = Color.BLACK
+//            graph.drawRect(it.start.x, it.start.y, it.sirina, it.visina)
+//            graph.dispose()
+//        }
+//
+//        img = img.spremeniVelikost(w = 600, h = 1000)
+//
+//        val alert = Alert(null, null, ButtonType.OK)
+//        alert.isResizable = true
+//        val image = Image(img.inputStream)
+//        val imageView = ImageView(image)
+//        alert.graphic = imageView
+//        alert.showAndWait()
     }
 }

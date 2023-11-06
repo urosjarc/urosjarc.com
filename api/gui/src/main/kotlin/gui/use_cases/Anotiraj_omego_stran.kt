@@ -10,15 +10,17 @@ import java.awt.image.BufferedImage
 class Anotiraj_omego_stran {
 
     fun zdaj(img: BufferedImage, anotacije: List<Anotacija>): Stran {
-        val stran = Stran(okvir = img.okvir, anotacije = anotacije.toSet())
-
+        val stran = this.ustvari_stran(img = img, anos = anotacije)
         this.dodaj_anotacije_noge(stran = stran, anos = anotacije.toSet())
         this.dodaj_anotacije_nalog(img = img, stran = stran, anos = anotacije.toSet())
         this.dodaj_anotacije_podnalog(stran = stran, anos = anotacije)
         this.dodaj_anotacije_naslovov(img = img, stran = stran, anos = anotacije.toSet())
         this.dodaj_anotacije_teorij(img = img, stran = stran, anos = anotacije.toSet())
-
         return stran
+    }
+
+    fun ustvari_stran(img: BufferedImage, anos: List<Anotacija>): Stran {
+        return Stran(okvir = img.okvir, anotacije = anos.toSet())
     }
 
     fun dodaj_anotacije_teorij(img: BufferedImage, stran: Stran, anos: Set<Anotacija>) {
