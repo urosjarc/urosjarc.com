@@ -16,10 +16,11 @@ class Razrezi_stran {
 
         val deli = mutableListOf<Odsek>()
 
-        deli.addAll(this.najdi_glave(slika = slika, stran = stran))
+        val meglaImg = slika.zamegliSliko(radij = 6)
+        deli.addAll(this.najdi_glave(slika = meglaImg, stran = stran))
         deli.addAll(this.najdi_naslove(stran = stran))
         deli.addAll(this.najdi_teorije(stran = stran))
-        deli.addAll(this.najdi_naloge(slika = slika, stran = stran))
+        deli.addAll(this.najdi_naloge(slika = meglaImg, stran = stran))
 
         return deli.sortedBy { it.okvir.start.y }.toMutableList()
     }
@@ -68,7 +69,6 @@ class Razrezi_stran {
     private fun odseki_podnalog(slika: BufferedImage, stran: Stran, rob: Okvir, tip: Odsek.Tip): MutableList<Odsek> {
         val odseki = mutableListOf<Odsek>()
         val matrika = stran.podnaloge.vOkvirju(okvir = rob).matrika
-        val meglaImg = slika.zamegliSliko(radij = 6)
 
         for (y in 0 until matrika.size) {
             for (x in 0 until matrika[y].size) {
@@ -94,7 +94,7 @@ class Razrezi_stran {
                 this.log(najmanjsiOkvir)
 
                 //Razsiri do beline
-                this.razsiri_do_beline(slika = meglaImg, okvir = najmanjsiOkvir, spodnja_meja = dol, desna_meja = desno)
+                this.razsiri_do_beline(slika = slika, okvir = najmanjsiOkvir, spodnja_meja = dol, desna_meja = desno)
 
                 odseki.add(Odsek(okvir = najmanjsiOkvir, anotacije = anotacijeOkvirja, tip = Odsek.Tip.PODNALOGA))
             }
@@ -107,7 +107,6 @@ class Razrezi_stran {
         val odseki = mutableListOf<Odsek>()
         val vsiOkvirji = stran.okvirji.vOkvirju(okvir = rob)
         val matrika = (stran.naloge + stran.noga).matrika
-        val meglaImg = slika.zamegliSliko(radij = 6)
 
         for (y in 0 until matrika.size - 1) {
             for (x in 0 until matrika[y].size) {
@@ -138,7 +137,7 @@ class Razrezi_stran {
                 }
 
                 //Razsiri do beline
-                this.razsiri_do_beline(slika = meglaImg, okvir = najmanjsiOkvir, spodnja_meja = dol, desna_meja = desno)
+                this.razsiri_do_beline(slika = slika, okvir = najmanjsiOkvir, spodnja_meja = dol, desna_meja = desno)
 
                 odseki.add(Odsek(okvir = najmanjsiOkvir, anotacije = anotacijeOkvirja, tip = Odsek.Tip.NALOGA))
             }
