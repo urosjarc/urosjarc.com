@@ -21,7 +21,9 @@ class Anotiraj_omego_stran {
 
     fun ustvari_stran(img: BufferedImage, anos: List<Anotacija>): Stran {
         //Odstrani vse anotacije ki so manjse od dovoljene
-        val anotacije = anos.filter { it.okvir.povrsina > 8 * 8 && it.okvir.visina < 70 }.toSet()
+        val anotacije = anos
+            .filter { it.okvir.povrsina > 8 * 8 && it.okvir.visina < 70 }
+            .filter { img.steviloPikslov(okvir = it.okvir, countOn = { p -> p.is_black() }) > 8 }.toSet()
         return Stran(okvir = img.okvir, anotacije = anotacije)
     }
 

@@ -64,7 +64,7 @@ class Procesiranje_slike : Procesiranje_slike_Ui() {
             this.REZ.init(slika = slika, stran = stran, odseki=odseki)
             this.tabPane.selectionModel.select(this.rezanjeT)
         } else {
-            this.POP.potrdi_trenutne_nastavitve()
+            this.tabPane.selectionModel.select(this.popravljanjeT)
         }
     }
 

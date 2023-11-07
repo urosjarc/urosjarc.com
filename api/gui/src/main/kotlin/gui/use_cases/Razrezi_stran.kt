@@ -37,7 +37,7 @@ class Razrezi_stran {
         val najmanjsiOkvir = anotacije.najmanjsiOkvir
         val odsek = Odsek(okvir = najmanjsiOkvir, tip = Odsek.Tip.GLAVA, anotacije = anotacije)
         if (podnaloge.isNotEmpty())
-            odsek.pododseki = this.odseki_podnalog(slika = slika, stran = stran, rob = najmanjsiOkvir, tip = Odsek.Tip.PODNALOGA)
+            odsek.pododseki = this.odseki_podnalog(slika = slika, stran = stran, rob = najmanjsiOkvir)
 
         return mutableListOf(odsek)
     }
@@ -62,11 +62,11 @@ class Razrezi_stran {
 
     private fun najdi_naloge(slika: BufferedImage, stran: Stran): MutableList<Odsek> {
         val naloge = this.odseki_nalog(slika = slika, stran = stran, rob = slika.okvir)
-        naloge.forEach { it.pododseki = this.odseki_podnalog(slika = slika, stran = stran, rob = it.okvir, tip = Odsek.Tip.PODNALOGA) }
+        naloge.forEach { it.pododseki = this.odseki_podnalog(slika = slika, stran = stran, rob = it.okvir) }
         return naloge
     }
 
-    private fun odseki_podnalog(slika: BufferedImage, stran: Stran, rob: Okvir, tip: Odsek.Tip): MutableList<Odsek> {
+    private fun odseki_podnalog(slika: BufferedImage, stran: Stran, rob: Okvir): MutableList<Odsek> {
         val odseki = mutableListOf<Odsek>()
         val matrika = stran.podnaloge.vOkvirju(okvir = rob).matrika
 
@@ -80,24 +80,33 @@ class Razrezi_stran {
                 val gor = if (zgornji != null) listOf(t.povprecje.y, zgornji.povprecje.y).average().toInt() else t.start.y
                 val dol = if (spodnji != null) listOf(t.povprecje.y, spodnji.povprecje.y).average().toInt() else rob.end.y
 
-                val okvirOdseka = Okvir(start = Vektor(x = levo, y = gor.toInt()), end = Vektor(x = desno, y = dol))
+                val okvirOdseka = Okvir(start = Vektor(x = levo, y = gor), end = Vektor(x = desno, y = dol))
                 this.log(okvirOdseka)
 
-                var anotacijeOkvirja = stran.anotacije.vOkvirju(okvir = okvirOdseka)
-                var najmanjsiOkvir = anotacijeOkvirja.najmanjsiOkvir
+                var okvirjiOdseka = stran.okvirji.vOkvirju(okvir = okvirOdseka)
+                var najmanjsiOkvir = okvirjiOdseka.najmanjsiOkvir
                 this.log(najmanjsiOkvir)
 
                 repeat(3) {
-                    anotacijeOkvirja = stran.anotacije.vOkvirju(okvir = najmanjsiOkvir)
-                    najmanjsiOkvir = anotacijeOkvirja.najmanjsiOkvir
+                    okvirjiOdseka = stran.okvirji.vOkvirju(okvir = najmanjsiOkvir)
+                    najmanjsiOkvir = okvirjiOdseka.najmanjsiOkvir
                 }
                 this.log(najmanjsiOkvir)
 
                 //Razsiri do beline
                 this.razsiri_do_beline(slika = slika, okvir = najmanjsiOkvir, spodnja_meja = dol, desna_meja = desno)
 
-                odseki.add(Odsek(okvir = najmanjsiOkvir, anotacije = anotacijeOkvirja, tip = Odsek.Tip.PODNALOGA))
+                odseki.add(Odsek(okvir = najmanjsiOkvir, anotacije = stran.anotacije.vOkvirju(okvir = najmanjsiOkvir), tip = Odsek.Tip.PODNALOGA))
             }
+        }
+
+        //Dobi glavo naloge
+        val rob_besedila = odseki.minByOrNull { it.okvir.start.y }
+        if (rob_besedila != null) {
+            val okvir = rob.copy(end = rob.end.copy(y = rob_besedila.okvir.start.y))
+            val anotacije = stran.anotacije.vOkvirju(okvir=okvir)
+            val dodatno = stran.dodatno.vOkvirju(okvir=rob)
+            odseki.add(0, Odsek(okvir = anotacije.najmanjsiOkvir, anotacije = anotacije, tip=Odsek.Tip.NALOGA, dodatno = dodatno))
         }
 
         return odseki
@@ -126,20 +135,20 @@ class Razrezi_stran {
                 this.log(okvirOdseka)
 
                 //Najmanjsi okvir slike
-                var anotacijeOkvirja = stran.anotacije.vOkvirju(okvir = okvirOdseka)
-                var najmanjsiOkvir = anotacijeOkvirja.najmanjsiOkvir
+                var okvirjiOdseka = stran.okvirji.vOkvirju(okvir = okvirOdseka)
+                var najmanjsiOkvir = okvirjiOdseka.najmanjsiOkvir
                 this.log(najmanjsiOkvir)
 
                 //Popravi zaradi strlecih anotacij
                 repeat(3) {
-                    anotacijeOkvirja = stran.anotacije.vOkvirju(okvir = najmanjsiOkvir)
-                    najmanjsiOkvir = anotacijeOkvirja.najmanjsiOkvir
+                    okvirjiOdseka = stran.okvirji.vOkvirju(okvir = najmanjsiOkvir)
+                    najmanjsiOkvir = okvirjiOdseka.najmanjsiOkvir
                 }
 
                 //Razsiri do beline
                 this.razsiri_do_beline(slika = slika, okvir = najmanjsiOkvir, spodnja_meja = dol, desna_meja = desno)
 
-                odseki.add(Odsek(okvir = najmanjsiOkvir, anotacije = anotacijeOkvirja, tip = Odsek.Tip.NALOGA))
+                odseki.add(Odsek(okvir = najmanjsiOkvir, anotacije = stran.anotacije.vOkvirju(okvir = najmanjsiOkvir), tip = Odsek.Tip.NALOGA))
             }
         }
 

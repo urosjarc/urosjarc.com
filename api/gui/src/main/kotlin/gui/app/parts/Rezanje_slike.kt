@@ -95,24 +95,15 @@ open class Rezanje_slike : Rezanje_slike_Ui() {
 
     fun na_novo_narisi_odseke_v_ozadju(narisiNaloge: Boolean = true) {
         this.IMG.pobrisi_ozadje()
-        this.odseki.forEach { odsek ->
-            when (odsek.tip) {
-                Odsek.Tip.NALOGA -> {
-                    if (narisiNaloge) this.IMG.narisi_okvir(odsek.okvir, BarveAnotacij.NALOGA.value, round = 15)
-                    odsek.pododseki.forEach {
-                        this.IMG.narisi_okvir(it.okvir, BarveAnotacij.PODNALOGA.value, round = 15)
-                    }
-                }
-
-                Odsek.Tip.TEORIJA -> this.IMG.narisi_okvir(odsek.okvir, BarveAnotacij.TEORIJA.value, round = 15)
-                Odsek.Tip.NASLOV -> this.IMG.narisi_okvir(odsek.okvir, BarveAnotacij.NASLOV.value, round = 15)
-                Odsek.Tip.GLAVA -> {
-                    this.IMG.narisi_okvir(odsek.okvir, BarveAnotacij.NOGA.value, round = 15)
-                    odsek.pododseki.forEachIndexed { i, podsek -> this.IMG.narisi_okvir(podsek.okvir, BarveAnotacij.PODNALOGA.value, round = 15) }
-                }
-
+        val vsiOdseki = this.odseki + this.odseki.map { it.pododseki }.flatten()
+        vsiOdseki.forEach {
+            when (it.tip) {
+                Odsek.Tip.NALOGA -> if (narisiNaloge) this.IMG.narisi_okvir(it.okvir, BarveAnotacij.NALOGA.value, round = 15)
+                Odsek.Tip.TEORIJA -> this.IMG.narisi_okvir(it.okvir, BarveAnotacij.TEORIJA.value, round = 15)
+                Odsek.Tip.NASLOV -> this.IMG.narisi_okvir(it.okvir, BarveAnotacij.NASLOV.value, round = 15)
+                Odsek.Tip.GLAVA -> this.IMG.narisi_okvir(it.okvir, BarveAnotacij.NOGA.value, round = 15)
+                Odsek.Tip.PODNALOGA -> this.IMG.narisi_okvir(it.okvir, BarveAnotacij.PODNALOGA.value, round = 15)
                 Odsek.Tip.NEZNANO -> TODO()
-                Odsek.Tip.PODNALOGA -> TODO()
             }
         }
         this.mouseOdseki.forEach { this.IMG.narisi_okvir(it.okvir, Color.BLACK, round = 0) }
@@ -144,7 +135,7 @@ open class Rezanje_slike : Rezanje_slike_Ui() {
         if (!me.isPrimaryButtonDown) return
 
         val vektor = this.IMG.mapiraj(me.vektor, noter = false)
-        if(this.izbranOdsek != null) {
+        if (this.izbranOdsek != null) {
             this.izbranOdsek!!.okvir.end = vektor
             this.na_novo_narisi_odseke_v_ozadju()
         }

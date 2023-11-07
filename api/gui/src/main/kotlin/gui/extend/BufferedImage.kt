@@ -51,7 +51,7 @@ fun BufferedImage.shrani(file: File) {
 fun BufferedImage.izrezi(okvir: Okvir): BufferedImage {
     try {
         return this.getSubimage(okvir.start.x, okvir.start.y, okvir.sirina, okvir.visina)
-    } catch (err: Throwable){
+    } catch (err: Throwable) {
         println("$okvir, $this")
         this.prikazi()
         return this
@@ -87,6 +87,17 @@ fun BufferedImage.povprecenPiksel(okvir: Okvir): Piksel {
         }
     }
     return Piksel.average(pixels)
+}
+
+fun BufferedImage.steviloPikslov(okvir: Okvir, countOn: (Piksel) -> Boolean): Int {
+    var count = 0
+    for (y in okvir.start.y..okvir.end.y) {
+        for (x in okvir.start.x..okvir.end.x) {
+            val pixel = this.piksel(x, y)
+            if (countOn(pixel)) ++count
+        }
+    }
+    return count
 }
 
 fun BufferedImage.odstrani_prazen_prostor(margin: Int = 10): BufferedImage {
