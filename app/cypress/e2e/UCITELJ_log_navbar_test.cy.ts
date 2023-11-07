@@ -45,7 +45,6 @@ describe('Log in as UCENEC and test navbar links', () => {
         .its('length')
         .then(row_length => {
           tests_table_row_length_before += row_length;
-          console.error(tests_table_row_length_before, 'total table rows  before/-------------------')
           navigateToNextPage1()
         })
     }
@@ -123,8 +122,6 @@ describe('Log in as UCENEC and test navbar links', () => {
       async function countTableRows() {
         cy.get('.mdc-data-table__content tr').its('length').then(async row_length => {
           tests_table_row_lenght_after += row_length;
-          console.error(tests_table_row_lenght_after, 'total table rows after/-------------------')
-          // expect(row_length).to.equal(tests_table_row_length + 1)
           await navigateToNextPage()
         })
       }
